@@ -10,4 +10,4 @@ if (!container) {
 const rawEnvironment = readEnvironment();
 const configurationResult = createConfiguration(rawEnvironment);
 
-bootstrap(container, configurationResult);
+await bootstrap(container, configurationResult);

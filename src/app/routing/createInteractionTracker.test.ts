@@ -144,4 +144,28 @@ describe('createInteractionTracker', () => {
 
     expect(observability.analytics.track).not.toHaveBeenCalled();
   });
+
+  it('shouldReportPrimitive is true the first time a key is seen and false after', () => {
+    const observability = createSpyObservability();
+    const tracker = createInteractionTracker(observability);
+
+    expect(tracker.shouldReportPrimitive('string:boom')).toBe(true);
+    expect(tracker.shouldReportPrimitive('string:boom')).toBe(false);
+    expect(tracker.shouldReportPrimitive('object:null')).toBe(true);
+  });
+
+  it('a new interaction clears which primitive keys were already reported', () => {
+    const observability = createSpyObservability();
+    const tracker = createInteractionTracker(observability);
+    const { router, emit } = createFakeRouter();
+
+    expect(tracker.shouldReportPrimitive('string:boom')).toBe(true);
+    expect(tracker.shouldReportPrimitive('string:boom')).toBe(false);
+
+    tracker.attach(router);
+    emit(IDLE_SUCCESS);
+    emit(LOADING);
+
+    expect(tracker.shouldReportPrimitive('string:boom')).toBe(true);
+  });
 });

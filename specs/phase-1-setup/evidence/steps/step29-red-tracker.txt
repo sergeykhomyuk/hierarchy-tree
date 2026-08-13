@@ -1,0 +1,39 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/routing/createInteractionTracker.test.ts (8 tests | 2 failed) 4ms
+     × shouldReportPrimitive is true the first time a key is seen and false after 1ms
+     × a new interaction clears which primitive keys were already reported 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/routing/createInteractionTracker.test.ts > createInteractionTracker > shouldReportPrimitive is true the first time a key is seen and false after
+TypeError: tracker.shouldReportPrimitive is not a function
+ ❯ src/app/routing/createInteractionTracker.test.ts:152:20
+    150|     const tracker = createInteractionTracker(observability);
+    151|
+    152|     expect(tracker.shouldReportPrimitive('string:boom')).toBe(true);
+       |                    ^
+    153|     expect(tracker.shouldReportPrimitive('string:boom')).toBe(false);
+    154|     expect(tracker.shouldReportPrimitive('object:null')).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/app/routing/createInteractionTracker.test.ts > createInteractionTracker > a new interaction clears which primitive keys were already reported
+TypeError: tracker.shouldReportPrimitive is not a function
+ ❯ src/app/routing/createInteractionTracker.test.ts:162:20
+    160|     const { router, emit } = createFakeRouter();
+    161|
+    162|     expect(tracker.shouldReportPrimitive('string:boom')).toBe(true);
+       |                    ^
+    163|     expect(tracker.shouldReportPrimitive('string:boom')).toBe(false);
+    164|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  17:15:55
+   Duration  541ms (transform 24ms, setup 92ms, import 6ms, tests 4ms, environment 362ms)
+

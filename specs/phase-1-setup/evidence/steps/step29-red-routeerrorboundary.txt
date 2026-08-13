@@ -1,0 +1,33 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/error-boundary/RouteErrorBoundary.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/error-boundary/RouteErrorBoundary.test.tsx [ src/app/error-boundary/RouteErrorBoundary.test.tsx ]
+Error: Failed to resolve import "./RouteErrorBoundary" from "src/app/error-boundary/RouteErrorBoundary.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/error-boundary/RouteErrorBoundary.test.tsx:6:35
+  4  |  import { createMemoryRouter, RouterProvider } from "react-router";
+  5  |  import { renderRoute } from "../testing/renderRoute";
+  6  |  import { RouteErrorBoundary } from "./RouteErrorBoundary";
+     |                                      ^
+  7  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/error-boundary/RouteErrorBoun...
+  8  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  17:21:00
+   Duration  566ms (transform 21ms, setup 99ms, import 0ms, tests 0ms, environment 370ms)
+

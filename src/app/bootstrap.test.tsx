@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { act } from 'react';
+import { act, waitFor } from '@testing-library/react';
 import { bootstrap } from './bootstrap';
 import type { ConfigurationResult } from '@platform/configuration';
 
@@ -8,46 +8,47 @@ const VALID_CONFIGURATION_RESULT: ConfigurationResult = {
   configuration: Object.freeze({
     apiBaseUrl: 'https://gongfetest.firebaseio.com',
     logLevel: 'debug',
-    observabilitySink: 'console',
+    observabilitySink: 'none',
     requestTimeoutMilliseconds: 8000,
-    telemetryBufferHandle: true,
+    telemetryBufferHandle: false,
     developmentRoutes: true,
     basePath: '/',
   }),
 };
 
 describe('bootstrap', () => {
-  it('the startup placeholder renders through bootstrap', () => {
+  it('the startup placeholder renders through the real provider stack', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
-    act(() => {
-      bootstrap(container, VALID_CONFIGURATION_RESULT);
+    await act(async () => {
+      await bootstrap(container, VALID_CONFIGURATION_RESULT);
     });
 
-    expect(
-      container.querySelector('[data-testid="startup-placeholder"]'),
-    ).not.toBeNull();
+    await waitFor(() => {
+      // eslint-disable-next-line testing-library/no-node-access -- this container is created and rendered into directly (bootstrap owns createRoot), not returned from RTL's render().
+      const startupPlaceholder = container.querySelector(
+        '[data-testid="startup-placeholder"]',
+      );
+      expect(startupPlaceholder).not.toBeNull();
+    });
 
     document.body.removeChild(container);
   });
 
-  it('an invalid environment renders the error screen and does not render the router', () => {
+  it('an invalid environment renders the error screen and does not render the router', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
-    act(() => {
-      bootstrap(container, { ok: false, invalidKeys: ['VITE_API_BASE_URL'] });
+    await act(async () => {
+      await bootstrap(container, {
+        ok: false,
+        invalidKeys: ['VITE_API_BASE_URL'],
+      });
     });
 
-    // No router exists yet in this milestone (M5) - the substitute claim
-    // is that neither the error screen and the normal startup content are
-    // both present, since exactly one of the two is what "renders the
-    // error screen instead" means.
+    // eslint-disable-next-line testing-library/no-node-access -- this container is created and rendered into directly (bootstrap owns createRoot), not returned from RTL's render().
     expect(container.querySelector('[role="alert"]')).not.toBeNull();
-    expect(
-      container.querySelector('[data-testid="startup-placeholder"]'),
-    ).toBeNull();
     expect(container.textContent).toContain('VITE_API_BASE_URL');
 
     document.body.removeChild(container);

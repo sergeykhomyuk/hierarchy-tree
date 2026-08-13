@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T16:13:46Z",
+  "updated": "2026-08-13T16:30:36Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 28
+      "steps_done": 29
     },
     "G3": {
       "status": "pending",
@@ -1091,8 +1091,8 @@
         "the root boundary renders the error surface above any router without throwing",
         "the boundary reports the error exactly once and displays the correlation id"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T16:30:12Z evidence/steps/step29-red-tracker.txt; evidence/steps/step29-red-reportrooterror.txt; evidence/steps/step29-red-errorsurface.txt; evidence/steps/step29-red-rootboundary.txt; evidence/steps/step29-red-routeerrorboundary.txt; evidence/steps/step29-red-bootstrap.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -1765,7 +1765,18 @@
     "2026-08-13T16:13:46Z evidence recorded: evidence/steps/step28-red-features.txt (6585d6023d9e) - genuine red: no h1 found (stub pages return null)",
     "2026-08-13T16:13:46Z evidence recorded: evidence/steps/step28-red-usedocumenttitle.txt (9bcf2c2adc63) - genuine red: useDocumentTitle.ts module not found",
     "2026-08-13T16:13:46Z evidence recorded: evidence/steps/step28-red-lorem.txt (71292ea98c8c) - genuine red: assert-no-lorem-ipsum.mjs script not found",
-    "2026-08-13T16:13:46Z evidence recorded: evidence/steps/step28-green.txt (e81966bb9f15) - full npm run verify green: 203 unit tests + 4 build-output tests, 96.24% coverage"
+    "2026-08-13T16:13:46Z evidence recorded: evidence/steps/step28-green.txt (e81966bb9f15) - full npm run verify green: 203 unit tests + 4 build-output tests, 96.24% coverage",
+    "2026-08-13T16:30:12Z step 29 -> red",
+    "2026-08-13T16:30:17Z step 29 -> green",
+    "2026-08-13T16:30:26Z step 29: RootErrorBoundary (class component above RouterProvider, no router hook, recovery = window.location.assign) and RouteErrorBoundary (inside the router, recovery = navigate(0)) both render the shared ErrorSurface. reportRootError.ts dedups object errors via a module-level WeakSet and primitive errors via a new interactionTracker.shouldReportPrimitive() (Set<string>, cleared per interaction). createRoot's onCaughtError/onUncaughtError now route to reportRootError instead of console.error. Course-corrected mid-step: initially wired bootstrap.ts to the REAL router too, which made route chunks reachable in the build and tripped declaration-table.test.ts's fail-closed guard (phase is still 'building', route chunks aren't accounted for until step 31 per PLAN.md). Reverted to keep StartupPlaceholder as bootstrap's rendered content - only createRuntime + ApplicationRoot + the error-boundary wiring are live now, router wiring stays step 31's job. Entry size 85.16kB/100kB reflects the runtime composition now being real for the first time.",
+    "2026-08-13T16:30:27Z step 29 -> done",
+    "2026-08-13T16:30:35Z evidence recorded: evidence/steps/step29-red-tracker.txt (79309119987c) - genuine red: shouldReportPrimitive not a function",
+    "2026-08-13T16:30:35Z evidence recorded: evidence/steps/step29-red-reportrooterror.txt (4fbc19c7a1d7) - genuine red: reportRootError.ts module not found",
+    "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-red-errorsurface.txt (1e2052a1962b) - genuine red: ErrorSurface.tsx module not found",
+    "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-red-rootboundary.txt (4f5966d90339) - genuine red: RootErrorBoundary throws propagate, no boundary catches them yet",
+    "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-red-routeerrorboundary.txt (d09828e7d42d) - genuine red: RouteErrorBoundary.tsx module not found",
+    "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-red-bootstrap.txt (c0ea48112e39) - genuine red: bootstrap still renders StartupPlaceholder directly, waitFor times out",
+    "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-green.txt (e8491e9579be) - full npm run verify green: 215 tests, 95.62% coverage, declaration-table guard passes (no route chunks reachable yet), entry 85.16kB/100kB"
   ],
   "milestones": [
     {
@@ -2330,6 +2341,41 @@
       "sha": "e81966bb9f15",
       "recorded": "2026-08-13T16:13:46Z",
       "note": "full npm run verify green: 203 unit tests + 4 build-output tests, 96.24% coverage"
+    },
+    "evidence/steps/step29-red-tracker.txt": {
+      "sha": "79309119987c",
+      "recorded": "2026-08-13T16:30:35Z",
+      "note": "genuine red: shouldReportPrimitive not a function"
+    },
+    "evidence/steps/step29-red-reportrooterror.txt": {
+      "sha": "4fbc19c7a1d7",
+      "recorded": "2026-08-13T16:30:35Z",
+      "note": "genuine red: reportRootError.ts module not found"
+    },
+    "evidence/steps/step29-red-errorsurface.txt": {
+      "sha": "1e2052a1962b",
+      "recorded": "2026-08-13T16:30:36Z",
+      "note": "genuine red: ErrorSurface.tsx module not found"
+    },
+    "evidence/steps/step29-red-rootboundary.txt": {
+      "sha": "4f5966d90339",
+      "recorded": "2026-08-13T16:30:36Z",
+      "note": "genuine red: RootErrorBoundary throws propagate, no boundary catches them yet"
+    },
+    "evidence/steps/step29-red-routeerrorboundary.txt": {
+      "sha": "d09828e7d42d",
+      "recorded": "2026-08-13T16:30:36Z",
+      "note": "genuine red: RouteErrorBoundary.tsx module not found"
+    },
+    "evidence/steps/step29-red-bootstrap.txt": {
+      "sha": "c0ea48112e39",
+      "recorded": "2026-08-13T16:30:36Z",
+      "note": "genuine red: bootstrap still renders StartupPlaceholder directly, waitFor times out"
+    },
+    "evidence/steps/step29-green.txt": {
+      "sha": "e8491e9579be",
+      "recorded": "2026-08-13T16:30:36Z",
+      "note": "full npm run verify green: 215 tests, 95.62% coverage, declaration-table guard passes (no route chunks reachable yet), entry 85.16kB/100kB"
     }
   },
   "test_file_hashes": {}

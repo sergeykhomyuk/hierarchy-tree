@@ -2,6 +2,7 @@ import { createElement } from 'react';
 import type { i18n } from 'i18next';
 import type { RouteObject } from 'react-router';
 import { ApplicationLayout } from '../layout/ApplicationLayout';
+import { RouteErrorBoundary } from '../error-boundary/RouteErrorBoundary';
 
 // Each lazy() awaits its feature's own loadTranslations(instance) before
 // resolving, so a route never renders before its namespace is registered
@@ -12,6 +13,7 @@ export function routeDefinitions(instance: i18n): RouteObject[] {
     {
       path: '/',
       element: createElement(ApplicationLayout),
+      ErrorBoundary: RouteErrorBoundary,
       children: [
         {
           index: true,
