@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:34:51Z",
+  "updated": "2026-08-13T12:41:40Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 9
+      "steps_done": 10
     },
     "G3": {
       "status": "pending",
@@ -767,8 +767,8 @@
       "tests": [
         "the boundaries rules are configured at error severity"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T12:35:17Z evidence/steps/step10-red.txt: no boundaries/* rules configured yet",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1469,7 +1469,13 @@
     "2026-08-13T12:34:51Z evidence recorded: evidence/steps/step9-red.txt (14e60fe6dd6c) - vitest red: feature entries don't exist",
     "2026-08-13T12:34:51Z evidence recorded: evidence/steps/step9-green.txt (a9713e68406c) - vitest green: both feature entries export their placeholder pages",
     "2026-08-13T12:34:51Z step 9 -> green",
-    "2026-08-13T12:34:51Z step 9 -> done"
+    "2026-08-13T12:34:51Z step 9 -> done",
+    "2026-08-13T12:35:17Z step 10 -> red",
+    "2026-08-13T12:41:40Z evidence recorded: evidence/steps/step10-red.txt (f6144c8030be) - vitest red: no boundaries/* rules configured",
+    "2026-08-13T12:41:40Z evidence recorded: evidence/steps/step10-green.txt (9dc78e8d3cd8) - vitest green: boundaries rules at error severity; empirically confirmed against installed 7.2.0 (deprecated element-types/mode/rules/no-unknown replaced with dependencies/policies/no-unknown-dependencies); manually verified cross-feature import blocked with correct message",
+    "2026-08-13T12:41:40Z step 10 -> green",
+    "2026-08-13T12:41:40Z step 10 -> done",
+    "2026-08-13T12:41:40Z step 10: eslint-plugin-boundaries 7.2.0 is substantially different from TECH.md's element-types-era example - mode/string-tuple selectors/rules option/legacy ${} templates are all deprecated in favor of dependencies/object-selectors/policies/{{}} templates (confirmed via installed package meta + ESLINT_PLUGIN_BOUNDARIES_DEBUG=true). Also needed eslint-import-resolver-typescript (new devDependency, not in TECH.md's version list but not runtime-restricted by invariant 134) - without a resolver that knows .ts/.tsx extensions and tsconfig paths, even same-element relative imports like './bootstrap' come back fully unresolved and no-unknown-dependencies fires on them."
   ],
   "milestones": [
     {
@@ -1674,6 +1680,16 @@
       "sha": "a9713e68406c",
       "recorded": "2026-08-13T12:34:51Z",
       "note": "vitest green: both feature entries export their placeholder pages"
+    },
+    "evidence/steps/step10-red.txt": {
+      "sha": "f6144c8030be",
+      "recorded": "2026-08-13T12:41:40Z",
+      "note": "vitest red: no boundaries/* rules configured"
+    },
+    "evidence/steps/step10-green.txt": {
+      "sha": "9dc78e8d3cd8",
+      "recorded": "2026-08-13T12:41:40Z",
+      "note": "vitest green: boundaries rules at error severity; empirically confirmed against installed 7.2.0 (deprecated element-types/mode/rules/no-unknown replaced with dependencies/policies/no-unknown-dependencies); manually verified cross-feature import blocked with correct message"
     }
   },
   "test_file_hashes": {}
