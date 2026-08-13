@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:04:41Z",
+  "updated": "2026-08-13T12:07:57Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 4
+      "steps_done": 5
     },
     "G3": {
       "status": "pending",
@@ -688,8 +688,8 @@
       "tests": [
         "the Prettier config declares the tailwind stylesheet path"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T12:05:37Z evidence/steps/step5-red.txt: .prettierrc.json missing",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -1401,7 +1401,13 @@
     "2026-08-13T12:04:41Z evidence recorded: evidence/steps/step4-green.txt (41aae0435822) - vitest green: both conditional-config tests pass, tsc -b clean",
     "2026-08-13T12:04:41Z step 4 -> green",
     "2026-08-13T12:04:41Z step 4 -> done",
-    "2026-08-13T12:04:41Z step 4 gap: TECH.md's directory tree names a right-to-left.spec.ts running in a right-to-left Playwright project, but section 6.2's config detail only enumerates chromium/development/deployed. PLAN.md step 4 itself only names those three, matching section 6.2, so I built playwright.config.ts with three projects and deferred the right-to-left project to whichever later step actually writes right-to-left.spec.ts (likely M3 step 20 or M5, once localeDirection/ApplicationRoot exist). Flagging now so it is not lost - this is the kind of build-config gap PLAN.md's carried-risk section already expects in M1."
+    "2026-08-13T12:04:41Z step 4 gap: TECH.md's directory tree names a right-to-left.spec.ts running in a right-to-left Playwright project, but section 6.2's config detail only enumerates chromium/development/deployed. PLAN.md step 4 itself only names those three, matching section 6.2, so I built playwright.config.ts with three projects and deferred the right-to-left project to whichever later step actually writes right-to-left.spec.ts (likely M3 step 20 or M5, once localeDirection/ApplicationRoot exist). Flagging now so it is not lost - this is the kind of build-config gap PLAN.md's carried-risk section already expects in M1.",
+    "2026-08-13T12:05:37Z step 5 -> red",
+    "2026-08-13T12:07:48Z evidence recorded: evidence/steps/step5-red.txt (be4b98eeeb58) - vitest red: .prettierrc.json missing",
+    "2026-08-13T12:07:49Z evidence recorded: evidence/steps/step5-green.txt (df0282bd8155) - vitest green: tailwind stylesheet path test passes, tsc/eslint clean",
+    "2026-08-13T12:07:49Z step 5 -> green",
+    "2026-08-13T12:07:49Z step 5 -> done",
+    "2026-08-13T12:07:57Z step 5 gap: prettier-plugin-tailwindcss (v4 mode) eagerly loads the tailwindStylesheet path for every file it formats, not only files with tailwind classes - with theme.css absent (arrives M4) this made npm run format:check error on every file, not just fail on style. Fixed by creating a minimal src/shared/theme/theme.css placeholder (@import 'tailwindcss'; only, unimported) now; M4 step 21 fleshes it out with the real token layer. Also added specs/ and docs/ to .prettierignore - specs/ holds hash-registered immutable evidence and G1-validated spec docs that are not Prettier's to reformat as a side effect of a toolchain step."
   ],
   "milestones": [
     {
@@ -1536,6 +1542,16 @@
       "sha": "41aae0435822",
       "recorded": "2026-08-13T12:04:41Z",
       "note": "vitest green: both conditional-config tests pass, tsc -b clean"
+    },
+    "evidence/steps/step5-red.txt": {
+      "sha": "be4b98eeeb58",
+      "recorded": "2026-08-13T12:07:48Z",
+      "note": "vitest red: .prettierrc.json missing"
+    },
+    "evidence/steps/step5-green.txt": {
+      "sha": "df0282bd8155",
+      "recorded": "2026-08-13T12:07:48Z",
+      "note": "vitest green: tailwind stylesheet path test passes, tsc/eslint clean"
     }
   },
   "test_file_hashes": {}

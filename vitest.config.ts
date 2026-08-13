@@ -1,12 +1,12 @@
-import path from 'node:path'
-import { defineConfig } from 'vitest/config'
+import path from 'node:path';
+import { defineConfig } from 'vitest/config';
 
 const alias = {
   '@app': path.resolve(import.meta.dirname, './src/app'),
   '@features': path.resolve(import.meta.dirname, './src/features'),
   '@shared': path.resolve(import.meta.dirname, './src/shared'),
   '@platform': path.resolve(import.meta.dirname, './src/platform'),
-}
+};
 
 export default defineConfig({
   resolve: { alias },
@@ -67,4 +67,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

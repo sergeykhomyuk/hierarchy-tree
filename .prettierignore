@@ -1,0 +1,12 @@
+dist
+node_modules
+coverage
+playwright-report
+test-results
+package-lock.json
+
+# Loop specs and docs: loop.json is CLI-managed, evidence files are
+# hash-registered and immutable once cited, and the spec documents are
+# frozen artifacts validated at G1 - none of it is Prettier's to reformat.
+specs
+docs
