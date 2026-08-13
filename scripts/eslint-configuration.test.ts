@@ -99,4 +99,47 @@ describe('eslint configuration', () => {
       );
     }
   });
+
+  it('the testing-harness override is scoped to test files and no wider', async () => {
+    const config = await readEslintConfig();
+    const boundaryRules = collectRules(config, 'boundaries/dependencies');
+
+    expect(boundaryRules.length).toBe(2);
+    const [baseRule, overrideRule] = boundaryRules;
+
+    expect(baseRule?.files).toEqual(['src/**/*.{ts,tsx}']);
+    expect(
+      overrideRule?.files,
+      'override files glob must be exactly the test-file pattern',
+    ).toEqual(['src/**/*.test.{ts,tsx}']);
+    expect(ruleSeverity(overrideRule!.value)).toBe('error');
+
+    const basePolicies = (
+      baseRule!.value as [string, { policies: unknown[] }]
+    )[1].policies;
+    const overridePolicies = (
+      overrideRule!.value as [string, { policies: unknown[] }]
+    )[1].policies;
+
+    expect(overridePolicies.length, 'only feature and shared rows change').toBe(
+      basePolicies.length,
+    );
+
+    const basePoliciesJson = basePolicies.map((policy) =>
+      JSON.stringify(policy),
+    );
+    const overridePoliciesJson = overridePolicies.map((policy) =>
+      JSON.stringify(policy),
+    );
+    const changedRows = overridePoliciesJson.filter(
+      (policy, index) => policy !== basePoliciesJson[index],
+    );
+
+    expect(changedRows.length, 'exactly feature and shared should differ').toBe(
+      2,
+    );
+    for (const changed of changedRows) {
+      expect(changed).toContain('testing-harness');
+    }
+  });
 });

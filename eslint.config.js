@@ -4,11 +4,20 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import boundaries from 'eslint-plugin-boundaries';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import i18next from 'eslint-plugin-i18next';
+import testingLibrary from 'eslint-plugin-testing-library';
+import playwright from 'eslint-plugin-playwright';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
   globalIgnores(['dist']),
+  {
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
+    },
+  },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -16,10 +25,74 @@ export default defineConfig([
       tseslint.configs.recommended,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
+      jsxA11y.flatConfigs.recommended,
     ],
     languageOptions: {
       globals: globals.browser,
     },
+  },
+  {
+    // Type-aware linting (invariant 104), scoped to the files that belong
+    // to a TypeScript project - projectService: true reports anything else
+    // as outside one and fails on the first file it can't place.
+    files: ['src/**/*.{ts,tsx}', 'e2e/**/*.ts'],
+    extends: [tseslint.configs.recommendedTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'error',
+    },
+  },
+  {
+    files: ['**/*.js', 'scripts/**/*.mjs'],
+    extends: [tseslint.configs.disableTypeChecked],
+  },
+  {
+    // mode: 'jsx-only' plus an explicit exclude list keeps className (and
+    // Tailwind's utility strings) out of the check while aria-label, alt
+    // and title - what's actually user-visible - stay checked.
+    files: ['src/**/*.{ts,tsx}'],
+    plugins: { i18next },
+    rules: {
+      'i18next/no-literal-string': [
+        'error',
+        {
+          mode: 'jsx-only',
+          'jsx-attributes': {
+            exclude: [
+              'className',
+              'data-testid',
+              'role',
+              'type',
+              'id',
+              'name',
+              'href',
+              'rel',
+              'referrerPolicy',
+              'loading',
+              'width',
+              'height',
+              'autoComplete',
+              'dir',
+              'lang',
+            ],
+          },
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/*.test.{ts,tsx}'],
+    extends: [testingLibrary.configs['flat/react']],
+  },
+  {
+    files: ['e2e/**/*.ts'],
+    extends: [playwright.configs['flat/recommended']],
   },
   {
     // eslint-plugin-boundaries 7.2.0 deprecates `element-types`, `mode`,
@@ -122,6 +195,119 @@ export default defineConfig([
               from: { element: { type: 'shared' } },
               allow: {
                 to: { element: { types: { anyOf: ['shared', 'platform'] } } },
+              },
+            },
+            {
+              from: { element: { type: 'platform' } },
+              allow: { to: { element: { type: 'platform' } } },
+            },
+          ],
+        },
+      ],
+      'boundaries/no-unknown-dependencies': 'error',
+      'boundaries/no-unknown-files': 'error',
+    },
+  },
+  {
+    // Test files may additionally reach testing-harness (renderRoute.tsx,
+    // kitStates.tsx) - the real provider stack a feature/kit test needs to
+    // satisfy invariant 90. Production files in those layers still cannot;
+    // this block matches ONLY test files and nothing wider, and its
+    // policies differ from the base rule solely by that one addition.
+    files: ['src/**/*.test.{ts,tsx}'],
+    plugins: { boundaries },
+    settings: {
+      'import/resolver': { typescript: { project: './tsconfig.json' } },
+      'boundaries/include': ['src/**/*.{ts,tsx}'],
+      'boundaries/ignore': ['src/vite-env.d.ts'],
+      'boundaries/elements': [
+        { type: 'testing-harness', pattern: 'src/app/testing/**' },
+        { type: 'app', pattern: 'src/app/**' },
+        {
+          type: 'feature',
+          pattern: 'src/features/*/**',
+          capture: ['featureName'],
+        },
+        { type: 'shared', pattern: 'src/shared/**' },
+        { type: 'platform', pattern: 'src/platform/**' },
+      ],
+    },
+    rules: {
+      'boundaries/dependencies': [
+        'error',
+        {
+          default: 'disallow',
+          message:
+            '{{from.type}} may not import {{to.type}} ({{dependency.source}})',
+          policies: [
+            {
+              from: { element: { type: 'testing-harness' } },
+              allow: {
+                to: {
+                  element: {
+                    types: {
+                      anyOf: [
+                        'app',
+                        'feature',
+                        'shared',
+                        'platform',
+                        'testing-harness',
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+            {
+              from: { element: { type: 'app' } },
+              allow: {
+                to: {
+                  element: {
+                    types: {
+                      anyOf: [
+                        'app',
+                        'feature',
+                        'shared',
+                        'platform',
+                        'testing-harness',
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+            {
+              from: { element: { type: 'feature' } },
+              allow: [
+                {
+                  to: {
+                    element: {
+                      types: {
+                        anyOf: ['shared', 'platform', 'testing-harness'],
+                      },
+                    },
+                  },
+                },
+                {
+                  to: {
+                    element: {
+                      type: 'feature',
+                      captured: {
+                        featureName: '{{from.captured.featureName}}',
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              from: { element: { type: 'shared' } },
+              allow: {
+                to: {
+                  element: {
+                    types: { anyOf: ['shared', 'platform', 'testing-harness'] },
+                  },
+                },
               },
             },
             {

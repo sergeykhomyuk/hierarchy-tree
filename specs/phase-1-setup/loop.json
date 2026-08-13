@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:44:32Z",
+  "updated": "2026-08-13T12:50:56Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 11
+      "steps_done": 12
     },
     "G3": {
       "status": "pending",
@@ -788,8 +788,8 @@
       "tests": [
         "the testing-harness override is scoped to test files and no wider"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T12:46:57Z evidence/steps/step12-red.txt: only one boundaries/dependencies block exists, no testing-harness override",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1480,7 +1480,13 @@
     "2026-08-13T12:44:32Z evidence recorded: evidence/steps/step11-red.txt (99f4ab526236) - vitest red: no restricted-globals/properties/syntax rules configured",
     "2026-08-13T12:44:32Z evidence recorded: evidence/steps/step11-green.txt (9e7e08ad987e) - vitest green: storage ban covers all 5 globals bare+member, restricted-syntax at error; manually verified deep feature import blocked",
     "2026-08-13T12:44:32Z step 11 -> green",
-    "2026-08-13T12:44:32Z step 11 -> done"
+    "2026-08-13T12:44:32Z step 11 -> done",
+    "2026-08-13T12:46:57Z step 12 -> red",
+    "2026-08-13T12:50:46Z evidence recorded: evidence/steps/step12-red.txt (4e1d76e933ef) - vitest red: no testing-harness override block existed",
+    "2026-08-13T12:50:46Z evidence recorded: evidence/steps/step12-green.txt (a341451333e6) - vitest green: testing-harness override scoped correctly, differs from base by exactly feature+shared rows; full npm run verify re-confirmed green with real i18next/no-literal-string and require-await findings fixed (not config bugs)",
+    "2026-08-13T12:50:46Z step 12 -> green",
+    "2026-08-13T12:50:46Z step 12 -> done",
+    "2026-08-13T12:50:56Z step 12: eslint-plugin-jsx-a11y 6.10.2 (latest published) has not updated its peerDependencies for ESLint 10 yet (still ^3-^9) - installed with --legacy-peer-deps after confirming no newer release exists. Real findings surfaced once type-aware + i18next rules went live: i18next/no-literal-string correctly caught StartupPlaceholder.tsx's hardcoded 'hierarchy-tree' text (fixed by removing the visible string entirely rather than working around the linter - i18n catalogues don't exist until M3/M5) and require-await caught an async test callback with no await (fixed by making it sync). Also found @testing-library/dom was never an explicit or transitively-hoisted dependency despite being a hard peer of both @testing-library/react and @testing-library/jest-dom - installed explicitly; without it every jsdom-project test silently depended on accidental hoisting. Coverage also regressed when M2's feature placeholders (step 9) were imported-but-never-rendered; fixed by rendering both in features.test.tsx."
   ],
   "milestones": [
     {
@@ -1705,6 +1711,16 @@
       "sha": "9e7e08ad987e",
       "recorded": "2026-08-13T12:44:32Z",
       "note": "vitest green: storage ban covers all 5 globals bare+member, restricted-syntax at error; manually verified deep feature import blocked"
+    },
+    "evidence/steps/step12-red.txt": {
+      "sha": "4e1d76e933ef",
+      "recorded": "2026-08-13T12:50:46Z",
+      "note": "vitest red: no testing-harness override block existed"
+    },
+    "evidence/steps/step12-green.txt": {
+      "sha": "a341451333e6",
+      "recorded": "2026-08-13T12:50:46Z",
+      "note": "vitest green: testing-harness override scoped correctly, differs from base by exactly feature+shared rows; full npm run verify re-confirmed green with real i18next/no-literal-string and require-await findings fixed (not config bugs)"
     }
   },
   "test_file_hashes": {}

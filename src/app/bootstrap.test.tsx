@@ -3,15 +3,17 @@ import { act } from 'react';
 import { bootstrap } from './bootstrap';
 
 describe('bootstrap', () => {
-  it('the startup placeholder renders through bootstrap', async () => {
+  it('the startup placeholder renders through bootstrap', () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
-    await act(async () => {
+    act(() => {
       bootstrap(container);
     });
 
-    expect(container.querySelector('h1')?.textContent).toBe('hierarchy-tree');
+    expect(
+      container.querySelector('[data-testid="startup-placeholder"]'),
+    ).not.toBeNull();
 
     document.body.removeChild(container);
   });
