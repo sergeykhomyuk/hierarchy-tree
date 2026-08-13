@@ -10,3 +10,4 @@ export type { ObservabilityFacade } from './observabilityFacade';
 export type { TimingRecord } from './timingRecord';
 export type { TelemetryRecord } from './telemetryRecord';
 export type { AnalyticsEventName, AnalyticsPayloads } from './analyticsEvents';
+export { reportWebVitals } from './reportWebVitals';

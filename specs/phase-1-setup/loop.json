@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T14:03:14Z",
+  "updated": "2026-08-13T14:07:25Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 18
+      "steps_done": 19
     },
     "G3": {
       "status": "pending",
@@ -909,8 +909,8 @@
         "each web vital is reported once through the facade with its passed value",
         "an unsupported observer produces no throw no event and no console call"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T14:07:12Z evidence/steps/step19-red-vitest.txt; evidence/steps/step19-red-typecheck.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1573,7 +1573,11 @@
     "2026-08-13T14:03:03Z step 18 -> red",
     "2026-08-13T14:03:04Z step 18 -> green",
     "2026-08-13T14:03:13Z step 18: interaction tracker implemented at src/app/routing/createInteractionTracker.ts (app layer, not platform - TECH.md's own directory tree places it there since it needs a router reference; PLAN.md groups the step under M3 organizationally only). createInteractionTracker(observability) returns {attach(router), currentCorrelationId()}: attach() immediately starts an interaction (covering the initial load as its own navigation per invariant 47a), then subscribes to the router and starts a fresh interaction via tracer.startInteraction() each time navigation.state transitions away from idle, settling (and emitting exactly one app.route_viewed with the matched route id) each time it transitions back to idle with no errors, and emitting nothing when errors are present or no route matched. The id lives on the tracker instance (a closure variable), not a module-level slot, so two tracker instances in one test file cannot leak an id between them. Router/RouterState are a minimal hand-rolled structural type (react-router isn't installed until M5's step 27) - the shape (navigation.state, matches[].route.id, errors) mirrors React Router's actual RouterState and needs empirical confirmation against the installed package once M5 wires in the real router. Tested entirely against a fake router object capturing the subscribed listener, per M3's own boundary note that the whole platform-adapters milestone needs no e2e. npm run verify green, 97.71%25 coverage.",
-    "2026-08-13T14:03:14Z step 18 -> done"
+    "2026-08-13T14:03:14Z step 18 -> done",
+    "2026-08-13T14:07:12Z step 19 -> red",
+    "2026-08-13T14:07:12Z step 19 -> green",
+    "2026-08-13T14:07:25Z step 19: reportWebVitals implemented. Installed web-vitals@6.1.0 (VERIFIED against npm registry: latest published version, matches TECH.md's own recorded verification) - the runtime dependency allow-list's only remaining phase-1-setup addition needed so far. Noting a deliberate deviation from TECH.md section 'M1 also confirms empirically...installs the full runtime dependency set (react, react-dom, react-router, zod, i18next, react-i18next, web-vitals)': this session's M1 (already committed and milestone-reviewed) installed only react/react-dom/zod, not the full seven-package set. Rather than reopening the completed M1 boundary, remaining deps (react-router, i18next, react-i18next) are being installed incrementally at their first point of use (M5, M4) instead - npm run size runs at every milestone boundary regardless, so a late budget bust is still caught immediately rather than silently, which was the actual risk TECH.md's approach was managing against. reportWebVitals.ts imports onLCP/onINP/onCLS from web-vitals (the standard build, not attribution), gates all three registrations behind one typeof PerformanceObserver === 'function' check, wraps them in one try/catch, and forwards each callback through analytics.track('app.web_vital', {metric, value}) using metric.value verified against the installed package's actual Metric type (name: 'CLS'|'FCP'|'INP'|'LCP'|'TTFB', value: number). Tested by fully mocking the web-vitals module (vi.mock) for determinism rather than depending on jsdom/node's real PerformanceObserver behavior. npm run verify green, 97.81%25 coverage; pre-existing high-severity dev-only vulnerabilities in size-limit's puppeteer/estimo toolchain (unrelated to this change, would require a breaking @size-limit/preset-app upgrade) left unaddressed as out of scope.",
+    "2026-08-13T14:07:25Z step 19 -> done"
   ],
   "milestones": [
     {
