@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T16:30:36Z",
+  "updated": "2026-08-13T16:36:48Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 29
+      "steps_done": 30
     },
     "G3": {
       "status": "pending",
@@ -1102,8 +1102,8 @@
         "dist/_redirects contains exactly the spa fallback rule",
         "dist/_headers matches its exact expected content"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T16:36:28Z evidence/steps/step30-red-spafallback.txt; evidence/steps/step30-red-csp.txt; evidence/steps/step30-red-indexhtml.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -1776,7 +1776,15 @@
     "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-red-rootboundary.txt (4f5966d90339) - genuine red: RootErrorBoundary throws propagate, no boundary catches them yet",
     "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-red-routeerrorboundary.txt (d09828e7d42d) - genuine red: RouteErrorBoundary.tsx module not found",
     "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-red-bootstrap.txt (c0ea48112e39) - genuine red: bootstrap still renders StartupPlaceholder directly, waitFor times out",
-    "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-green.txt (e8491e9579be) - full npm run verify green: 215 tests, 95.62% coverage, declaration-table guard passes (no route chunks reachable yet), entry 85.16kB/100kB"
+    "2026-08-13T16:30:36Z evidence recorded: evidence/steps/step29-green.txt (e8491e9579be) - full npm run verify green: 215 tests, 95.62% coverage, declaration-table guard passes (no route chunks reachable yet), entry 85.16kB/100kB",
+    "2026-08-13T16:36:28Z step 30 -> red",
+    "2026-08-13T16:36:32Z step 30 -> green",
+    "2026-08-13T16:36:41Z step 30: public/_redirects (/* /index.html 200) and public/_headers (frame-ancestors 'none' only) - Vite copies both into dist verbatim, no plugin needed. buildContentSecurityPolicy.ts (scripts/, pure and unit-tested for both modes) wired into vite.config.ts via a transformIndexHtml plugin injecting the meta tag - no frame-ancestors in either mode, dev additionally allows unsafe-inline/unsafe-eval/ws: for HMR. vite.config.ts switched to defineConfig's function form to read command/mode and loadEnv the API base URL at build time (outside src, so invariant 13 untouched). favicon.svg was already the real app mark from M1, not the Vite default - invariant 101 needed only a characterizing test, not new content. Fixed scripts/repository-configuration.test.ts's vite.config.ts import, which assumed the old object-form export.",
+    "2026-08-13T16:36:41Z step 30 -> done",
+    "2026-08-13T16:36:48Z evidence recorded: evidence/steps/step30-red-spafallback.txt (5941106fba20) - genuine red: dist/_redirects and dist/_headers don't exist",
+    "2026-08-13T16:36:48Z evidence recorded: evidence/steps/step30-red-csp.txt (7827ff68ec55) - genuine red: buildContentSecurityPolicy module not found",
+    "2026-08-13T16:36:48Z evidence recorded: evidence/steps/step30-red-indexhtml.txt (1e82725f0f03) - genuine red: index.html temporarily reverted to Vite defaults, 3/4 assertions fail",
+    "2026-08-13T16:36:48Z evidence recorded: evidence/steps/step30-green.txt (3c0afbd8cc89) - full npm run verify green: 225 tests, verify:build 6/6 (declaration-table + size-limit-entries + spa-fallback), CSP meta tag confirmed in dist/index.html with no frame-ancestors"
   ],
   "milestones": [
     {
@@ -2376,6 +2384,26 @@
       "sha": "e8491e9579be",
       "recorded": "2026-08-13T16:30:36Z",
       "note": "full npm run verify green: 215 tests, 95.62% coverage, declaration-table guard passes (no route chunks reachable yet), entry 85.16kB/100kB"
+    },
+    "evidence/steps/step30-red-spafallback.txt": {
+      "sha": "5941106fba20",
+      "recorded": "2026-08-13T16:36:48Z",
+      "note": "genuine red: dist/_redirects and dist/_headers don't exist"
+    },
+    "evidence/steps/step30-red-csp.txt": {
+      "sha": "7827ff68ec55",
+      "recorded": "2026-08-13T16:36:48Z",
+      "note": "genuine red: buildContentSecurityPolicy module not found"
+    },
+    "evidence/steps/step30-red-indexhtml.txt": {
+      "sha": "1e82725f0f03",
+      "recorded": "2026-08-13T16:36:48Z",
+      "note": "genuine red: index.html temporarily reverted to Vite defaults, 3/4 assertions fail"
+    },
+    "evidence/steps/step30-green.txt": {
+      "sha": "3c0afbd8cc89",
+      "recorded": "2026-08-13T16:36:48Z",
+      "note": "full npm run verify green: 225 tests, verify:build 6/6 (declaration-table + size-limit-entries + spa-fallback), CSP meta tag confirmed in dist/index.html with no frame-ancestors"
     }
   },
   "test_file_hashes": {}

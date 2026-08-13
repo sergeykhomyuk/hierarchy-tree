@@ -113,7 +113,10 @@ describe('repository configuration', () => {
     );
     const tsconfigPaths = tsconfig.compilerOptions.paths ?? {};
 
-    const viteConfig = (await import('../vite.config.ts')).default;
+    const viteConfigFn = (await import('../vite.config.ts')).default;
+    const viteConfig = await (typeof viteConfigFn === 'function'
+      ? viteConfigFn({ command: 'build', mode: 'production' })
+      : viteConfigFn);
     const vitestConfig = (await import('../vitest.config.ts')).default;
     const viteAlias = viteConfig.resolve?.alias as
       Record<string, string> | undefined;
