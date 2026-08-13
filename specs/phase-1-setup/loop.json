@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:41:40Z",
+  "updated": "2026-08-13T12:44:32Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 10
+      "steps_done": 11
     },
     "G3": {
       "status": "pending",
@@ -778,8 +778,8 @@
         "the storage ban covers all five globals in bare and member forms",
         "the restricted-syntax rules are configured at error severity"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T12:42:58Z evidence/steps/step11-red.txt: no restricted-globals/properties/syntax rules configured",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1475,7 +1475,12 @@
     "2026-08-13T12:41:40Z evidence recorded: evidence/steps/step10-green.txt (9dc78e8d3cd8) - vitest green: boundaries rules at error severity; empirically confirmed against installed 7.2.0 (deprecated element-types/mode/rules/no-unknown replaced with dependencies/policies/no-unknown-dependencies); manually verified cross-feature import blocked with correct message",
     "2026-08-13T12:41:40Z step 10 -> green",
     "2026-08-13T12:41:40Z step 10 -> done",
-    "2026-08-13T12:41:40Z step 10: eslint-plugin-boundaries 7.2.0 is substantially different from TECH.md's element-types-era example - mode/string-tuple selectors/rules option/legacy ${} templates are all deprecated in favor of dependencies/object-selectors/policies/{{}} templates (confirmed via installed package meta + ESLINT_PLUGIN_BOUNDARIES_DEBUG=true). Also needed eslint-import-resolver-typescript (new devDependency, not in TECH.md's version list but not runtime-restricted by invariant 134) - without a resolver that knows .ts/.tsx extensions and tsconfig paths, even same-element relative imports like './bootstrap' come back fully unresolved and no-unknown-dependencies fires on them."
+    "2026-08-13T12:41:40Z step 10: eslint-plugin-boundaries 7.2.0 is substantially different from TECH.md's element-types-era example - mode/string-tuple selectors/rules option/legacy ${} templates are all deprecated in favor of dependencies/object-selectors/policies/{{}} templates (confirmed via installed package meta + ESLINT_PLUGIN_BOUNDARIES_DEBUG=true). Also needed eslint-import-resolver-typescript (new devDependency, not in TECH.md's version list but not runtime-restricted by invariant 134) - without a resolver that knows .ts/.tsx extensions and tsconfig paths, even same-element relative imports like './bootstrap' come back fully unresolved and no-unknown-dependencies fires on them.",
+    "2026-08-13T12:42:58Z step 11 -> red",
+    "2026-08-13T12:44:32Z evidence recorded: evidence/steps/step11-red.txt (99f4ab526236) - vitest red: no restricted-globals/properties/syntax rules configured",
+    "2026-08-13T12:44:32Z evidence recorded: evidence/steps/step11-green.txt (9e7e08ad987e) - vitest green: storage ban covers all 5 globals bare+member, restricted-syntax at error; manually verified deep feature import blocked",
+    "2026-08-13T12:44:32Z step 11 -> green",
+    "2026-08-13T12:44:32Z step 11 -> done"
   ],
   "milestones": [
     {
@@ -1690,6 +1695,16 @@
       "sha": "9dc78e8d3cd8",
       "recorded": "2026-08-13T12:41:40Z",
       "note": "vitest green: boundaries rules at error severity; empirically confirmed against installed 7.2.0 (deprecated element-types/mode/rules/no-unknown replaced with dependencies/policies/no-unknown-dependencies); manually verified cross-feature import blocked with correct message"
+    },
+    "evidence/steps/step11-red.txt": {
+      "sha": "99f4ab526236",
+      "recorded": "2026-08-13T12:44:32Z",
+      "note": "vitest red: no restricted-globals/properties/syntax rules configured"
+    },
+    "evidence/steps/step11-green.txt": {
+      "sha": "9e7e08ad987e",
+      "recorded": "2026-08-13T12:44:32Z",
+      "note": "vitest green: storage ban covers all 5 globals bare+member, restricted-syntax at error; manually verified deep feature import blocked"
     }
   },
   "test_file_hashes": {}

@@ -135,6 +135,295 @@ export default defineConfig([
       'boundaries/no-unknown-files': 'error',
     },
   },
+  {
+    // Deep imports past a public entry (invariant 7). boundaries/entry-point
+    // is deliberately not used - it also inspects intra-element imports in
+    // some configurations, and ARCHITECTURE.md already names
+    // no-restricted-imports as the mechanism.
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@features/*/*', '@features/*/**'],
+              message:
+                'Import a feature only through its public entry: @features/<name>.',
+            },
+            {
+              group: ['**/features/**', '../features/*', '../../features/*'],
+              message:
+                'Import features through the @features/<name> alias, never a relative path.',
+            },
+            {
+              group: [
+                '@platform/observability/sinks/*',
+                '**/observability/sinks/*',
+              ],
+              message:
+                'Sinks are constructed only by platform/observability/createObservability.ts.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    // A feature's own files use relative imports freely among themselves.
+    files: ['src/features/*/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': 'off',
+    },
+  },
+  {
+    // Single-reader rules (section 2.4): each capability is readable from
+    // exactly one module, enforced as a lint failure rather than a
+    // convention. Overrides below re-enable the banned identifier only in
+    // that one module.
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            'MemberExpression[object.type="MetaProperty"][object.meta.name="import"][object.property.name="meta"][property.name="env"]',
+          message:
+            'Read the environment only in src/platform/configuration/environment.ts.',
+        },
+        {
+          selector: 'MemberExpression[property.name="sendBeacon"]',
+          message:
+            'Use the http client. Only platform/http/createFetchTransport.ts calls fetch.',
+        },
+        {
+          selector: 'NewExpression[callee.name="Date"][arguments.length=0]',
+          message:
+            'Inject Clock.now() instead of `new Date()`. Only createSystemClock.ts may call it.',
+        },
+        {
+          selector:
+            'MemberExpression[property.name="__hierarchyTreeTelemetry"]',
+          message:
+            'The telemetry handle is attached only by app/composition/createRuntime.ts.',
+        },
+      ],
+      'no-restricted-globals': [
+        'error',
+        {
+          name: 'fetch',
+          message:
+            'Use the http client. Only platform/http/createFetchTransport.ts calls fetch.',
+        },
+        {
+          name: 'XMLHttpRequest',
+          message:
+            'Use the http client. Only platform/http/createFetchTransport.ts calls fetch.',
+        },
+        {
+          name: 'WebSocket',
+          message:
+            'Use the http client. Only platform/http/createFetchTransport.ts calls fetch.',
+        },
+        {
+          name: 'EventSource',
+          message:
+            'Use the http client. Only platform/http/createFetchTransport.ts calls fetch.',
+        },
+        {
+          name: 'setTimeout',
+          message:
+            'Inject Clock instead. Only createSystemClock.ts may call this.',
+        },
+        {
+          name: 'setInterval',
+          message:
+            'Inject Clock instead. Only createSystemClock.ts may call this.',
+        },
+        {
+          name: 'requestAnimationFrame',
+          message:
+            'Inject Clock instead. Only createSystemClock.ts may call this.',
+        },
+        {
+          name: 'localStorage',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          name: 'sessionStorage',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          name: 'indexedDB',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          name: 'caches',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+      ],
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'window',
+          property: 'fetch',
+          message:
+            'Use the http client. Only platform/http/createFetchTransport.ts calls fetch.',
+        },
+        {
+          object: 'navigator',
+          property: 'sendBeacon',
+          message:
+            'Use the http client. Only platform/http/createFetchTransport.ts calls fetch.',
+        },
+        {
+          object: 'Date',
+          property: 'now',
+          message:
+            'Inject Clock.now() instead. Only createSystemClock.ts may call this.',
+        },
+        {
+          object: 'Math',
+          property: 'random',
+          message:
+            'Inject Randomness instead. Only createSystemRandomness.ts may call this.',
+        },
+        {
+          object: 'performance',
+          property: 'now',
+          message:
+            'Inject Clock.now() instead. Only createSystemClock.ts may call this.',
+        },
+        {
+          object: 'crypto',
+          property: 'getRandomValues',
+          message:
+            'Inject Randomness instead. Only createSystemRandomness.ts may call this.',
+        },
+        {
+          object: 'window',
+          property: 'localStorage',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'window',
+          property: 'sessionStorage',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'window',
+          property: 'indexedDB',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'window',
+          property: 'caches',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'window',
+          property: 'serviceWorker',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'globalThis',
+          property: 'localStorage',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'globalThis',
+          property: 'sessionStorage',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'globalThis',
+          property: 'indexedDB',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'globalThis',
+          property: 'caches',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'globalThis',
+          property: 'serviceWorker',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'navigator',
+          property: 'localStorage',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'navigator',
+          property: 'sessionStorage',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'navigator',
+          property: 'indexedDB',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'navigator',
+          property: 'caches',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+        {
+          object: 'navigator',
+          property: 'serviceWorker',
+          message:
+            'Nothing in this phase persists anything. See invariant 128.',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/platform/configuration/environment.ts'],
+    rules: { 'no-restricted-syntax': 'off' },
+  },
+  {
+    files: ['src/platform/http/createFetchTransport.ts'],
+    rules: {
+      'no-restricted-syntax': 'off',
+      'no-restricted-globals': 'off',
+      'no-restricted-properties': 'off',
+    },
+  },
+  {
+    files: [
+      'src/platform/runtime/createSystemClock.ts',
+      'src/platform/runtime/createSystemRandomness.ts',
+    ],
+    rules: {
+      'no-restricted-syntax': 'off',
+      'no-restricted-globals': 'off',
+      'no-restricted-properties': 'off',
+    },
+  },
+  {
+    files: ['src/app/composition/createRuntime.ts'],
+    rules: { 'no-restricted-syntax': 'off' },
+  },
   // Applied last so no formatting rule is owned by both ESLint and Prettier.
   eslintConfigPrettier,
 ]);

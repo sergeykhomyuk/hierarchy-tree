@@ -1,0 +1,39 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/eslint-configuration.test.ts (3 tests | 2 failed) 518ms
+     × the storage ban covers all five globals in bare and member forms 2ms
+     × the restricted-syntax rules are configured at error severity 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/eslint-configuration.test.ts > eslint configuration > the storage ban covers all five globals in bare and member forms
+AssertionError: localStorage missing from no-restricted-globals: expected [] to include 'localStorage'
+ ❯ scripts/eslint-configuration.test.ts:52:79
+     50|
+     51|     for (const name of storageGlobals) {
+     52|       expect(bannedGlobalNames, `${name} missing from no-restricted-gl…
+       |                                                                               ^
+     53|         name,
+     54|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |tooling| scripts/eslint-configuration.test.ts > eslint configuration > the restricted-syntax rules are configured at error severity
+AssertionError: expected 0 to be greater than 0
+ ❯ scripts/eslint-configuration.test.ts:74:42
+     72|     const restrictedSyntaxRules = collectRules(config, 'no-restricted-…
+     73|
+     74|     expect(restrictedSyntaxRules.length).toBeGreaterThan(0);
+       |                                          ^
+     75|     for (const rule of restrictedSyntaxRules) {
+     76|       expect(ruleSeverity(rule.value), `${rule.name} must be "error"`)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  13:42:50
+   Duration  600ms (transform 20ms, setup 10ms, import 7ms, tests 518ms, environment 0ms)
+
