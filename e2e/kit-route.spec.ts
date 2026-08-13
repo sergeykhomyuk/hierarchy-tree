@@ -54,4 +54,30 @@ test.describe('kit route', () => {
       .analyze();
     expect(results.violations).toEqual([]);
   });
+
+  test('a skeleton box equals the box of the content it stands in for', async ({
+    page,
+    baseURL,
+  }) => {
+    await installRouteMocks(page, baseURL ?? '');
+
+    await page.goto('/__kit');
+
+    // Skeleton's `circle`/`avatar` size token (sizeClass.ts: h-[34px]
+    // w-[34px]) is the same literal class pair Avatar's `medium` size
+    // uses - the "closed set of kit-local size tokens shared with the
+    // content" invariant 76 requires. This is the browser measurement
+    // that proves swapping one for the other produces no layout shift.
+    const skeletonBox = await page
+      .locator('section[aria-label="Skeleton circle"] > span')
+      .boundingBox();
+    const avatarBox = await page
+      .locator('section[aria-label="Avatar initials fallback"] > span')
+      .boundingBox();
+
+    expect(skeletonBox).not.toBeNull();
+    expect(avatarBox).not.toBeNull();
+    expect(skeletonBox?.width).toBe(avatarBox?.width);
+    expect(skeletonBox?.height).toBe(avatarBox?.height);
+  });
 });

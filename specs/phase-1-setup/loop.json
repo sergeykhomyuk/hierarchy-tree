@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T17:49:32Z",
+  "updated": "2026-08-13T18:20:35Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -761,6 +761,18 @@
           "blocking": false,
           "disposition": "fixed",
           "round": "milestone-4"
+        },
+        "Claude-81": {
+          "desc": "Invariant 86a/76: kit-route.spec.ts never performs the required browser measurement that a Skeleton's box equals its replacement content's box - only overflow and axe are asserted. This is a named, explicit acceptance criterion the M5 milestone claims to satisfy and does not.",
+          "blocking": true,
+          "disposition": "fixed - added 'a skeleton box equals the box of the content it stands in for' to kit-route.spec.ts, measuring Skeleton(circle, avatar/avatar) against Avatar(medium) via boundingBox(), both sharing the h-[34px] w-[34px] token pair. npm run e2e green (17/17).",
+          "round": "milestone-5"
+        },
+        "Claude-82": {
+          "desc": "error-boundary.spec.ts's retry recovery is activated via page.click(), not a keyboard press, even though loop.json step 32's own description and invariant 93 (reachable by keyboard) claim keyboard recovery is exercised. Non-blocking (the underlying button is natively keyboard-operable) but the test doesn't prove the claim.",
+          "blocking": false,
+          "disposition": "fixed - error-boundary.spec.ts now focuses the retry button and activates it with keyboard Enter instead of a mouse click, genuinely exercising invariant 93's keyboard-reachability claim. npm run e2e green (17/17).",
+          "round": "milestone-5"
         }
       }
     },
@@ -1801,7 +1813,13 @@
     "2026-08-13T17:49:17Z step 32 -> red",
     "2026-08-13T17:49:17Z step 32 -> green",
     "2026-08-13T17:49:18Z step 32 -> done",
-    "2026-08-13T17:49:32Z step 32: built the full e2e suite (16 tests, chromium+development projects). Found and fixed 4 genuine pre-existing bugs while building it: (1) interactionTracker.attach() was never called in bootstrap.ts, so route_viewed was never emitted in production; (2) ApplicationRoot never set document.documentElement.lang/dir from the active locale (invariant 66 gap); (3) loadTranslations.ts's module-level singleton promise tied a feature's catalogue to whichever i18n instance called it first, silently breaking a second app instance; (4) theme.css never applied --color-ink/--color-canvas-app to body, so any plain text without an explicit text-* class rendered browser-default black - invisible in light mode, a real WCAG AA failure in dark mode, caught by the kit route's dark-mode axe pass exactly as TECH.md's design rationale predicted. Also fixed: the /__kit route was never wired into routeDefinitions.ts (built in M4 but unreachable); gating its dynamic import behind the re-exported isDevelopmentBuild constant did not fold at build time (empirically confirmed via esbuild probe), so it shipped a KitRoute-*.js chunk to production regardless - fixed by reading import.meta.env.DEV directly in routeDefinitions.ts with a narrow, documented eslint override; react-router's own HydrateFallback warning fired on every route (fixed with a null HydrateFallback on the root route); playwright.config.ts's webServer bound to 'localhost' which resolved to IPv6 loopback on this machine, not the 127.0.0.1 every URL in the config targets (fixed with --host 127.0.0.1); the pre-existing forceDirection.ts e2e helper's addInitScript-based override did not survive a real navigation (documentElement gets replaced during HTML parsing) - fixed by installing the override via page.evaluate after load instead. All findings and fixes documented in ARCHITECTURE.md/TECH.md/PRODUCT.md decision logs where they affect binding invariants. Full npm run verify chain green (230 unit tests, build, verify:build, size) and npm run e2e green (16/16)."
+    "2026-08-13T17:49:32Z step 32: built the full e2e suite (16 tests, chromium+development projects). Found and fixed 4 genuine pre-existing bugs while building it: (1) interactionTracker.attach() was never called in bootstrap.ts, so route_viewed was never emitted in production; (2) ApplicationRoot never set document.documentElement.lang/dir from the active locale (invariant 66 gap); (3) loadTranslations.ts's module-level singleton promise tied a feature's catalogue to whichever i18n instance called it first, silently breaking a second app instance; (4) theme.css never applied --color-ink/--color-canvas-app to body, so any plain text without an explicit text-* class rendered browser-default black - invisible in light mode, a real WCAG AA failure in dark mode, caught by the kit route's dark-mode axe pass exactly as TECH.md's design rationale predicted. Also fixed: the /__kit route was never wired into routeDefinitions.ts (built in M4 but unreachable); gating its dynamic import behind the re-exported isDevelopmentBuild constant did not fold at build time (empirically confirmed via esbuild probe), so it shipped a KitRoute-*.js chunk to production regardless - fixed by reading import.meta.env.DEV directly in routeDefinitions.ts with a narrow, documented eslint override; react-router's own HydrateFallback warning fired on every route (fixed with a null HydrateFallback on the root route); playwright.config.ts's webServer bound to 'localhost' which resolved to IPv6 loopback on this machine, not the 127.0.0.1 every URL in the config targets (fixed with --host 127.0.0.1); the pre-existing forceDirection.ts e2e helper's addInitScript-based override did not survive a real navigation (documentElement gets replaced during HTML parsing) - fixed by installing the override via page.evaluate after load instead. All findings and fixes documented in ARCHITECTURE.md/TECH.md/PRODUCT.md decision logs where they affect binding invariants. Full npm run verify chain green (230 unit tests, build, verify:build, size) and npm run e2e green (16/16).",
+    "2026-08-13T17:50:07Z milestone 5 boundary verified: npm run verify green (typecheck, lint, format, 230 unit tests at 96%+ coverage, build, 8/15 build-output tests, size-limit at revised 150kB entry budget). npm run e2e green (16/16). phase === 'complete' recorded directly in expected-build-output.json, arming declaration-table.test.ts's fail-closed guard - the router now genuinely serves route chunks, catalogue chunks, /__kit gated correctly out of production, and all four conditional declaration-table families are populated. Evidence: specs/phase-1-setup/evidence/steps/step26..32-{red,green}*.txt",
+    "2026-08-13T17:59:04Z G4 finding Claude-81 recorded (blocking) [round: milestone-5]: Invariant 86a/76: kit-route.spec.ts never performs the required browser measurement that a Skeleton's box equals its replacement content's box - only overflow and axe are asserted. This is a named, explicit acceptance criterion the M5 milestone claims to satisfy and does not.",
+    "2026-08-13T17:59:04Z G4 finding Claude-82 recorded [round: milestone-5]: error-boundary.spec.ts's retry recovery is activated via page.click(), not a keyboard press, even though loop.json step 32's own description and invariant 93 (reachable by keyboard) claim keyboard recovery is exercised. Non-blocking (the underlying button is natively keyboard-operable) but the test doesn't prove the claim.",
+    "2026-08-13T18:19:54Z G4 finding Claude-81 dispositioned: fixed - added 'a skeleton box equals the box of the content it stands in for' to kit-route.spec.ts, measuring Skeleton(circle, avatar/avatar) against Avatar(medium) via boundingBox(), both sharing the h-[34px] w-[34px] token pair. npm run e2e green (17/17).",
+    "2026-08-13T18:19:54Z G4 finding Claude-82 dispositioned: fixed - error-boundary.spec.ts now focuses the retry button and activates it with keyboard Enter instead of a mouse click, genuinely exercising invariant 93's keyboard-reachability claim. npm run e2e green (17/17).",
+    "2026-08-13T18:20:35Z evidence recorded: evidence/steps/m5-review-fixes-verify.txt (ca2efe101980) - npm run verify green after fixing M5 milestone review findings Claude-81 (skeleton-to-content box measurement) and Claude-82 (keyboard-driven retry)"
   ],
   "milestones": [
     {
@@ -1831,7 +1849,7 @@
     {
       "id": 5,
       "title": "M5 - App shell",
-      "verified": null,
+      "verified": "2026-08-13T17:50:07Z npm run verify green (typecheck, lint, format, 230 unit tests at 96%+ coverage, build, 8/15 build-output tests, size-limit at revised 150kB entry budget). npm run e2e green (16/16). phase === 'complete' recorded directly in expected-build-output.json, arming declaration-table.test.ts's fail-closed guard - the router now genuinely serves route chunks, catalogue chunks, /__kit gated correctly out of production, and all four conditional declaration-table families are populated. Evidence: specs/phase-1-setup/evidence/steps/step26..32-{red,green}*.txt",
       "reviewed": null
     },
     {
@@ -2456,6 +2474,11 @@
       "sha": "8822f86ce5c8",
       "recorded": "2026-08-13T17:49:11Z",
       "note": "full npm run verify chain green after step 32: typecheck, lint, format, 230 unit/component tests at 96%+ coverage, build, 8/15 build-output tests, size-limit all green"
+    },
+    "evidence/steps/m5-review-fixes-verify.txt": {
+      "sha": "ca2efe101980",
+      "recorded": "2026-08-13T18:20:35Z",
+      "note": "npm run verify green after fixing M5 milestone review findings Claude-81 (skeleton-to-content box measurement) and Claude-82 (keyboard-driven retry)"
     }
   },
   "test_file_hashes": {}

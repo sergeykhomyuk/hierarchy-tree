@@ -45,7 +45,10 @@ test('a forced route chunk failure renders the boundary with a correlation id an
   );
   expect(routeViewedBeforeRetry).toHaveLength(0);
 
-  await page.getByRole('button', { name: 'Try again' }).click();
+  const retryButton = page.getByRole('button', { name: 'Try again' });
+  await retryButton.focus();
+  await expect(retryButton).toBeFocused();
+  await page.keyboard.press('Enter');
 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     "Sign in isn't built yet",
