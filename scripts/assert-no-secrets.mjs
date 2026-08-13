@@ -73,23 +73,30 @@ function checkTrackedEnvFiles(violations) {
   }
 }
 
+const explicitTargets = process.argv
+  .slice(2)
+  .filter((arg) => !arg.startsWith('--'));
 const violations = [];
 
 if (mode === 'source') {
-  checkTrackedEnvFiles(violations);
-  for (const filePath of globSync('src/**/*.{ts,tsx}')) {
+  if (explicitTargets.length === 0) checkTrackedEnvFiles(violations);
+  for (const filePath of explicitTargets.length > 0
+    ? explicitTargets
+    : globSync('src/**/*.{ts,tsx}')) {
     const source = readFileSync(filePath, 'utf-8');
     findKeywordSecrets(source, filePath, violations);
     findSuppressedRules(source, filePath, violations);
   }
 } else {
-  if (!existsSync('dist')) {
+  if (explicitTargets.length === 0 && !existsSync('dist')) {
     console.error(
       'assert-no-secrets --bundle-only: dist/ is missing - run npm run build first',
     );
     process.exit(1);
   }
-  for (const filePath of globSync('dist/**/*.{js,html,css}')) {
+  for (const filePath of explicitTargets.length > 0
+    ? explicitTargets
+    : globSync('dist/**/*.{js,html,css}')) {
     const source = readFileSync(filePath, 'utf-8');
     findKeywordSecrets(source, filePath, violations);
   }

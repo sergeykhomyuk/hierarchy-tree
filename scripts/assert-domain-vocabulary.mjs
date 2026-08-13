@@ -81,16 +81,21 @@ function extractIdentifiers(source) {
 function extractExportedIdentifiers(source) {
   const names = new Set();
   for (const match of source.matchAll(
+    /export\s+default\s+(?:function\*?|class)\s+([A-Za-z_$][A-Za-z0-9_$]*)/g,
+  )) {
+    names.add(match[1]);
+  }
+  for (const match of source.matchAll(
     /export\s+(?:const|let|var|function\*?|class|type|interface|enum)\s+([A-Za-z_$][A-Za-z0-9_$]*)/g,
   )) {
     names.add(match[1]);
   }
   for (const match of source.matchAll(/export\s*{([^}]+)}/g)) {
     for (const rawName of match[1].split(',')) {
-      const name = rawName
-        .trim()
-        .split(/\s+as\s+/)[0]
-        ?.trim();
+      // The PUBLIC name is what matters here - for "local as Public" that
+      // is the part after `as`, not the local declaration being renamed.
+      const parts = rawName.trim().split(/\s+as\s+/);
+      const name = (parts.length > 1 ? parts[1] : parts[0])?.trim();
       if (name) names.add(name);
     }
   }
