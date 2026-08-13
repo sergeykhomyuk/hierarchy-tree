@@ -1,0 +1,26 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |platform| src/shared/theme/contrastPairs.test.ts (3 tests | 1 failed) 3ms
+     × every contrast pair holds AA in both themes 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |platform| src/shared/theme/contrastPairs.test.ts > contrastPairs > every contrast pair holds AA in both themes
+AssertionError: light: ink-faint on surface must hold 4.5:1: expected 3.3369556578252824 to be greater than or equal to 4.5
+ ❯ src/shared/theme/contrastPairs.test.ts:119:9
+    117|         lightRatio,
+    118|         `light: ${pair.foreground} on ${pair.background} must hold ${p…
+    119|       ).toBeGreaterThanOrEqual(pair.minimumRatio);
+       |         ^
+    120|
+    121|       const darkRatio = contrastRatio(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  16:34:35
+   Duration  101ms (transform 22ms, setup 34ms, import 5ms, tests 3ms, environment 0ms)
+

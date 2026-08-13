@@ -58,4 +58,24 @@ describe('Avatar', () => {
 
     expect(screen.queryByLabelText('Grace Hopper')).not.toBeInTheDocument();
   });
+
+  it('renders a decorative image with an empty alt instead of the display name', () => {
+    const { container } = render(
+      <Avatar
+        imageSource="https://example.com/avatar.jpg"
+        displayName="Grace Hopper"
+        size="small"
+        decorative
+      />,
+    );
+
+    // An empty alt removes the img from the accessibility tree's img role,
+    // so it is unreachable through getByRole - the decorative contract
+    // itself is what is being asserted here.
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+
+    // eslint-disable-next-line testing-library/no-node-access -- the element under test has no accessible role by design.
+    const image = container.firstElementChild;
+    expect(image).toHaveAttribute('alt', '');
+  });
 });

@@ -19,7 +19,7 @@
   --color-ink: #1b1230;
   --color-ink-muted: #55506b;
   --color-ink-muted-soft: #6a6a85;
-  --color-ink-faint: #8e8aa0;
+  --color-ink-faint: #726e85;
   --color-ink-placeholder: #a9a5b8;
   --color-border-hairline: rgb(36 11 78 / 0.08);
   --color-border-field: #8f89a3;
@@ -47,7 +47,13 @@
    from docs/reference.md's literal #E2DDEE (a 1.33:1 hairline) to
    #8F89A3 so the same "UI boundary" pair holds AA 3:1 in both themes -
    invariant 72 is the binding rule where it and invariant 70's mockup
-   fidelity would otherwise conflict. */
+   fidelity would otherwise conflict. ink-faint is darkened in light
+   (#8E8AA0 -> #726E85) and lightened in dark (#7C7891 -> #847F95) for
+   the same reason: ErrorState renders the correlation id (invariant 92)
+   in this token on --color-surface, and the mockup value held only
+   3.34:1 light / 4.31:1 dark against AA's 4.5:1 body-text floor. Both
+   deviations are recorded here rather than in docs/reference.md because
+   the mockup's literal values are what is being knowingly overridden. */
 @media (prefers-color-scheme: dark) {
   :root {
     --color-primary-tint: #2f2350;
@@ -60,7 +66,7 @@
     --color-ink: #f3f1f8;
     --color-ink-muted: #b7b2c9;
     --color-ink-muted-soft: #9d97b3;
-    --color-ink-faint: #7c7891;
+    --color-ink-faint: #847f95;
     --color-ink-placeholder: #66627c;
     --color-border-hairline: rgb(255 255 255 / 0.08);
     --color-border-indent-rail: #2a2338;

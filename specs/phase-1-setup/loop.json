@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T15:13:11Z",
+  "updated": "2026-08-13T15:39:53Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -725,6 +725,42 @@
           "blocking": false,
           "disposition": "fixed: enabled i18next's appendNamespaceToMissingKey:true, verified against the installed package's source (i18next.js) to confirm it prefixes only the key parseMissingKeyHandler receives (namespace:key via nsSeparator ':'), not missingKeyHandler's - so the rendered marker becomes the invariant-63 '\u27e6namespace:key\u27e7' format while the logged report keeps clean separate namespace/key fields. Updated the affected test's expected marker string.",
           "round": "milestone-3"
+        },
+        "Claude-75": {
+          "desc": "ErrorState's correlation-id text (text-ink-faint on bg-surface) fails WCAG AA contrast in both themes (~3.34:1 light, ~4.31:1 dark, both below the 4.5:1 invariant 72 requires for body text); contrastPairs.ts has no ink-faint/surface entry so contrastPairs.test.ts never caught it. src/shared/ui/ErrorState.tsx:24, src/shared/theme/contrastPairs.ts",
+          "blocking": true,
+          "disposition": "fixed",
+          "round": "milestone-4"
+        },
+        "Claude-76": {
+          "desc": "Skeleton concatenates sizeClass[width] and sizeClass[height] independently; sizeClass entries are complete box classes (both h- and w-), so width!==height emits two conflicting height/width classes with CSS-order-dependent effective size, silently breaking invariant 76's no-layout-shift guarantee. Currently unexercised since every call site uses width===height. src/shared/ui/Skeleton.tsx:25",
+          "blocking": false,
+          "disposition": "fixed",
+          "round": "milestone-4"
+        },
+        "Claude-77": {
+          "desc": "The kit no-orphan-component completeness check (kitStates.test.tsx) asserts against a hand-maintained literal KIT_COMPONENT_NAMES array, not against shared/ui/index.ts's real exports - a 9th component added without updating the literal array would escape the guard silently, though TECH.md/PLAN describe it as checking real exports. src/app/testing/kitStates.tsx:21-30, kitStates.test.tsx:7-18",
+          "blocking": false,
+          "disposition": "accepted",
+          "round": "milestone-4"
+        },
+        "Claude-78": {
+          "desc": "Avatar's decorative-image branch (real imageSource + decorative=true, alt='') is untested - coverage report flags Avatar.tsx:38 as an uncovered branch; every imageSource test uses decorative=false and every decorative test omits imageSource, so the alt=''+aria-hidden path invariant 79 requires is never asserted against a rendered img. src/shared/ui/Avatar.tsx:38",
+          "blocking": false,
+          "disposition": "fixed",
+          "round": "milestone-4"
+        },
+        "Claude-79": {
+          "desc": "Light-theme --color-border-field (#8f89a3) deliberately departs from the mockup value (#E2DDEE, docs/reference.md:69, ~1.33:1 contrast) to meet invariant 72's 3:1 UI-boundary requirement (~3.35:1 achieved) - correct call, documented in a theme.css comment, but not recorded in docs/reference.md or ARCHITECTURE.md's decision log as CLAUDE.md's binding-docs rule and invariant 70 imply it should be. src/shared/theme/theme.css:25",
+          "blocking": false,
+          "disposition": "fixed",
+          "round": "milestone-4"
+        },
+        "Claude-80": {
+          "desc": "size-limit-entries.test.ts's 'the built entry and vendor chunks match their size-limit globs' test was not extended to assert the CSS chunk exists alongside the new stylesheet entry added in M4 - only entry-*.js and vendor-*.js are globbed; a missing stylesheet chunk is only caught indirectly by npm run size failing on an empty glob. build-output/size-limit-entries.test.ts:34-50",
+          "blocking": false,
+          "disposition": "fixed",
+          "round": "milestone-4"
         }
       }
     },
@@ -1655,7 +1691,28 @@
     "2026-08-13T15:13:10Z evidence recorded: evidence/steps/step25-red-skeleton.txt (7a2c20112be9) - genuine red: skeleton style-attribute regression injected, test fails, then reverted",
     "2026-08-13T15:13:10Z evidence recorded: evidence/steps/step25-red-size-limit.txt (c7c1a653198d) - genuine red: expected-build-output.json stylesheet entry added alone, .size-limit.json mismatch",
     "2026-08-13T15:13:10Z evidence recorded: evidence/steps/step25-red-kitroute.txt (1f00f49edf8b) - genuine red: KitRoute.tsx module not found",
-    "2026-08-13T15:13:11Z evidence recorded: evidence/steps/step25-green.txt (2987e62d9d4a) - full npm run verify green: 174 tests, 98.34% coverage, build + verify:build + size all pass"
+    "2026-08-13T15:13:11Z evidence recorded: evidence/steps/step25-green.txt (2987e62d9d4a) - full npm run verify green: 174 tests, 98.34% coverage, build + verify:build + size all pass",
+    "2026-08-13T15:13:53Z evidence recorded: evidence/milestones/m4-suite.txt (34dcd715be26) - M4 boundary: full npm run verify green, 174 tests, 98.34% coverage, size-limit both entries pass",
+    "2026-08-13T15:13:53Z milestone 4 boundary verified: npm run verify green end to end: typecheck, lint (boundaries/domain-vocab/no-physical-props/no-secrets), prettier, 174 unit tests at 98.34% coverage, build, verify:build, size (entry 66.08/100kB, stylesheet 3.76/15kB). ui Vitest project passes with axe assertions on every documented kit state and the contrast test walks all 6 pairs in both themes. Does NOT claim the browser checks (kit-route.spec.ts, invariants 86/86a/86b, dark half of 87) - those need the router, which is M5's job. Evidence: evidence/milestones/m4-suite.txt",
+    "2026-08-13T15:22:49Z G4 finding Claude-75 recorded (blocking) [round: milestone-4]: ErrorState's correlation-id text (text-ink-faint on bg-surface) fails WCAG AA contrast in both themes (~3.34:1 light, ~4.31:1 dark, both below the 4.5:1 invariant 72 requires for body text); contrastPairs.ts has no ink-faint/surface entry so contrastPairs.test.ts never caught it. src/shared/ui/ErrorState.tsx:24, src/shared/theme/contrastPairs.ts",
+    "2026-08-13T15:22:49Z G4 finding Claude-76 recorded [round: milestone-4]: Skeleton concatenates sizeClass[width] and sizeClass[height] independently; sizeClass entries are complete box classes (both h- and w-), so width!==height emits two conflicting height/width classes with CSS-order-dependent effective size, silently breaking invariant 76's no-layout-shift guarantee. Currently unexercised since every call site uses width===height. src/shared/ui/Skeleton.tsx:25",
+    "2026-08-13T15:22:49Z G4 finding Claude-77 recorded [round: milestone-4]: The kit no-orphan-component completeness check (kitStates.test.tsx) asserts against a hand-maintained literal KIT_COMPONENT_NAMES array, not against shared/ui/index.ts's real exports - a 9th component added without updating the literal array would escape the guard silently, though TECH.md/PLAN describe it as checking real exports. src/app/testing/kitStates.tsx:21-30, kitStates.test.tsx:7-18",
+    "2026-08-13T15:22:50Z G4 finding Claude-78 recorded [round: milestone-4]: Avatar's decorative-image branch (real imageSource + decorative=true, alt='') is untested - coverage report flags Avatar.tsx:38 as an uncovered branch; every imageSource test uses decorative=false and every decorative test omits imageSource, so the alt=''+aria-hidden path invariant 79 requires is never asserted against a rendered img. src/shared/ui/Avatar.tsx:38",
+    "2026-08-13T15:22:50Z G4 finding Claude-79 recorded [round: milestone-4]: Light-theme --color-border-field (#8f89a3) deliberately departs from the mockup value (#E2DDEE, docs/reference.md:69, ~1.33:1 contrast) to meet invariant 72's 3:1 UI-boundary requirement (~3.35:1 achieved) - correct call, documented in a theme.css comment, but not recorded in docs/reference.md or ARCHITECTURE.md's decision log as CLAUDE.md's binding-docs rule and invariant 70 imply it should be. src/shared/theme/theme.css:25",
+    "2026-08-13T15:22:50Z G4 finding Claude-80 recorded [round: milestone-4]: size-limit-entries.test.ts's 'the built entry and vendor chunks match their size-limit globs' test was not extended to assert the CSS chunk exists alongside the new stylesheet entry added in M4 - only entry-*.js and vendor-*.js are globbed; a missing stylesheet chunk is only caught indirectly by npm run size failing on an empty glob. build-output/size-limit-entries.test.ts:34-50",
+    "2026-08-13T15:23:01Z milestone 4 reviewed: Fresh-context reviewer on git diff 774e0f2..HEAD (M4: steps 21-25). 6 findings recorded (Claude-75..80), 1 blocking (Claude-75: ErrorState correlation-id text fails WCAG AA contrast, contrastPairs.ts missing that pair). Fixing blocking finding plus the worthwhile non-blocking ones before re-verifying.",
+    "2026-08-13T15:39:41Z G4 finding Claude-75 dispositioned: fixed",
+    "2026-08-13T15:39:42Z G4 finding Claude-76 dispositioned: fixed",
+    "2026-08-13T15:39:42Z G4 finding Claude-77 dispositioned: accepted",
+    "2026-08-13T15:39:42Z G4 finding Claude-78 dispositioned: fixed",
+    "2026-08-13T15:39:42Z G4 finding Claude-79 dispositioned: fixed",
+    "2026-08-13T15:39:42Z G4 finding Claude-80 dispositioned: fixed",
+    "2026-08-13T15:39:52Z M4 boundary review fixes: Claude-75 (fixed - ink-faint darkened both themes, ErrorState correlation-id text now clears AA 4.5:1, contrastPairs.ts gained the ink-faint/surface entry, ARCHITECTURE.md decision log updated), Claude-76 (fixed - Skeleton no longer concatenates two complete box classes for independent width/height, dimensionClass() helper takes only the relevant half of each), Claude-77 (accepted - completeness check stays a hand-maintained parallel list; deriving it from real exports would need React-internals reflection or a redundant grouping object, currently correct 8/8), Claude-78 (fixed - Avatar decorative+real-image branch now tested), Claude-79 (fixed - border-field and ink-faint token deviations recorded in specs/ARCHITECTURE.md section 6), Claude-80 (fixed - size-limit-entries.test.ts asserts the CSS chunk exists). Full npm run verify green post-fix: 176 tests, 98.05% coverage. Evidence: evidence/milestones/m4-suite-post-review.txt",
+    "2026-08-13T15:39:53Z evidence recorded: evidence/milestones/m4-suite-post-review.txt (f1796c340221) - M4 boundary review fixes: full verify green, 176 tests, 98.05% coverage, verify:build 4 tests (new CSS-glob assertion), size both entries pass",
+    "2026-08-13T15:39:53Z evidence recorded: evidence/steps/m4-review-fix-red-inkfaint.txt (0dbd77dae2e1) - genuine red: ink-faint/surface contrast pair added before darkening the token",
+    "2026-08-13T15:39:53Z evidence recorded: evidence/steps/m4-review-fix-red-skeleton-dims.txt (6b4a6f60f800) - genuine red: Skeleton mismatched width/height emits two conflicting classes before the dimensionClass fix",
+    "2026-08-13T15:39:53Z evidence recorded: evidence/steps/m4-review-fix-red-avatar.txt (831efdd55f49) - genuine red: Avatar decorative+real-image alt regression before revert",
+    "2026-08-13T15:39:53Z evidence recorded: evidence/steps/m4-review-fix-red-css-glob.txt (db914ce4d972) - genuine red: dist removed, CSS glob assertion fails before rebuild"
   ],
   "milestones": [
     {
@@ -1679,8 +1736,8 @@
     {
       "id": 4,
       "title": "M4 - Tokens and the UI kit",
-      "verified": null,
-      "reviewed": null
+      "verified": "2026-08-13T15:13:53Z npm run verify green end to end: typecheck, lint (boundaries/domain-vocab/no-physical-props/no-secrets), prettier, 174 unit tests at 98.34% coverage, build, verify:build, size (entry 66.08/100kB, stylesheet 3.76/15kB). ui Vitest project passes with axe assertions on every documented kit state and the contrast test walks all 6 pairs in both themes. Does NOT claim the browser checks (kit-route.spec.ts, invariants 86/86a/86b, dark half of 87) - those need the router, which is M5's job. Evidence: evidence/milestones/m4-suite.txt",
+      "reviewed": "2026-08-13T15:23:01Z Fresh-context reviewer on git diff 774e0f2..HEAD (M4: steps 21-25). 6 findings recorded (Claude-75..80), 1 blocking (Claude-75: ErrorState correlation-id text fails WCAG AA contrast, contrastPairs.ts missing that pair). Fixing blocking finding plus the worthwhile non-blocking ones before re-verifying."
     },
     {
       "id": 5,
@@ -1985,6 +2042,36 @@
       "sha": "2987e62d9d4a",
       "recorded": "2026-08-13T15:13:11Z",
       "note": "full npm run verify green: 174 tests, 98.34% coverage, build + verify:build + size all pass"
+    },
+    "evidence/milestones/m4-suite.txt": {
+      "sha": "34dcd715be26",
+      "recorded": "2026-08-13T15:13:53Z",
+      "note": "M4 boundary: full npm run verify green, 174 tests, 98.34% coverage, size-limit both entries pass"
+    },
+    "evidence/milestones/m4-suite-post-review.txt": {
+      "sha": "f1796c340221",
+      "recorded": "2026-08-13T15:39:53Z",
+      "note": "M4 boundary review fixes: full verify green, 176 tests, 98.05% coverage, verify:build 4 tests (new CSS-glob assertion), size both entries pass"
+    },
+    "evidence/steps/m4-review-fix-red-inkfaint.txt": {
+      "sha": "0dbd77dae2e1",
+      "recorded": "2026-08-13T15:39:53Z",
+      "note": "genuine red: ink-faint/surface contrast pair added before darkening the token"
+    },
+    "evidence/steps/m4-review-fix-red-skeleton-dims.txt": {
+      "sha": "6b4a6f60f800",
+      "recorded": "2026-08-13T15:39:53Z",
+      "note": "genuine red: Skeleton mismatched width/height emits two conflicting classes before the dimensionClass fix"
+    },
+    "evidence/steps/m4-review-fix-red-avatar.txt": {
+      "sha": "831efdd55f49",
+      "recorded": "2026-08-13T15:39:53Z",
+      "note": "genuine red: Avatar decorative+real-image alt regression before revert"
+    },
+    "evidence/steps/m4-review-fix-red-css-glob.txt": {
+      "sha": "db914ce4d972",
+      "recorded": "2026-08-13T15:39:53Z",
+      "note": "genuine red: dist removed, CSS glob assertion fails before rebuild"
     }
   },
   "test_file_hashes": {}

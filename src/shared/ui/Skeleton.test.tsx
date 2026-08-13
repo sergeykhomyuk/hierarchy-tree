@@ -36,4 +36,27 @@ describe('Skeleton', () => {
     // eslint-disable-next-line testing-library/no-node-access -- asserting absence of an attribute the production CSP blocks, not a role or text query.
     expect(container.firstElementChild).not.toHaveAttribute('style');
   });
+
+  it('independent width and height sizes never emit two conflicting classes for the same dimension', () => {
+    const { container } = render(
+      <Skeleton shape="block" width="card" height="avatar" />,
+    );
+
+    // eslint-disable-next-line testing-library/no-node-access -- className composition is not queryable through role or text.
+    const element = container.firstElementChild;
+    const classNames = element?.className.split(' ') ?? [];
+    const widthClasses = classNames.filter((name) => name.startsWith('w-'));
+    const heightClasses = classNames.filter((name) => name.startsWith('h-'));
+
+    expect(
+      widthClasses,
+      `expected exactly one width class, got ${widthClasses.join(', ')}`,
+    ).toHaveLength(1);
+    expect(
+      heightClasses,
+      `expected exactly one height class, got ${heightClasses.join(', ')}`,
+    ).toHaveLength(1);
+    expect(widthClasses).toEqual(['w-full']);
+    expect(heightClasses).toEqual(['h-[34px]']);
+  });
 });

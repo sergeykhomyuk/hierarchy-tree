@@ -48,4 +48,13 @@ describe('size-limit entries', () => {
       'no dist/assets/vendor-*.js emitted',
     ).toBeGreaterThan(0);
   });
+
+  it('the built stylesheet matches its size-limit glob', () => {
+    const stylesheetMatches = globSync('dist/assets/*.css');
+
+    expect(
+      stylesheetMatches.length,
+      'no dist/assets/*.css emitted',
+    ).toBeGreaterThan(0);
+  });
 });

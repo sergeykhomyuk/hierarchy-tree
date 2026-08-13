@@ -1,0 +1,33 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/shared/ui/Skeleton.test.tsx (5 tests | 1 failed) 13ms
+     × independent width and height sizes never emit two conflicting classes for the same dimension 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/shared/ui/Skeleton.test.tsx > Skeleton > independent width and height sizes never emit two conflicting classes for the same dimension
+AssertionError: expected exactly one width class, got w-full, w-[34px]: expected [ 'w-full', 'w-[34px]' ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/shared/ui/Skeleton.test.tsx:50:94
+     48|     const heightClasses = classNames.filter((name) => name.startsWith(…
+     49|
+     50|     expect(widthClasses, `expected exactly one width class, got ${widt…
+       |                                                                                              ^
+     51|     expect(heightClasses, `expected exactly one height class, got ${he…
+     52|     expect(widthClasses).toEqual(['w-full']);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  16:35:37
+   Duration  605ms (transform 29ms, setup 113ms, import 13ms, tests 13ms, environment 390ms)
+
