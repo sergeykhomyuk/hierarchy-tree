@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "validate",
-  "phase_entered": "2026-08-13T08:11:19Z",
+  "phase": "plan",
+  "phase_entered": "2026-08-13T10:55:52Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T10:55:35Z",
+  "updated": "2026-08-13T11:00:36Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -617,7 +617,9 @@
     },
     "G2": {
       "status": "pending",
-      "attempts": 0
+      "attempts": 0,
+      "steps_total": 38,
+      "steps_done": 0
     },
     "G3": {
       "status": "pending",
@@ -634,7 +636,435 @@
     }
   },
   "retro": null,
-  "plan_steps": [],
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "VERIFICATION.md (the repository verification profile), .nvmrc at 24.15.0, package.json engines.node, and the .gitignore blanket *.log fix so evidence logs under specs/ are committable (invariants 117, 118)",
+      "tests": [
+        "node version is pinned consistently in .nvmrc and package.json engines",
+        "evidence logs under specs are not excluded by .gitignore"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 2,
+      "desc": "tsconfig.app.json gains strict plus noUncheckedIndexedAccess, exactOptionalPropertyTypes and noImplicitOverride; tsconfig.tools.json added; path aliases declared in tsconfig, Vite and Vitest (invariants 104, 105)",
+      "tests": [
+        "tsconfig.app.json enables strict and the four strictness flags",
+        "path aliases resolve identically in tsconfig, Vite and Vitest"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 3,
+      "desc": "Vitest projects (jsdom, platform, ui) with coverage thresholds at 85 percent, the src/features/*/domain 100 percent glob configured inert, passWithNoTests false, and vitest.setup.ts stubbing fetch/XMLHttpRequest/WebSocket/sendBeacon in EVERY project (invariants 108, 109, 110, 115, 32, 21)",
+      "tests": [
+        "coverage thresholds are configured at 85 for lines branches and functions",
+        "the features domain 100 percent threshold is configured and inert while no such directory exists",
+        "every Vitest project loads the setup file that makes a real fetch throw"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 4,
+      "desc": "playwright.config.ts with the conditional webServer ARRAY and conditional projects array keyed on DEPLOYED_BASE_URL, the chromium, development and deployed projects, and the e2e/support modules (invariants 113, 100, 115)",
+      "tests": [
+        "the deployed project is absent from the projects array when DEPLOYED_BASE_URL is unset",
+        "no webServer is configured when DEPLOYED_BASE_URL is set"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 5,
+      "desc": "Tailwind v4 wiring, Prettier with prettier-plugin-tailwindcss, and eslint-config-prettier applied last so no formatting rule is owned by both tools (invariant 107)",
+      "tests": [
+        "the Prettier config declares the tailwind stylesheet path"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 6,
+      "desc": "vite.config.ts build.rolldownOptions.output block (entryFileNames, chunkFileNames, codeSplitting vendor group) and .size-limit.json carrying the entry+vendor pair. EMPIRICALLY CONFIRM against the installed vite 8.2.1 and rolldown 1.2.4 what [name] actually emits for a dynamic-import chunk, that rolldownOptions is accepted, and that codeSplitting produces vendor-*.js with no deprecation warning - correcting TECH section 5.3, the size-limit globs AND declaration-table.test.ts's arming glob together if they disagree (invariants 112, 89)",
+      "tests": [
+        "the built entry and vendor chunks match their size-limit globs",
+        "size-limit entries equal the declaration table expected set"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 7,
+      "desc": "Delete the Vite template cruft - App.tsx, App.css, index.css, src/assets/**, public/icons.svg - and add src/vite-env.d.ts plus a minimal src/app/main.tsx and bootstrap with one static placeholder component that M1's own test covers, so the 85 percent threshold is met by real coverage of real code rather than an empty denominator (invariants 131, 136)",
+      "tests": [
+        "the Vite template files no longer exist",
+        "the startup placeholder renders through bootstrap"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 8,
+      "desc": "Every npm script from TECH section 7.1 including verify:build, vitest.build-output.config.ts, and expected-build-output.json seeded with the alwaysOn keys and phase building; build-output/declaration-table.test.ts and size-limit-entries.test.ts (invariants 102, 103, 112)",
+      "tests": [
+        "every gating npm script named by the workflow order exists in package.json",
+        "the declaration table is internally valid at phase building"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 9,
+      "desc": "The four layer directories under src and both feature slices (features/auth, features/hierarchy) with one public entry each and no product behavior behind them (invariants 1, 9)",
+      "tests": [
+        "both feature entries exist and export their documented names"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 10,
+      "desc": "eslint-plugin-boundaries configuration: element definitions, the four element-types rows, no-unknown and no-unknown-files as errors, entry-point. Resolve the deprecation against the INSTALLED plugin - read its rule exports and, if boundaries/dependencies is present and covers the same edges, configure against it and record the mapping in a comment (invariants 1-7, 12)",
+      "tests": [
+        "the boundaries rules are configured at error severity"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 11,
+      "desc": "Restricted imports and syntax: the single import.meta.env reader override, the enumerated network ban in identifier and member forms, the five storage globals in both forms, the observability sinks path ban, and the globalThis telemetry-handle selector scoped to createRuntime.ts alone (invariants 13, 21, 45, 45a, 128)",
+      "tests": [
+        "the storage ban covers all five globals in bare and member forms",
+        "the restricted-syntax rules are configured at error severity"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 12,
+      "desc": "The remaining ESLint configuration: jsx-a11y, i18next in jsx-only mode with the ignoreAttribute list, react-hooks, testing-library, playwright, type-aware rules, no-explicit-any, no-non-null-assertion, reportUnusedDisableDirectives, and the testing-harness element override scoped to test files only (invariants 105, 106, 90)",
+      "tests": [
+        "the testing-harness override is scoped to test files and no wider"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 13,
+      "desc": "The demonstrable negatives, each producing a named lint error captured as evidence under specs/phase-1-setup/evidence/ and then reverted in the same change: a cross-feature import, a deep import into a feature, a stray unclassified file, a platform-to-shared import, a second import.meta.env read, and a direct fetch call (invariants 10, 11)",
+      "tests": [
+        "lint fails with the boundaries rule named on a cross-feature import",
+        "lint fails with the restricted-import rule named on a deep feature import"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 14,
+      "desc": "scripts/assert-no-physical-properties.mjs and the domain-vocabulary script matching at identifier-segment level with the stated allow-list, plus assert-no-secrets.mjs --source-only wired into lint (invariants 8, 67, 20, 133)",
+      "tests": [
+        "the vocabulary script matches whole identifier segments and not substrings",
+        "the physical-properties script rejects a physical-direction utility"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 15,
+      "desc": "platform/configuration: environment.ts as the single import.meta.env reader (exporting readEnvironment and isDevelopmentBuild), the Zod schema with zod/mini, a frozen typed configuration object, environment-shaped defaults, test injectability, and the ConfigurationErrorScreen naming failed keys but never their values (invariants 13-20)",
+      "tests": [
+        "configuration is frozen and rejects a runtime write",
+        "an invalid value is named in the message and its value is not",
+        "createConfiguration succeeds with development-shaped defaults",
+        "an invalid environment renders the error screen and does not render the router"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 16,
+      "desc": "platform/http: the injected transport, the deadline as a PER LOGICAL REQUEST budget covering first attempt plus backoff plus retry, caller-abort composition via AbortSignal.any, the cancelled outcome as a sibling of failure, at most one retry on GET for network/timeout/5xx only, injected clock and randomness, traceparent propagation, and one timing record per attempt (invariants 21-35)",
+      "tests": [
+        "the deadline covers the whole logical request and settles as timeout at the budget",
+        "a caller abort yields cancelled without retrying or reporting an error",
+        "a pre-aborted signal yields cancelled with no transport call",
+        "the failure union is exhaustive without a default branch",
+        "an error carries no response body content"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 17,
+      "desc": "platform/observability: the facade exposing exactly logger, tracer and analytics, the factory additionally returning a buffer handle only when the buffer sink is selected, the three sinks, the bounded ring buffer readable oldest-first across a wrap, the redaction layer running before any sink, the level guard, and the whole-call guard covering level check, redaction traversal and sink write (invariants 45, 45a, 46, 48, 54-59)",
+      "tests": [
+        "the facade exposes exactly three keys",
+        "the buffer handle is null unless the buffer sink is selected",
+        "the ring buffer drops oldest and reads oldest-first after wrapping",
+        "redaction removes matching keys at any depth including arrays cycles and url parameters",
+        "a throwing property getter does not escape the facade"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 18,
+      "desc": "The interaction tracker owning one correlation id per navigation including the initial load, emitting exactly one route_viewed on a settled navigation and none on a failed one, with the id shared by the boundary report and the analytics event and equal to the traceparent trace-id (invariants 47, 47a, 30)",
+      "tests": [
+        "a new correlation id is issued per navigation including the initial load",
+        "a failed navigation emits no route_viewed"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 19,
+      "desc": "reportWebVitals through the web-vitals package for LCP, INP and CLS, degrading silently where PerformanceObserver or an entry type is unsupported (invariants 52, 53)",
+      "tests": [
+        "each web vital is reported once through the facade with its passed value",
+        "an unsupported observer produces no throw no event and no console call"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 20,
+      "desc": "platform/internationalization: i18next with one namespace per feature plus common, lazily loaded namespaces, the missing-key handler reporting at error level and rendering the visible marker in every environment, and the explicit locale-to-direction map (invariants 60-66)",
+      "tests": [
+        "a missing key reports through the facade and renders the visible marker",
+        "the locale direction map resolves without Intl.Locale"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 21,
+      "desc": "shared/theme: theme.css declaring the token layer once, the dark theme over the same token names activated from prefers-color-scheme, logical properties throughout, and the reduced-motion rule disabling every transition including the Skeleton shimmer (invariants 70, 71, 73, 75, 67)",
+      "tests": [
+        "no component references a raw color value instead of a token",
+        "reduced motion disables every transition including the skeleton shimmer"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 22,
+      "desc": "contrastPairs.ts and the automated WCAG AA contrast assertion walking every listed pair in both themes at 4.5:1 for body text and 3:1 for large text, icons and UI boundaries, plus the focus-indicator contrast (invariants 72, 74)",
+      "tests": [
+        "every contrast pair holds AA in both themes",
+        "every interactive element has a focus indicator meeting 3:1"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 23,
+      "desc": "The eight kit components - Button, Field, Input, Card, Avatar, Skeleton, ErrorState, EmptyState - domain-free, with no user-visible literal, Button suppressing activation when busy via preventDefault before anything else, Field associating label and describedby through FieldContext, Avatar with lazy loading and initials fallback (invariants 69, 76-85)",
+      "tests": [
+        "a busy button cannot submit its form by pointer or keyboard",
+        "the field associates its label error and hint and communicates required",
+        "the avatar falls back to initials when the image fails to load",
+        "no kit component contains a user-visible literal"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 24,
+      "desc": "The single state inventory consumed by both the unit tests and the kit route, one axe assertion per documented state in jsdom light, and a check failing when a kit component has no state in the inventory (invariant 87)",
+      "tests": [
+        "every documented kit state has zero axe violations",
+        "every exported kit component has a state in the inventory"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 25,
+      "desc": "The kit route MODULE behind the build-time flag - the component, skeletonSize.ts and sizeClass.ts emitting no style attribute so the production style-src self CSP cannot be violated - plus the stylesheet entry appended to .size-limit.json with the theme it measures (invariants 86a, 76, 112)",
+      "tests": [
+        "the skeleton emits no style attribute",
+        "size-limit entries equal the declaration table expected set"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 26,
+      "desc": "app/composition: createRuntime building configuration, observability, http and i18next once in the documented order, runtimeContext and useRuntime, and ApplicationRoot composing the provider stack in exactly one place so a test route renders through the real stack (invariant 90)",
+      "tests": [
+        "a route rendered in a test goes through the real provider stack"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 27,
+      "desc": "The router: createBrowserRouter with basename from configuration.basePath, lazily imported route modules each awaiting its feature loadTranslations, the placeholder routes at / and /login, the not-found route, and no guard redirect session read or fetch (invariants 88, 89, 94, 97, 98)",
+      "tests": [
+        "the router is created with basename taken from configuration rather than a literal",
+        "an unmatched path renders the not-found route with a link home"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 28,
+      "desc": "Both placeholder pages through the UI kit with catalogue strings, a document title from the catalogue, exactly one h1, a main landmark, full keyboard reachability and zero axe violations - the /login placeholder generic, carrying none of mockup screen 1a's chrome (invariants 95, 96, 96a, 132)",
+      "tests": [
+        "each placeholder exposes one h1 inside a main landmark and passes axe"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 29,
+      "desc": "Both error boundaries and the shared ErrorSurface taking recovery as a prop and calling no router hook, plus the createRoot onCaughtError and onUncaughtError handlers routing boundary-caught errors to the facade instead of console.error, with the error reported exactly once and its correlation id displayed (invariants 91, 92, 93, 100)",
+      "tests": [
+        "the root boundary renders the error surface above any router without throwing",
+        "the boundary reports the error exactly once and displays the correlation id"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 30,
+      "desc": "The CSP Vite plugin emitting the meta policy WITHOUT frame-ancestors, public/_redirects carrying exactly the SPA rule, public/_headers carrying frame-ancestors and nothing else, the app favicon and index.html (invariants 99, 99a, 101, 124)",
+      "tests": [
+        "dist/_redirects contains exactly the spa fallback rule",
+        "dist/_headers matches its exact expected content"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 31,
+      "desc": "Populate expected-build-output.json's four conditional keys and flip phase to complete, arming declaration-table.test.ts; append the route and catalogue entries to .size-limit.json; the base-path, route-chunk, catalogue-chunk and kit-route-absence build-output tests go live (invariants 62, 86b, 89, 103, 122)",
+      "tests": [
+        "the declaration table is complete and every family is declared at phase complete",
+        "no dist file contains the kit route path chunk or state-inventory marker",
+        "each route chunk imports only its own catalogue chunk"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 32,
+      "desc": "The e2e suite of invariant 113 plus the kit-route browser checks M4 could not run: both routes, not-found, the forced route error with correlation id and keyboard recovery, buffer sink assertions, clean console, axe per route, storage emptiness, and the kit route at 320px with axe in real light and real dark (invariants 113, 49, 86, 86a, 87, 100, 128)",
+      "tests": [
+        "the forced route error renders the boundary with a working keyboard recovery",
+        "the buffer sink recorded the expected events",
+        "every kit component renders at 320px with zero axe violations in light and dark",
+        "local and session storage are empty after visiting both routes"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 33,
+      "desc": "The CI workflow's verify job: the seven named gating steps in invariant 103's order, the Playwright browser cache, the site artifact uploaded after size and BEFORE e2e so the verified dist is the shipped dist, and the report artifact with if always (invariants 102, 103, 114, 117, 120)",
+      "tests": [
+        "the workflow steps match the required gating order",
+        "the site artifact upload precedes the e2e step"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 6
+    },
+    {
+      "id": 34,
+      "desc": "The deploy job: needs verify, gated on push to main, permissions contents read, the concurrency group, actions/checkout with sparse-checkout of deployment.json, download of the site artifact, the SHA-pinned wrangler action consuming that artifact without rebuilding, and the assertion that the returned deployment URL equals productionHostname (invariants 120, 121, 123, 125)",
+      "tests": [
+        "the deploy job declares least-privilege permissions and a concurrency group",
+        "every non-actions uses is pinned to a commit sha",
+        "the deploy job consumes the site artifact and runs no build of its own"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 6
+    },
+    {
+      "id": 35,
+      "desc": "The workflow-parse test asserting every gating run line is an npm script or an allow-listed setup command, no continue-on-error, no if false, no skip flag, and the deploy job's if condition - plus a grep asserting no .skip .only or test.fixme in src or e2e (invariants 102, 135, 121)",
+      "tests": [
+        "every gating run line is an npm script or an allow-listed setup command",
+        "no verify step carries continue-on-error or a skip flag"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 6
+    },
+    {
+      "id": 36,
+      "desc": "deployment.json at the repository root carrying projectName and productionHostname as the single machine-readable source, the production-hostname markers added to VERIFICATION.md and .env.example, and the doc-agreement test asserting each marker is PRESENT and its value equals deployment.json (invariant 123)",
+      "tests": [
+        "the production hostname markers are present and agree with deployment.json"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 6
+    },
+    {
+      "id": 37,
+      "desc": "The live-smoke job on workflow_dispatch only, with vitest.live.config.ts and scripts/live-smoke/ outside src and outside every default Vitest project, probing reachability and shape and printing the observed users field names without asserting on them (invariants 116, 116a, 116b)",
+      "tests": [
+        "the live smoke test file is collected by no default vitest project",
+        "the live probe asserts the two top-level keys and prints the observed field names"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 6
+    },
+    {
+      "id": 38,
+      "desc": "deployed-smoke.spec.ts and the post-merge obligation of invariant 126a: after merge, e2e:deployed runs against productionHostname read from deployment.json, asserting the home route, /login on direct load and refresh with status 200, and the frame-ancestors header on the live response - captured as evidence/deployed-smoke.txt. The phase is not complete until it passes (invariants 123, 124, 126a, 99a, 119)",
+      "tests": [
+        "the deployed home route renders the placeholder",
+        "the deployed login route renders on direct load and refresh with status 200",
+        "the frame-ancestors header arrives on the live response"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 6
+    }
+  ],
   "log": [
     "2026-08-13T07:40:19Z init: type=feature size=L flags=[security ]",
     "2026-08-13T07:40:44Z triage: roadmap phase 1 (project setup) = feature/L. feature not chore: greenfield code with new tested behavior (http client, cache, config, observability, i18n), nothing external being absorbed. L not M: cross-cutting across all four layers, >1k LOC, no test harness exists yet (Vitest+Playwright bootstrap included), CI+deploy. Not decomposed to child loops: ARCHITECTURE.md has already settled the ambiguous technical decisions, so the L artifacts are enough. security flag on: telemetry redaction layer, CSP meta tag and typed config validation land in this phase. design flag off: docs/mockups + specs/hierarchy-tree-mockups.html are the existing visual reference. Concurrency: loop list empty, no overlap.",
@@ -900,9 +1330,92 @@
     "2026-08-13T10:55:19Z G1 finding Claude-72 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
     "2026-08-13T10:55:19Z G1 finding Claude-73 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
     "2026-08-13T10:55:19Z G1 finding Claude-74 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
-    "2026-08-13T10:55:35Z G1 -> passed (L-size spec sign-off across five validation rounds. 93 findings total: 91 resolved, 2 rejected with the user's reason (Codex-53 loop-state timestamp hygiene, and the earlier Claude-31 console residual accepted explicitly). Rounds 1-4 (75 findings) validated PRODUCT.md + TECH.md before a user-directed three-part scope change (caching withdrawn, deploy moved to Cloudflare Pages, file conventions realigned) that neither reviewer had read. Round 5 was a scoped delta re-review the user requested rather than signing off unreviewed: fresh loop-spec-validator grill (14 findings, 3 blocking) + independent Codex thread (8 findings, 4 blocking, plus 3 verified unique findings from a supplementary pass), converging on five core defects and each catching what the other missed. The driving session added Claude-57 by verifying a reviewer's bundler claim against node_modules rather than on faith - vite 8.2.1 ships rolldown, not Rollup. Two further confirmation passes by fresh validators then found 10 and 8 more defects respectively, several introduced by the fixes themselves, including one blocking (a deploy job reading deployment.json with no checkout step). All fixed. ACCEPTED RESIDUALS, at the user's explicit decision: (1) invariant 100's exact-expected-console-set is weaker than an empty console and React Router's own console.error behavior stays UNVERIFIED until M5 installs the package; (2) invariant 112's entry budget leaves only 10-15 kB for this repository's own code over the 85-90 kB dependency estimate, first measured at M1; (3) the final 9 fixes (Claude-63, 65, 68-74) were NOT re-confirmed by a validator - the user declined a fourth confirmation cycle, so G3/G4 and the milestone boundary reviews carry that risk; (4) Codex's raiser-thread confirmation of Codex-45..55 did not return before sign-off, so those fixes rest on the Claude-side re-checks of the same passages. Reviews: evidence/reviews/g1-grill-claude.md, g1-codex-review.md, g1-codex-fix-confirmation.md, g1-codex-round3-incomplete.md, g1-codex-round4-confirmation.md, g1-grill-claude-confirmation.md, g1-grill-claude-delta.md, g1-codex-delta.md, g1-codex-delta-supplementary.md, g1-grill-claude-delta-recheck.md, g1-grill-claude-delta-recheck-2.md)"
+    "2026-08-13T10:55:35Z G1 -> passed (L-size spec sign-off across five validation rounds. 93 findings total: 91 resolved, 2 rejected with the user's reason (Codex-53 loop-state timestamp hygiene, and the earlier Claude-31 console residual accepted explicitly). Rounds 1-4 (75 findings) validated PRODUCT.md + TECH.md before a user-directed three-part scope change (caching withdrawn, deploy moved to Cloudflare Pages, file conventions realigned) that neither reviewer had read. Round 5 was a scoped delta re-review the user requested rather than signing off unreviewed: fresh loop-spec-validator grill (14 findings, 3 blocking) + independent Codex thread (8 findings, 4 blocking, plus 3 verified unique findings from a supplementary pass), converging on five core defects and each catching what the other missed. The driving session added Claude-57 by verifying a reviewer's bundler claim against node_modules rather than on faith - vite 8.2.1 ships rolldown, not Rollup. Two further confirmation passes by fresh validators then found 10 and 8 more defects respectively, several introduced by the fixes themselves, including one blocking (a deploy job reading deployment.json with no checkout step). All fixed. ACCEPTED RESIDUALS, at the user's explicit decision: (1) invariant 100's exact-expected-console-set is weaker than an empty console and React Router's own console.error behavior stays UNVERIFIED until M5 installs the package; (2) invariant 112's entry budget leaves only 10-15 kB for this repository's own code over the 85-90 kB dependency estimate, first measured at M1; (3) the final 9 fixes (Claude-63, 65, 68-74) were NOT re-confirmed by a validator - the user declined a fourth confirmation cycle, so G3/G4 and the milestone boundary reviews carry that risk; (4) Codex's raiser-thread confirmation of Codex-45..55 did not return before sign-off, so those fixes rest on the Claude-side re-checks of the same passages. Reviews: evidence/reviews/g1-grill-claude.md, g1-codex-review.md, g1-codex-fix-confirmation.md, g1-codex-round3-incomplete.md, g1-codex-round4-confirmation.md, g1-grill-claude-confirmation.md, g1-grill-claude-delta.md, g1-codex-delta.md, g1-codex-delta-supplementary.md, g1-grill-claude-delta-recheck.md, g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:55:52Z phase -> plan",
+    "2026-08-13T10:55:52Z milestone 1 added: M1 - Toolchain, cruft removal and the verification harness",
+    "2026-08-13T10:55:52Z milestone 2 added: M2 - Layers and boundary enforcement",
+    "2026-08-13T10:55:52Z milestone 3 added: M3 - Platform adapters",
+    "2026-08-13T10:55:52Z milestone 4 added: M4 - Tokens and the UI kit",
+    "2026-08-13T10:55:52Z milestone 5 added: M5 - App shell",
+    "2026-08-13T10:55:52Z milestone 6 added: M6 - Pipeline and deploy",
+    "2026-08-13T10:57:25Z step 1 added (milestone 1): VERIFICATION.md (the repository verification profile), .nvmrc at 24.15.0, package.json engines.node, and the .gitignore blanket *.log fix so evidence logs under specs/ are committable (invariants 117, 118)",
+    "2026-08-13T10:57:25Z step 2 added (milestone 1): tsconfig.app.json gains strict plus noUncheckedIndexedAccess, exactOptionalPropertyTypes and noImplicitOverride; tsconfig.tools.json added; path aliases declared in tsconfig, Vite and Vitest (invariants 104, 105)",
+    "2026-08-13T10:57:25Z step 3 added (milestone 1): Vitest projects (jsdom, platform, ui) with coverage thresholds at 85 percent, the src/features/*/domain 100 percent glob configured inert, passWithNoTests false, and vitest.setup.ts stubbing fetch/XMLHttpRequest/WebSocket/sendBeacon in EVERY project (invariants 108, 109, 110, 115, 32, 21)",
+    "2026-08-13T10:57:25Z step 4 added (milestone 1): playwright.config.ts with the conditional webServer ARRAY and conditional projects array keyed on DEPLOYED_BASE_URL, the chromium, development and deployed projects, and the e2e/support modules (invariants 113, 100, 115)",
+    "2026-08-13T10:57:25Z step 5 added (milestone 1): Tailwind v4 wiring, Prettier with prettier-plugin-tailwindcss, and eslint-config-prettier applied last so no formatting rule is owned by both tools (invariant 107)",
+    "2026-08-13T10:57:39Z step 6 added (milestone 1): vite.config.ts build.rolldownOptions.output block (entryFileNames, chunkFileNames, codeSplitting vendor group) and .size-limit.json carrying the entry+vendor pair. EMPIRICALLY CONFIRM against the installed vite 8.2.1 and rolldown 1.2.4 what [name] actually emits for a dynamic-import chunk, that rolldownOptions is accepted, and that codeSplitting produces vendor-*.js with no deprecation warning - correcting TECH section 5.3, the size-limit globs AND declaration-table.test.ts's arming glob together if they disagree (invariants 112, 89)",
+    "2026-08-13T10:57:39Z step 7 added (milestone 1): Delete the Vite template cruft - App.tsx, App.css, index.css, src/assets/**, public/icons.svg - and add src/vite-env.d.ts plus a minimal src/app/main.tsx and bootstrap with one static placeholder component that M1's own test covers, so the 85 percent threshold is met by real coverage of real code rather than an empty denominator (invariants 131, 136)",
+    "2026-08-13T10:57:39Z step 8 added (milestone 1): Every npm script from TECH section 7.1 including verify:build, vitest.build-output.config.ts, and expected-build-output.json seeded with the alwaysOn keys and phase building; build-output/declaration-table.test.ts and size-limit-entries.test.ts (invariants 102, 103, 112)",
+    "2026-08-13T10:57:58Z step 9 added (milestone 2): The four layer directories under src and both feature slices (features/auth, features/hierarchy) with one public entry each and no product behavior behind them (invariants 1, 9)",
+    "2026-08-13T10:57:58Z step 10 added (milestone 2): eslint-plugin-boundaries configuration: element definitions, the four element-types rows, no-unknown and no-unknown-files as errors, entry-point. Resolve the deprecation against the INSTALLED plugin - read its rule exports and, if boundaries/dependencies is present and covers the same edges, configure against it and record the mapping in a comment (invariants 1-7, 12)",
+    "2026-08-13T10:57:58Z step 11 added (milestone 2): Restricted imports and syntax: the single import.meta.env reader override, the enumerated network ban in identifier and member forms, the five storage globals in both forms, the observability sinks path ban, and the globalThis telemetry-handle selector scoped to createRuntime.ts alone (invariants 13, 21, 45, 45a, 128)",
+    "2026-08-13T10:57:58Z step 12 added (milestone 2): The remaining ESLint configuration: jsx-a11y, i18next in jsx-only mode with the ignoreAttribute list, react-hooks, testing-library, playwright, type-aware rules, no-explicit-any, no-non-null-assertion, reportUnusedDisableDirectives, and the testing-harness element override scoped to test files only (invariants 105, 106, 90)",
+    "2026-08-13T10:57:58Z step 13 added (milestone 2): The demonstrable negatives, each producing a named lint error captured as evidence under specs/phase-1-setup/evidence/ and then reverted in the same change: a cross-feature import, a deep import into a feature, a stray unclassified file, a platform-to-shared import, a second import.meta.env read, and a direct fetch call (invariants 10, 11)",
+    "2026-08-13T10:57:58Z step 14 added (milestone 2): scripts/assert-no-physical-properties.mjs and the domain-vocabulary script matching at identifier-segment level with the stated allow-list, plus assert-no-secrets.mjs --source-only wired into lint (invariants 8, 67, 20, 133)",
+    "2026-08-13T10:58:19Z step 15 added (milestone 3): platform/configuration: environment.ts as the single import.meta.env reader (exporting readEnvironment and isDevelopmentBuild), the Zod schema with zod/mini, a frozen typed configuration object, environment-shaped defaults, test injectability, and the ConfigurationErrorScreen naming failed keys but never their values (invariants 13-20)",
+    "2026-08-13T10:58:19Z step 16 added (milestone 3): platform/http: the injected transport, the deadline as a PER LOGICAL REQUEST budget covering first attempt plus backoff plus retry, caller-abort composition via AbortSignal.any, the cancelled outcome as a sibling of failure, at most one retry on GET for network/timeout/5xx only, injected clock and randomness, traceparent propagation, and one timing record per attempt (invariants 21-35)",
+    "2026-08-13T10:58:19Z step 17 added (milestone 3): platform/observability: the facade exposing exactly logger, tracer and analytics, the factory additionally returning a buffer handle only when the buffer sink is selected, the three sinks, the bounded ring buffer readable oldest-first across a wrap, the redaction layer running before any sink, the level guard, and the whole-call guard covering level check, redaction traversal and sink write (invariants 45, 45a, 46, 48, 54-59)",
+    "2026-08-13T10:58:19Z step 18 added (milestone 3): The interaction tracker owning one correlation id per navigation including the initial load, emitting exactly one route_viewed on a settled navigation and none on a failed one, with the id shared by the boundary report and the analytics event and equal to the traceparent trace-id (invariants 47, 47a, 30)",
+    "2026-08-13T10:58:19Z step 19 added (milestone 3): reportWebVitals through the web-vitals package for LCP, INP and CLS, degrading silently where PerformanceObserver or an entry type is unsupported (invariants 52, 53)",
+    "2026-08-13T10:58:19Z step 20 added (milestone 3): platform/internationalization: i18next with one namespace per feature plus common, lazily loaded namespaces, the missing-key handler reporting at error level and rendering the visible marker in every environment, and the explicit locale-to-direction map (invariants 60-66)",
+    "2026-08-13T10:58:35Z step 21 added (milestone 4): shared/theme: theme.css declaring the token layer once, the dark theme over the same token names activated from prefers-color-scheme, logical properties throughout, and the reduced-motion rule disabling every transition including the Skeleton shimmer (invariants 70, 71, 73, 75, 67)",
+    "2026-08-13T10:58:35Z step 22 added (milestone 4): contrastPairs.ts and the automated WCAG AA contrast assertion walking every listed pair in both themes at 4.5:1 for body text and 3:1 for large text, icons and UI boundaries, plus the focus-indicator contrast (invariants 72, 74)",
+    "2026-08-13T10:58:35Z step 23 added (milestone 4): The eight kit components - Button, Field, Input, Card, Avatar, Skeleton, ErrorState, EmptyState - domain-free, with no user-visible literal, Button suppressing activation when busy via preventDefault before anything else, Field associating label and describedby through FieldContext, Avatar with lazy loading and initials fallback (invariants 69, 76-85)",
+    "2026-08-13T10:58:35Z step 24 added (milestone 4): The single state inventory consumed by both the unit tests and the kit route, one axe assertion per documented state in jsdom light, and a check failing when a kit component has no state in the inventory (invariant 87)",
+    "2026-08-13T10:58:35Z step 25 added (milestone 4): The kit route MODULE behind the build-time flag - the component, skeletonSize.ts and sizeClass.ts emitting no style attribute so the production style-src self CSP cannot be violated - plus the stylesheet entry appended to .size-limit.json with the theme it measures (invariants 86a, 76, 112)",
+    "2026-08-13T10:58:54Z step 26 added (milestone 5): app/composition: createRuntime building configuration, observability, http and i18next once in the documented order, runtimeContext and useRuntime, and ApplicationRoot composing the provider stack in exactly one place so a test route renders through the real stack (invariant 90)",
+    "2026-08-13T10:58:54Z step 27 added (milestone 5): The router: createBrowserRouter with basename from configuration.basePath, lazily imported route modules each awaiting its feature loadTranslations, the placeholder routes at / and /login, the not-found route, and no guard redirect session read or fetch (invariants 88, 89, 94, 97, 98)",
+    "2026-08-13T10:58:54Z step 28 added (milestone 5): Both placeholder pages through the UI kit with catalogue strings, a document title from the catalogue, exactly one h1, a main landmark, full keyboard reachability and zero axe violations - the /login placeholder generic, carrying none of mockup screen 1a's chrome (invariants 95, 96, 96a, 132)",
+    "2026-08-13T10:58:54Z step 29 added (milestone 5): Both error boundaries and the shared ErrorSurface taking recovery as a prop and calling no router hook, plus the createRoot onCaughtError and onUncaughtError handlers routing boundary-caught errors to the facade instead of console.error, with the error reported exactly once and its correlation id displayed (invariants 91, 92, 93, 100)",
+    "2026-08-13T10:58:54Z step 30 added (milestone 5): The CSP Vite plugin emitting the meta policy WITHOUT frame-ancestors, public/_redirects carrying exactly the SPA rule, public/_headers carrying frame-ancestors and nothing else, the app favicon and index.html (invariants 99, 99a, 101, 124)",
+    "2026-08-13T10:58:54Z step 31 added (milestone 5): Populate expected-build-output.json's four conditional keys and flip phase to complete, arming declaration-table.test.ts; append the route and catalogue entries to .size-limit.json; the base-path, route-chunk, catalogue-chunk and kit-route-absence build-output tests go live (invariants 62, 86b, 89, 103, 122)",
+    "2026-08-13T10:58:55Z step 32 added (milestone 5): The e2e suite of invariant 113 plus the kit-route browser checks M4 could not run: both routes, not-found, the forced route error with correlation id and keyboard recovery, buffer sink assertions, clean console, axe per route, storage emptiness, and the kit route at 320px with axe in real light and real dark (invariants 113, 49, 86, 86a, 87, 100, 128)",
+    "2026-08-13T10:59:13Z step 33 added (milestone 6): The CI workflow's verify job: the seven named gating steps in invariant 103's order, the Playwright browser cache, the site artifact uploaded after size and BEFORE e2e so the verified dist is the shipped dist, and the report artifact with if always (invariants 102, 103, 114, 117, 120)",
+    "2026-08-13T10:59:13Z step 34 added (milestone 6): The deploy job: needs verify, gated on push to main, permissions contents read, the concurrency group, actions/checkout with sparse-checkout of deployment.json, download of the site artifact, the SHA-pinned wrangler action consuming that artifact without rebuilding, and the assertion that the returned deployment URL equals productionHostname (invariants 120, 121, 123, 125)",
+    "2026-08-13T10:59:13Z step 35 added (milestone 6): The workflow-parse test asserting every gating run line is an npm script or an allow-listed setup command, no continue-on-error, no if false, no skip flag, and the deploy job's if condition - plus a grep asserting no .skip .only or test.fixme in src or e2e (invariants 102, 135, 121)",
+    "2026-08-13T10:59:13Z step 36 added (milestone 6): deployment.json at the repository root carrying projectName and productionHostname as the single machine-readable source, the production-hostname markers added to VERIFICATION.md and .env.example, and the doc-agreement test asserting each marker is PRESENT and its value equals deployment.json (invariant 123)",
+    "2026-08-13T10:59:13Z step 37 added (milestone 6): The live-smoke job on workflow_dispatch only, with vitest.live.config.ts and scripts/live-smoke/ outside src and outside every default Vitest project, probing reachability and shape and printing the observed users field names without asserting on them (invariants 116, 116a, 116b)",
+    "2026-08-13T10:59:13Z step 38 added (milestone 6): deployed-smoke.spec.ts and the post-merge obligation of invariant 126a: after merge, e2e:deployed runs against productionHostname read from deployment.json, asserting the home route, /login on direct load and refresh with status 200, and the frame-ancestors header on the live response - captured as evidence/deployed-smoke.txt. The phase is not complete until it passes (invariants 123, 124, 126a, 99a, 119)",
+    "2026-08-13T11:00:36Z Plan registered: 6 milestones, 38 steps, sequential. Worktree fan-out rejected and the reason recorded in PLAN.md - M3 and M4 were the only candidate pair, M4 depends on M3's configuration flag, and both would edit package.json, vitest.config.ts and eslint.config.js where a bad merge is SILENT (a dropped ESLint override removes a check without failing a build). Verification profile: the skill's verification-bootstrap path was NOT run, because TECH.md M1 step 1 already specifies VERIFICATION.md's full contents and that specification passed five G1 rounds - running the bootstrap would re-derive a decision the user already signed off. G1's carried risk is written into PLAN.md rather than left in the gate note: the final nine fixes went unconfirmed and concentrate in M1's build config and declaration table and M6's deploy job, which is where to look hardest during implementation."
   ],
-  "milestones": [],
+  "milestones": [
+    {
+      "id": 1,
+      "title": "M1 - Toolchain, cruft removal and the verification harness",
+      "verified": null,
+      "reviewed": null
+    },
+    {
+      "id": 2,
+      "title": "M2 - Layers and boundary enforcement",
+      "verified": null,
+      "reviewed": null
+    },
+    {
+      "id": 3,
+      "title": "M3 - Platform adapters",
+      "verified": null,
+      "reviewed": null
+    },
+    {
+      "id": 4,
+      "title": "M4 - Tokens and the UI kit",
+      "verified": null,
+      "reviewed": null
+    },
+    {
+      "id": 5,
+      "title": "M5 - App shell",
+      "verified": null,
+      "reviewed": null
+    },
+    {
+      "id": 6,
+      "title": "M6 - Pipeline and deploy",
+      "verified": null,
+      "reviewed": null
+    }
+  ],
   "evidence_hashes": {
     "evidence/reviews/g1-grill-claude.md": {
       "sha": "243b954335fd",
