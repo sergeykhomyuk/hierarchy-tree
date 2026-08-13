@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { globSync, readFileSync } from 'node:fs';
+import { existsSync, globSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -252,5 +252,27 @@ describe('build output', () => {
     );
 
     expect(sizeLimitConfig).toEqual(M1_SIZE_LIMIT_ENTRIES);
+  });
+});
+
+describe('template cruft removal', () => {
+  it('the Vite template files no longer exist', () => {
+    const removedPaths = [
+      'src/App.tsx',
+      'src/App.css',
+      'src/index.css',
+      'src/main.tsx',
+      'src/assets/react.svg',
+      'src/assets/vite.svg',
+      'src/assets/hero.png',
+      'public/icons.svg',
+    ];
+
+    for (const removedPath of removedPaths) {
+      expect(
+        existsSync(removedPath),
+        `${removedPath} should have been deleted`,
+      ).toBe(false);
+    }
   });
 });

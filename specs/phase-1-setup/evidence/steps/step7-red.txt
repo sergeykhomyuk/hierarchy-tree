@@ -1,0 +1,57 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/bootstrap.test.tsx (0 test)
+ ❯ |tooling| scripts/repository-configuration.test.ts (11 tests | 1 failed) 455ms
+     × the Vite template files no longer exist 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/bootstrap.test.tsx [ src/app/bootstrap.test.tsx ]
+Error: Failed to resolve import "./bootstrap" from "src/app/bootstrap.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/bootstrap.test.tsx:3:26
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { act } from "react";
+  3  |  import { bootstrap } from "./bootstrap";
+     |                             ^
+  4  |  describe("bootstrap", () => {
+  5  |  	it("the startup placeholder renders through bootstrap", async () => {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/repository-configuration.test.ts > template cruft removal > the Vite template files no longer exist
+AssertionError: src/App.tsx should have been deleted: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ scripts/repository-configuration.test.ts:272:82
+    270|
+    271|     for (const removedPath of removedPaths) {
+    272|       expect(existsSync(removedPath), `${removedPath} should have been…
+       |                                                                                  ^
+    273|         false,
+    274|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  1 failed | 10 passed (11)
+   Start at  13:12:30
+   Duration  535ms (transform 23ms, setup 65ms, import 10ms, tests 455ms, environment 365ms)
+

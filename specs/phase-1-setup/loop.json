@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:10:59Z",
+  "updated": "2026-08-13T12:13:43Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 6
+      "steps_done": 7
     },
     "G3": {
       "status": "pending",
@@ -710,8 +710,8 @@
         "the Vite template files no longer exist",
         "the startup placeholder renders through bootstrap"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T12:12:38Z evidence/steps/step7-red.txt: template files still present, bootstrap.ts missing",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -1413,7 +1413,12 @@
     "2026-08-13T12:10:59Z evidence recorded: evidence/steps/step6-green.txt (2f1c30695b26) - vitest green: build emits matching chunks, size-limit config matches expected set; empirically confirmed rolldownOptions.output.entryFileNames/chunkFileNames/codeSplitting against installed vite 8.2.1/rolldown ~1.2.1",
     "2026-08-13T12:10:59Z step 6 -> green",
     "2026-08-13T12:10:59Z step 6 -> done",
-    "2026-08-13T12:10:59Z step 6: empirically confirmed against installed vite 8.2.1 (bundles rolldown ~1.2.1 natively) - rolldownOptions.output.entryFileNames/chunkFileNames use the same [hash] placeholder syntax as documented, and vendor grouping uses output.codeSplitting.groups (rolldown's own API, not rollupOptions.output.manualChunks). npm run size currently exceeds the 100kB budget (117.28kB) because template cruft (App.tsx, hero.png, App.css) is still bundled - expected to resolve at step 7 when that cruft is deleted; not required to pass until the M1 boundary."
+    "2026-08-13T12:10:59Z step 6: empirically confirmed against installed vite 8.2.1 (bundles rolldown ~1.2.1 natively) - rolldownOptions.output.entryFileNames/chunkFileNames use the same [hash] placeholder syntax as documented, and vendor grouping uses output.codeSplitting.groups (rolldown's own API, not rollupOptions.output.manualChunks). npm run size currently exceeds the 100kB budget (117.28kB) because template cruft (App.tsx, hero.png, App.css) is still bundled - expected to resolve at step 7 when that cruft is deleted; not required to pass until the M1 boundary.",
+    "2026-08-13T12:12:38Z step 7 -> red",
+    "2026-08-13T12:13:42Z evidence recorded: evidence/steps/step7-red.txt (5efb611519f9) - vitest red: template files present, bootstrap.ts missing",
+    "2026-08-13T12:13:42Z evidence recorded: evidence/steps/step7-green.txt (cf4d9485f00f) - vitest green: template gone, bootstrap renders placeholder; real build now 59.4kB gzipped (was 117.28kB with cruft), 100% coverage on new code",
+    "2026-08-13T12:13:42Z step 7 -> green",
+    "2026-08-13T12:13:43Z step 7 -> done"
   ],
   "milestones": [
     {
@@ -1568,6 +1573,16 @@
       "sha": "2f1c30695b26",
       "recorded": "2026-08-13T12:10:59Z",
       "note": "vitest green: build emits matching chunks, size-limit config matches expected set; empirically confirmed rolldownOptions.output.entryFileNames/chunkFileNames/codeSplitting against installed vite 8.2.1/rolldown ~1.2.1"
+    },
+    "evidence/steps/step7-red.txt": {
+      "sha": "5efb611519f9",
+      "recorded": "2026-08-13T12:13:42Z",
+      "note": "vitest red: template files present, bootstrap.ts missing"
+    },
+    "evidence/steps/step7-green.txt": {
+      "sha": "cf4d9485f00f",
+      "recorded": "2026-08-13T12:13:42Z",
+      "note": "vitest green: template gone, bootstrap renders placeholder; real build now 59.4kB gzipped (was 117.28kB with cruft), 100% coverage on new code"
     }
   },
   "test_file_hashes": {}
