@@ -211,8 +211,16 @@ export default defineConfig([
     },
   },
   {
+    // Invariant 60 governs what SHIPS; a test fixture's literal prop
+    // values and text ("variant=\"primary\"", a Button's "Save" label in
+    // a render() call) are never shipped, so the rule that catches a
+    // hardcoded copy string in a real component would otherwise flag
+    // ordinary test data instead - the kit's own literal-string guard
+    // (scripts/eslint-configuration.test.ts) checks the real component
+    // files, not their tests, which is the actual invariant 85 surface.
     files: ['src/**/*.test.{ts,tsx}'],
     extends: [testingLibrary.configs['flat/react']],
+    rules: { 'i18next/no-literal-string': 'off' },
   },
   {
     files: ['e2e/**/*.ts'],

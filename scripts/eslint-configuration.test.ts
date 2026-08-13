@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { rmSync, writeFileSync } from 'node:fs';
+import { globSync, rmSync, writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 function lintOutputFor(probePath: string, source: string): string {
@@ -190,5 +190,26 @@ describe('demonstrable negatives', () => {
 
     expect(output).toContain('no-restricted-imports');
     expect(output).toContain('public entry');
+  });
+});
+
+describe('kit literal-string guard', () => {
+  it('no kit component contains a user-visible literal', () => {
+    const files = globSync('src/shared/ui/**/*.tsx').filter(
+      (file) => !file.endsWith('.test.tsx'),
+    );
+    expect(
+      files.length,
+      'expected the eight kit components to exist',
+    ).toBeGreaterThan(0);
+
+    let output = '';
+    try {
+      execFileSync('npx', ['eslint', ...files], { encoding: 'utf-8' });
+    } catch (error) {
+      output = String((error as { stdout?: string }).stdout ?? '');
+    }
+
+    expect(output).not.toContain('i18next/no-literal-string');
   });
 });

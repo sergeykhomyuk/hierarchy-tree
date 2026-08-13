@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T14:42:54Z",
+  "updated": "2026-08-13T14:54:50Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 22
+      "steps_done": 23
     },
     "G3": {
       "status": "pending",
@@ -991,8 +991,8 @@
         "the avatar falls back to initials when the image fails to load",
         "no kit component contains a user-visible literal"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T14:54:35Z evidence/steps/step23-red-vitest.txt; evidence/steps/step23-red-typecheck.txt; evidence/steps/step23-red-vitest-lint.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1639,7 +1639,11 @@
     "2026-08-13T14:42:44Z step 22 -> red",
     "2026-08-13T14:42:44Z step 22 -> green",
     "2026-08-13T14:42:54Z step 22: contrastPairs.ts + automated WCAG AA contrast assertion implemented. contrastPairs.test.ts parses theme.css directly with node:fs (the @theme block for light, the prefers-color-scheme:dark :root block layered over light for dark - an unspecified token inherits, matching step 21's design), handles both #rrggbb and rgb(r g b / a) formats with alpha compositing over the stated background, computes WCAG 2.1 relative luminance, and asserts every pair's ratio in both themes with no skip path (a missing token throws rather than being silently omitted, verified by its own test). All 6 contrastPairs (ink/surface, ink-muted/canvas-app, on-primary/primary, focus-ring/surface, border-field/surface, danger/danger-surface) pass at their required ratio in both themes using step 21's already-computed token values - no new tuning needed here since the contrast math was verified before theme.css was written. The focus-indicator test checks the :focus-visible rule's presence/color plus that contrastPairs registers a focus-ring pair at >=3:1; full interactive-element coverage (invariant 74 on real components) completes in step 23 (kit components) and M5's e2e. npm run verify green, 133 tests, 98.03%25 coverage.",
-    "2026-08-13T14:42:54Z step 22 -> done"
+    "2026-08-13T14:42:54Z step 22 -> done",
+    "2026-08-13T14:54:35Z step 23 -> red",
+    "2026-08-13T14:54:35Z step 23 -> green",
+    "2026-08-13T14:54:50Z step 23: the eight kit components implemented (Button, Field, Input, Card, Avatar, Skeleton, ErrorState, EmptyState) plus fieldContext.ts, deriveInitials.ts, skeletonSize.ts, sizeClass.ts. Button's busy state calls preventDefault() before anything else and skips onClick, proven against a real form's onSubmit via userEvent for both pointer click and keyboard Enter after focus - both blocked, and the button stays focusable with its visible label as accessible name (aria-busy/aria-disabled set, native disabled never set while busy). Field/Input share state via FieldContext (a default value lets Input render standalone outside a Field without throwing); the association test walks aria-describedby's id list and confirms each id resolves to a real element. Avatar falls back to initials via deriveInitials(displayName) on missing source or image onError (tested with fireEvent.error, not a raw dispatchEvent, so the React state update actually flushes before the assertion). Two real infrastructure gaps surfaced and fixed: (1) @testing-library/react has no /vitest auto-cleanup entry unlike jest-dom, so DOM nodes leaked across tests within a file until vitest.setup.ts registered afterEach(cleanup) explicitly - the first test file in the repo with multiple render() calls per file is what exposed this; (2) toBeInTheDocument() and friends type-checked as missing under tsconfig.app.json (the SAME types-array-disables-auto-inclusion issue as steps 20/21, this time for jest-dom's vitest matcher augmentation, not node) - fixed with a triple-slash reference in vite-env.d.ts. Also found the i18next/no-literal-string rule was flagging ordinary test fixture data (variant=\"primary\", a Button's \"Save\" label in a render() call) since it had no test-file exemption - scoped it off for src/**/*.test.{ts,tsx}, since invariant 60/85 govern what SHIPS and tests never ship; the actual literal-string guard for the kit runs eslint against the real component files only (scripts/eslint-configuration.test.ts's new 'kit literal-string guard' describe block). npm run verify green, 169 tests, 98.33%25 coverage.",
+    "2026-08-13T14:54:50Z step 23 -> done"
   ],
   "milestones": [
     {
