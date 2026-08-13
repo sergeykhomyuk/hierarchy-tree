@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { globSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -118,6 +118,56 @@ describe('repository configuration', () => {
       const expected = resolve(tsconfigTarget as string);
       expect(viteAlias?.[alias], `${alias} missing from vite.config.ts alias`).toBe(expected);
       expect(vitestAlias?.[alias], `${alias} missing from vitest.config.ts alias`).toBe(expected);
+    }
+  });
+});
+
+describe('vitest configuration', () => {
+  it('coverage thresholds are configured at 85 for lines branches and functions', async () => {
+    const vitestConfig = (await import('../vitest.config.ts')).default;
+    const thresholds = vitestConfig.test?.coverage?.thresholds as
+      | Record<string, unknown>
+      | undefined;
+
+    expect(thresholds?.lines).toBe(85);
+    expect(thresholds?.branches).toBe(85);
+    expect(thresholds?.functions).toBe(85);
+  });
+
+  it('the features domain 100 percent threshold is configured and inert while no such directory exists', async () => {
+    const vitestConfig = (await import('../vitest.config.ts')).default;
+    const thresholds = vitestConfig.test?.coverage?.thresholds as
+      | Record<string, { lines: number; branches: number; functions: number; statements: number }>
+      | undefined;
+    const domainThreshold = thresholds?.['src/features/*/domain/**'];
+
+    expect(domainThreshold).toEqual({ lines: 100, branches: 100, functions: 100, statements: 100 });
+
+    const matches = globSync('src/features/*/domain');
+    expect(matches, 'the domain glob should match nothing yet').toHaveLength(0);
+  });
+
+  it('every Vitest project loads the setup file that makes a real fetch throw', async () => {
+    const vitestConfig = (await import('../vitest.config.ts')).default;
+    const projects = vitestConfig.test?.projects ?? [];
+
+    expect(projects.length).toBeGreaterThanOrEqual(2);
+    for (const project of projects) {
+      const setupFiles =
+        typeof project === 'object' && project !== null && 'test' in project
+          ? (project as { test?: { setupFiles?: string[] } }).test?.setupFiles
+          : undefined;
+      expect(setupFiles, 'project is missing setupFiles').toContain('./vitest.setup.ts');
+    }
+
+    const originalFetch = globalThis.fetch;
+    try {
+      await import('../vitest.setup.ts');
+      expect(() => fetch('https://example.com')).toThrow(
+        'network access is not allowed in unit tests',
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
     }
   });
 });

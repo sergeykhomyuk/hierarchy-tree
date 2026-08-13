@@ -1,0 +1,71 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ scripts/repository-configuration.test.ts (7 tests | 3 failed) 64ms
+     × coverage thresholds are configured at 85 for lines branches and functions 2ms
+     × the features domain 100 percent threshold is configured and inert while no such directory exists 1ms
+     × every Vitest project loads the setup file that makes a real fetch throw 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  scripts/repository-configuration.test.ts > vitest configuration > coverage thresholds are configured at 85 for lines branches and functions
+AssertionError: expected undefined to be 85 // Object.is equality
+
+- Expected:
+85
+
++ Received:
+undefined
+
+ ❯ scripts/repository-configuration.test.ts:132:31
+    130|       | undefined;
+    131|
+    132|     expect(thresholds?.lines).toBe(85);
+       |                               ^
+    133|     expect(thresholds?.branches).toBe(85);
+    134|     expect(thresholds?.functions).toBe(85);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  scripts/repository-configuration.test.ts > vitest configuration > the features domain 100 percent threshold is configured and inert while no such directory exists
+AssertionError: expected undefined to deeply equal { lines: 100, branches: 100, …(2) }
+
+- Expected:
+{
+  "branches": 100,
+  "functions": 100,
+  "lines": 100,
+  "statements": 100,
+}
+
++ Received:
+undefined
+
+ ❯ scripts/repository-configuration.test.ts:144:29
+    142|     const domainThreshold = thresholds?.['src/features/*/domain/**'];
+    143|
+    144|     expect(domainThreshold).toEqual({ lines: 100, branches: 100, funct…
+       |                             ^
+    145|
+    146|     const matches = globSync('src/features/*/domain');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  scripts/repository-configuration.test.ts > vitest configuration > every Vitest project loads the setup file that makes a real fetch throw
+AssertionError: expected 0 to be greater than or equal to 2
+ ❯ scripts/repository-configuration.test.ts:154:29
+    152|     const projects = vitestConfig.test?.projects ?? [];
+    153|
+    154|     expect(projects.length).toBeGreaterThanOrEqual(2);
+       |                             ^
+    155|     for (const project of projects) {
+    156|       const setupFiles =
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 4 passed (7)
+   Start at  12:15:02
+   Duration  138ms (transform 16ms, setup 0ms, import 15ms, tests 64ms, environment 0ms)
+
