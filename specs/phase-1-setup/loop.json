@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T19:20:09Z",
+  "updated": "2026-08-13T19:47:39Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -622,8 +622,8 @@
       "steps_done": 37
     },
     "G3": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "findings": {
         "Gap-1": {
           "desc": "Invariant 58: TECH.md promises a unit test asserting each of the three sink modules' import graph contains no transport module and no network global. No such test exists. Confirmed by direct inspection that the invariant currently holds (no sink imports a transport module or touches a network global), but nothing regression-tests it.",
@@ -640,7 +640,8 @@
           "blocking": false,
           "disposition": "covered - right-to-left.spec.ts now covers both / and /login (was / only), plus a new getComputedStyle(...).direction assertion and a screenshot per route; kit-route.spec.ts gained a matching RTL test for /__kit (the third route TECH.md named, unreachable from right-to-left.spec.ts's chromium project since /__kit only exists in the development project). The padding-inline-start mirroring assertion TECH.md describes has no real subject in phase 1 - no shipped component has asymmetric inline spacing (confirmed by grep for ps-/pe-/ms-/me- Tailwind utilities, none found) - documented in a code comment rather than fabricated against a component built only to satisfy the test; invariant 67's assert-no-physical-properties.mjs independently proves no physical-direction utility was used at all. npm run e2e green (19/19)."
         }
-      }
+      },
+      "note": "Fresh-context verifier (agent af901495b89468e65) ran npm run verify (63 files, 96%+ coverage), npm run e2e (19/19), npm run smoke:live (2/2) against the real backend, and checked all 135 PRODUCT.md invariants. Found 3 verification gaps (Gap-1: invariant 58 sink-import-graph test missing, Gap-2: invariant 134 dependency allow-list test missing, Gap-3: invariant 68 RTL e2e coverage incomplete), all fixed and covered. Evidence: evidence/g3-verify-20260813-200803.txt, evidence/g3-e2e-20260813-200803.txt, evidence/g3-smoke-live-20260813-200803.txt, evidence/g3-gap-fixes-verify.txt, evidence/g3-gap-fixes-e2e.txt. Invariants 123/124/126a (post-merge deployment proof) are explicitly out of scope for this gate - they cannot be satisfied before merge and are tracked as outstanding in PROOF.md."
     },
     "G4": {
       "status": "pending",
@@ -790,6 +791,54 @@
           "blocking": false,
           "disposition": "fixed - error-boundary.spec.ts now focuses the retry button and activates it with keyboard Enter instead of a mouse click, genuinely exercising invariant 93's keyboard-reachability claim. npm run e2e green (17/17).",
           "round": "milestone-5"
+        },
+        "Codex-56": {
+          "desc": "A type-valid resource path can escape the configured API origin - only `//` was rejected; new URL('/\\\\evil.example/x', 'https://api.example.com') resolves to https://evil.example/x, violating invariant 22. createHttpClient.ts:57, resourcePath.ts:1.",
+          "blocking": true,
+          "disposition": "fixed: compare the resolved URL's origin (new URL(url).origin) against configuration.apiBaseUrl's origin instead of a '//' prefix heuristic - discriminates every escape technique the URL parser itself resolves. Regression test added: 'rejects a backslash-escape resource path without calling the transport'.",
+          "round": "final"
+        },
+        "Codex-57": {
+          "desc": "The production CSP was constructed from an unvalidated build-time environment string - loadEnv() passed raw VITE_API_BASE_URL directly into connect-src, disconnected from the runtime Zod validation, so whitespace or semicolons could produce malformed or injected directives. vite.config.ts:30, buildContentSecurityPolicy.ts:6.",
+          "blocking": true,
+          "disposition": "fixed: vite.config.ts now validates VITE_API_BASE_URL with the same z.url({protocol: /^https$/}) rule as configurationSchema.ts, falls back to the documented default on failure, and passes only the parsed URL's .origin (not the raw string) into buildContentSecurityPolicy - an origin cannot carry a ';' so directive injection is structurally impossible. Tests added in scripts/repository-configuration.test.ts (CSP origin resolution).",
+          "round": "final"
+        },
+        "Codex-58": {
+          "desc": "The verify and live-smoke jobs inherited repository-default GITHUB_TOKEN permissions - only deploy set contents:read; checkout persists credentials by default and both other jobs run installed code. ci.yml:13, ci.yml:86.",
+          "blocking": true,
+          "disposition": "fixed: added permissions: {contents: read} to both the verify and live-smoke jobs in ci.yml (deploy already had it). Test coverage added in scripts/workflow-configuration.test.ts (verify job / live-smoke job read-access assertions).",
+          "round": "final"
+        },
+        "Codex-59": {
+          "desc": "A deadline reached while the response body is being read was reported as ParseError - aborting fetch while response.json() is pending rejects that operation, but the unconditional catch mapped it to {kind:'parse'} without checking signal.aborted, breaking invariant 23's deadline contract. createHttpClient.ts:235.",
+          "blocking": true,
+          "disposition": "fixed: performAttempt's response.json() catch now checks signal.aborted before falling back to {kind:'parse'}, returning {kind:'aborted'} instead so the caller sees timeout/cancelled rather than a spurious parse failure. Regression test added: 'reports a timeout, not a parse failure, when the deadline fires while the body is still being read'.",
+          "round": "final"
+        },
+        "Codex-60": {
+          "desc": "The invalid-configuration UI remained a milestone stand-in instead of the specified translated kit error surface - rendered only raw environment-key names despite a stale comment saying M4/M5 would replace it, using neither ErrorState nor the common catalogue, violating invariants 16 and 60. ConfigurationErrorScreen.tsx:7, TECH.md:421.",
+          "blocking": true,
+          "disposition": "fixed: ConfigurationErrorScreen now renders through the shared ErrorState kit component with copy read from the statically bundled common.json catalogue (a plain JSON import, not useTranslation(), since this renders before createRuntime() can build an i18next instance - documented in a code comment). Added the configurationError key to src/app/locales/en/common.json.",
+          "round": "final"
+        },
+        "Codex-61": {
+          "desc": "The secret scanner could not enforce the repository-wide invariant it claims to guard - source mode scanned only src/**/*.{ts,tsx}, bundle mode scanned selected dist extensions, and the environment check examined only root directory entries rather than tracked files; a credential in .github, scripts, public, docs, JSON, or a nested .env passed invariant 133's gate. assert-no-secrets.mjs:65,81.",
+          "blocking": true,
+          "disposition": "fixed: assert-no-secrets.mjs rewritten to enumerate every git-tracked file (git ls-files) filtered by scannable source extensions, rather than a narrow src/**/*.{ts,tsx} glob; env-file check now scans all git-tracked files for a .env* basename, not just the repo root. Exclusion lists added for legitimate high-entropy content (package-lock.json hashes, loop.json audit trail, SHA-pinned Actions refs, eslint.config.js's own glob strings, the scanner's own keyword-pattern definitions). Regression test added in scripts/guard-scripts.test.ts proving discovery mode catches a keyword secret in .github/workflows/ and not in a *.test.ts file.",
+          "round": "final"
+        },
+        "Codex-62": {
+          "desc": "An in-flight caller cancellation emitted no timing record - the client returned cancelled before recordTiming, while invariant 31 requires one timing record per outbound attempt; TimingRecord also lacked a cancelled outcome. createHttpClient.ts:97, timingRecord.ts:1.",
+          "blocking": false,
+          "disposition": "fixed: TimingRecord's outcome union gained 'cancelled'; the caller-abort branch inside the request loop (an attempt was already made and durationMilliseconds already computed) now calls recordTiming with outcome:'cancelled' before returning. Regression test added: 'a caller abort of an in-flight attempt still records its timing, with a cancelled outcome'. The pre-flight case (signal already aborted before any attempt) correctly still emits none, matching invariant 31's 'per outbound attempt' wording.",
+          "round": "final"
+        },
+        "Codex-63": {
+          "desc": "The logical-deadline test did not discriminate against a per-attempt deadline implementation - it hung the first attempt until timeout and never performed the specified first-failure/backoff/hanging-retry sequence, so a per-attempt deadline restart would still have passed it. createHttpClient.test.ts:61, TECH.md:973.",
+          "blocking": false,
+          "disposition": "fixed: added a new discriminating test - 'the deadline is a single logical-request budget spanning a retry, not restarted per attempt' - that fails the first attempt immediately, lets it retry after the fixed 100ms backoff, hangs the second attempt, and asserts the deadline still fires at the original cumulative 1000ms rather than 1000ms further (which a per-attempt-reset implementation would require). Confirmed the implementation was already correct (the deadline timer is set once before the retry loop, not per attempt) - this closes the test-quality gap, not a code defect.",
+          "round": "final"
         }
       }
     },
@@ -1888,7 +1937,26 @@
     "2026-08-13T19:19:32Z evidence recorded: evidence/g3-e2e-playwright-report-20260813-200803.tar.gz (8a90201c59ca) - G3 fresh-context verification: full Playwright HTML report with all 17 traces embedded",
     "2026-08-13T19:19:32Z evidence recorded: evidence/g3-smoke-live-20260813-200803.txt (cf7d2335448e) - G3 fresh-context verification: npm run smoke:live against the real backend, 2/2 passed",
     "2026-08-13T19:20:09Z evidence recorded: evidence/g3-gap-fixes-verify.txt (32a57980525d) - npm run verify green after fixing G3 gaps 1-3 (63 test files)",
-    "2026-08-13T19:20:09Z evidence recorded: evidence/g3-gap-fixes-e2e.txt (2604f8b644ff) - npm run e2e green after fixing G3 gaps 1-3 (19/19)"
+    "2026-08-13T19:20:09Z evidence recorded: evidence/g3-gap-fixes-e2e.txt (2604f8b644ff) - npm run e2e green after fixing G3 gaps 1-3 (19/19)",
+    "2026-08-13T19:43:36Z evidence recorded: evidence/reviews/g4-codex-raw-output.txt (293416f010ac) - Codex second-opinion raw output for G4 dual review, full diff base..HEAD",
+    "2026-08-13T19:46:55Z G3 -> passed (Fresh-context verifier (agent af901495b89468e65) ran npm run verify (63 files, 96%+ coverage), npm run e2e (19/19), npm run smoke:live (2/2) against the real backend, and checked all 135 PRODUCT.md invariants. Found 3 verification gaps (Gap-1: invariant 58 sink-import-graph test missing, Gap-2: invariant 134 dependency allow-list test missing, Gap-3: invariant 68 RTL e2e coverage incomplete), all fixed and covered. Evidence: evidence/g3-verify-20260813-200803.txt, evidence/g3-e2e-20260813-200803.txt, evidence/g3-smoke-live-20260813-200803.txt, evidence/g3-gap-fixes-verify.txt, evidence/g3-gap-fixes-e2e.txt. Invariants 123/124/126a (post-merge deployment proof) are explicitly out of scope for this gate - they cannot be satisfied before merge and are tracked as outstanding in PROOF.md.)",
+    "2026-08-13T19:47:09Z G4 finding Codex-56 recorded (blocking) [round: final]: A type-valid resource path can escape the configured API origin - only `//` was rejected; new URL('/\\\\evil.example/x', 'https://api.example.com') resolves to https://evil.example/x, violating invariant 22. createHttpClient.ts:57, resourcePath.ts:1.",
+    "2026-08-13T19:47:09Z G4 finding Codex-57 recorded (blocking) [round: final]: The production CSP was constructed from an unvalidated build-time environment string - loadEnv() passed raw VITE_API_BASE_URL directly into connect-src, disconnected from the runtime Zod validation, so whitespace or semicolons could produce malformed or injected directives. vite.config.ts:30, buildContentSecurityPolicy.ts:6.",
+    "2026-08-13T19:47:09Z G4 finding Codex-58 recorded (blocking) [round: final]: The verify and live-smoke jobs inherited repository-default GITHUB_TOKEN permissions - only deploy set contents:read; checkout persists credentials by default and both other jobs run installed code. ci.yml:13, ci.yml:86.",
+    "2026-08-13T19:47:09Z G4 finding Codex-59 recorded (blocking) [round: final]: A deadline reached while the response body is being read was reported as ParseError - aborting fetch while response.json() is pending rejects that operation, but the unconditional catch mapped it to {kind:'parse'} without checking signal.aborted, breaking invariant 23's deadline contract. createHttpClient.ts:235.",
+    "2026-08-13T19:47:09Z G4 finding Codex-60 recorded (blocking) [round: final]: The invalid-configuration UI remained a milestone stand-in instead of the specified translated kit error surface - rendered only raw environment-key names despite a stale comment saying M4/M5 would replace it, using neither ErrorState nor the common catalogue, violating invariants 16 and 60. ConfigurationErrorScreen.tsx:7, TECH.md:421.",
+    "2026-08-13T19:47:09Z G4 finding Codex-61 recorded (blocking) [round: final]: The secret scanner could not enforce the repository-wide invariant it claims to guard - source mode scanned only src/**/*.{ts,tsx}, bundle mode scanned selected dist extensions, and the environment check examined only root directory entries rather than tracked files; a credential in .github, scripts, public, docs, JSON, or a nested .env passed invariant 133's gate. assert-no-secrets.mjs:65,81.",
+    "2026-08-13T19:47:09Z G4 finding Codex-62 recorded [round: final]: An in-flight caller cancellation emitted no timing record - the client returned cancelled before recordTiming, while invariant 31 requires one timing record per outbound attempt; TimingRecord also lacked a cancelled outcome. createHttpClient.ts:97, timingRecord.ts:1.",
+    "2026-08-13T19:47:09Z G4 finding Codex-63 recorded [round: final]: The logical-deadline test did not discriminate against a per-attempt deadline implementation - it hung the first attempt until timeout and never performed the specified first-failure/backoff/hanging-retry sequence, so a per-attempt deadline restart would still have passed it. createHttpClient.test.ts:61, TECH.md:973.",
+    "2026-08-13T19:47:27Z G4 finding Codex-56 dispositioned: fixed: compare the resolved URL's origin (new URL(url).origin) against configuration.apiBaseUrl's origin instead of a '//' prefix heuristic - discriminates every escape technique the URL parser itself resolves. Regression test added: 'rejects a backslash-escape resource path without calling the transport'.",
+    "2026-08-13T19:47:27Z G4 finding Codex-57 dispositioned: fixed: vite.config.ts now validates VITE_API_BASE_URL with the same z.url({protocol: /^https$/}) rule as configurationSchema.ts, falls back to the documented default on failure, and passes only the parsed URL's .origin (not the raw string) into buildContentSecurityPolicy - an origin cannot carry a ';' so directive injection is structurally impossible. Tests added in scripts/repository-configuration.test.ts (CSP origin resolution).",
+    "2026-08-13T19:47:27Z G4 finding Codex-58 dispositioned: fixed: added permissions: {contents: read} to both the verify and live-smoke jobs in ci.yml (deploy already had it). Test coverage added in scripts/workflow-configuration.test.ts (verify job / live-smoke job read-access assertions).",
+    "2026-08-13T19:47:27Z G4 finding Codex-59 dispositioned: fixed: performAttempt's response.json() catch now checks signal.aborted before falling back to {kind:'parse'}, returning {kind:'aborted'} instead so the caller sees timeout/cancelled rather than a spurious parse failure. Regression test added: 'reports a timeout, not a parse failure, when the deadline fires while the body is still being read'.",
+    "2026-08-13T19:47:27Z G4 finding Codex-60 dispositioned: fixed: ConfigurationErrorScreen now renders through the shared ErrorState kit component with copy read from the statically bundled common.json catalogue (a plain JSON import, not useTranslation(), since this renders before createRuntime() can build an i18next instance - documented in a code comment). Added the configurationError key to src/app/locales/en/common.json.",
+    "2026-08-13T19:47:27Z G4 finding Codex-61 dispositioned: fixed: assert-no-secrets.mjs rewritten to enumerate every git-tracked file (git ls-files) filtered by scannable source extensions, rather than a narrow src/**/*.{ts,tsx} glob; env-file check now scans all git-tracked files for a .env* basename, not just the repo root. Exclusion lists added for legitimate high-entropy content (package-lock.json hashes, loop.json audit trail, SHA-pinned Actions refs, eslint.config.js's own glob strings, the scanner's own keyword-pattern definitions). Regression test added in scripts/guard-scripts.test.ts proving discovery mode catches a keyword secret in .github/workflows/ and not in a *.test.ts file.",
+    "2026-08-13T19:47:27Z G4 finding Codex-62 dispositioned: fixed: TimingRecord's outcome union gained 'cancelled'; the caller-abort branch inside the request loop (an attempt was already made and durationMilliseconds already computed) now calls recordTiming with outcome:'cancelled' before returning. Regression test added: 'a caller abort of an in-flight attempt still records its timing, with a cancelled outcome'. The pre-flight case (signal already aborted before any attempt) correctly still emits none, matching invariant 31's 'per outbound attempt' wording.",
+    "2026-08-13T19:47:27Z G4 finding Codex-63 dispositioned: fixed: added a new discriminating test - 'the deadline is a single logical-request budget spanning a retry, not restarted per attempt' - that fails the first attempt immediately, lets it retry after the fixed 100ms backoff, hangs the second attempt, and asserts the deadline still fires at the original cumulative 1000ms rather than 1000ms further (which a per-attempt-reset implementation would require). Confirmed the implementation was already correct (the deadline timer is set once before the retry loop, not per attempt) - this closes the test-quality gap, not a code defect.",
+    "2026-08-13T19:47:39Z G4 Codex second opinion (evidence/reviews/g4-codex-raw-output.txt): 8 findings (Codex-56..63), 6 blocking. Fixed all 8: origin-escape via resolved-URL-origin comparison (56), CSP built from validated+origin-only apiBaseUrl in vite.config.ts (57), verify/live-smoke CI jobs scoped to contents:read (58), deadline-during-parse now returns aborted not parse-failure (59), ConfigurationErrorScreen rebuilt on ErrorState+catalogue (60), assert-no-secrets.mjs rescoped to all git-tracked files (61), cancelled in-flight attempts now emit a timing record with a new 'cancelled' TimingRecord outcome (62), and a new discriminating deadline-vs-retry regression test added (63, confirmed no code defect - test-quality gap only). Also independently found and fixed invariant 21's lint coverage gap (globalThis.fetch, new Image().src not banned) with a matching eslint-configuration.test.ts coverage assertion. npm run verify and npm run e2e (19/19) green after all fixes."
   ],
   "milestones": [
     {
@@ -2618,6 +2686,11 @@
       "sha": "2604f8b644ff",
       "recorded": "2026-08-13T19:20:09Z",
       "note": "npm run e2e green after fixing G3 gaps 1-3 (19/19)"
+    },
+    "evidence/reviews/g4-codex-raw-output.txt": {
+      "sha": "293416f010ac",
+      "recorded": "2026-08-13T19:43:36Z",
+      "note": "Codex second-opinion raw output for G4 dual review, full diff base..HEAD"
     }
   },
   "test_file_hashes": {}

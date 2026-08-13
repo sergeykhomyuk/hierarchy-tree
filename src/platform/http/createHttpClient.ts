@@ -54,7 +54,18 @@ export function createHttpClient(
   async function request<Value>(
     httpRequest: HttpRequest<Value>,
   ): Promise<HttpResult<Value>> {
-    if (httpRequest.resourcePath.startsWith('//')) {
+    // A string-prefix check (the previous `startsWith('//')` guard) only
+    // catches a protocol-relative escape. `new URL('/\\evil.example/x',
+    // 'https://api.example.com')` resolves to `https://evil.example/x` -
+    // the WHATWG URL parser treats a leading backslash the same as a
+    // forward slash for special schemes - which no prefix heuristic
+    // catches. Comparing the RESOLVED url's origin against the
+    // configured one is the only check that discriminates every escape
+    // technique the parser itself is willing to resolve, because it
+    // reuses that exact resolution rather than re-deriving a narrower
+    // rule from it (invariant 22).
+    const url = buildUrl(configuration.apiBaseUrl, httpRequest);
+    if (new URL(url).origin !== new URL(configuration.apiBaseUrl).origin) {
       observability.logger.error('http.invalid_resource_path', {
         resourcePath: httpRequest.resourcePath,
       });
@@ -84,7 +95,6 @@ export function createHttpClient(
       while (true) {
         const attemptStartedAt = clock.now();
         const traceparent = createTraceparent(correlationId, randomness);
-        const url = buildUrl(configuration.apiBaseUrl, httpRequest);
         const rawOutcome = await performAttempt(
           httpRequest,
           url,
@@ -98,6 +108,15 @@ export function createHttpClient(
           if (httpRequest.signal?.aborted) {
             observability.logger.debug('http.request_cancelled', {
               resourcePath: httpRequest.resourcePath,
+              requestId,
+            });
+            observability.tracer.recordTiming({
+              method: httpRequest.method,
+              resourcePath: httpRequest.resourcePath,
+              outcome: 'cancelled',
+              durationMilliseconds,
+              correlationId,
+              attempt,
               requestId,
             });
             return { outcome: 'cancelled' };
@@ -240,6 +259,11 @@ async function performAttempt<Value>(
       status: response.status,
     };
   } catch {
+    // The deadline (or a caller abort) can fire while the body is still
+    // being read, which rejects response.json() the same way a genuine
+    // parse failure would - unconditionally mapping this catch to
+    // 'parse' misreported a cancellation/timeout as malformed JSON.
+    if (signal.aborted) return { kind: 'aborted' };
     return { kind: 'failure', failure: { kind: 'parse' } };
   }
 }

@@ -282,4 +282,42 @@ describe('assert-no-secrets', () => {
     expect(result.status, 'a missing dist/ must fail, not skip').not.toBe(0);
     expect(result.output).toContain('dist/ is missing');
   });
+
+  it('discovery mode (no explicit target) scans every git-tracked code file, not only src/', () => {
+    const probeDir = mkdtempSync(join(tmpdir(), 'no-secrets-discovery-'));
+    execFileSync('git', ['init', '--quiet'], { cwd: probeDir });
+    execFileSync('git', ['config', 'user.email', 'probe@example.test'], {
+      cwd: probeDir,
+    });
+    execFileSync('git', ['config', 'user.name', 'probe'], { cwd: probeDir });
+
+    mkdirSync(join(probeDir, '.github', 'workflows'), { recursive: true });
+    writeFileSync(
+      join(probeDir, '.github', 'workflows', 'ci.yml'),
+      'env:\n  TOKEN: "apiKey_value_here"\n',
+    );
+    // A .test.ts fixture carrying the same pattern must NOT be caught -
+    // this repository's own test files deliberately contain banned
+    // patterns as probes.
+    writeFileSync(
+      join(probeDir, 'sample.test.ts'),
+      'export const apiKey = "probe";\n',
+    );
+    execFileSync('git', ['add', '-A'], { cwd: probeDir });
+
+    const result = runScript(
+      join(process.cwd(), scriptPath),
+      ['--source-only'],
+      { cwd: probeDir },
+    );
+
+    rmSync(probeDir, { recursive: true, force: true });
+
+    expect(
+      result.status,
+      'a keyword secret outside src/ must be caught by discovery mode',
+    ).not.toBe(0);
+    expect(result.output).toContain('.github/workflows/ci.yml');
+    expect(result.output).not.toContain('sample.test.ts');
+  });
 });

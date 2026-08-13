@@ -1,7 +1,7 @@
 export type TimingRecord = {
   method: string;
   resourcePath: string;
-  outcome: 'success' | 'failure';
+  outcome: 'success' | 'failure' | 'cancelled';
   status?: number;
   durationMilliseconds: number;
   correlationId: string;

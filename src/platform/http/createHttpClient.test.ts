@@ -87,6 +87,54 @@ describe('createHttpClient', () => {
     });
   });
 
+  it('the deadline is a single logical-request budget spanning a retry, not restarted per attempt', async () => {
+    const clock = createFakeClock();
+    let callCount = 0;
+    const transport: Transport = (request) => {
+      callCount += 1;
+      if (callCount === 1) {
+        return Promise.reject(new Error('network down'));
+      }
+      return new Promise((_resolve, reject) => {
+        request.signal.addEventListener('abort', () => {
+          reject(new DOMException('aborted', 'AbortError'));
+        });
+      });
+    };
+    const client = createHttpClient(
+      createTestDependencies({
+        transport,
+        clock,
+        configuration: {
+          apiBaseUrl: 'https://api.example.com',
+          requestTimeoutMilliseconds: 1000,
+        },
+      }),
+    );
+
+    const resultPromise = client.request({
+      method: 'GET',
+      resourcePath: '/things',
+      parse: (value) => value,
+    });
+    await flushMicrotasks();
+    // The first attempt fails immediately; retryDelayMilliseconds(0, 0) is
+    // 100ms under the fixed-at-zero randomness fake.
+    await clock.advance(100);
+    await flushMicrotasks();
+    expect(callCount).toBe(2);
+    // A per-attempt deadline would restart at the retry and not fire until
+    // a further 1000ms (1100ms total) - advancing to exactly 900 more
+    // proves the single deadline set before the retry loop still governs.
+    await clock.advance(900);
+    const result = await resultPromise;
+
+    expect(result).toEqual({
+      outcome: 'failure',
+      failure: { kind: 'timeout', timeoutMilliseconds: 1000 },
+    });
+  });
+
   it('a caller abort yields cancelled without retrying or reporting an error', async () => {
     const observability = createSpyObservability();
     const { transport, callCount } = createHangingTransport();
@@ -108,6 +156,29 @@ describe('createHttpClient', () => {
     expect(result).toEqual({ outcome: 'cancelled' });
     expect(callCount()).toBe(1);
     expect(observability.logger.error).not.toHaveBeenCalled();
+  });
+
+  it('a caller abort of an in-flight attempt still records its timing, with a cancelled outcome', async () => {
+    const observability = createSpyObservability();
+    const { transport } = createHangingTransport();
+    const controller = new AbortController();
+    const client = createHttpClient(
+      createTestDependencies({ transport, observability }),
+    );
+
+    const resultPromise = client.request({
+      method: 'GET',
+      resourcePath: '/things',
+      signal: controller.signal,
+      parse: (value) => value,
+    });
+    await flushMicrotasks();
+    controller.abort();
+    await resultPromise;
+
+    expect(observability.tracer.recordTiming).toHaveBeenCalledWith(
+      expect.objectContaining({ outcome: 'cancelled', attempt: 0 }),
+    );
   });
 
   it('a pre-aborted signal yields cancelled with no transport call', async () => {
@@ -370,6 +441,74 @@ describe('createHttpClient', () => {
       failure: { kind: 'network' },
     });
     expect(observability.logger.error).toHaveBeenCalled();
+  });
+
+  it('rejects a backslash-escape resource path without calling the transport', async () => {
+    const observability = createSpyObservability();
+    let calls = 0;
+    const transport: Transport = () => {
+      calls += 1;
+      return Promise.resolve(new Response(null, { status: 200 }));
+    };
+    const client = createHttpClient(
+      createTestDependencies({ transport, observability }),
+    );
+
+    const result = await client.request({
+      // The WHATWG URL parser treats a leading backslash the same as a
+      // forward slash for special schemes: `new URL('/\\evil.example/x',
+      // 'https://api.example.com')` resolves to `https://evil.example/x`,
+      // escaping the configured origin without a `//` prefix (invariant 22).
+      resourcePath: '/\\evil.example/x',
+      method: 'GET',
+      parse: (value) => value,
+    });
+
+    expect(calls).toBe(0);
+    expect(result).toEqual({
+      outcome: 'failure',
+      failure: { kind: 'network' },
+    });
+    expect(observability.logger.error).toHaveBeenCalled();
+  });
+
+  it('reports a timeout, not a parse failure, when the deadline fires while the body is still being read', async () => {
+    const clock = createFakeClock();
+    const transport: Transport = (request) =>
+      Promise.resolve().then(() => {
+        const response = new Response(null, { status: 200 });
+        response.json = () =>
+          new Promise((_resolve, reject) => {
+            request.signal.addEventListener('abort', () => {
+              reject(new DOMException('aborted', 'AbortError'));
+            });
+          });
+        return response;
+      });
+    const client = createHttpClient(
+      createTestDependencies({
+        transport,
+        clock,
+        configuration: {
+          apiBaseUrl: 'https://api.example.com',
+          requestTimeoutMilliseconds: 1000,
+        },
+      }),
+    );
+
+    const resultPromise = client.request({
+      method: 'GET',
+      resourcePath: '/things',
+      parse: (value) => value,
+    });
+    await flushMicrotasks();
+    await clock.advance(1000);
+    const result = await resultPromise;
+
+    expect(result).toEqual({
+      outcome: 'failure',
+      failure: { kind: 'timeout', timeoutMilliseconds: 1000 },
+    });
   });
 
   it('rejects an absolute URL at compile time', () => {

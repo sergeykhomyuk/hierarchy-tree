@@ -45,6 +45,11 @@ const STORAGE_GLOBALS = [
 const NETWORK_PROPERTIES = [
   { object: 'window', property: 'fetch', message: USE_HTTP_CLIENT_MESSAGE },
   {
+    object: 'globalThis',
+    property: 'fetch',
+    message: USE_HTTP_CLIENT_MESSAGE,
+  },
+  {
     object: 'navigator',
     property: 'sendBeacon',
     message: USE_HTTP_CLIENT_MESSAGE,
@@ -103,6 +108,11 @@ const SEND_BEACON_SYNTAX = {
   selector: 'MemberExpression[property.name="sendBeacon"]',
   message: USE_HTTP_CLIENT_MESSAGE,
 };
+const IMAGE_SRC_SYNTAX = {
+  selector:
+    'AssignmentExpression[left.type="MemberExpression"][left.property.name="src"][left.object.type="NewExpression"][left.object.callee.name="Image"]',
+  message: USE_HTTP_CLIENT_MESSAGE,
+};
 const DATE_SYNTAX = {
   selector: 'NewExpression[callee.name="Date"][arguments.length=0]',
   message:
@@ -129,7 +139,7 @@ const FEATURE_DEEP_IMPORT_PATTERNS = [
 const SINKS_IMPORT_PATTERN = {
   group: ['@platform/observability/sinks/*', '**/observability/sinks/*'],
   message:
-    'Sinks are constructed only by platform/observability/createObservability.ts.',
+    'Sinks are constructed only by createObservability.ts (platform/observability).',
 };
 
 export default defineConfig([
@@ -545,6 +555,7 @@ export default defineConfig([
         'error',
         ENV_SYNTAX,
         SEND_BEACON_SYNTAX,
+        IMAGE_SRC_SYNTAX,
         DATE_SYNTAX,
         TELEMETRY_SYNTAX,
       ],
@@ -569,6 +580,7 @@ export default defineConfig([
       'no-restricted-syntax': [
         'error',
         SEND_BEACON_SYNTAX,
+        IMAGE_SRC_SYNTAX,
         DATE_SYNTAX,
         TELEMETRY_SYNTAX,
       ],
@@ -591,6 +603,7 @@ export default defineConfig([
       'no-restricted-syntax': [
         'error',
         SEND_BEACON_SYNTAX,
+        IMAGE_SRC_SYNTAX,
         DATE_SYNTAX,
         TELEMETRY_SYNTAX,
       ],
@@ -621,6 +634,7 @@ export default defineConfig([
         'error',
         ENV_SYNTAX,
         SEND_BEACON_SYNTAX,
+        IMAGE_SRC_SYNTAX,
         TELEMETRY_SYNTAX,
       ],
       'no-restricted-globals': [
@@ -654,6 +668,7 @@ export default defineConfig([
         'error',
         ENV_SYNTAX,
         SEND_BEACON_SYNTAX,
+        IMAGE_SRC_SYNTAX,
         DATE_SYNTAX,
       ],
     },
@@ -673,6 +688,7 @@ export default defineConfig([
         'error',
         ENV_SYNTAX,
         SEND_BEACON_SYNTAX,
+        IMAGE_SRC_SYNTAX,
         DATE_SYNTAX,
       ],
     },

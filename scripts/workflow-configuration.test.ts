@@ -75,6 +75,12 @@ describe('CI workflow', () => {
   });
 
   describe('verify job', () => {
+    it('carries no more than read access to repository contents', () => {
+      const job = readWorkflow().jobs?.verify;
+
+      expect(job?.permissions).toEqual({ contents: 'read' });
+    });
+
     it('checks out, sets up Node from .nvmrc with npm caching, and runs npm ci', () => {
       const job = readWorkflow().jobs?.verify;
       const steps = job?.steps ?? [];
@@ -271,6 +277,12 @@ describe('CI workflow', () => {
   });
 
   describe('live-smoke job', () => {
+    it('carries no more than read access to repository contents', () => {
+      const job = readWorkflow().jobs?.['live-smoke'];
+
+      expect(job?.permissions).toEqual({ contents: 'read' });
+    });
+
     it('runs only when manually dispatched, and blocks no merge', () => {
       const workflow = readWorkflow();
 

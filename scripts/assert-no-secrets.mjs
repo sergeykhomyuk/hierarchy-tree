@@ -4,7 +4,70 @@
 // things: --source-only runs in `npm run lint` over src/, --bundle-only
 // runs in `npm run verify:build` over dist/ immediately after the build
 // and FAILS (not skips) when dist/ is missing.
-import { existsSync, globSync, readdirSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, globSync, readFileSync } from 'node:fs';
+
+// Every git-tracked code/config file, not a hand-maintained glob - a
+// credential landing in .github/, scripts/, public/ or a root config
+// file previously passed this check silently, because --source-only
+// only ever scanned src/**/*.{ts,tsx}. `git ls-files` also naturally
+// excludes node_modules, dist and anything else .gitignore already
+// keeps out of the repository.
+//
+// Markdown and test files are deliberately NOT in this set: this
+// repository's own specs discuss the banned keyword patterns in prose
+// (TECH.md explains the apiKey/authorization/bearer bans by naming
+// them) and its test fixtures deliberately contain the literal banned
+// patterns as probes (guard-scripts.test.ts, eslint-configuration.test.ts).
+// Scanning those would bury real findings under expected, self-referential
+// noise; secret risk in docs/tests is review-carried, not this script's job.
+const SCANNABLE_SOURCE_EXTENSIONS = new Set([
+  '.ts',
+  '.tsx',
+  '.mjs',
+  '.js',
+  '.json',
+  '.yml',
+  '.yaml',
+]);
+const TEST_FILE_PATTERN = /\.test\.[jt]sx?$/;
+
+// Files that legitimately carry a long hash-like or path-like run for
+// reasons unrelated to secrecy: npm's integrity hashes in the lockfile,
+// the loop state file's own evidence hashes and logged file-path
+// references, a workflow file's deliberate commit-SHA action pinning (a
+// security best practice, not a leak), and the ESLint config's own
+// `files:` glob arrays, several of which name a `src/platform/**` path
+// past the 40-character threshold by construction. Excluded from the
+// entropy heuristic only - SECRET_KEYWORDS still applies to all of them.
+const ENTROPY_SCAN_EXCLUDES = new Set([
+  'package-lock.json',
+  '.github/workflows/ci.yml',
+  'eslint.config.js',
+]);
+const ENTROPY_SCAN_EXCLUDE_PATTERN = /(^|\/)loop\.json$/;
+
+function listTrackedSourceFiles() {
+  const tracked = execFileSync('git', ['ls-files'], { encoding: 'utf-8' })
+    .split('\n')
+    .filter(Boolean);
+  return tracked.filter((filePath) => {
+    if (TEST_FILE_PATTERN.test(filePath)) return false;
+    const dot = filePath.lastIndexOf('.');
+    const extension = dot === -1 ? '' : filePath.slice(dot);
+    return SCANNABLE_SOURCE_EXTENSIONS.has(extension);
+  });
+}
+
+function listTrackedEnvFiles() {
+  return execFileSync('git', ['ls-files'], { encoding: 'utf-8' })
+    .split('\n')
+    .filter(Boolean)
+    .filter((filePath) => {
+      const basename = filePath.split('/').pop() ?? '';
+      return basename.startsWith('.env') && basename !== '.env.example';
+    });
+}
 
 const mode = process.argv.includes('--bundle-only')
   ? 'bundle'
@@ -26,12 +89,30 @@ const SECRET_KEYWORDS = [
   /AIza[0-9A-Za-z_-]{35}/,
 ];
 
+// This script's own pattern definitions below contain the literal
+// keyword text they ban (apiKey, authorization, bearer) - excluded from
+// its own keyword check for that reason, not because its content is
+// exempt from scrutiny.
+const KEYWORD_SCAN_EXCLUDES = new Set(['scripts/assert-no-secrets.mjs']);
+
 function findKeywordSecrets(source, filePath, violations) {
-  for (const pattern of SECRET_KEYWORDS) {
-    if (pattern.test(source)) {
-      violations.push(`${filePath}: matches secret keyword pattern ${pattern}`);
+  if (!KEYWORD_SCAN_EXCLUDES.has(filePath)) {
+    for (const pattern of SECRET_KEYWORDS) {
+      if (pattern.test(source)) {
+        violations.push(
+          `${filePath}: matches secret keyword pattern ${pattern}`,
+        );
+      }
     }
   }
+
+  if (
+    ENTROPY_SCAN_EXCLUDES.has(filePath) ||
+    ENTROPY_SCAN_EXCLUDE_PATTERN.test(filePath)
+  ) {
+    return;
+  }
+
   const entropyMatch = source.match(HIGH_ENTROPY_HEX_OR_BASE64);
   if (entropyMatch) {
     violations.push(
@@ -63,10 +144,7 @@ function findSuppressedRules(source, filePath, violations) {
 }
 
 function checkTrackedEnvFiles(violations) {
-  const envFiles = readdirSync('.').filter(
-    (name) => name.startsWith('.env') && name !== '.env.example',
-  );
-  for (const envFile of envFiles) {
+  for (const envFile of listTrackedEnvFiles()) {
     violations.push(
       `${envFile}: a .env file other than .env.example must never be tracked`,
     );
@@ -82,7 +160,7 @@ if (mode === 'source') {
   if (explicitTargets.length === 0) checkTrackedEnvFiles(violations);
   for (const filePath of explicitTargets.length > 0
     ? explicitTargets
-    : globSync('src/**/*.{ts,tsx}')) {
+    : listTrackedSourceFiles()) {
     const source = readFileSync(filePath, 'utf-8');
     findKeywordSecrets(source, filePath, violations);
     findSuppressedRules(source, filePath, violations);

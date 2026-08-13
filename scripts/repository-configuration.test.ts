@@ -144,6 +144,41 @@ describe('repository configuration', () => {
   });
 });
 
+describe('CSP origin resolution', () => {
+  it('accepts a valid https base url and reduces it to its origin', async () => {
+    const { resolveApiOrigin } = await import('../vite.config.ts');
+
+    expect(resolveApiOrigin('https://api.example.com/v1/things')).toBe(
+      'https://api.example.com',
+    );
+  });
+
+  it('falls back to the documented default for a non-https or malformed value', async () => {
+    const { resolveApiOrigin } = await import('../vite.config.ts');
+
+    expect(resolveApiOrigin('http://api.example.com')).toBe(
+      'https://gongfetest.firebaseio.com',
+    );
+    expect(resolveApiOrigin('not a url')).toBe(
+      'https://gongfetest.firebaseio.com',
+    );
+  });
+
+  it('never lets a directive-injection payload reach the CSP directive unescaped', async () => {
+    const { resolveApiOrigin } = await import('../vite.config.ts');
+
+    // A base url carrying a `;` could otherwise inject a second CSP
+    // directive once interpolated into `connect-src 'self' ${...}`
+    // (Codex-2) - an origin can never contain one, valid or not.
+    const origin = resolveApiOrigin(
+      "https://api.example.com; script-src 'unsafe-inline'",
+    );
+
+    expect(origin).not.toContain(';');
+    expect(origin).toBe('https://gongfetest.firebaseio.com');
+  });
+});
+
 describe('vitest configuration', () => {
   it('coverage thresholds are configured at 85 for lines branches and functions', async () => {
     const vitestConfig = (await import('../vitest.config.ts')).default;

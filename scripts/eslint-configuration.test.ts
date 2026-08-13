@@ -97,6 +97,73 @@ describe('eslint configuration', () => {
     }
   });
 
+  it('the network ban covers every enumerated identifier in bare and member forms', async () => {
+    const config = await readEslintConfig();
+    const bareNetworkGlobals = [
+      'fetch',
+      'XMLHttpRequest',
+      'WebSocket',
+      'EventSource',
+    ];
+    // `fetch` and `sendBeacon` are also reachable through a member
+    // expression (window.fetch, globalThis.fetch, navigator.sendBeacon);
+    // the invariant names all three explicitly, not the bare identifier
+    // alone.
+    const memberNetworkProperties = ['fetch', 'sendBeacon'];
+
+    const restrictedGlobals = collectRules(
+      config,
+      'no-restricted-globals',
+    ).flatMap(
+      (rule) =>
+        (Array.isArray(rule.value) ? rule.value.slice(1) : []) as unknown[],
+    ) as Array<{ name?: string } | string>;
+    const bannedGlobalNames = restrictedGlobals.map((entry) =>
+      typeof entry === 'string' ? entry : entry.name,
+    );
+
+    for (const name of bareNetworkGlobals) {
+      expect(
+        bannedGlobalNames,
+        `${name} missing from no-restricted-globals`,
+      ).toContain(name);
+    }
+
+    const restrictedProperties = collectRules(
+      config,
+      'no-restricted-properties',
+    ).flatMap(
+      (rule) =>
+        (Array.isArray(rule.value) ? rule.value.slice(1) : []) as unknown[],
+    ) as Array<{ property?: string }>;
+    const bannedPropertyNames = new Set(
+      restrictedProperties.map((entry) => entry.property),
+    );
+
+    for (const name of memberNetworkProperties) {
+      expect(
+        bannedPropertyNames.has(name),
+        `${name} missing from no-restricted-properties`,
+      ).toBe(true);
+    }
+
+    const restrictedSyntaxSelectors = collectRules(
+      config,
+      'no-restricted-syntax',
+    ).flatMap(
+      (rule) =>
+        (Array.isArray(rule.value) ? rule.value.slice(1) : []) as unknown[],
+    ) as Array<{ selector?: string }>;
+    const hasImageSrcSelector = restrictedSyntaxSelectors.some(
+      (entry) =>
+        entry.selector?.includes('Image') && entry.selector.includes('src'),
+    );
+    expect(
+      hasImageSrcSelector,
+      'no no-restricted-syntax selector bans new Image().src',
+    ).toBe(true);
+  });
+
   it('the restricted-syntax rules are configured at error severity', async () => {
     const config = await readEslintConfig();
     // Single-reader files (createSystemClock.ts and friends) legitimately
