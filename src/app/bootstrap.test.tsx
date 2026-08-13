@@ -17,7 +17,7 @@ const VALID_CONFIGURATION_RESULT: ConfigurationResult = {
 };
 
 describe('bootstrap', () => {
-  it('the startup placeholder renders through the real provider stack', async () => {
+  it('renders the home route through the real router when configuration is valid', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
 
@@ -26,12 +26,15 @@ describe('bootstrap', () => {
     });
 
     await waitFor(() => {
-      // eslint-disable-next-line testing-library/no-node-access -- this container is created and rendered into directly (bootstrap owns createRoot), not returned from RTL's render().
-      const startupPlaceholder = container.querySelector(
-        '[data-testid="startup-placeholder"]',
+      expect(container.textContent).toContain(
+        "The hierarchy view isn't built yet",
       );
-      expect(startupPlaceholder).not.toBeNull();
     });
+    // eslint-disable-next-line testing-library/no-node-access -- this container is created and rendered into directly (bootstrap owns createRoot), not returned from RTL's render().
+    const startupPlaceholder = container.querySelector(
+      '[data-testid="startup-placeholder"]',
+    );
+    expect(startupPlaceholder).toBeNull();
 
     document.body.removeChild(container);
   });

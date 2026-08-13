@@ -1,0 +1,54 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ build-output/route-chunks.test.ts (1 test | 1 failed) 4ms
+     × emits a chunk file for each route 3ms
+ ❯ build-output/catalogue-chunks.test.ts (2 tests | 2 failed) 7ms
+     × each route chunk imports only its own catalogue chunk 3ms
+     × emits a chunk file for each catalogue 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  build-output/catalogue-chunks.test.ts > catalogue chunks > each route chunk imports only its own catalogue chunk
+Error: ENOENT: no such file or directory, open 'dist/.vite/manifest.json'
+ ❯ readManifest build-output/catalogue-chunks.test.ts:13:5
+     11| function readManifest(): Manifest {
+     12|   return JSON.parse(
+     13|     readFileSync('dist/.vite/manifest.json', 'utf-8'),
+       |     ^
+     14|   ) as Manifest;
+     15| }
+ ❯ build-output/catalogue-chunks.test.ts:19:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  build-output/catalogue-chunks.test.ts > catalogue chunks > emits a chunk file for each catalogue
+AssertionError: no dist/assets/auth-*.js emitted: expected 0 to be greater than 0
+ ❯ build-output/catalogue-chunks.test.ts:46:9
+     44|         matches.length,
+     45|         `no dist/assets/${catalogueName}-*.js emitted`,
+     46|       ).toBeGreaterThan(0);
+       |         ^
+     47|     }
+     48|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  build-output/route-chunks.test.ts > route chunks > emits a chunk file for each route
+AssertionError: no dist/assets/HomeRoute-*.js emitted: expected 0 to be greater than 0
+ ❯ build-output/route-chunks.test.ts:13:9
+     11|         matches.length,
+     12|         `no dist/assets/${routeName}-*.js emitted`,
+     13|       ).toBeGreaterThan(0);
+       |         ^
+     14|     }
+     15|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 6 passed (8)
+      Tests  3 failed | 11 passed (14)
+   Start at  17:53:30
+   Duration  131ms (transform 53ms, setup 0ms, import 118ms, tests 64ms, environment 0ms)
+

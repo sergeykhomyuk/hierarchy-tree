@@ -18,10 +18,8 @@ export function routeDefinitions(instance: i18n): RouteObject[] {
         {
           index: true,
           lazy: async () => {
-            const [{ HomeRoute }, { loadTranslations }] = await Promise.all([
-              import('./routes/HomeRoute'),
-              import('@features/hierarchy'),
-            ]);
+            const { HomeRoute, loadTranslations } =
+              await import('./routes/HomeRoute');
             await loadTranslations(instance);
             return { Component: HomeRoute };
           },
@@ -29,10 +27,8 @@ export function routeDefinitions(instance: i18n): RouteObject[] {
         {
           path: 'login',
           lazy: async () => {
-            const [{ LoginRoute }, { loadTranslations }] = await Promise.all([
-              import('./routes/LoginRoute'),
-              import('@features/auth'),
-            ]);
+            const { LoginRoute, loadTranslations } =
+              await import('./routes/LoginRoute');
             await loadTranslations(instance);
             return { Component: LoginRoute };
           },

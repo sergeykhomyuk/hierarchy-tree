@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T16:36:48Z",
+  "updated": "2026-08-13T16:55:26Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 30
+      "steps_done": 31
     },
     "G3": {
       "status": "pending",
@@ -1111,11 +1111,11 @@
       "desc": "Populate expected-build-output.json's four conditional keys and flip phase to complete, arming declaration-table.test.ts; append the route and catalogue entries to .size-limit.json; the base-path, route-chunk, catalogue-chunk and kit-route-absence build-output tests go live (invariants 62, 86b, 89, 103, 122)",
       "tests": [
         "the declaration table is complete and every family is declared at phase complete",
-        "no dist file contains the kit route path chunk or state-inventory marker",
+        "no dist file contains the kit route path, chunk, or state-inventory marker",
         "each route chunk imports only its own catalogue chunk"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T16:55:26Z evidence/steps/step31-red.txt; evidence/steps/step31-red-declaration-table.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -1784,7 +1784,15 @@
     "2026-08-13T16:36:48Z evidence recorded: evidence/steps/step30-red-spafallback.txt (5941106fba20) - genuine red: dist/_redirects and dist/_headers don't exist",
     "2026-08-13T16:36:48Z evidence recorded: evidence/steps/step30-red-csp.txt (7827ff68ec55) - genuine red: buildContentSecurityPolicy module not found",
     "2026-08-13T16:36:48Z evidence recorded: evidence/steps/step30-red-indexhtml.txt (1e82725f0f03) - genuine red: index.html temporarily reverted to Vite defaults, 3/4 assertions fail",
-    "2026-08-13T16:36:48Z evidence recorded: evidence/steps/step30-green.txt (3c0afbd8cc89) - full npm run verify green: 225 tests, verify:build 6/6 (declaration-table + size-limit-entries + spa-fallback), CSP meta tag confirmed in dist/index.html with no frame-ancestors"
+    "2026-08-13T16:36:48Z evidence recorded: evidence/steps/step30-green.txt (3c0afbd8cc89) - full npm run verify green: 225 tests, verify:build 6/6 (declaration-table + size-limit-entries + spa-fallback), CSP meta tag confirmed in dist/index.html with no frame-ancestors",
+    "2026-08-13T16:51:38Z step 31: entry budget busted 112.77kB vs 100kB after wiring the real router. Root cause confirmed via isolated esbuild probe: createBrowserRouter+RouterProvider tree-shaken alone is ~31kB gzip, not a code/tree-shaking defect - the M1 estimate undercounted react-router. Per ARCHITECTURE.md's own rule, revisited with the user; user set the corrected budget at 150kB. Updated .size-limit.json, expected-build-output.json, ARCHITECTURE.md decision log, TECH.md decision log, PRODUCT.md invariant 112. npm run size now green (112.77kB / 150kB).",
+    "2026-08-13T16:54:44Z evidence recorded: evidence/steps/step31-red.txt (2110341b9186) - route-chunks.test.ts and catalogue-chunks.test.ts red against the pre-step-31 build (StartupPlaceholder, no router wired) - genuine chunk-graph failures for invariants 62 and 89",
+    "2026-08-13T16:54:44Z evidence recorded: evidence/steps/step31-red-declaration-table.txt (e65af30e8c96) - declaration-table.test.ts new phase-complete test red against phase: building - invariant 103",
+    "2026-08-13T16:54:44Z evidence recorded: evidence/steps/step31-green.txt (281587ccf1a2) - full npm run verify chain green after step 31: typecheck, lint, format, 225 unit/component tests, build, 8/15 build-output tests, size-limit all green at the revised 150kB entry budget",
+    "2026-08-13T16:55:22Z step 31 amended: desc: \"Populate expected-build-output.json's four conditional keys and flip phase to complete, arming declaration-table.test.ts; append the route and catalogue entries to .size-limit.json; the base-path, route-chunk, catalogue-chunk and kit-route-absence build-output tests go live (invariants 62, 86b, 89, 103, 122)\" -> \"Populate expected-build-output.json's four conditional keys and flip phase to complete, arming declaration-table.test.ts; append the route and catalogue entries to .size-limit.json; the base-path, route-chunk, catalogue-chunk and kit-route-absence build-output tests go live (invariants 62, 86b, 89, 103, 122)\"; tests: ['the declaration table is complete and every family is declared at phase complete', 'no dist file contains the kit route path chunk or state-inventory marker', 'each route chunk imports only its own catalogue chunk'] -> ['the declaration table is complete and every family is declared at phase complete', 'no dist file contains the kit route path, chunk, or state-inventory marker', 'each route chunk imports only its own catalogue chunk']",
+    "2026-08-13T16:55:26Z step 31 -> red",
+    "2026-08-13T16:55:26Z step 31 -> green",
+    "2026-08-13T16:55:26Z step 31 -> done"
   ],
   "milestones": [
     {
@@ -2404,6 +2412,21 @@
       "sha": "3c0afbd8cc89",
       "recorded": "2026-08-13T16:36:48Z",
       "note": "full npm run verify green: 225 tests, verify:build 6/6 (declaration-table + size-limit-entries + spa-fallback), CSP meta tag confirmed in dist/index.html with no frame-ancestors"
+    },
+    "evidence/steps/step31-red.txt": {
+      "sha": "2110341b9186",
+      "recorded": "2026-08-13T16:54:44Z",
+      "note": "route-chunks.test.ts and catalogue-chunks.test.ts red against the pre-step-31 build (StartupPlaceholder, no router wired) - genuine chunk-graph failures for invariants 62 and 89"
+    },
+    "evidence/steps/step31-red-declaration-table.txt": {
+      "sha": "e65af30e8c96",
+      "recorded": "2026-08-13T16:54:44Z",
+      "note": "declaration-table.test.ts new phase-complete test red against phase: building - invariant 103"
+    },
+    "evidence/steps/step31-green.txt": {
+      "sha": "281587ccf1a2",
+      "recorded": "2026-08-13T16:54:44Z",
+      "note": "full npm run verify chain green after step 31: typecheck, lint, format, 225 unit/component tests, build, 8/15 build-output tests, size-limit all green at the revised 150kB entry budget"
     }
   },
   "test_file_hashes": {}

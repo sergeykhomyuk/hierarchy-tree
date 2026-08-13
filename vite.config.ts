@@ -45,6 +45,11 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     build: {
+      // Read by build-output/route-chunks.test.ts and catalogue-chunks.test.ts
+      // to assert on the CHUNK GRAPH (invariant 62) - which chunk imports
+      // which - rather than grepping a chunk's own content for a key that
+      // was never inlined there.
+      manifest: true,
       rolldownOptions: {
         output: {
           entryFileNames: 'assets/entry-[hash].js',

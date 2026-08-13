@@ -231,6 +231,18 @@ export default defineConfig([
     rules: { 'i18next/no-literal-string': 'off' },
   },
   {
+    // Route wrapper modules re-export a component AND its feature's
+    // loadTranslations under one name, so routeDefinitions.ts's lazy()
+    // reaches both through a single dynamic import() - two per route
+    // would split the feature's module graph into an extra chunk each,
+    // breaking the clean route-chunk -> catalogue-chunk graph invariant
+    // 62's chunk-graph check rests on. Fast Refresh does not apply to a
+    // module loaded only through React Router's lazy(), so the usual
+    // one-component-per-file convention buys nothing here.
+    files: ['src/app/routing/routes/*.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+  {
     files: ['e2e/**/*.ts'],
     extends: [playwright.configs['flat/recommended']],
   },

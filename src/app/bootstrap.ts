@@ -1,12 +1,13 @@
 import { StrictMode, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
+import { RouterProvider } from 'react-router';
 import type { ConfigurationResult } from '@platform/configuration';
 import { createObservability } from '@platform/observability';
 import { createSystemRandomness } from '@platform/runtime';
 import { ApplicationRoot } from './ApplicationRoot';
 import { ConfigurationErrorScreen } from './ConfigurationErrorScreen';
-import { StartupPlaceholder } from './StartupPlaceholder';
 import { createRuntime } from './composition';
+import { createApplicationRouter } from './routing';
 import { reportRootError } from './error-boundary';
 
 // The testable startup path: main.tsx is the one file whose name is not
@@ -42,6 +43,7 @@ export async function bootstrap(
   }
 
   const runtime = await createRuntime(configurationResult.configuration);
+  const router = createApplicationRouter(runtime);
 
   function handleBoundaryError(error: unknown): void {
     // React 19 logs every boundary-caught error via console.error by
@@ -63,12 +65,7 @@ export async function bootstrap(
       null,
       createElement(ApplicationRoot, {
         runtime,
-        // The router becomes this element at step 31, once
-        // build-output/expected-build-output.json's declaration table is
-        // armed to expect the route chunks reaching it in the build would
-        // produce (build-output/declaration-table.test.ts is fail-closed
-        // on exactly that gap).
-        children: createElement(StartupPlaceholder),
+        children: createElement(RouterProvider, { router }),
       }),
     ),
   );

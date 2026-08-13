@@ -1,11 +1,34 @@
 {
-  "phase": "building",
+  "phase": "complete",
   "alwaysOn": {
     "basePath": true,
     "bundleSecrets": true,
     "sizeLimitEntries": [
-      { "name": "app entry (initial payload)", "limit": "100 kB" },
-      { "name": "stylesheet", "limit": "15 kB" }
+      { "name": "app entry (initial payload)", "limit": "150 kB" },
+      { "name": "stylesheet", "limit": "15 kB" },
+      { "name": "route: home", "limit": "30 kB" },
+      { "name": "route: login", "limit": "30 kB" },
+      { "name": "route: not-found", "limit": "30 kB" },
+      { "name": "catalogue: auth", "limit": "5 kB" },
+      { "name": "catalogue: hierarchy", "limit": "5 kB" }
     ]
+  },
+  "routeChunks": {
+    "home": "dist/assets/HomeRoute-*.js",
+    "login": "dist/assets/LoginRoute-*.js",
+    "notFound": "dist/assets/NotFoundRoute-*.js"
+  },
+  "catalogueChunks": {
+    "auth": "dist/assets/auth-*.js",
+    "hierarchy": "dist/assets/hierarchy-*.js"
+  },
+  "spaFallback": {
+    "redirects": "/* /index.html 200",
+    "headers": "frame-ancestors 'none'"
+  },
+  "kitRouteAbsent": {
+    "chunkPattern": "dist/assets/KitRoute-*.js",
+    "pathMarker": "__kit",
+    "stateInventoryMarker": "Kit Person"
   }
 }

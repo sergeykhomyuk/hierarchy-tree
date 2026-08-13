@@ -1,1 +1,4 @@
-export { AuthPlaceholderPage as LoginRoute } from '@features/auth';
+export {
+  AuthPlaceholderPage as LoginRoute,
+  loadTranslations,
+} from '@features/auth';

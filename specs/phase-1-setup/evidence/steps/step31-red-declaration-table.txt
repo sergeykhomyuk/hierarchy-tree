@@ -1,0 +1,30 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ build-output/declaration-table.test.ts (2 tests | 1 failed) 10ms
+     × the declaration table is complete and every family is declared at phase complete 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  build-output/declaration-table.test.ts > declaration table > the declaration table is complete and every family is declared at phase complete
+AssertionError: expected 'building' to be 'complete' // Object.is equality
+
+Expected: "complete"
+Received: "building"
+
+ ❯ build-output/declaration-table.test.ts:74:25
+     72|     const table = readDeclarationTable();
+     73|
+     74|     expect(table.phase).toBe('complete');
+       |                         ^
+     75|     for (const family of CONDITIONAL_FAMILIES) {
+     76|       expect(table[family], `${family} must be present`).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  17:54:04
+   Duration  84ms (transform 9ms, setup 0ms, import 13ms, tests 10ms, environment 0ms)
+

@@ -1,1 +1,4 @@
-export { HierarchyPlaceholderPage as HomeRoute } from '@features/hierarchy';
+export {
+  HierarchyPlaceholderPage as HomeRoute,
+  loadTranslations,
+} from '@features/hierarchy';

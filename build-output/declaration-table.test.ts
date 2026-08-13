@@ -67,4 +67,17 @@ describe('declaration table', () => {
       ).toBe('complete');
     }
   });
+
+  it('the declaration table is complete and every family is declared at phase complete', () => {
+    const table = readDeclarationTable();
+
+    expect(table.phase).toBe('complete');
+    for (const family of CONDITIONAL_FAMILIES) {
+      expect(table[family], `${family} must be present`).toBeDefined();
+      expect(
+        Object.keys(table[family] ?? {}).length,
+        `${family} must be non-empty`,
+      ).toBeGreaterThan(0);
+    }
+  });
 });
