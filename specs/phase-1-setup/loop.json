@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T14:13:24Z",
+  "updated": "2026-08-13T14:32:20Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -689,6 +689,42 @@
           "blocking": false,
           "disposition": "fixed: added 5 tests covering keyword patterns, high-entropy detection, the suppression grep, the --source-only/--bundle-only mode requirement, and the bundle-mode dist-missing-fails-not-skips contract",
           "round": "milestone-2"
+        },
+        "Claude-11": {
+          "desc": "HttpClientDependencies has no correlationId source; createHttpClient generates its own requestId and uses it as the traceparent trace id, so it never matches the interaction tracker's currentCorrelationId(), breaking invariant 30/47's cross-system equality.",
+          "blocking": true,
+          "disposition": "fixed: HttpClientDependencies gained a correlationId: () => string field (the interaction tracker's currentCorrelationId(), wired properly in M5). createHttpClient now uses it as the traceparent trace id AND the timing record's correlationId field, keeping the separately-generated requestId only for tying retried attempts of one logical request together. Added a dedicated test proving the traceparent trace id and the timing record's correlationId both equal an injected interaction correlation id (the three-way-equality test TECH.md itself specifies). All 13 existing test call sites updated via a new createTestDependencies() helper.",
+          "round": "milestone-3"
+        },
+        "Claude-12": {
+          "desc": "bootstrap.ts's configuration-failure path still calls console.error directly instead of the observability facade built in this milestone; the adjacent comment cites 'M3 step 17' as the trigger, which is now done.",
+          "blocking": false,
+          "disposition": "fixed: bootstrap.ts's configuration-failure path now constructs a real minimal observability instance (createObservability with sink:'console', level:'error') and reports through facade.logger.error instead of a bare console.error. Required pulling platform/runtime/createSystemRandomness.ts forward from its nominal M5 slot (it's TECH.md-specified, just not yet needed until now) since createObservability's tracer needs a Randomness source even though this path never calls startInteraction.",
+          "round": "milestone-3"
+        },
+        "Claude-13": {
+          "desc": "TECH.md's specified 'malformed log level fed to the comparison, asserted not to throw' test for the observability whole-call guard is missing from createObservability.test.ts.",
+          "blocking": false,
+          "disposition": "fixed: added 'does not throw when the level comparison is fed a malformed level' test to createObservability.test.ts, matching TECH.md 3.4's explicit instruction.",
+          "round": "milestone-3"
+        },
+        "Claude-14": {
+          "desc": "tracer.startInteraction() in createObservability.ts is not wrapped in dispatch's try/catch, so a throwing randomness.nextBytes would propagate into every router navigation, contradicting invariant 59's whole-facade scope.",
+          "blocking": false,
+          "disposition": "fixed: tracer.startInteraction() now wraps createCorrelationId in its own try/catch, returning a fixed fallback id (32 zero chars) if the randomness source throws, so invariant 59's whole-facade guarantee covers it too. Added a regression test with a throwing randomness source.",
+          "round": "milestone-3"
+        },
+        "Claude-15": {
+          "desc": "redact.ts's WeakSet cycle guard never removes entries as the traversal unwinds, so a shared (non-cyclic, DAG) object reference appearing twice is mislabeled '[circular]' on its second occurrence instead of being redacted normally.",
+          "blocking": false,
+          "disposition": "fixed: redact.ts's WeakSet entries are now removed on the way back out of the recursion (seen.delete after processing), so the set tracks only the current recursion path (true ancestors) rather than every object visited - a shared (non-cyclic) object reference appearing under two different keys is now redacted correctly at each occurrence instead of being marked '[circular]' the second time. Added a regression test.",
+          "round": "milestone-3"
+        },
+        "Claude-16": {
+          "desc": "formatMissingKey.ts renders '\u27e6key\u27e7', omitting the namespace, where PRODUCT.md invariant 63 states the marker format as '\u27e6namespace:key\u27e7'.",
+          "blocking": false,
+          "disposition": "fixed: enabled i18next's appendNamespaceToMissingKey:true, verified against the installed package's source (i18next.js) to confirm it prefixes only the key parseMissingKeyHandler receives (namespace:key via nsSeparator ':'), not missingKeyHandler's - so the rendered marker becomes the invariant-63 '\u27e6namespace:key\u27e7' format while the logged report keeps clean separate namespace/key fields. Updated the affected test's expected marker string.",
+          "round": "milestone-3"
         }
       }
     },
@@ -1581,7 +1617,21 @@
     "2026-08-13T14:13:11Z step 20 -> red",
     "2026-08-13T14:13:11Z step 20 -> green",
     "2026-08-13T14:13:24Z step 20: platform/internationalization implemented, completing M3. Installed i18next@26.3.6 and react-i18next@17.0.11 (VERIFIED against npm registry, matching TECH.md's recorded versions). createInternationalization.ts creates a fresh i18next instance per call (createInstance(), not the module singleton) with lng/fallbackLng:false/defaultNS+ns:['common']/interpolation.escapeValue:false/returnNull:false/saveMissing:true/react.useSuspense:false, registering both missingKeyHandler (reportMissingKey.ts - logs at error level and pushes to a module-level missingKeyReports array) and parseMissingKeyHandler (formatMissingKey.ts - renders the visible marker literally as bracket-delimited text). localeDirection.ts is a plain explicit-map lookup with no Intl.Locale dependency, proven by a test that replaces globalThis.Intl.Locale with a throwing constructor and confirms the function still resolves correctly. Wired missingKeyReports into vitest.setup.ts globally (beforeEach clears it, afterEach asserts it empty) so ANY test across all three vitest projects that renders a missing translation key fails the suite, not just i18n-specific tests - tests that deliberately exercise the missing-key path clear the array themselves before their own afterEach runs. This global wiring surfaced a real TypeScript project-boundary gap: tsconfig.tools.json (which checks vitest.setup.ts) had no vite/client types, so once vitest.setup.ts started importing @platform/internationalization - which transitively reaches environment.ts's import.meta.env through the observability barrel - typecheck failed under the tools project even though the app project was fine; fixed by adding vite/client to tsconfig.tools.json's types array. Also renamed an initially-chosen type name (MissingKeyReport) to MissingKeyEntry after assert-domain-vocabulary.mjs correctly flagged 'Report' as a banned segment (the script's plural-vs-singular segment matching meant missingKeyReports the array passed while the singular type name didn't). npm run verify green, 97.91%25 coverage, 113 tests. M3 (platform adapters, steps 15-20) is now complete.",
-    "2026-08-13T14:13:24Z step 20 -> done"
+    "2026-08-13T14:13:24Z step 20 -> done",
+    "2026-08-13T14:14:21Z milestone 3 boundary verified: npm run verify green (typecheck/lint/format/test:coverage/build/verify:build/size) - see evidence/milestones/m3-suite.txt. 27 test files, 113 tests, 97.91% coverage. Per M3's own boundary note in PLAN.md ('npm run test:coverage covers the whole platform layer with fakes. No e2e is claimed - none is needed'), no e2e evidence is required or captured for this milestone.",
+    "2026-08-13T14:25:42Z G4 finding Claude-11 recorded (blocking) [round: milestone-3]: HttpClientDependencies has no correlationId source; createHttpClient generates its own requestId and uses it as the traceparent trace id, so it never matches the interaction tracker's currentCorrelationId(), breaking invariant 30/47's cross-system equality.",
+    "2026-08-13T14:25:42Z G4 finding Claude-12 recorded [round: milestone-3]: bootstrap.ts's configuration-failure path still calls console.error directly instead of the observability facade built in this milestone; the adjacent comment cites 'M3 step 17' as the trigger, which is now done.",
+    "2026-08-13T14:25:42Z G4 finding Claude-13 recorded [round: milestone-3]: TECH.md's specified 'malformed log level fed to the comparison, asserted not to throw' test for the observability whole-call guard is missing from createObservability.test.ts.",
+    "2026-08-13T14:25:42Z G4 finding Claude-14 recorded [round: milestone-3]: tracer.startInteraction() in createObservability.ts is not wrapped in dispatch's try/catch, so a throwing randomness.nextBytes would propagate into every router navigation, contradicting invariant 59's whole-facade scope.",
+    "2026-08-13T14:25:43Z G4 finding Claude-15 recorded [round: milestone-3]: redact.ts's WeakSet cycle guard never removes entries as the traversal unwinds, so a shared (non-cyclic, DAG) object reference appearing twice is mislabeled '[circular]' on its second occurrence instead of being redacted normally.",
+    "2026-08-13T14:25:43Z G4 finding Claude-16 recorded [round: milestone-3]: formatMissingKey.ts renders '\u27e6key\u27e7', omitting the namespace, where PRODUCT.md invariant 63 states the marker format as '\u27e6namespace:key\u27e7'.",
+    "2026-08-13T14:32:07Z G4 finding Claude-11 dispositioned: fixed: HttpClientDependencies gained a correlationId: () => string field (the interaction tracker's currentCorrelationId(), wired properly in M5). createHttpClient now uses it as the traceparent trace id AND the timing record's correlationId field, keeping the separately-generated requestId only for tying retried attempts of one logical request together. Added a dedicated test proving the traceparent trace id and the timing record's correlationId both equal an injected interaction correlation id (the three-way-equality test TECH.md itself specifies). All 13 existing test call sites updated via a new createTestDependencies() helper.",
+    "2026-08-13T14:32:07Z G4 finding Claude-12 dispositioned: fixed: bootstrap.ts's configuration-failure path now constructs a real minimal observability instance (createObservability with sink:'console', level:'error') and reports through facade.logger.error instead of a bare console.error. Required pulling platform/runtime/createSystemRandomness.ts forward from its nominal M5 slot (it's TECH.md-specified, just not yet needed until now) since createObservability's tracer needs a Randomness source even though this path never calls startInteraction.",
+    "2026-08-13T14:32:08Z G4 finding Claude-13 dispositioned: fixed: added 'does not throw when the level comparison is fed a malformed level' test to createObservability.test.ts, matching TECH.md 3.4's explicit instruction.",
+    "2026-08-13T14:32:08Z G4 finding Claude-14 dispositioned: fixed: tracer.startInteraction() now wraps createCorrelationId in its own try/catch, returning a fixed fallback id (32 zero chars) if the randomness source throws, so invariant 59's whole-facade guarantee covers it too. Added a regression test with a throwing randomness source.",
+    "2026-08-13T14:32:08Z G4 finding Claude-15 dispositioned: fixed: redact.ts's WeakSet entries are now removed on the way back out of the recursion (seen.delete after processing), so the set tracks only the current recursion path (true ancestors) rather than every object visited - a shared (non-cyclic) object reference appearing under two different keys is now redacted correctly at each occurrence instead of being marked '[circular]' the second time. Added a regression test.",
+    "2026-08-13T14:32:08Z G4 finding Claude-16 dispositioned: fixed: enabled i18next's appendNamespaceToMissingKey:true, verified against the installed package's source (i18next.js) to confirm it prefixes only the key parseMissingKeyHandler receives (namespace:key via nsSeparator ':'), not missingKeyHandler's - so the rendered marker becomes the invariant-63 '\u27e6namespace:key\u27e7' format while the logged report keeps clean separate namespace/key fields. Updated the affected test's expected marker string.",
+    "2026-08-13T14:32:20Z milestone 3 reviewed: Fresh-context reviewer (loop-reviewer subagent) reviewed the full M3 diff (3875858..4077b8b) against PRODUCT.md invariants 13-35, 45-59, 47/47a, 30, 52-53, 60-66 and TECH.md sections 3.1-3.5. 6 findings recorded (Claude-11..16), 1 blocking. All 6 fixed: Claude-11 (blocking) - HttpClientDependencies now takes an injected correlationId source, used as both the traceparent trace id and the timing record's correlationId, satisfying invariant 30/47's cross-system equality (previously the client generated its own unrelated id). Claude-12 - bootstrap.ts's configuration-failure path now reports through a real observability facade instead of console.error, pulling platform/runtime/createSystemRandomness.ts forward from M5 since it was genuinely needed. Claude-13 - added the TECH.md-specified malformed-log-level test. Claude-14 - wrapped tracer.startInteraction() in its own try/catch per invariant 59's whole-facade scope. Claude-15 - fixed redact.ts's WeakSet cycle guard to track only the current recursion path, not all visited objects, so DAG-shared (non-cyclic) references redact correctly instead of being mislabeled circular. Claude-16 - enabled i18next's appendNamespaceToMissingKey so the rendered marker matches invariant 63's literal '\u27e6namespace:key\u27e7' format. Re-verified post-fix: npm run verify green (evidence/milestones/m3-suite-post-review.txt), 120 tests, 98.02%25 coverage, entry 66.08kB/100kB."
   ],
   "milestones": [
     {
@@ -1599,8 +1649,8 @@
     {
       "id": 3,
       "title": "M3 - Platform adapters",
-      "verified": null,
-      "reviewed": null
+      "verified": "2026-08-13T14:14:21Z npm run verify green (typecheck/lint/format/test:coverage/build/verify:build/size) - see evidence/milestones/m3-suite.txt. 27 test files, 113 tests, 97.91% coverage. Per M3's own boundary note in PLAN.md ('npm run test:coverage covers the whole platform layer with fakes. No e2e is claimed - none is needed'), no e2e evidence is required or captured for this milestone.",
+      "reviewed": "2026-08-13T14:32:20Z Fresh-context reviewer (loop-reviewer subagent) reviewed the full M3 diff (3875858..4077b8b) against PRODUCT.md invariants 13-35, 45-59, 47/47a, 30, 52-53, 60-66 and TECH.md sections 3.1-3.5. 6 findings recorded (Claude-11..16), 1 blocking. All 6 fixed: Claude-11 (blocking) - HttpClientDependencies now takes an injected correlationId source, used as both the traceparent trace id and the timing record's correlationId, satisfying invariant 30/47's cross-system equality (previously the client generated its own unrelated id). Claude-12 - bootstrap.ts's configuration-failure path now reports through a real observability facade instead of console.error, pulling platform/runtime/createSystemRandomness.ts forward from M5 since it was genuinely needed. Claude-13 - added the TECH.md-specified malformed-log-level test. Claude-14 - wrapped tracer.startInteraction() in its own try/catch per invariant 59's whole-facade scope. Claude-15 - fixed redact.ts's WeakSet cycle guard to track only the current recursion path, not all visited objects, so DAG-shared (non-cyclic) references redact correctly instead of being mislabeled circular. Claude-16 - enabled i18next's appendNamespaceToMissingKey so the rendered marker matches invariant 63's literal '\u27e6namespace:key\u27e7' format. Re-verified post-fix: npm run verify green (evidence/milestones/m3-suite-post-review.txt), 120 tests, 98.02%25 coverage, entry 66.08kB/100kB."
     },
     {
       "id": 4,

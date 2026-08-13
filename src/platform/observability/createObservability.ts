@@ -8,6 +8,8 @@ import { createNoOpSink } from './sinks/createNoOpSink';
 import { createRingBufferSink } from './sinks/createRingBufferSink';
 import type { TelemetryRecord } from './telemetryRecord';
 
+const FALLBACK_CORRELATION_ID = '0'.repeat(32);
+
 const LOG_LEVEL_SEVERITY = {
   debug: 0,
   info: 1,
@@ -64,7 +66,15 @@ export function createObservability(
     },
     tracer: {
       recordTiming: (record) => dispatch({ kind: 'timing', timing: record }),
-      startInteraction: () => createCorrelationId(dependencies.randomness),
+      startInteraction: () => {
+        // invariant 59 covers the whole facade, not only dispatch-routed
+        // calls: a throwing randomness source must not escape either.
+        try {
+          return createCorrelationId(dependencies.randomness);
+        } catch {
+          return FALLBACK_CORRELATION_ID;
+        }
+      },
     },
     analytics: {
       track: (name, payload) => dispatch({ kind: 'analytics', name, payload }),

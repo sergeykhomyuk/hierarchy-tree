@@ -133,4 +133,33 @@ describe('createObservability', () => {
 
     expect(facade.tracer.startInteraction()).toMatch(/^[0-9a-f]{32}$/);
   });
+
+  it('does not throw when the level comparison is fed a malformed level', () => {
+    const { facade } = createObservability({
+      // A malformed level reaching the runtime despite the type - e.g. a
+      // stale build artifact or an untyped caller.
+      configuration: {
+        observabilitySink: 'none',
+        logLevel: 'verbose' as never,
+      },
+      randomness: createFakeRandomness(),
+    });
+
+    expect(() => facade.logger.error('thing.happened')).not.toThrow();
+  });
+
+  it('startInteraction does not throw when the randomness source throws', () => {
+    const throwingRandomness = {
+      nextUnitInterval: () => 0,
+      nextBytes: (): Uint8Array => {
+        throw new Error('no entropy available');
+      },
+    };
+    const { facade } = createObservability({
+      configuration: { observabilitySink: 'none', logLevel: 'debug' },
+      randomness: throwingRandomness,
+    });
+
+    expect(() => facade.tracer.startInteraction()).not.toThrow();
+  });
 });

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createFakeClock, createFakeRandomness } from '@shared/testing';
 import type { ObservabilityFacade } from '@platform/observability';
 import { createHttpClient } from './createHttpClient';
+import type { HttpClientDependencies } from './createHttpClient';
 import type { Transport } from './transport';
 import type { HttpRequest } from './httpRequest';
 
@@ -32,6 +33,24 @@ function createHangingTransport(): {
   return { transport, callCount: () => calls };
 }
 
+function createTestDependencies(
+  overrides: Partial<HttpClientDependencies> = {},
+): HttpClientDependencies {
+  return {
+    transport:
+      overrides.transport ??
+      (() => Promise.resolve(new Response(null, { status: 200 }))),
+    clock: overrides.clock ?? createFakeClock(),
+    randomness: overrides.randomness ?? createFakeRandomness(),
+    observability: overrides.observability ?? createSpyObservability(),
+    configuration: overrides.configuration ?? {
+      apiBaseUrl: 'https://api.example.com',
+      requestTimeoutMilliseconds: 8000,
+    },
+    correlationId: overrides.correlationId ?? (() => 'c'.repeat(32)),
+  };
+}
+
 async function flushMicrotasks(times = 10): Promise<void> {
   for (let index = 0; index < times; index += 1) {
     await Promise.resolve();
@@ -41,19 +60,17 @@ async function flushMicrotasks(times = 10): Promise<void> {
 describe('createHttpClient', () => {
   it('the deadline covers the whole logical request and settles as timeout at the budget', async () => {
     const clock = createFakeClock();
-    const randomness = createFakeRandomness();
-    const observability = createSpyObservability();
     const { transport } = createHangingTransport();
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 1000,
-      },
-    });
+    const client = createHttpClient(
+      createTestDependencies({
+        transport,
+        clock,
+        configuration: {
+          apiBaseUrl: 'https://api.example.com',
+          requestTimeoutMilliseconds: 1000,
+        },
+      }),
+    );
 
     const resultPromise = client.request({
       method: 'GET',
@@ -71,21 +88,12 @@ describe('createHttpClient', () => {
   });
 
   it('a caller abort yields cancelled without retrying or reporting an error', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
     const observability = createSpyObservability();
     const { transport, callCount } = createHangingTransport();
     const controller = new AbortController();
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(
+      createTestDependencies({ transport, observability }),
+    );
 
     const resultPromise = client.request({
       method: 'GET',
@@ -103,22 +111,10 @@ describe('createHttpClient', () => {
   });
 
   it('a pre-aborted signal yields cancelled with no transport call', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
-    const observability = createSpyObservability();
     const { transport, callCount } = createHangingTransport();
     const controller = new AbortController();
     controller.abort();
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(createTestDependencies({ transport }));
 
     const result = await client.request({
       method: 'GET',
@@ -132,9 +128,6 @@ describe('createHttpClient', () => {
   });
 
   it('an error carries no response body content', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
-    const observability = createSpyObservability();
     const transport: Transport = () =>
       Promise.resolve(
         new Response(
@@ -142,21 +135,10 @@ describe('createHttpClient', () => {
             secret: 'do-not-leak',
             accountNumber: '1234567890',
           }),
-          {
-            status: 500,
-          },
+          { status: 500 },
         ),
       );
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(createTestDependencies({ transport }));
 
     const result = await client.request({
       method: 'POST',
@@ -178,23 +160,11 @@ describe('createHttpClient', () => {
   });
 
   it('returns success with the parsed value and status', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
-    const observability = createSpyObservability();
     const transport: Transport = () =>
       Promise.resolve(
         new Response(JSON.stringify({ name: 'root' }), { status: 200 }),
       );
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(createTestDependencies({ transport }));
 
     const result = await client.request({
       method: 'GET',
@@ -206,24 +176,12 @@ describe('createHttpClient', () => {
   });
 
   it('does not retry a POST request that fails', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
-    const observability = createSpyObservability();
     let calls = 0;
     const transport: Transport = () => {
       calls += 1;
       return Promise.resolve(new Response(null, { status: 500 }));
     };
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(createTestDependencies({ transport }));
 
     const result = await client.request({
       method: 'POST',
@@ -236,24 +194,12 @@ describe('createHttpClient', () => {
   });
 
   it('does not retry a 4xx response', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
-    const observability = createSpyObservability();
     let calls = 0;
     const transport: Transport = () => {
       calls += 1;
       return Promise.resolve(new Response(null, { status: 404 }));
     };
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(createTestDependencies({ transport }));
 
     const result = await client.request({
       method: 'GET',
@@ -268,7 +214,6 @@ describe('createHttpClient', () => {
   it('retries once on a GET 500 then succeeds', async () => {
     const clock = createFakeClock();
     const randomness = createFakeRandomness([0]);
-    const observability = createSpyObservability();
     let calls = 0;
     const transport: Transport = () => {
       calls += 1;
@@ -278,16 +223,9 @@ describe('createHttpClient', () => {
         new Response(JSON.stringify({ ok: true }), { status: 200 }),
       );
     };
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(
+      createTestDependencies({ transport, clock, randomness }),
+    );
 
     const resultPromise = client.request({
       method: 'GET',
@@ -308,22 +246,10 @@ describe('createHttpClient', () => {
   });
 
   it('maps a thrown transport error to a network failure', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
-    const observability = createSpyObservability();
     const transport: Transport = () => {
       throw new TypeError('fetch failed');
     };
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(createTestDependencies({ transport }));
 
     const result = await client.request({
       method: 'POST',
@@ -338,21 +264,9 @@ describe('createHttpClient', () => {
   });
 
   it('maps a JSON parse throw to a parse failure', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
-    const observability = createSpyObservability();
     const transport: Transport = () =>
       Promise.resolve(new Response('not json', { status: 200 }));
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(createTestDependencies({ transport }));
 
     const result = await client.request({
       method: 'POST',
@@ -364,24 +278,12 @@ describe('createHttpClient', () => {
   });
 
   it('sends a traceparent header in valid W3C format', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
-    const observability = createSpyObservability();
     let capturedHeader: string | null = null;
     const transport: Transport = (request) => {
       capturedHeader = request.headers.get('traceparent');
       return Promise.resolve(new Response(JSON.stringify({}), { status: 200 }));
     };
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(createTestDependencies({ transport }));
 
     await client.request({
       method: 'GET',
@@ -392,10 +294,37 @@ describe('createHttpClient', () => {
     expect(capturedHeader).toMatch(/^00-[0-9a-f]{32}-[0-9a-f]{16}-01$/);
   });
 
-  it('serializes a request body as JSON with a content-type header', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
+  it('the traceparent trace id and the timing record correlation id both equal the injected interaction correlation id', async () => {
+    const interactionCorrelationId = 'b'.repeat(32);
     const observability = createSpyObservability();
+    let capturedHeader: string | null = null;
+    const transport: Transport = (request) => {
+      capturedHeader = request.headers.get('traceparent');
+      return Promise.resolve(new Response(JSON.stringify({}), { status: 200 }));
+    };
+    const client = createHttpClient(
+      createTestDependencies({
+        transport,
+        observability,
+        correlationId: () => interactionCorrelationId,
+      }),
+    );
+
+    await client.request({
+      method: 'GET',
+      resourcePath: '/things',
+      parse: (value) => value,
+    });
+
+    expect(capturedHeader).toMatch(
+      new RegExp(`^00-${interactionCorrelationId}-[0-9a-f]{16}-01$`),
+    );
+    expect(observability.tracer.recordTiming).toHaveBeenCalledWith(
+      expect.objectContaining({ correlationId: interactionCorrelationId }),
+    );
+  });
+
+  it('serializes a request body as JSON with a content-type header', async () => {
     let capturedContentType: string | null = null;
     let capturedBody: string | undefined;
     const transport: Transport = async (request) => {
@@ -403,16 +332,7 @@ describe('createHttpClient', () => {
       capturedBody = await request.text();
       return new Response(JSON.stringify({}), { status: 200 });
     };
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(createTestDependencies({ transport }));
 
     await client.request({
       method: 'POST',
@@ -426,24 +346,15 @@ describe('createHttpClient', () => {
   });
 
   it('rejects a protocol-relative resource path without calling the transport', async () => {
-    const clock = createFakeClock();
-    const randomness = createFakeRandomness();
     const observability = createSpyObservability();
     let calls = 0;
     const transport: Transport = () => {
       calls += 1;
       return Promise.resolve(new Response(null, { status: 200 }));
     };
-    const client = createHttpClient({
-      transport,
-      clock,
-      randomness,
-      observability,
-      configuration: {
-        apiBaseUrl: 'https://api.example.com',
-        requestTimeoutMilliseconds: 8000,
-      },
-    });
+    const client = createHttpClient(
+      createTestDependencies({ transport, observability }),
+    );
 
     const result = await client.request({
       // A protocol-relative path satisfies the ResourcePath type (it starts

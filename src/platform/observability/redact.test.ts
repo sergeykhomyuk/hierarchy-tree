@@ -62,4 +62,14 @@ describe('redact', () => {
     expect(redacted[0]).toBe('first');
     expect(typeof redacted[1]).toBe('string');
   });
+
+  it('redacts a shared (non-cyclic) object reference at each occurrence rather than marking it circular', () => {
+    const shared = { token: 'shared-secret', label: 'shared' };
+    const payload = { first: shared, second: shared };
+
+    const redacted = redact(payload);
+
+    expect(redacted.first).toEqual({ token: '[redacted]', label: 'shared' });
+    expect(redacted.second).toEqual({ token: '[redacted]', label: 'shared' });
+  });
 });

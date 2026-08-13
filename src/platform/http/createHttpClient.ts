@@ -21,6 +21,11 @@ export type HttpClientDependencies = {
     Configuration,
     'apiBaseUrl' | 'requestTimeoutMilliseconds'
   >;
+  // The interaction tracker's currentCorrelationId() (invariant 47) - the
+  // trace id sent on the wire and the timing record's correlationId are
+  // both this value, not the per-logical-request requestId below, which
+  // only ties a request's own retried attempts together.
+  correlationId: () => string;
 };
 
 export type HttpClient = {
@@ -37,8 +42,14 @@ type AttemptOutcome<Value> =
 export function createHttpClient(
   dependencies: HttpClientDependencies,
 ): HttpClient {
-  const { transport, clock, randomness, observability, configuration } =
-    dependencies;
+  const {
+    transport,
+    clock,
+    randomness,
+    observability,
+    configuration,
+    correlationId: getCorrelationId,
+  } = dependencies;
 
   async function request<Value>(
     httpRequest: HttpRequest<Value>,
@@ -55,6 +66,7 @@ export function createHttpClient(
     }
 
     const requestId = createCorrelationId(randomness);
+    const correlationId = getCorrelationId();
     const timeoutMilliseconds =
       httpRequest.timeoutMilliseconds ??
       configuration.requestTimeoutMilliseconds;
@@ -71,7 +83,7 @@ export function createHttpClient(
 
       while (true) {
         const attemptStartedAt = clock.now();
-        const traceparent = createTraceparent(requestId, randomness);
+        const traceparent = createTraceparent(correlationId, randomness);
         const url = buildUrl(configuration.apiBaseUrl, httpRequest);
         const rawOutcome = await performAttempt(
           httpRequest,
@@ -96,7 +108,7 @@ export function createHttpClient(
             resourcePath: httpRequest.resourcePath,
             outcome: 'failure',
             durationMilliseconds,
-            correlationId: requestId,
+            correlationId,
             attempt,
             requestId,
           });
@@ -117,7 +129,7 @@ export function createHttpClient(
           resourcePath: httpRequest.resourcePath,
           outcome: rawOutcome.kind,
           durationMilliseconds,
-          correlationId: requestId,
+          correlationId,
           attempt,
           requestId,
           ...(status !== undefined ? { status } : {}),

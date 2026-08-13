@@ -25,7 +25,7 @@ describe('createInternationalization', () => {
 
     const rendered = instance.t('login.submit');
 
-    expect(rendered).toBe('⟦login.submit⟧');
+    expect(rendered).toBe('⟦common:login.submit⟧');
     expect(error).toHaveBeenCalledWith('i18n.missing_key', {
       namespace: 'common',
       key: 'login.submit',

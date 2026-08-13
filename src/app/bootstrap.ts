@@ -1,6 +1,8 @@
 import { StrictMode, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { ConfigurationResult } from '@platform/configuration';
+import { createObservability } from '@platform/observability';
+import { createSystemRandomness } from '@platform/runtime';
 import { StartupPlaceholder } from './StartupPlaceholder';
 import { ConfigurationErrorScreen } from './ConfigurationErrorScreen';
 
@@ -13,10 +15,18 @@ export function bootstrap(
   configurationResult: ConfigurationResult,
 ): void {
   if (!configurationResult.ok) {
-    // A minimal, safe-defaults report until M3 step 17 wires the real
-    // observability facade in - no router, no feature code and no
-    // partially configured UI is mounted either way.
-    console.error('configuration invalid', configurationResult.invalidKeys);
+    // A minimal, safe-defaults observability instance (console sink,
+    // error level) until createRuntime.ts (M5) builds the real one from
+    // validated configuration - which is unavailable here by definition,
+    // since configuration is exactly what failed. No router, no feature
+    // code and no partially configured UI is mounted either way.
+    const { facade } = createObservability({
+      configuration: { observabilitySink: 'console', logLevel: 'error' },
+      randomness: createSystemRandomness(),
+    });
+    facade.logger.error('app.configuration_invalid', {
+      invalidKeys: configurationResult.invalidKeys,
+    });
     createRoot(container).render(
       createElement(
         StrictMode,

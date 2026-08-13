@@ -25,6 +25,11 @@ export async function createInternationalization(
     interpolation: { escapeValue: false },
     returnNull: false,
     saveMissing: true,
+    // Prefixes only the key parseMissingKeyHandler receives, not
+    // missingKeyHandler's - i18next passes namespace as its own argument
+    // there regardless, so the logged report stays clean while the
+    // rendered marker becomes the invariant-63 `namespace:key` format.
+    appendNamespaceToMissingKey: true,
     missingKeyHandler: createMissingKeyHandler(dependencies.observability),
     parseMissingKeyHandler: formatMissingKey,
     react: { useSuspense: false },

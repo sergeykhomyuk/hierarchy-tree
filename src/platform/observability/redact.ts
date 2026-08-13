@@ -14,7 +14,13 @@ function redactValue(value: unknown, seen: WeakSet<object>): unknown {
   if (Array.isArray(value)) {
     if (seen.has(value)) return CIRCULAR_PLACEHOLDER;
     seen.add(value);
-    return value.map((item) => redactValue(item, seen));
+    // Removed on the way back out: `seen` tracks the current recursion
+    // PATH (ancestors), not every object visited so far - otherwise the
+    // same object reachable twice via two sibling branches (a DAG, not a
+    // cycle) would be wrongly flagged circular on its second occurrence.
+    const result = value.map((item) => redactValue(item, seen));
+    seen.delete(value);
+    return result;
   }
 
   if (value !== null && typeof value === 'object') {
@@ -27,6 +33,7 @@ function redactValue(value: unknown, seen: WeakSet<object>): unknown {
         ? REDACTED_PLACEHOLDER
         : redactValue(source[key], seen);
     }
+    seen.delete(value);
     return result;
   }
 
