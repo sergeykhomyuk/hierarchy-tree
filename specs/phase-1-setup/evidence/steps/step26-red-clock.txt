@@ -1,0 +1,24 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |platform| src/platform/runtime/createSystemClock.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |platform| src/platform/runtime/createSystemClock.test.ts [ src/platform/runtime/createSystemClock.test.ts ]
+Error: Cannot find module './createSystemClock' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/runtime/createSystemClock.test.ts
+ ❯ src/platform/runtime/createSystemClock.test.ts:2:1
+      1| import { afterEach, beforeEach, describe, expect, it, vi } from 'vites…
+      2| import { createSystemClock } from './createSystemClock';
+       | ^
+      3|
+      4| describe('createSystemClock', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  16:42:50
+   Duration  108ms (transform 22ms, setup 37ms, import 0ms, tests 0ms, environment 0ms)
+

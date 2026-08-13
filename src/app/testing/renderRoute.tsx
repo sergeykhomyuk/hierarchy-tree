@@ -1,0 +1,77 @@
+import type { ReactNode } from 'react';
+import { render, type RenderResult } from '@testing-library/react';
+import type { Configuration } from '@platform/configuration';
+import { createObservability } from '@platform/observability';
+import { createInternationalization } from '@platform/internationalization';
+import { createHttpClient } from '@platform/http';
+import {
+  createFakeClock,
+  createFakeRandomness,
+  createFakeTransport,
+} from '@shared/testing';
+import { ApplicationRoot } from '../ApplicationRoot';
+import { createInteractionTracker } from '../routing';
+import type { Runtime } from '../composition';
+import commonCatalogue from '../locales/en/common.json';
+
+const TEST_CONFIGURATION: Configuration = Object.freeze({
+  apiBaseUrl: 'https://example.test',
+  logLevel: 'silent',
+  observabilitySink: 'none',
+  requestTimeoutMilliseconds: 8000,
+  telemetryBufferHandle: false,
+  developmentRoutes: false,
+  basePath: '/',
+});
+
+// The pieces createRuntime.ts composes, assembled here with fakes instead
+// of the real system adapters - this is what lets a test render "through
+// the real stack" (invariant 90) without touching the network or a real
+// clock, since createRuntime.ts itself always uses the real adapters.
+export async function buildTestRuntime(
+  configurationOverrides: Partial<Configuration> = {},
+): Promise<Runtime> {
+  const configuration: Configuration = Object.freeze({
+    ...TEST_CONFIGURATION,
+    ...configurationOverrides,
+  });
+  const randomness = createFakeRandomness();
+  const clock = createFakeClock();
+  const { facade: observability } = createObservability({
+    configuration,
+    randomness,
+  });
+  const interactionTracker = createInteractionTracker(observability);
+  const http = createHttpClient({
+    transport: createFakeTransport({}),
+    clock,
+    randomness,
+    observability,
+    configuration,
+    correlationId: () =>
+      interactionTracker.currentCorrelationId() ?? 'test-correlation-id',
+  });
+  const i18n = await createInternationalization({
+    resources: { common: commonCatalogue },
+    language: 'en',
+    observability,
+  });
+
+  return Object.freeze({
+    configuration,
+    observability,
+    http,
+    i18n,
+    interactionTracker,
+  });
+}
+
+export async function renderRoute(
+  children: ReactNode,
+  configurationOverrides: Partial<Configuration> = {},
+): Promise<RenderResult> {
+  const runtime = await buildTestRuntime(configurationOverrides);
+  return render(
+    <ApplicationRoot runtime={runtime}>{children}</ApplicationRoot>,
+  );
+}

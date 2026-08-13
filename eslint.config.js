@@ -601,6 +601,21 @@ export default defineConfig([
       ],
     },
   },
+  {
+    // The one test that asserts createRuntime.ts's attach/no-attach
+    // behavior has to read and reset the same global the production
+    // code writes - narrower than exempting every test file, which
+    // would let an unrelated test read the handle undetected.
+    files: ['src/app/composition/createRuntime.test.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        ENV_SYNTAX,
+        SEND_BEACON_SYNTAX,
+        DATE_SYNTAX,
+      ],
+    },
+  },
   // Applied last so no formatting rule is owned by both ESLint and Prettier.
   eslintConfigPrettier,
 ]);

@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T15:40:44Z",
+  "updated": "2026-08-13T15:54:14Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 25
+      "steps_done": 26
     },
     "G3": {
       "status": "pending",
@@ -1059,8 +1059,8 @@
       "tests": [
         "a route rendered in a test goes through the real provider stack"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T15:53:56Z evidence/steps/step26-red-clock.txt; evidence/steps/step26-red-vitest.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -1742,7 +1742,14 @@
     "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step23-red-vitest.txt (a3e92cb18cc1) - backfilled registration: committed earlier in session, registration was missed at the time",
     "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step24-green.txt (1c9ab4f82f1f) - backfilled registration: committed earlier in session, registration was missed at the time",
     "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step24-red-typecheck.txt (d9c0fefd2338) - backfilled registration: committed earlier in session, registration was missed at the time",
-    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step24-red-vitest.txt (2b294641eb81) - backfilled registration: committed earlier in session, registration was missed at the time"
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step24-red-vitest.txt (2b294641eb81) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:53:56Z step 26 -> red",
+    "2026-08-13T15:54:02Z step 26 -> green",
+    "2026-08-13T15:54:08Z step 26: createSystemClock.ts (real setTimeout/Date.now adapter), createRuntime.ts (composes real observability/http/i18next/interactionTracker, attaches the telemetry buffer handle to globalThis when configured), runtimeContext.ts + useRuntime.ts, ApplicationRoot.tsx (RuntimeContext.Provider > I18nextProvider > children - RootErrorBoundary and RouterProvider join in later steps, still wrapping children), src/app/locales/en/common.json seeded, and src/app/testing/renderRoute.tsx (assembles a fake Runtime from the same pieces createRuntime.ts composes, for invariant 90's real-provider-stack test).",
+    "2026-08-13T15:54:08Z step 26 -> done",
+    "2026-08-13T15:54:14Z evidence recorded: evidence/steps/step26-red-clock.txt (241bfc416835) - genuine red: createSystemClock.ts module not found",
+    "2026-08-13T15:54:14Z evidence recorded: evidence/steps/step26-red-vitest.txt (cf1fdb10ff9f) - genuine red: useRuntime.ts, createRuntime.ts, ApplicationRoot/renderRoute modules not found",
+    "2026-08-13T15:54:14Z evidence recorded: evidence/steps/step26-green.txt (5e4c8f119d1a) - full npm run verify green: 189 tests, 98.24% coverage, build/verify:build/size all pass"
   ],
   "milestones": [
     {
@@ -2252,6 +2259,21 @@
       "sha": "2b294641eb81",
       "recorded": "2026-08-13T15:40:44Z",
       "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step26-red-clock.txt": {
+      "sha": "241bfc416835",
+      "recorded": "2026-08-13T15:54:14Z",
+      "note": "genuine red: createSystemClock.ts module not found"
+    },
+    "evidence/steps/step26-red-vitest.txt": {
+      "sha": "cf1fdb10ff9f",
+      "recorded": "2026-08-13T15:54:14Z",
+      "note": "genuine red: useRuntime.ts, createRuntime.ts, ApplicationRoot/renderRoute modules not found"
+    },
+    "evidence/steps/step26-green.txt": {
+      "sha": "5e4c8f119d1a",
+      "recorded": "2026-08-13T15:54:14Z",
+      "note": "full npm run verify green: 189 tests, 98.24% coverage, build/verify:build/size all pass"
     }
   },
   "test_file_hashes": {}
