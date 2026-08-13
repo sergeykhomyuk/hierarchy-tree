@@ -77,6 +77,18 @@
   }
 }
 
+/* The one place default text and page colour are set from the token
+   layer - without it, plain text with no explicit text-* class (Card's
+   children, the placeholder pages, not-found) inherits the browser's
+   default black rather than --color-ink, which only fails contrast once
+   the surface actually goes dark (invariant 87's jsdom unit run applies
+   no stylesheet, so it cannot catch this; the kit route's real dark-mode
+   axe pass is what did). */
+body {
+  color: var(--color-ink);
+  background-color: var(--color-canvas-app);
+}
+
 :focus-visible {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;

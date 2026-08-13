@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T16:55:26Z",
+  "updated": "2026-08-13T17:49:32Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 31
+      "steps_done": 32
     },
     "G3": {
       "status": "pending",
@@ -1122,13 +1122,13 @@
       "id": 32,
       "desc": "The e2e suite of invariant 113 plus the kit-route browser checks M4 could not run: both routes, not-found, the forced route error with correlation id and keyboard recovery, buffer sink assertions, clean console, axe per route, storage emptiness, and the kit route at 320px with axe in real light and real dark (invariants 113, 49, 86, 86a, 87, 100, 128)",
       "tests": [
-        "the forced route error renders the boundary with a working keyboard recovery",
-        "the buffer sink recorded the expected events",
-        "every kit component renders at 320px with zero axe violations in light and dark",
-        "local and session storage are empty after visiting both routes"
+        "a forced route chunk failure renders the boundary with a correlation id and recovers on retry",
+        "the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage",
+        "local and session storage are empty after visiting both routes",
+        "has zero axe violations in real dark"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T17:49:17Z evidence/steps/step32-red-attach-langdir.txt; evidence/steps/step32-red-e2e-first-run.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -1792,7 +1792,16 @@
     "2026-08-13T16:55:22Z step 31 amended: desc: \"Populate expected-build-output.json's four conditional keys and flip phase to complete, arming declaration-table.test.ts; append the route and catalogue entries to .size-limit.json; the base-path, route-chunk, catalogue-chunk and kit-route-absence build-output tests go live (invariants 62, 86b, 89, 103, 122)\" -> \"Populate expected-build-output.json's four conditional keys and flip phase to complete, arming declaration-table.test.ts; append the route and catalogue entries to .size-limit.json; the base-path, route-chunk, catalogue-chunk and kit-route-absence build-output tests go live (invariants 62, 86b, 89, 103, 122)\"; tests: ['the declaration table is complete and every family is declared at phase complete', 'no dist file contains the kit route path chunk or state-inventory marker', 'each route chunk imports only its own catalogue chunk'] -> ['the declaration table is complete and every family is declared at phase complete', 'no dist file contains the kit route path, chunk, or state-inventory marker', 'each route chunk imports only its own catalogue chunk']",
     "2026-08-13T16:55:26Z step 31 -> red",
     "2026-08-13T16:55:26Z step 31 -> green",
-    "2026-08-13T16:55:26Z step 31 -> done"
+    "2026-08-13T16:55:26Z step 31 -> done",
+    "2026-08-13T17:48:24Z step 32 amended: desc: 'The e2e suite of invariant 113 plus the kit-route browser checks M4 could not run: both routes, not-found, the forced route error with correlation id and keyboard recovery, buffer sink assertions, clean console, axe per route, storage emptiness, and the kit route at 320px with axe in real light and real dark (invariants 113, 49, 86, 86a, 87, 100, 128)' -> 'The e2e suite of invariant 113 plus the kit-route browser checks M4 could not run: both routes, not-found, the forced route error with correlation id and keyboard recovery, buffer sink assertions, clean console, axe per route, storage emptiness, and the kit route at 320px with axe in real light and real dark (invariants 113, 49, 86, 86a, 87, 100, 128)'; tests: ['the forced route error renders the boundary with a working keyboard recovery', 'the buffer sink recorded the expected events', 'every kit component renders at 320px with zero axe violations in light and dark', 'local and session storage are empty after visiting both routes'] -> ['a forced route chunk failure renders the boundary with a correlation id and recovers on retry', 'the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage', 'local and session storage are empty after visiting both routes', 'has zero axe violations in real dark']",
+    "2026-08-13T17:49:11Z evidence recorded: evidence/steps/step32-red-attach-langdir.txt (8af30d5727ae) - unit-level red: interactionTracker.attach never wired into bootstrap.ts (route_viewed never emitted) and ApplicationRoot never set document.documentElement.lang/dir from locale (invariant 66 gap) - both genuine pre-existing bugs found while building the e2e suite",
+    "2026-08-13T17:49:11Z evidence recorded: evidence/steps/step32-red-e2e-first-run.txt (278d4a31071c) - first full e2e run: 10 failures - react-router HydrateFallback console warning on every route, dark-mode color-contrast failure (Card/placeholder text had no text-ink color, invariant 87 dark half), KitRoute chunk leaking into production (fixed separately, see step32 log), skip-link focus timing, forced RTL override not surviving real navigation",
+    "2026-08-13T17:49:11Z evidence recorded: evidence/steps/step32-green-e2e.txt (d140b57778a7) - full npm run e2e green: 16/16 tests across chromium and development projects - placeholder routes, not-found, error boundary with keyboard recovery, telemetry buffer, storage emptiness, accessibility, right-to-left, development console, kit route light+dark axe",
+    "2026-08-13T17:49:12Z evidence recorded: evidence/steps/step32-green-verify.txt (8822f86ce5c8) - full npm run verify chain green after step 32: typecheck, lint, format, 230 unit/component tests at 96%+ coverage, build, 8/15 build-output tests, size-limit all green",
+    "2026-08-13T17:49:17Z step 32 -> red",
+    "2026-08-13T17:49:17Z step 32 -> green",
+    "2026-08-13T17:49:18Z step 32 -> done",
+    "2026-08-13T17:49:32Z step 32: built the full e2e suite (16 tests, chromium+development projects). Found and fixed 4 genuine pre-existing bugs while building it: (1) interactionTracker.attach() was never called in bootstrap.ts, so route_viewed was never emitted in production; (2) ApplicationRoot never set document.documentElement.lang/dir from the active locale (invariant 66 gap); (3) loadTranslations.ts's module-level singleton promise tied a feature's catalogue to whichever i18n instance called it first, silently breaking a second app instance; (4) theme.css never applied --color-ink/--color-canvas-app to body, so any plain text without an explicit text-* class rendered browser-default black - invisible in light mode, a real WCAG AA failure in dark mode, caught by the kit route's dark-mode axe pass exactly as TECH.md's design rationale predicted. Also fixed: the /__kit route was never wired into routeDefinitions.ts (built in M4 but unreachable); gating its dynamic import behind the re-exported isDevelopmentBuild constant did not fold at build time (empirically confirmed via esbuild probe), so it shipped a KitRoute-*.js chunk to production regardless - fixed by reading import.meta.env.DEV directly in routeDefinitions.ts with a narrow, documented eslint override; react-router's own HydrateFallback warning fired on every route (fixed with a null HydrateFallback on the root route); playwright.config.ts's webServer bound to 'localhost' which resolved to IPv6 loopback on this machine, not the 127.0.0.1 every URL in the config targets (fixed with --host 127.0.0.1); the pre-existing forceDirection.ts e2e helper's addInitScript-based override did not survive a real navigation (documentElement gets replaced during HTML parsing) - fixed by installing the override via page.evaluate after load instead. All findings and fixes documented in ARCHITECTURE.md/TECH.md/PRODUCT.md decision logs where they affect binding invariants. Full npm run verify chain green (230 unit tests, build, verify:build, size) and npm run e2e green (16/16)."
   ],
   "milestones": [
     {
@@ -2427,6 +2436,26 @@
       "sha": "281587ccf1a2",
       "recorded": "2026-08-13T16:54:44Z",
       "note": "full npm run verify chain green after step 31: typecheck, lint, format, 225 unit/component tests, build, 8/15 build-output tests, size-limit all green at the revised 150kB entry budget"
+    },
+    "evidence/steps/step32-red-attach-langdir.txt": {
+      "sha": "8af30d5727ae",
+      "recorded": "2026-08-13T17:49:11Z",
+      "note": "unit-level red: interactionTracker.attach never wired into bootstrap.ts (route_viewed never emitted) and ApplicationRoot never set document.documentElement.lang/dir from locale (invariant 66 gap) - both genuine pre-existing bugs found while building the e2e suite"
+    },
+    "evidence/steps/step32-red-e2e-first-run.txt": {
+      "sha": "278d4a31071c",
+      "recorded": "2026-08-13T17:49:11Z",
+      "note": "first full e2e run: 10 failures - react-router HydrateFallback console warning on every route, dark-mode color-contrast failure (Card/placeholder text had no text-ink color, invariant 87 dark half), KitRoute chunk leaking into production (fixed separately, see step32 log), skip-link focus timing, forced RTL override not surviving real navigation"
+    },
+    "evidence/steps/step32-green-e2e.txt": {
+      "sha": "d140b57778a7",
+      "recorded": "2026-08-13T17:49:11Z",
+      "note": "full npm run e2e green: 16/16 tests across chromium and development projects - placeholder routes, not-found, error boundary with keyboard recovery, telemetry buffer, storage emptiness, accessibility, right-to-left, development console, kit route light+dark axe"
+    },
+    "evidence/steps/step32-green-verify.txt": {
+      "sha": "8822f86ce5c8",
+      "recorded": "2026-08-13T17:49:11Z",
+      "note": "full npm run verify chain green after step 32: typecheck, lint, format, 230 unit/component tests at 96%+ coverage, build, 8/15 build-output tests, size-limit all green"
     }
   },
   "test_file_hashes": {}

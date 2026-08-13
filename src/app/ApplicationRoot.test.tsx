@@ -22,4 +22,11 @@ describe('ApplicationRoot', () => {
 
     expect(screen.getByText('https://example.test|ready')).toBeInTheDocument();
   });
+
+  it('sets document.documentElement.lang and dir from the active i18next language', async () => {
+    await renderRoute(<ProbeRoute />);
+
+    expect(document.documentElement.lang).toBe('en');
+    expect(document.documentElement.dir).toBe('ltr');
+  });
 });

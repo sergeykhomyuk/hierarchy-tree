@@ -39,6 +39,37 @@ describe('bootstrap', () => {
     document.body.removeChild(container);
   });
 
+  it('attaches the interaction tracker to the router so a settled navigation is recorded', async () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    await act(async () => {
+      await bootstrap(container, {
+        ok: true,
+        configuration: Object.freeze({
+          ...VALID_CONFIGURATION_RESULT.configuration,
+          observabilitySink: 'buffer',
+          telemetryBufferHandle: true,
+        }),
+      });
+    });
+
+    await waitFor(() => {
+      expect(container.textContent).toContain(
+        "The hierarchy view isn't built yet",
+      );
+    });
+
+    const records = globalThis.__hierarchyTreeTelemetry?.read() ?? [];
+    const routeViewed = records.filter(
+      (record) =>
+        record.kind === 'analytics' && record.name === 'app.route_viewed',
+    );
+    expect(routeViewed).toHaveLength(1);
+
+    document.body.removeChild(container);
+  });
+
   it('an invalid environment renders the error screen and does not render the router', async () => {
     const container = document.createElement('div');
     document.body.appendChild(container);

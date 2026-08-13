@@ -44,6 +44,7 @@ export async function bootstrap(
 
   const runtime = await createRuntime(configurationResult.configuration);
   const router = createApplicationRouter(runtime);
+  runtime.interactionTracker.attach(router);
 
   function handleBoundaryError(error: unknown): void {
     // React 19 logs every boundary-caught error via console.error by

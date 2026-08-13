@@ -7,7 +7,8 @@ import { routeDefinitions } from './routeDefinitions';
 // in lib/router/router.d.ts - that type is re-exported under `DataRouter`
 // instead (confirmed against the installed react-router@8.3.0's index.d.ts).
 export function createApplicationRouter(runtime: Runtime): DataRouter {
-  return createBrowserRouter(routeDefinitions(runtime.i18n), {
-    basename: runtime.configuration.basePath,
-  });
+  return createBrowserRouter(
+    routeDefinitions(runtime.i18n, runtime.configuration.developmentRoutes),
+    { basename: runtime.configuration.basePath },
+  );
 }

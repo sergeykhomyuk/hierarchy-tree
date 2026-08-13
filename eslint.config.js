@@ -575,6 +575,28 @@ export default defineConfig([
     },
   },
   {
+    // The re-exported `isDevelopmentBuild` constant (environment.ts) does
+    // not fold across the module boundary: confirmed empirically that
+    // Vite/Rolldown only dead-code-eliminates `import.meta.env.DEV` when
+    // it appears literally at the call site, so gating the /__kit route's
+    // dynamic import() behind the re-exported constant left a
+    // KitRoute-*.js chunk shipping to production regardless of its value
+    // (invariant 86b). Reading the Vite-builtin DEV flag directly here,
+    // in this one file, is what actually lets the bundler drop the
+    // module; this is not a raw `import.meta.env.VITE_*` read, so
+    // invariant 13's single-parser guarantee for user-defined
+    // configuration is unaffected.
+    files: ['src/app/routing/routeDefinitions.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        SEND_BEACON_SYNTAX,
+        DATE_SYNTAX,
+        TELEMETRY_SYNTAX,
+      ],
+    },
+  },
+  {
     files: ['src/platform/http/createFetchTransport.ts'],
     rules: {
       'no-restricted-globals': [
@@ -637,11 +659,15 @@ export default defineConfig([
     },
   },
   {
-    // The one test that asserts createRuntime.ts's attach/no-attach
-    // behavior has to read and reset the same global the production
-    // code writes - narrower than exempting every test file, which
-    // would let an unrelated test read the handle undetected.
-    files: ['src/app/composition/createRuntime.test.ts'],
+    // The tests that assert createRuntime.ts's attach/no-attach behavior
+    // and bootstrap.ts's end-to-end router wiring have to read the same
+    // global the production code writes - narrower than exempting every
+    // test file, which would let an unrelated test read the handle
+    // undetected.
+    files: [
+      'src/app/composition/createRuntime.test.ts',
+      'src/app/bootstrap.test.tsx',
+    ],
     rules: {
       'no-restricted-syntax': [
         'error',

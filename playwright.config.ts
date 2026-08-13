@@ -2,14 +2,20 @@ import { defineConfig, devices } from '@playwright/test';
 
 const isDeployedRun = Boolean(process.env.DEPLOYED_BASE_URL);
 
+// --host 127.0.0.1 pins the server to the exact address this config
+// probes and every baseURL below points at. Without it, Vite binds
+// `localhost`, which some environments resolve to the IPv6 loopback
+// (::1) - a real address the server IS listening on, but not the IPv4
+// one Playwright's webServer readiness check and every request target,
+// so the check times out against a server that is actually up.
 const previewServer = {
-  command: 'npm run preview -- --port 4173',
+  command: 'npm run preview -- --port 4173 --host 127.0.0.1',
   url: 'http://127.0.0.1:4173/',
   reuseExistingServer: !process.env.CI,
 };
 
 const developmentServer = {
-  command: 'npm run dev -- --port 4174',
+  command: 'npm run dev -- --port 4174 --host 127.0.0.1',
   url: 'http://127.0.0.1:4174/',
   reuseExistingServer: !process.env.CI,
 };
