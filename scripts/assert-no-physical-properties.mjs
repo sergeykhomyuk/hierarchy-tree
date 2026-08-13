@@ -22,15 +22,27 @@ const PATTERNS = [
   { name: 'border-r', regex: /\bborder-r\b/ },
 ];
 
+// Raw color values (invariant 71): scoped to the components and app
+// shell rather than every *.css file, because shared/theme/theme.css is
+// where the raw values legitimately live - it declares the tokens.
+const RAW_COLOR_PATTERN = /#[0-9a-fA-F]{3,8}\b/;
+
 const explicitTargets = process.argv
   .slice(2)
   .filter((arg) => !arg.startsWith('--'));
-const files =
+const physicalPropertyFiles =
   explicitTargets.length > 0 ? explicitTargets : globSync('src/**/*.{tsx,css}');
+const rawColorFiles =
+  explicitTargets.length > 0
+    ? explicitTargets
+    : [
+        ...globSync('src/shared/ui/**/*.{tsx,css}'),
+        ...globSync('src/app/**/*.{tsx,css}'),
+      ];
 
 const violations = [];
 
-for (const filePath of files) {
+for (const filePath of physicalPropertyFiles) {
   const source = readFileSync(filePath, 'utf-8');
   for (const pattern of PATTERNS) {
     if (pattern.regex.test(source)) {
@@ -38,6 +50,15 @@ for (const filePath of files) {
         `${filePath}: physical property/utility "${pattern.name}" found - use the logical equivalent`,
       );
     }
+  }
+}
+
+for (const filePath of rawColorFiles) {
+  const source = readFileSync(filePath, 'utf-8');
+  if (RAW_COLOR_PATTERN.test(source)) {
+    violations.push(
+      `${filePath}: raw color value found - use a theme.css token instead`,
+    );
   }
 }
 

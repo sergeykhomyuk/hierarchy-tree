@@ -138,6 +138,31 @@ describe('assert-no-physical-properties', () => {
     ).not.toBe(0);
     expect(bannedResult.output).toContain('ml-');
   });
+
+  it('no component references a raw color value instead of a token', () => {
+    const probeDir = mkdtempSync(join(tmpdir(), 'raw-color-'));
+    const safeFile = join(probeDir, 'Safe.tmp.tsx');
+    const bannedFile = join(probeDir, 'Banned.tmp.tsx');
+
+    writeFileSync(
+      safeFile,
+      'export const Safe = () => <div className="bg-surface text-ink" />;\n',
+    );
+    writeFileSync(
+      bannedFile,
+      'export const Banned = () => <div style={{}} className="text-[#1b1230]" />;\n',
+    );
+
+    const scriptPath = 'scripts/assert-no-physical-properties.mjs';
+    const safeResult = runScript(scriptPath, [safeFile]);
+    const bannedResult = runScript(scriptPath, [bannedFile]);
+
+    rmSync(probeDir, { recursive: true, force: true });
+
+    expect(safeResult.status, 'a token utility must not be flagged').toBe(0);
+    expect(bannedResult.status, 'a raw hex color must be flagged').not.toBe(0);
+    expect(bannedResult.output).toContain('raw color');
+  });
 });
 
 describe('assert-no-secrets', () => {

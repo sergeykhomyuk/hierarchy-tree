@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T14:32:20Z",
+  "updated": "2026-08-13T14:40:20Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 20
+      "steps_done": 21
     },
     "G3": {
       "status": "pending",
@@ -967,8 +967,8 @@
         "no component references a raw color value instead of a token",
         "reduced motion disables every transition including the skeleton shimmer"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T14:40:07Z evidence/steps/step21-red-vitest.txt; evidence/steps/step21-red-vitest-guard.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1631,7 +1631,11 @@
     "2026-08-13T14:32:08Z G4 finding Claude-14 dispositioned: fixed: tracer.startInteraction() now wraps createCorrelationId in its own try/catch, returning a fixed fallback id (32 zero chars) if the randomness source throws, so invariant 59's whole-facade guarantee covers it too. Added a regression test with a throwing randomness source.",
     "2026-08-13T14:32:08Z G4 finding Claude-15 dispositioned: fixed: redact.ts's WeakSet entries are now removed on the way back out of the recursion (seen.delete after processing), so the set tracks only the current recursion path (true ancestors) rather than every object visited - a shared (non-cyclic) object reference appearing under two different keys is now redacted correctly at each occurrence instead of being marked '[circular]' the second time. Added a regression test.",
     "2026-08-13T14:32:08Z G4 finding Claude-16 dispositioned: fixed: enabled i18next's appendNamespaceToMissingKey:true, verified against the installed package's source (i18next.js) to confirm it prefixes only the key parseMissingKeyHandler receives (namespace:key via nsSeparator ':'), not missingKeyHandler's - so the rendered marker becomes the invariant-63 '\u27e6namespace:key\u27e7' format while the logged report keeps clean separate namespace/key fields. Updated the affected test's expected marker string.",
-    "2026-08-13T14:32:20Z milestone 3 reviewed: Fresh-context reviewer (loop-reviewer subagent) reviewed the full M3 diff (3875858..4077b8b) against PRODUCT.md invariants 13-35, 45-59, 47/47a, 30, 52-53, 60-66 and TECH.md sections 3.1-3.5. 6 findings recorded (Claude-11..16), 1 blocking. All 6 fixed: Claude-11 (blocking) - HttpClientDependencies now takes an injected correlationId source, used as both the traceparent trace id and the timing record's correlationId, satisfying invariant 30/47's cross-system equality (previously the client generated its own unrelated id). Claude-12 - bootstrap.ts's configuration-failure path now reports through a real observability facade instead of console.error, pulling platform/runtime/createSystemRandomness.ts forward from M5 since it was genuinely needed. Claude-13 - added the TECH.md-specified malformed-log-level test. Claude-14 - wrapped tracer.startInteraction() in its own try/catch per invariant 59's whole-facade scope. Claude-15 - fixed redact.ts's WeakSet cycle guard to track only the current recursion path, not all visited objects, so DAG-shared (non-cyclic) references redact correctly instead of being mislabeled circular. Claude-16 - enabled i18next's appendNamespaceToMissingKey so the rendered marker matches invariant 63's literal '\u27e6namespace:key\u27e7' format. Re-verified post-fix: npm run verify green (evidence/milestones/m3-suite-post-review.txt), 120 tests, 98.02%25 coverage, entry 66.08kB/100kB."
+    "2026-08-13T14:32:20Z milestone 3 reviewed: Fresh-context reviewer (loop-reviewer subagent) reviewed the full M3 diff (3875858..4077b8b) against PRODUCT.md invariants 13-35, 45-59, 47/47a, 30, 52-53, 60-66 and TECH.md sections 3.1-3.5. 6 findings recorded (Claude-11..16), 1 blocking. All 6 fixed: Claude-11 (blocking) - HttpClientDependencies now takes an injected correlationId source, used as both the traceparent trace id and the timing record's correlationId, satisfying invariant 30/47's cross-system equality (previously the client generated its own unrelated id). Claude-12 - bootstrap.ts's configuration-failure path now reports through a real observability facade instead of console.error, pulling platform/runtime/createSystemRandomness.ts forward from M5 since it was genuinely needed. Claude-13 - added the TECH.md-specified malformed-log-level test. Claude-14 - wrapped tracer.startInteraction() in its own try/catch per invariant 59's whole-facade scope. Claude-15 - fixed redact.ts's WeakSet cycle guard to track only the current recursion path, not all visited objects, so DAG-shared (non-cyclic) references redact correctly instead of being mislabeled circular. Claude-16 - enabled i18next's appendNamespaceToMissingKey so the rendered marker matches invariant 63's literal '\u27e6namespace:key\u27e7' format. Re-verified post-fix: npm run verify green (evidence/milestones/m3-suite-post-review.txt), 120 tests, 98.02%25 coverage, entry 66.08kB/100kB.",
+    "2026-08-13T14:40:07Z step 21 -> red",
+    "2026-08-13T14:40:07Z step 21 -> green",
+    "2026-08-13T14:40:20Z step 21: shared/theme/theme.css implemented - the token layer (color, radii, motion) declared once in @theme, dark values re-declared over the same names only where they differ (an unspecified token inherits its light value, matching contrastPairs.test.ts's own parsing assumption for step 22), prefers-color-scheme activation with no switcher, a universal prefers-reduced-motion rule covering every future animation including Skeleton's not-yet-built shimmer, and a single :focus-visible rule. One deliberate deviation from docs/reference.md's literal mockup color, computed and verified with a WCAG contrast script before writing any CSS: border-field's mockup value #E2DDEE is only 1.33:1 against white (invariant 72's own example pair asks for 3:1 for this exact pairing), so it's replaced with #8F89A3 (same hue family, verified 3.35:1 light / 5.46:1 dark). Also introduced a new --color-on-primary:#ffffff token, constant across themes, for the button-label-on-primary pair - TECH.md's own example named 'surface' for this role, which breaks in dark mode once surface itself flips to a dark page background (button text would go from white-on-purple to near-black-on-purple). Extended assert-no-physical-properties.mjs per TECH.md's own instruction to also grep for raw hex colors, scoped to src/shared/ui/** and src/app/** only (not shared/theme, which legitimately declares them). Surfaced and fixed a second tsconfig gap of the same shape as step 20's: tsconfig.app.json's explicit types:['vite/client'] array disables TypeScript's automatic @types/* inclusion entirely, so theme.test.ts's node:fs import resolved to any until 'node' was added alongside it. npm run verify green, 127 tests, 98.02%25 coverage.",
+    "2026-08-13T14:40:20Z step 21 -> done"
   ],
   "milestones": [
     {

@@ -1,0 +1,26 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/guard-scripts.test.ts (10 tests | 1 failed | 9 skipped) 50ms
+     × no component references a raw color value instead of a token 50ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/guard-scripts.test.ts > assert-no-physical-properties > no component references a raw color value instead of a token
+AssertionError: a raw hex color must be flagged: expected +0 not to be +0 // Object.is equality
+ ❯ scripts/guard-scripts.test.ts:166:11
+    164|       bannedResult.status,
+    165|       'a raw hex color must be flagged',
+    166|     ).not.toBe(0);
+       |           ^
+    167|     expect(bannedResult.output).toContain('raw color');
+    168|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  15:38:24
+   Duration  140ms (transform 18ms, setup 28ms, import 5ms, tests 50ms, environment 0ms)
+
