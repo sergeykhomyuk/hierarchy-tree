@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:31:31Z",
+  "updated": "2026-08-13T12:34:51Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 8
+      "steps_done": 9
     },
     "G3": {
       "status": "pending",
@@ -757,8 +757,8 @@
       "tests": [
         "both feature entries exist and export their documented names"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T12:34:08Z evidence/steps/step9-red.txt: @features/auth and @features/hierarchy do not exist",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1464,7 +1464,12 @@
     "2026-08-13T12:31:24Z G4 finding Claude-3 dispositioned: fixed: VERIFICATION.md now states npm run verify covers 7 of invariant 103's 8 ordered steps and explicitly does not include e2e, with the reason (e2e needs the already-verified artifact served, not rebuilt).",
     "2026-08-13T12:31:24Z G4 finding Claude-4 dispositioned: accepted: matches PLAN.md's own staged rollout - base-path.test.ts is M5 step 31, bundle-secrets.test.ts needs M2 step 14's assert-no-secrets.mjs. Not an M1 defect.",
     "2026-08-13T12:31:31Z evidence recorded: evidence/milestones/m1-suite-post-review.txt (0ea09211ebc2) - npm run verify re-run after fixing Claude-1/Claude-3; confirms npm test is hermetic (13 tests) and verify still passes end to end",
-    "2026-08-13T12:31:31Z milestone 1 reviewed: Fresh-context loop-reviewer on the full M1 diff; evidence/reviews/m1-claude-review.md. 4 findings, 1 blocking (Claude-1: npm test triggered a live vite build - fixed by relocating the check to build-output/, verified post-review). Claude-3 (VERIFICATION.md e2e scope overclaim) fixed. Claude-2, Claude-4 accepted as non-defects / already-tracked staged rollout."
+    "2026-08-13T12:31:31Z milestone 1 reviewed: Fresh-context loop-reviewer on the full M1 diff; evidence/reviews/m1-claude-review.md. 4 findings, 1 blocking (Claude-1: npm test triggered a live vite build - fixed by relocating the check to build-output/, verified post-review). Claude-3 (VERIFICATION.md e2e scope overclaim) fixed. Claude-2, Claude-4 accepted as non-defects / already-tracked staged rollout.",
+    "2026-08-13T12:34:08Z step 9 -> red",
+    "2026-08-13T12:34:51Z evidence recorded: evidence/steps/step9-red.txt (14e60fe6dd6c) - vitest red: feature entries don't exist",
+    "2026-08-13T12:34:51Z evidence recorded: evidence/steps/step9-green.txt (a9713e68406c) - vitest green: both feature entries export their placeholder pages",
+    "2026-08-13T12:34:51Z step 9 -> green",
+    "2026-08-13T12:34:51Z step 9 -> done"
   ],
   "milestones": [
     {
@@ -1659,6 +1664,16 @@
       "sha": "0ea09211ebc2",
       "recorded": "2026-08-13T12:31:31Z",
       "note": "npm run verify re-run after fixing Claude-1/Claude-3; confirms npm test is hermetic (13 tests) and verify still passes end to end"
+    },
+    "evidence/steps/step9-red.txt": {
+      "sha": "14e60fe6dd6c",
+      "recorded": "2026-08-13T12:34:51Z",
+      "note": "vitest red: feature entries don't exist"
+    },
+    "evidence/steps/step9-green.txt": {
+      "sha": "a9713e68406c",
+      "recorded": "2026-08-13T12:34:51Z",
+      "note": "vitest green: both feature entries export their placeholder pages"
     }
   },
   "test_file_hashes": {}

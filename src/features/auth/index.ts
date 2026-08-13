@@ -1,0 +1,1 @@
+export { AuthPlaceholderPage } from './AuthPlaceholderPage';
