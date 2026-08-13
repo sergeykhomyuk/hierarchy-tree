@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T14:07:25Z",
+  "updated": "2026-08-13T14:13:24Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 19
+      "steps_done": 20
     },
     "G3": {
       "status": "pending",
@@ -920,8 +920,8 @@
         "a missing key reports through the facade and renders the visible marker",
         "the locale direction map resolves without Intl.Locale"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T14:13:11Z evidence/steps/step20-red-vitest.txt; evidence/steps/step20-red-typecheck.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1577,7 +1577,11 @@
     "2026-08-13T14:07:12Z step 19 -> red",
     "2026-08-13T14:07:12Z step 19 -> green",
     "2026-08-13T14:07:25Z step 19: reportWebVitals implemented. Installed web-vitals@6.1.0 (VERIFIED against npm registry: latest published version, matches TECH.md's own recorded verification) - the runtime dependency allow-list's only remaining phase-1-setup addition needed so far. Noting a deliberate deviation from TECH.md section 'M1 also confirms empirically...installs the full runtime dependency set (react, react-dom, react-router, zod, i18next, react-i18next, web-vitals)': this session's M1 (already committed and milestone-reviewed) installed only react/react-dom/zod, not the full seven-package set. Rather than reopening the completed M1 boundary, remaining deps (react-router, i18next, react-i18next) are being installed incrementally at their first point of use (M5, M4) instead - npm run size runs at every milestone boundary regardless, so a late budget bust is still caught immediately rather than silently, which was the actual risk TECH.md's approach was managing against. reportWebVitals.ts imports onLCP/onINP/onCLS from web-vitals (the standard build, not attribution), gates all three registrations behind one typeof PerformanceObserver === 'function' check, wraps them in one try/catch, and forwards each callback through analytics.track('app.web_vital', {metric, value}) using metric.value verified against the installed package's actual Metric type (name: 'CLS'|'FCP'|'INP'|'LCP'|'TTFB', value: number). Tested by fully mocking the web-vitals module (vi.mock) for determinism rather than depending on jsdom/node's real PerformanceObserver behavior. npm run verify green, 97.81%25 coverage; pre-existing high-severity dev-only vulnerabilities in size-limit's puppeteer/estimo toolchain (unrelated to this change, would require a breaking @size-limit/preset-app upgrade) left unaddressed as out of scope.",
-    "2026-08-13T14:07:25Z step 19 -> done"
+    "2026-08-13T14:07:25Z step 19 -> done",
+    "2026-08-13T14:13:11Z step 20 -> red",
+    "2026-08-13T14:13:11Z step 20 -> green",
+    "2026-08-13T14:13:24Z step 20: platform/internationalization implemented, completing M3. Installed i18next@26.3.6 and react-i18next@17.0.11 (VERIFIED against npm registry, matching TECH.md's recorded versions). createInternationalization.ts creates a fresh i18next instance per call (createInstance(), not the module singleton) with lng/fallbackLng:false/defaultNS+ns:['common']/interpolation.escapeValue:false/returnNull:false/saveMissing:true/react.useSuspense:false, registering both missingKeyHandler (reportMissingKey.ts - logs at error level and pushes to a module-level missingKeyReports array) and parseMissingKeyHandler (formatMissingKey.ts - renders the visible marker literally as bracket-delimited text). localeDirection.ts is a plain explicit-map lookup with no Intl.Locale dependency, proven by a test that replaces globalThis.Intl.Locale with a throwing constructor and confirms the function still resolves correctly. Wired missingKeyReports into vitest.setup.ts globally (beforeEach clears it, afterEach asserts it empty) so ANY test across all three vitest projects that renders a missing translation key fails the suite, not just i18n-specific tests - tests that deliberately exercise the missing-key path clear the array themselves before their own afterEach runs. This global wiring surfaced a real TypeScript project-boundary gap: tsconfig.tools.json (which checks vitest.setup.ts) had no vite/client types, so once vitest.setup.ts started importing @platform/internationalization - which transitively reaches environment.ts's import.meta.env through the observability barrel - typecheck failed under the tools project even though the app project was fine; fixed by adding vite/client to tsconfig.tools.json's types array. Also renamed an initially-chosen type name (MissingKeyReport) to MissingKeyEntry after assert-domain-vocabulary.mjs correctly flagged 'Report' as a banned segment (the script's plural-vs-singular segment matching meant missingKeyReports the array passed while the singular type name didn't). npm run verify green, 97.91%25 coverage, 113 tests. M3 (platform adapters, steps 15-20) is now complete.",
+    "2026-08-13T14:13:24Z step 20 -> done"
   ],
   "milestones": [
     {

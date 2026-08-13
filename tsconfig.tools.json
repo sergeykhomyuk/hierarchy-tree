@@ -3,7 +3,11 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tools.tsbuildinfo",
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
-    "types": ["node"],
+    // vite/client is needed here too, not just in tsconfig.app.json:
+    // vitest.setup.ts (checked under this project) imports
+    // @platform/internationalization, which transitively reaches
+    // environment.ts's import.meta.env through the observability barrel.
+    "types": ["node", "vite/client"],
     "skipLibCheck": true,
 
     "module": "esnext",
