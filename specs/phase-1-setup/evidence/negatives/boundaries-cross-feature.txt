@@ -1,0 +1,7 @@
+
+/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/AuthPlaceholderPage.tsx
+  11:42  error  feature may not import feature (@features/hierarchy)                                                                            boundaries/dependencies
+  12:38  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+✖ 2 problems (2 errors, 0 warnings)
+

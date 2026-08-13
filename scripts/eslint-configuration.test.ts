@@ -1,4 +1,18 @@
+import { execFileSync } from 'node:child_process';
+import { rmSync, writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+
+function lintOutputFor(probePath: string, source: string): string {
+  writeFileSync(probePath, source);
+  try {
+    execFileSync('npx', ['eslint', probePath], { encoding: 'utf-8' });
+    return '';
+  } catch (error) {
+    return String((error as { stdout?: string }).stdout ?? '');
+  } finally {
+    rmSync(probePath);
+  }
+}
 
 type RuleValue = string | [string, ...unknown[]];
 type ConfigEntry = { rules?: Record<string, RuleValue>; files?: string[] };
@@ -141,5 +155,27 @@ describe('eslint configuration', () => {
     for (const changed of changedRows) {
       expect(changed).toContain('testing-harness');
     }
+  });
+});
+
+describe('demonstrable negatives', () => {
+  it('lint fails with the boundaries rule named on a cross-feature import', () => {
+    const output = lintOutputFor(
+      'src/features/auth/boundariesCrossFeatureProbe.ts',
+      "import { HierarchyPlaceholderPage } from '@features/hierarchy';\nexport { HierarchyPlaceholderPage as _probe };\n",
+    );
+
+    expect(output).toContain('boundaries/dependencies');
+    expect(output).toContain('feature');
+  });
+
+  it('lint fails with the restricted-import rule named on a deep feature import', () => {
+    const output = lintOutputFor(
+      'src/app/restrictedImportProbe.ts',
+      "import { HierarchyPlaceholderPage } from '@features/hierarchy/HierarchyPlaceholderPage';\nexport { HierarchyPlaceholderPage as _probe };\n",
+    );
+
+    expect(output).toContain('no-restricted-imports');
+    expect(output).toContain('public entry');
   });
 });

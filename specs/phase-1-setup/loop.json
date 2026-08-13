@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:50:56Z",
+  "updated": "2026-08-13T12:53:47Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 12
+      "steps_done": 13
     },
     "G3": {
       "status": "pending",
@@ -799,8 +799,8 @@
         "lint fails with the boundaries rule named on a cross-feature import",
         "lint fails with the restricted-import rule named on a deep feature import"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "n/a: case (b): review-driven confirmatory test of already-correct behavior - the boundaries/dependencies and no-restricted-imports rules were built and verified in steps 10 and 11; these are permanent regression tests proving they still fire, not new implementation",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1486,7 +1486,17 @@
     "2026-08-13T12:50:46Z evidence recorded: evidence/steps/step12-green.txt (a341451333e6) - vitest green: testing-harness override scoped correctly, differs from base by exactly feature+shared rows; full npm run verify re-confirmed green with real i18next/no-literal-string and require-await findings fixed (not config bugs)",
     "2026-08-13T12:50:46Z step 12 -> green",
     "2026-08-13T12:50:46Z step 12 -> done",
-    "2026-08-13T12:50:56Z step 12: eslint-plugin-jsx-a11y 6.10.2 (latest published) has not updated its peerDependencies for ESLint 10 yet (still ^3-^9) - installed with --legacy-peer-deps after confirming no newer release exists. Real findings surfaced once type-aware + i18next rules went live: i18next/no-literal-string correctly caught StartupPlaceholder.tsx's hardcoded 'hierarchy-tree' text (fixed by removing the visible string entirely rather than working around the linter - i18n catalogues don't exist until M3/M5) and require-await caught an async test callback with no await (fixed by making it sync). Also found @testing-library/dom was never an explicit or transitively-hoisted dependency despite being a hard peer of both @testing-library/react and @testing-library/jest-dom - installed explicitly; without it every jsdom-project test silently depended on accidental hoisting. Coverage also regressed when M2's feature placeholders (step 9) were imported-but-never-rendered; fixed by rendering both in features.test.tsx."
+    "2026-08-13T12:50:56Z step 12: eslint-plugin-jsx-a11y 6.10.2 (latest published) has not updated its peerDependencies for ESLint 10 yet (still ^3-^9) - installed with --legacy-peer-deps after confirming no newer release exists. Real findings surfaced once type-aware + i18next rules went live: i18next/no-literal-string correctly caught StartupPlaceholder.tsx's hardcoded 'hierarchy-tree' text (fixed by removing the visible string entirely rather than working around the linter - i18n catalogues don't exist until M3/M5) and require-await caught an async test callback with no await (fixed by making it sync). Also found @testing-library/dom was never an explicit or transitively-hoisted dependency despite being a hard peer of both @testing-library/react and @testing-library/jest-dom - installed explicitly; without it every jsdom-project test silently depended on accidental hoisting. Coverage also regressed when M2's feature placeholders (step 9) were imported-but-never-rendered; fixed by rendering both in features.test.tsx.",
+    "2026-08-13T12:52:25Z step 13 -> na",
+    "2026-08-13T12:52:49Z step 13 -> green",
+    "2026-08-13T12:52:49Z step 13 -> done",
+    "2026-08-13T12:53:46Z evidence recorded: evidence/negatives/boundaries-cross-feature.txt (f1966ed8fdf2) - demonstrable negative: captured lint failure, reverted in the same change",
+    "2026-08-13T12:53:46Z evidence recorded: evidence/negatives/boundaries-deep-import.txt (d74d21a01cc3) - demonstrable negative: captured lint failure, reverted in the same change",
+    "2026-08-13T12:53:46Z evidence recorded: evidence/negatives/boundaries-stray-file.txt (90bac831b487) - demonstrable negative: captured lint failure, reverted in the same change",
+    "2026-08-13T12:53:46Z evidence recorded: evidence/negatives/boundaries-platform-to-shared.txt (9bcd25703bc5) - demonstrable negative: captured lint failure, reverted in the same change",
+    "2026-08-13T12:53:47Z evidence recorded: evidence/negatives/single-reader-env.txt (9dd9a29d3462) - demonstrable negative: captured lint failure, reverted in the same change",
+    "2026-08-13T12:53:47Z evidence recorded: evidence/negatives/single-reader-fetch.txt (8600726ea0ff) - demonstrable negative: captured lint failure, reverted in the same change",
+    "2026-08-13T12:53:47Z evidence recorded: evidence/steps/step13-na.txt (f60e29385ed5) - vitest: both permanent regression tests (cross-feature, deep-import) pass immediately, confirming steps 10-11's rules"
   ],
   "milestones": [
     {
@@ -1721,6 +1731,41 @@
       "sha": "a341451333e6",
       "recorded": "2026-08-13T12:50:46Z",
       "note": "vitest green: testing-harness override scoped correctly, differs from base by exactly feature+shared rows; full npm run verify re-confirmed green with real i18next/no-literal-string and require-await findings fixed (not config bugs)"
+    },
+    "evidence/negatives/boundaries-cross-feature.txt": {
+      "sha": "f1966ed8fdf2",
+      "recorded": "2026-08-13T12:53:46Z",
+      "note": "demonstrable negative: captured lint failure, reverted in the same change"
+    },
+    "evidence/negatives/boundaries-deep-import.txt": {
+      "sha": "d74d21a01cc3",
+      "recorded": "2026-08-13T12:53:46Z",
+      "note": "demonstrable negative: captured lint failure, reverted in the same change"
+    },
+    "evidence/negatives/boundaries-stray-file.txt": {
+      "sha": "90bac831b487",
+      "recorded": "2026-08-13T12:53:46Z",
+      "note": "demonstrable negative: captured lint failure, reverted in the same change"
+    },
+    "evidence/negatives/boundaries-platform-to-shared.txt": {
+      "sha": "9bcd25703bc5",
+      "recorded": "2026-08-13T12:53:46Z",
+      "note": "demonstrable negative: captured lint failure, reverted in the same change"
+    },
+    "evidence/negatives/single-reader-env.txt": {
+      "sha": "9dd9a29d3462",
+      "recorded": "2026-08-13T12:53:47Z",
+      "note": "demonstrable negative: captured lint failure, reverted in the same change"
+    },
+    "evidence/negatives/single-reader-fetch.txt": {
+      "sha": "8600726ea0ff",
+      "recorded": "2026-08-13T12:53:47Z",
+      "note": "demonstrable negative: captured lint failure, reverted in the same change"
+    },
+    "evidence/steps/step13-na.txt": {
+      "sha": "f60e29385ed5",
+      "recorded": "2026-08-13T12:53:47Z",
+      "note": "vitest: both permanent regression tests (cross-feature, deep-import) pass immediately, confirming steps 10-11's rules"
     }
   },
   "test_file_hashes": {}
