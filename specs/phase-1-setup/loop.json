@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:59:25Z",
+  "updated": "2026-08-13T13:00:20Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -1501,7 +1501,10 @@
     "2026-08-13T12:59:25Z evidence recorded: evidence/steps/step14-red.txt (77e0cfc7a432) - node: assert-domain-vocabulary.mjs and assert-no-physical-properties.mjs did not exist",
     "2026-08-13T12:59:25Z evidence recorded: evidence/steps/step14-green.txt (dcf17989a125) - vitest green: both scripts correctly distinguish safe substring collisions from banned whole identifiers; wired into npm run lint; full npm run verify re-confirmed green",
     "2026-08-13T12:59:25Z step 14 -> green",
-    "2026-08-13T12:59:25Z step 14 -> done"
+    "2026-08-13T12:59:25Z step 14 -> done",
+    "2026-08-13T13:00:20Z evidence recorded: evidence/milestones/m2-suite.txt (36aacd94f605) - npm run verify full chain output at M2 boundary",
+    "2026-08-13T13:00:20Z evidence recorded: evidence/milestones/m2-e2e.txt (c6af98639848) - M2 boundary claim is lint-focused per PLAN.md, not e2e; points to the six demonstrable-negative evidence files and four permanent regression tests",
+    "2026-08-13T13:00:20Z milestone 2 boundary verified: npm run lint green on the tree; six demonstrable negatives captured with the rule named in each (evidence/negatives/); npm run verify passes end to end as the full chain; evidence/milestones/m2-suite.txt, m2-e2e.txt"
   ],
   "milestones": [
     {
@@ -1513,7 +1516,7 @@
     {
       "id": 2,
       "title": "M2 - Layers and boundary enforcement",
-      "verified": null,
+      "verified": "2026-08-13T13:00:20Z npm run lint green on the tree; six demonstrable negatives captured with the rule named in each (evidence/negatives/); npm run verify passes end to end as the full chain; evidence/milestones/m2-suite.txt, m2-e2e.txt",
       "reviewed": null
     },
     {
@@ -1781,6 +1784,16 @@
       "sha": "dcf17989a125",
       "recorded": "2026-08-13T12:59:25Z",
       "note": "vitest green: both scripts correctly distinguish safe substring collisions from banned whole identifiers; wired into npm run lint; full npm run verify re-confirmed green"
+    },
+    "evidence/milestones/m2-suite.txt": {
+      "sha": "36aacd94f605",
+      "recorded": "2026-08-13T13:00:20Z",
+      "note": "npm run verify full chain output at M2 boundary"
+    },
+    "evidence/milestones/m2-e2e.txt": {
+      "sha": "c6af98639848",
+      "recorded": "2026-08-13T13:00:20Z",
+      "note": "M2 boundary claim is lint-focused per PLAN.md, not e2e; points to the six demonstrable-negative evidence files and four permanent regression tests"
     }
   },
   "test_file_hashes": {}
