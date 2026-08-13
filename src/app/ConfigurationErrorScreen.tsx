@@ -11,7 +11,13 @@ type ConfigurationErrorScreenProps = {
 // needs validated configuration (section 3.1). The strings still come
 // from the i18next catalogue (invariant 60): common.json is imported
 // directly as the static JSON it is, read as plain object properties
-// rather than through useTranslation()'s live instance.
+// rather than through useTranslation()'s live instance. The same
+// pre-i18n constraint applies to the locale passed to Intl.ListFormat
+// below - 'en', matching the hardcoded English catalogue this screen
+// already reads (invariant 64: lists are formatted through Intl, never
+// joined by hand).
+const invalidKeyListFormat = new Intl.ListFormat('en');
+
 const ConfigurationErrorScreen = memo(function ConfigurationErrorScreen({
   invalidKeys,
 }: ConfigurationErrorScreenProps) {
@@ -19,7 +25,7 @@ const ConfigurationErrorScreen = memo(function ConfigurationErrorScreen({
     <main>
       <ErrorState
         title={commonCatalogue.configurationError.title}
-        message={`${commonCatalogue.configurationError.message} ${invalidKeys.join(', ')}`}
+        message={`${commonCatalogue.configurationError.message} ${invalidKeyListFormat.format(invalidKeys)}`}
       />
     </main>
   );

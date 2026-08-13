@@ -1,0 +1,28 @@
+
+> hierarchy-tree@0.0.0 e2e
+> playwright test
+
+
+Running 19 tests using 5 workers
+
+  ✓   1 [chromium] › e2e/placeholder-routes.spec.ts:6:3 › placeholder routes › the home route renders the hierarchy placeholder (316ms)
+  ✓   2 [chromium] › e2e/not-found.spec.ts:5:1 › an unknown path renders the not-found route with a working link home (396ms)
+  ✓   3 [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry (479ms)
+  ✓   6 [chromium] › e2e/placeholder-routes.spec.ts:30:3 › placeholder routes › the login route renders the generic auth placeholder (157ms)
+  ✓   5 [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › / has zero axe violations (543ms)
+  ✓   7 [chromium] › e2e/telemetry-buffer.spec.ts:5:1 › the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage (139ms)
+  ✓   4 [chromium] › e2e/right-to-left.spec.ts:35:5 › right-to-left › / mirrors correctly under a forced right-to-left direction (559ms)
+  ✓   8 [chromium] › e2e/placeholder-routes.spec.ts:47:3 › placeholder routes › the skip link is the first thing a keyboard user reaches (141ms)
+  ✓  10 [chromium] › e2e/telemetry-buffer.spec.ts:29:1 › local and session storage are empty after visiting both routes (197ms)
+  ✓   9 [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › /login has zero axe violations (388ms)
+  ✓  11 [chromium] › e2e/right-to-left.spec.ts:35:5 › right-to-left › /login mirrors correctly under a forced right-to-left direction (429ms)
+  ✓  13 [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › /does-not-exist has zero axe violations (327ms)
+  ✓  12 [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › / produces no console error or warning (286ms)
+  ✓  14 [development] › e2e/kit-route.spec.ts:12:3 › kit route › renders every documented state with no horizontal overflow (273ms)
+  ✓  15 [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › /login produces no console error or warning (188ms)
+  ✓  16 [development] › e2e/kit-route.spec.ts:29:3 › kit route › has zero axe violations in real light (389ms)
+  ✓  17 [development] › e2e/kit-route.spec.ts:46:3 › kit route › has zero axe violations in real dark (357ms)
+  ✓  18 [development] › e2e/kit-route.spec.ts:59:3 › kit route › a skeleton box equals the box of the content it stands in for (208ms)
+  ✓  19 [development] › e2e/kit-route.spec.ts:85:3 › kit route › mirrors correctly under a forced right-to-left direction (415ms)
+
+  19 passed (4.1s)

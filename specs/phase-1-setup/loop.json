@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T19:52:02Z",
+  "updated": "2026-08-13T19:57:06Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -644,9 +644,9 @@
       "note": "Fresh-context verifier (agent af901495b89468e65) ran npm run verify (63 files, 96%+ coverage), npm run e2e (19/19), npm run smoke:live (2/2) against the real backend, and checked all 135 PRODUCT.md invariants. Found 3 verification gaps (Gap-1: invariant 58 sink-import-graph test missing, Gap-2: invariant 134 dependency allow-list test missing, Gap-3: invariant 68 RTL e2e coverage incomplete), all fixed and covered. Evidence: evidence/g3-verify-20260813-200803.txt, evidence/g3-e2e-20260813-200803.txt, evidence/g3-smoke-live-20260813-200803.txt, evidence/g3-gap-fixes-verify.txt, evidence/g3-gap-fixes-e2e.txt. Invariants 123/124/126a (post-merge deployment proof) are explicitly out of scope for this gate - they cannot be satisfied before merge and are tracked as outstanding in PROOF.md."
     },
     "G4": {
-      "status": "pending",
-      "attempts": 0,
-      "security_pass": null,
+      "status": "passed",
+      "attempts": 1,
+      "security_pass": "Security review complete as part of G4. Security-relevant findings and their fixes: Codex-56 (HTTP client origin-escape via backslash-prefixed resource paths - fixed via resolved-URL-origin comparison, closing a request-smuggling/off-origin-data-exfiltration path), Codex-57 (production CSP built from an unvalidated build-time env string, allowing directive injection via a crafted VITE_API_BASE_URL - fixed via the same https-only Zod validation the runtime config uses, plus passing only the validated URL's .origin through), Codex-58 (CI verify/live-smoke jobs inherited repository-default GITHUB_TOKEN permissions instead of an explicit contents:read - fixed, all three CI jobs now carry the minimal scope), Codex-61 (assert-no-secrets.mjs scanned only src/**/*.{ts,tsx}, missing .github/, scripts/, public/, docs, and nested .env files - fixed via git-ls-files-based discovery of every tracked file). No new dependencies were added. The deploy job's Cloudflare API token remains a GitHub Actions secret, never logged, referenced only via ${{ secrets.* }} interpolation in the SHA-pinned wrangler action. Invariants 123/124/126a (post-merge deployment proof) remain outstanding per PROOF.md and are not security-relevant to this pre-merge review.",
       "findings": {
         "Claude-1": {
           "desc": "scripts/repository-configuration.test.ts runs a live vite build as a side effect of the default (tooling project) test suite, making npm test non-hermetic and duplicating verify:build's check out of order",
@@ -839,8 +839,21 @@
           "blocking": false,
           "disposition": "fixed: added a new discriminating test - 'the deadline is a single logical-request budget spanning a retry, not restarted per attempt' - that fails the first attempt immediately, lets it retry after the fixed 100ms backoff, hangs the second attempt, and asserts the deadline still fires at the original cumulative 1000ms rather than 1000ms further (which a per-attempt-reset implementation would require). Confirmed the implementation was already correct (the deadline timer is set once before the retry loop, not per attempt) - this closes the test-quality gap, not a code defect.",
           "round": "final"
+        },
+        "Claude-83": {
+          "desc": "ConfigurationErrorScreen.tsx's rebuild (fixing Codex-60) introduced a new invariant 64 violation - the invalid-key list was built with invalidKeys.join(', ') instead of Intl.ListFormat. ConfigurationErrorScreen.tsx:22.",
+          "blocking": true,
+          "disposition": "fixed: ConfigurationErrorScreen.tsx now formats invalidKeys through a module-level new Intl.ListFormat('en') instead of .join(', ') - 'en' matches the file's existing hardcoded-English catalogue import (this screen renders before i18next can exist). Regression tests added in a new ConfigurationErrorScreen.test.tsx: a two-key Intl.ListFormat assertion (observed red against the join(', ') implementation before the fix) and a single-key no-stray-separator case.",
+          "round": "final"
+        },
+        "Claude-84": {
+          "desc": "The eslint meta-test claiming full bare+member+syntax coverage for the new Image().src ban only string-inspected the selector text rather than executing eslint against a probe file, unlike the sibling demonstrable-negatives tests in the same file. scripts/eslint-configuration.test.ts:150-164.",
+          "blocking": false,
+          "disposition": "fixed: the meta-test now runs eslint against a real probe file (new Image().src = '...') via the existing lintOutputFor helper and asserts on the no-restricted-syntax rule name in the output, mirroring the file's own 'demonstrable negatives' pattern, instead of string-inspecting the selector's source text.",
+          "round": "final"
         }
-      }
+      },
+      "note": "Dual review complete: 5 milestone-boundary loop-reviewer rounds (22 findings, 6 blocking, all fixed) + final-round Codex second opinion (Codex-56..63, 8 findings, 6 blocking, all fixed) + final-round fresh-context Claude review (Claude-83..84, 2 findings, 1 blocking, both fixed) + an independently-found invariant-21 lint coverage gap (fixed). Evidence: evidence/reviews/{m1..m5}-claude-review.md, evidence/reviews/g4-codex-raw-output.txt, evidence/reviews/g4-claude-final-review.md, evidence/g4-fix-verify.txt, evidence/g4-fix-e2e.txt, evidence/g4-final-review-fix-verify.txt, evidence/g4-final-review-fix-e2e.txt. npm run verify and npm run e2e (19/19) green after every fix."
     },
     "G5": {
       "status": "pending",
@@ -1959,7 +1972,16 @@
     "2026-08-13T19:47:39Z G4 Codex second opinion (evidence/reviews/g4-codex-raw-output.txt): 8 findings (Codex-56..63), 6 blocking. Fixed all 8: origin-escape via resolved-URL-origin comparison (56), CSP built from validated+origin-only apiBaseUrl in vite.config.ts (57), verify/live-smoke CI jobs scoped to contents:read (58), deadline-during-parse now returns aborted not parse-failure (59), ConfigurationErrorScreen rebuilt on ErrorState+catalogue (60), assert-no-secrets.mjs rescoped to all git-tracked files (61), cancelled in-flight attempts now emit a timing record with a new 'cancelled' TimingRecord outcome (62), and a new discriminating deadline-vs-retry regression test added (63, confirmed no code defect - test-quality gap only). Also independently found and fixed invariant 21's lint coverage gap (globalThis.fetch, new Image().src not banned) with a matching eslint-configuration.test.ts coverage assertion. npm run verify and npm run e2e (19/19) green after all fixes.",
     "2026-08-13T19:50:03Z evidence recorded: evidence/g4-fix-verify.txt (2a9b9da6d6ed) - npm run verify green after all 8 Codex G4 findings fixed (Codex-56..63) plus the independently found invariant-21 lint gap",
     "2026-08-13T19:50:03Z evidence recorded: evidence/g4-fix-e2e.txt (9bf415eb5843) - npm run e2e green (19/19) after all G4 fixes",
-    "2026-08-13T19:52:02Z set proof = PROOF.md"
+    "2026-08-13T19:52:02Z set proof = PROOF.md",
+    "2026-08-13T19:55:48Z evidence recorded: evidence/reviews/g4-claude-final-review.md (a1e86bdd72ea) - G4 final-round fresh-context Claude review over the complete diff after all Codex-56..63 fixes landed",
+    "2026-08-13T19:55:55Z G4 finding Claude-83 recorded (blocking) [round: final]: ConfigurationErrorScreen.tsx's rebuild (fixing Codex-60) introduced a new invariant 64 violation - the invalid-key list was built with invalidKeys.join(', ') instead of Intl.ListFormat. ConfigurationErrorScreen.tsx:22.",
+    "2026-08-13T19:55:55Z G4 finding Claude-84 recorded [round: final]: The eslint meta-test claiming full bare+member+syntax coverage for the new Image().src ban only string-inspected the selector text rather than executing eslint against a probe file, unlike the sibling demonstrable-negatives tests in the same file. scripts/eslint-configuration.test.ts:150-164.",
+    "2026-08-13T19:56:03Z G4 finding Claude-83 dispositioned: fixed: ConfigurationErrorScreen.tsx now formats invalidKeys through a module-level new Intl.ListFormat('en') instead of .join(', ') - 'en' matches the file's existing hardcoded-English catalogue import (this screen renders before i18next can exist). Regression tests added in a new ConfigurationErrorScreen.test.tsx: a two-key Intl.ListFormat assertion (observed red against the join(', ') implementation before the fix) and a single-key no-stray-separator case.",
+    "2026-08-13T19:56:03Z G4 finding Claude-84 dispositioned: fixed: the meta-test now runs eslint against a real probe file (new Image().src = '...') via the existing lintOutputFor helper and asserts on the no-restricted-syntax rule name in the output, mirroring the file's own 'demonstrable negatives' pattern, instead of string-inspecting the selector's source text.",
+    "2026-08-13T19:56:41Z evidence recorded: evidence/g4-final-review-fix-verify.txt (025425c8c3a4) - npm run verify green after fixing Claude-83 (invariant 64) and Claude-84 (weak meta-test), the final-round Claude reviewer's findings",
+    "2026-08-13T19:56:41Z evidence recorded: evidence/g4-final-review-fix-e2e.txt (e09033ac6977) - npm run e2e green (19/19) after fixing Claude-83 and Claude-84",
+    "2026-08-13T19:57:00Z set security-pass = Security review complete as part of G4. Security-relevant findings and their fixes: Codex-56 (HTTP client origin-escape via backslash-prefixed resource paths - fixed via resolved-URL-origin comparison, closing a request-smuggling/off-origin-data-exfiltration path), Codex-57 (production CSP built from an unvalidated build-time env string, allowing directive injection via a crafted VITE_API_BASE_URL - fixed via the same https-only Zod validation the runtime config uses, plus passing only the validated URL's .origin through), Codex-58 (CI verify/live-smoke jobs inherited repository-default GITHUB_TOKEN permissions instead of an explicit contents:read - fixed, all three CI jobs now carry the minimal scope), Codex-61 (assert-no-secrets.mjs scanned only src/**/*.{ts,tsx}, missing .github/, scripts/, public/, docs, and nested .env files - fixed via git-ls-files-based discovery of every tracked file). No new dependencies were added. The deploy job's Cloudflare API token remains a GitHub Actions secret, never logged, referenced only via ${{ secrets.* }} interpolation in the SHA-pinned wrangler action. Invariants 123/124/126a (post-merge deployment proof) remain outstanding per PROOF.md and are not security-relevant to this pre-merge review.",
+    "2026-08-13T19:57:06Z G4 -> passed (Dual review complete: 5 milestone-boundary loop-reviewer rounds (22 findings, 6 blocking, all fixed) + final-round Codex second opinion (Codex-56..63, 8 findings, 6 blocking, all fixed) + final-round fresh-context Claude review (Claude-83..84, 2 findings, 1 blocking, both fixed) + an independently-found invariant-21 lint coverage gap (fixed). Evidence: evidence/reviews/{m1..m5}-claude-review.md, evidence/reviews/g4-codex-raw-output.txt, evidence/reviews/g4-claude-final-review.md, evidence/g4-fix-verify.txt, evidence/g4-fix-e2e.txt, evidence/g4-final-review-fix-verify.txt, evidence/g4-final-review-fix-e2e.txt. npm run verify and npm run e2e (19/19) green after every fix.)"
   ],
   "milestones": [
     {
@@ -2704,6 +2726,21 @@
       "sha": "9bf415eb5843",
       "recorded": "2026-08-13T19:50:03Z",
       "note": "npm run e2e green (19/19) after all G4 fixes"
+    },
+    "evidence/reviews/g4-claude-final-review.md": {
+      "sha": "a1e86bdd72ea",
+      "recorded": "2026-08-13T19:55:48Z",
+      "note": "G4 final-round fresh-context Claude review over the complete diff after all Codex-56..63 fixes landed"
+    },
+    "evidence/g4-final-review-fix-verify.txt": {
+      "sha": "025425c8c3a4",
+      "recorded": "2026-08-13T19:56:41Z",
+      "note": "npm run verify green after fixing Claude-83 (invariant 64) and Claude-84 (weak meta-test), the final-round Claude reviewer's findings"
+    },
+    "evidence/g4-final-review-fix-e2e.txt": {
+      "sha": "e09033ac6977",
+      "recorded": "2026-08-13T19:56:41Z",
+      "note": "npm run e2e green (19/19) after fixing Claude-83 and Claude-84"
     }
   },
   "test_file_hashes": {}

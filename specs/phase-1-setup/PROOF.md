@@ -267,7 +267,7 @@ Re-verified after gap fixes: `npm run verify` green (63 test files,
 `gate G3 pass` explicitly scoped invariants 123/124/126a out - they cannot be satisfied before
 merge and are tracked here instead.
 
-## G4 dual review (gate: pending final tally, see below)
+## G4 dual review (gate: passed)
 
 ### Per-milestone review rounds
 
@@ -340,11 +340,28 @@ bare and member forms").
 
 A fresh-context `loop-reviewer` (agentic-loop:loop-reviewer, not the same context that made any
 of the fixes above) reviewed the complete final diff after all Codex-56..63 fixes landed, to
-independently confirm correctness and hunt for anything else. Findings and disposition recorded
-under `--round final` alongside the Codex findings above once that review returns.
+independently confirm correctness and hunt for anything else. It confirmed all 8 Codex fixes
+correct, and found 2 more findings (Claude-83..84, 1 blocking), both fixed:
 
-Re-verified after all G4 fixes: `npm run verify` green, `npm run e2e` green (19/19). Evidence:
-`evidence/g4-fix-verify.txt`, `evidence/g4-fix-e2e.txt`.
+- **Claude-83** (blocking): the Codex-60 rebuild of `ConfigurationErrorScreen.tsx` itself
+  introduced a new invariant 64 violation - the invalid-key list was built with
+  `invalidKeys.join(', ')` instead of `Intl.ListFormat`, untested at more than one key. Fixed:
+  a module-level `new Intl.ListFormat('en')` formats the list (`'en'` matches the file's existing
+  hardcoded-English catalogue import, since this screen renders before i18next can exist).
+  Regression tests added in a new `ConfigurationErrorScreen.test.tsx`: a two-key
+  `Intl.ListFormat` assertion (observed red against the `.join(', ')` implementation before the
+  fix) and a single-key no-stray-separator case.
+- **Claude-84** (non-blocking): the eslint meta-test proving "full bare+member+syntax coverage"
+  for the `new Image().src` ban only string-inspected the selector text, unlike the file's own
+  sibling "demonstrable negatives" tests, which actually run ESLint. Fixed: the test now runs
+  ESLint against a real probe file (`new Image().src = '...'`) via the existing `lintOutputFor`
+  helper and asserts on the `no-restricted-syntax` rule name in the output.
+
+Record: `evidence/reviews/g4-claude-final-review.md`.
+
+Re-verified after all G4 fixes: `npm run verify` green, `npm run e2e` green (19/19) after
+Codex-56..63 (`evidence/g4-fix-verify.txt`, `evidence/g4-fix-e2e.txt`), and again after
+Claude-83..84 (`evidence/g4-final-review-fix-verify.txt`, `evidence/g4-final-review-fix-e2e.txt`).
 
 ## Verification summary
 
@@ -397,13 +414,15 @@ refuse to skip past.
   concentrated in M1/M6 - matches where this PR's own G4 findings concentrated: CI permissions,
   CSP, secret scan). User sign-off recorded (`gate G1 pass --signoff`).
 - **G3 verification**: see above - passed, 3 gaps found and covered.
-- **G4 review**: 5 milestone-boundary rounds (22 findings, 6 blocking, all fixed) + 1 final-round
-  Codex second opinion (8 findings, 6 blocking, all fixed) + 1 final-round Claude fresh-context
-  confirmation (pending at time of writing, appended once returned) + 1 independently-found lint
-  coverage gap (fixed). See above for the full findings ledger.
+- **G4 review** (gate: passed): 5 milestone-boundary rounds (22 findings, 6 blocking, all fixed)
+  + 1 final-round Codex second opinion (8 findings, Codex-56..63, 6 blocking, all fixed) + 1
+  final-round Claude fresh-context confirmation (2 findings, Claude-83..84, 1 blocking, both
+  fixed) + 1 independently-found lint coverage gap (fixed). 32 findings total across the whole
+  loop's G4 ledger, 14 blocking, all fixed; 3 accepted as tracked non-defects. See above for the
+  full findings ledger.
 - Security pass: `security_review: true` at triage (this phase touches CSP, secret scanning, and
-  the deploy job's credential handling). Findings Codex-57, 58, 61 above are the security-relevant
-  outcomes of that review; all fixed.
+  the deploy job's credential handling). Findings Codex-56, 57, 58, 61 above are the
+  security-relevant outcomes of that review; all fixed. Recorded via `loop set security-pass`.
 
 ## Known limitations / accepted findings
 

@@ -147,21 +147,14 @@ describe('eslint configuration', () => {
       ).toBe(true);
     }
 
-    const restrictedSyntaxSelectors = collectRules(
-      config,
-      'no-restricted-syntax',
-    ).flatMap(
-      (rule) =>
-        (Array.isArray(rule.value) ? rule.value.slice(1) : []) as unknown[],
-    ) as Array<{ selector?: string }>;
-    const hasImageSrcSelector = restrictedSyntaxSelectors.some(
-      (entry) =>
-        entry.selector?.includes('Image') && entry.selector.includes('src'),
+    const output = lintOutputFor(
+      'src/app/imageSrcProbe.ts',
+      "new Image().src = 'https://example.test/x.png';\nexport {};\n",
     );
     expect(
-      hasImageSrcSelector,
-      'no no-restricted-syntax selector bans new Image().src',
-    ).toBe(true);
+      output,
+      'no-restricted-syntax must fire and name the http-client message on new Image().src',
+    ).toContain('no-restricted-syntax');
   });
 
   it('the restricted-syntax rules are configured at error severity', async () => {
