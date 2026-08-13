@@ -1,0 +1,44 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |platform| src/platform/configuration/createConfiguration.test.ts (0 test)
+stderr | src/app/bootstrap.test.tsx > bootstrap > an invalid environment renders the error screen and does not render the router
+The current testing environment is not configured to support act(...)
+
+ ❯ |ui| src/app/bootstrap.test.tsx (2 tests | 1 failed) 12ms
+     × an invalid environment renders the error screen and does not render the router 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |platform| src/platform/configuration/createConfiguration.test.ts [ src/platform/configuration/createConfiguration.test.ts ]
+Error: Cannot find module './createConfiguration' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/configuration/createConfiguration.test.ts
+ ❯ src/platform/configuration/createConfiguration.test.ts:2:1
+      1| import { describe, expect, it } from 'vitest';
+      2| import { createConfiguration } from './createConfiguration';
+       | ^
+      3| import type { RawEnvironment } from './environment';
+      4|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/bootstrap.test.tsx > bootstrap > an invalid environment renders the error screen and does not render the router
+AssertionError: expected null not to be null
+ ❯ src/app/bootstrap.test.tsx:47:59
+     45|     // both present, since exactly one of the two is what "renders the
+     46|     // error screen instead" means.
+     47|     expect(container.querySelector('[role="alert"]')).not.toBeNull();
+       |                                                           ^
+     48|     expect(
+     49|       container.querySelector('[data-testid="startup-placeholder"]'),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  1 failed | 1 passed (2)
+   Start at  14:18:47
+   Duration  536ms (transform 25ms, setup 68ms, import 25ms, tests 12ms, environment 362ms)
+

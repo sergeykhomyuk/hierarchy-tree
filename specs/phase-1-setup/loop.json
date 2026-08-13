@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T13:15:11Z",
+  "updated": "2026-08-13T13:22:01Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 14
+      "steps_done": 15
     },
     "G3": {
       "status": "pending",
@@ -859,8 +859,8 @@
         "createConfiguration succeeds with development-shaped defaults",
         "an invalid environment renders the error screen and does not render the router"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T13:18:54Z evidence/steps/step15-red.txt: createConfiguration module missing, bootstrap doesn't accept a ConfigurationResult",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1555,7 +1555,13 @@
     "2026-08-13T13:14:51Z G4 finding Claude-9 dispositioned: fixed: refactored eslint.config.js to named rule-entry constants (NETWORK_GLOBALS, CLOCK_GLOBALS, STORAGE_GLOBALS, etc.) so each single-reader override re-enables only the specific identifier its module owns, filtering the base arrays rather than disabling whole rule families",
     "2026-08-13T13:14:51Z G4 finding Claude-10 dispositioned: fixed: added 5 tests covering keyword patterns, high-entropy detection, the suppression grep, the --source-only/--bundle-only mode requirement, and the bundle-mode dist-missing-fails-not-skips contract",
     "2026-08-13T13:15:11Z evidence recorded: evidence/milestones/m2-suite-post-review.txt (71012ac1ecdb) - npm run verify re-run after fixing Claude-5/6/7/9/10; confirms full chain still green (29 tests) after eslint.config.js refactor and assert-domain-vocabulary.mjs fix",
-    "2026-08-13T13:15:11Z milestone 2 reviewed: Fresh-context loop-reviewer on the full M2 diff; evidence/reviews/m2-claude-review.md. 6 findings, 3 blocking (missing createObservability.ts override, features override disabling the sinks ban too, and a real extractExportedIdentifiers bug on aliased/default exports) - all fixed with regression tests, verified post-review. Claude-9 (over-broad single-reader overrides) and Claude-10 (no test coverage for assert-no-secrets.mjs) also fixed. Claude-8 (interface/type member names uncheckable by the regex approach) accepted as a tracked residual limitation."
+    "2026-08-13T13:15:11Z milestone 2 reviewed: Fresh-context loop-reviewer on the full M2 diff; evidence/reviews/m2-claude-review.md. 6 findings, 3 blocking (missing createObservability.ts override, features override disabling the sinks ban too, and a real extractExportedIdentifiers bug on aliased/default exports) - all fixed with regression tests, verified post-review. Claude-9 (over-broad single-reader overrides) and Claude-10 (no test coverage for assert-no-secrets.mjs) also fixed. Claude-8 (interface/type member names uncheckable by the regex approach) accepted as a tracked residual limitation.",
+    "2026-08-13T13:18:54Z step 15 -> red",
+    "2026-08-13T13:21:52Z evidence recorded: evidence/steps/step15-red.txt (e6912141e11f) - vitest red: createConfiguration/bootstrap did not exist/accept configuration",
+    "2026-08-13T13:21:52Z evidence recorded: evidence/steps/step15-green.txt (9d79dd1a0460) - vitest green: all 5 registered-test assertions pass; full npm run verify re-confirmed (65.17kB/100kB budget)",
+    "2026-08-13T13:21:52Z step 15 -> green",
+    "2026-08-13T13:21:53Z step 15 -> done",
+    "2026-08-13T13:22:01Z step 15: adapted step 15's 4th test ('does not render the router') since the router is M5 - substituted 'does not render the normal startup content (StartupPlaceholder)' as the equivalent claim this milestone can actually make. Configuration failure reports via a plain console.error for now (M3 step 17 wires the real observability facade in); ConfigurationErrorScreen.tsx is plain markup (M4's kit ErrorState doesn't exist yet)."
   ],
   "milestones": [
     {
@@ -1855,6 +1861,16 @@
       "sha": "71012ac1ecdb",
       "recorded": "2026-08-13T13:15:11Z",
       "note": "npm run verify re-run after fixing Claude-5/6/7/9/10; confirms full chain still green (29 tests) after eslint.config.js refactor and assert-domain-vocabulary.mjs fix"
+    },
+    "evidence/steps/step15-red.txt": {
+      "sha": "e6912141e11f",
+      "recorded": "2026-08-13T13:21:52Z",
+      "note": "vitest red: createConfiguration/bootstrap did not exist/accept configuration"
+    },
+    "evidence/steps/step15-green.txt": {
+      "sha": "9d79dd1a0460",
+      "recorded": "2026-08-13T13:21:52Z",
+      "note": "vitest green: all 5 registered-test assertions pass; full npm run verify re-confirmed (65.17kB/100kB budget)"
     }
   },
   "test_file_hashes": {}

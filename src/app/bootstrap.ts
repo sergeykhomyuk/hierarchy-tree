@@ -1,11 +1,34 @@
 import { StrictMode, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
+import type { ConfigurationResult } from '@platform/configuration';
 import { StartupPlaceholder } from './StartupPlaceholder';
+import { ConfigurationErrorScreen } from './ConfigurationErrorScreen';
 
 // The testable startup path: main.tsx is the one file whose name is not
 // ours to choose (fixed by index.html's <script src>), so the actual
-// startup logic lives here where a test can call it directly.
-export function bootstrap(container: Element): void {
+// startup logic - including the configuration-failure branch (invariants
+// 15, 16) - lives here where a test can call it directly.
+export function bootstrap(
+  container: Element,
+  configurationResult: ConfigurationResult,
+): void {
+  if (!configurationResult.ok) {
+    // A minimal, safe-defaults report until M3 step 17 wires the real
+    // observability facade in - no router, no feature code and no
+    // partially configured UI is mounted either way.
+    console.error('configuration invalid', configurationResult.invalidKeys);
+    createRoot(container).render(
+      createElement(
+        StrictMode,
+        null,
+        createElement(ConfigurationErrorScreen, {
+          invalidKeys: configurationResult.invalidKeys,
+        }),
+      ),
+    );
+    return;
+  }
+
   createRoot(container).render(
     createElement(StrictMode, null, createElement(StartupPlaceholder)),
   );
