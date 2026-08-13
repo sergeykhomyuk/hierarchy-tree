@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T19:47:39Z",
+  "updated": "2026-08-13T19:52:02Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -26,7 +26,7 @@
     "spec": null,
     "plan": "PLAN.md",
     "design": null,
-    "proof": null,
+    "proof": "PROOF.md",
     "evidence": "evidence/",
     "product": "PRODUCT.md",
     "tech": "TECH.md"
@@ -1956,7 +1956,10 @@
     "2026-08-13T19:47:27Z G4 finding Codex-61 dispositioned: fixed: assert-no-secrets.mjs rewritten to enumerate every git-tracked file (git ls-files) filtered by scannable source extensions, rather than a narrow src/**/*.{ts,tsx} glob; env-file check now scans all git-tracked files for a .env* basename, not just the repo root. Exclusion lists added for legitimate high-entropy content (package-lock.json hashes, loop.json audit trail, SHA-pinned Actions refs, eslint.config.js's own glob strings, the scanner's own keyword-pattern definitions). Regression test added in scripts/guard-scripts.test.ts proving discovery mode catches a keyword secret in .github/workflows/ and not in a *.test.ts file.",
     "2026-08-13T19:47:27Z G4 finding Codex-62 dispositioned: fixed: TimingRecord's outcome union gained 'cancelled'; the caller-abort branch inside the request loop (an attempt was already made and durationMilliseconds already computed) now calls recordTiming with outcome:'cancelled' before returning. Regression test added: 'a caller abort of an in-flight attempt still records its timing, with a cancelled outcome'. The pre-flight case (signal already aborted before any attempt) correctly still emits none, matching invariant 31's 'per outbound attempt' wording.",
     "2026-08-13T19:47:27Z G4 finding Codex-63 dispositioned: fixed: added a new discriminating test - 'the deadline is a single logical-request budget spanning a retry, not restarted per attempt' - that fails the first attempt immediately, lets it retry after the fixed 100ms backoff, hangs the second attempt, and asserts the deadline still fires at the original cumulative 1000ms rather than 1000ms further (which a per-attempt-reset implementation would require). Confirmed the implementation was already correct (the deadline timer is set once before the retry loop, not per attempt) - this closes the test-quality gap, not a code defect.",
-    "2026-08-13T19:47:39Z G4 Codex second opinion (evidence/reviews/g4-codex-raw-output.txt): 8 findings (Codex-56..63), 6 blocking. Fixed all 8: origin-escape via resolved-URL-origin comparison (56), CSP built from validated+origin-only apiBaseUrl in vite.config.ts (57), verify/live-smoke CI jobs scoped to contents:read (58), deadline-during-parse now returns aborted not parse-failure (59), ConfigurationErrorScreen rebuilt on ErrorState+catalogue (60), assert-no-secrets.mjs rescoped to all git-tracked files (61), cancelled in-flight attempts now emit a timing record with a new 'cancelled' TimingRecord outcome (62), and a new discriminating deadline-vs-retry regression test added (63, confirmed no code defect - test-quality gap only). Also independently found and fixed invariant 21's lint coverage gap (globalThis.fetch, new Image().src not banned) with a matching eslint-configuration.test.ts coverage assertion. npm run verify and npm run e2e (19/19) green after all fixes."
+    "2026-08-13T19:47:39Z G4 Codex second opinion (evidence/reviews/g4-codex-raw-output.txt): 8 findings (Codex-56..63), 6 blocking. Fixed all 8: origin-escape via resolved-URL-origin comparison (56), CSP built from validated+origin-only apiBaseUrl in vite.config.ts (57), verify/live-smoke CI jobs scoped to contents:read (58), deadline-during-parse now returns aborted not parse-failure (59), ConfigurationErrorScreen rebuilt on ErrorState+catalogue (60), assert-no-secrets.mjs rescoped to all git-tracked files (61), cancelled in-flight attempts now emit a timing record with a new 'cancelled' TimingRecord outcome (62), and a new discriminating deadline-vs-retry regression test added (63, confirmed no code defect - test-quality gap only). Also independently found and fixed invariant 21's lint coverage gap (globalThis.fetch, new Image().src not banned) with a matching eslint-configuration.test.ts coverage assertion. npm run verify and npm run e2e (19/19) green after all fixes.",
+    "2026-08-13T19:50:03Z evidence recorded: evidence/g4-fix-verify.txt (2a9b9da6d6ed) - npm run verify green after all 8 Codex G4 findings fixed (Codex-56..63) plus the independently found invariant-21 lint gap",
+    "2026-08-13T19:50:03Z evidence recorded: evidence/g4-fix-e2e.txt (9bf415eb5843) - npm run e2e green (19/19) after all G4 fixes",
+    "2026-08-13T19:52:02Z set proof = PROOF.md"
   ],
   "milestones": [
     {
@@ -2691,6 +2694,16 @@
       "sha": "293416f010ac",
       "recorded": "2026-08-13T19:43:36Z",
       "note": "Codex second-opinion raw output for G4 dual review, full diff base..HEAD"
+    },
+    "evidence/g4-fix-verify.txt": {
+      "sha": "2a9b9da6d6ed",
+      "recorded": "2026-08-13T19:50:03Z",
+      "note": "npm run verify green after all 8 Codex G4 findings fixed (Codex-56..63) plus the independently found invariant-21 lint gap"
+    },
+    "evidence/g4-fix-e2e.txt": {
+      "sha": "9bf415eb5843",
+      "recorded": "2026-08-13T19:50:03Z",
+      "note": "npm run e2e green (19/19) after all G4 fixes"
     }
   },
   "test_file_hashes": {}
