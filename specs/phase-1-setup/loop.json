@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T13:53:15Z",
+  "updated": "2026-08-13T13:59:44Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 16
+      "steps_done": 17
     },
     "G3": {
       "status": "pending",
@@ -887,8 +887,8 @@
         "redaction removes matching keys at any depth including arrays cycles and url parameters",
         "a throwing property getter does not escape the facade"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T13:59:33Z evidence/steps/step17-red-vitest.txt; evidence/steps/step17-red-typecheck.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1565,7 +1565,11 @@
     "2026-08-13T13:52:46Z step 16 -> red",
     "2026-08-13T13:52:57Z step 16 -> green",
     "2026-08-13T13:53:11Z step 16: platform/http implemented - createHttpClient with injected transport/clock/randomness/observability, single per-logical-request deadline via AbortController + fake-clock-testable backoff, caller-abort composed via AbortSignal.any and returned as a cancelled outcome sibling to failure (never retried, never error-logged), at-most-one-retry limited to GET on network/timeout/5xx via shouldRetry.ts, exponential-jitter backoff via retryDelayMilliseconds.ts, W3C traceparent per attempt via createTraceparent.ts, HttpFailure as an exhaustive 4-member union proven via a default-branch-free switch test, HttpError carrying only status+statusDescription (never response body/statusText). Two deliberate scope decisions: (1) pulled forward the minimal type-only scaffolding step 17/18 will flesh out - platform/runtime/{clock,randomness}.ts and platform/observability/{createCorrelationId,observabilityFacade,timingRecord,analyticsEvents}.ts plus partial index.ts barrels - since HttpClientDependencies's own signature requires them; createCorrelationId is also what supplies the per-request id used as requestId/traceId/correlationId in phase 1, since nothing wires in the real interaction tracker (step 18) yet, matching TECH.md 3.4's own note that the three-way correlation-id equality is phase-1-untestable end-to-end. (2) amended the M2 boundaries test-file override (eslint.config.js + scripts/eslint-configuration.test.ts's structural-diff test) to add a platform-to-shared allowance scoped to *.test.ts only, because TECH.md 3.2/6.1 explicitly places the http client's own fakes (createFakeClock/createFakeRandomness/createFakeTransport) in shared/testing, which the base boundaries rule (platform imports only platform) would otherwise make unreachable from platform's own tests; production platform code still cannot import shared. Also fixed a pre-existing eslint.config.js gap found while re-running verify twice locally: globalIgnores only listed dist, so a leftover coverage/ directory from a prior local run made a second npm run verify fail lint spuriously - widened it to match .gitignore's existing dist/coverage/playwright-report/test-results set.",
-    "2026-08-13T13:53:15Z step 16 -> done"
+    "2026-08-13T13:53:15Z step 16 -> done",
+    "2026-08-13T13:59:33Z step 17 -> red",
+    "2026-08-13T13:59:34Z step 17 -> green",
+    "2026-08-13T13:59:44Z step 17: platform/observability implemented - createObservability.ts returns {facade, bufferHandle} per invariant 45a; facade exposes exactly logger/tracer/analytics (invariant 45); sink chosen once from configuration.observabilitySink (console/buffer/none, invariant 46); createRingBufferSink.ts is a fixed 256-capacity array with a write cursor, dropping oldest past capacity and reading oldest-first across a wrap (invariants 48, 49); redact.ts walks objects/arrays to any depth with a WeakSet for cycles, matches /password|secret|token/i case-insensitively against keys, and additionally rewrites matching search parameters on any string that parses as a URL (invariants 54-56); the single private dispatch() function every facade method funnels through wraps the level check + redaction + sink call in one try/catch so nothing - a below-threshold call, a throwing property getter during redaction, or a throwing sink - escapes into application code (invariants 57, 59), proven by two separate tests per TECH.md's explicit instruction (a throwing getter, and a throwing console.error mocked via vi.spyOn). tracer.startInteraction() generates a correlation id via the createCorrelationId.ts built in step 16, since the real interaction tracker (step 18) doesn't exist yet. Coverage 96.96%25 overall; npm run verify green.",
+    "2026-08-13T13:59:44Z step 17 -> done"
   ],
   "milestones": [
     {
