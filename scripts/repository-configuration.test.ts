@@ -206,6 +206,38 @@ describe('vitest configuration', () => {
       globalThis.fetch = originalFetch;
     }
   });
+
+  it('the live smoke test file is collected by no default vitest project', async () => {
+    const vitestConfig = (await import('../vitest.config.ts')).default;
+    const projects = vitestConfig.test?.projects ?? [];
+    const liveSmokeFile = 'scripts/live-smoke/live-smoke.test.ts';
+
+    expect(existsSync(liveSmokeFile)).toBe(true);
+
+    for (const project of projects) {
+      const include =
+        typeof project === 'object' && project !== null && 'test' in project
+          ? ((project as { test?: { include?: string[] } }).test?.include ?? [])
+          : [];
+
+      for (const pattern of include) {
+        // A glob's `*` does not cross a `/`, so `scripts/*.test.ts`
+        // matches nothing under `scripts/live-smoke/` - asserted here
+        // rather than trusted, since the pattern that keeps this
+        // suite out is a single character away from one that would not.
+        const matches = globSync(pattern);
+        expect(
+          matches,
+          `project pattern "${pattern}" unexpectedly collects the live smoke file`,
+        ).not.toContain(liveSmokeFile);
+      }
+    }
+
+    const liveConfig = (await import('../vitest.live.config.ts')).default;
+    const liveInclude = liveConfig.test?.include ?? [];
+    const liveMatches = liveInclude.flatMap((pattern) => globSync(pattern));
+    expect(liveMatches).toContain(liveSmokeFile);
+  });
 });
 
 describe('prettier configuration', () => {

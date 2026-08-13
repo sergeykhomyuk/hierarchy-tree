@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T18:40:17Z",
+  "updated": "2026-08-13T18:44:30Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 36
+      "steps_done": 37
     },
     "G3": {
       "status": "pending",
@@ -1199,10 +1199,11 @@
       "desc": "The live-smoke job on workflow_dispatch only, with vitest.live.config.ts and scripts/live-smoke/ outside src and outside every default Vitest project, probing reachability and shape and printing the observed users field names without asserting on them (invariants 116, 116a, 116b)",
       "tests": [
         "the live smoke test file is collected by no default vitest project",
-        "the live probe asserts the two top-level keys and prints the observed field names"
+        "the real backend serves users.json as JSON with at least one record",
+        "the real backend serves secrets.json as JSON"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T18:44:30Z evidence/steps/step37-red.txt",
+      "status": "done",
       "milestone": 6
     },
     {
@@ -1847,7 +1848,14 @@
     "2026-08-13T18:40:17Z evidence recorded: evidence/steps/step36-green.txt (3bac7a97c073) - full npm run verify green after deployment.json, VERIFICATION.md/.env.example production-hostname markers, and the doc-agreement test were added",
     "2026-08-13T18:40:17Z step 36 -> red",
     "2026-08-13T18:40:17Z step 36 -> green",
-    "2026-08-13T18:40:17Z step 36 -> done"
+    "2026-08-13T18:40:17Z step 36 -> done",
+    "2026-08-13T18:44:24Z step 37 amended: desc: 'The live-smoke job on workflow_dispatch only, with vitest.live.config.ts and scripts/live-smoke/ outside src and outside every default Vitest project, probing reachability and shape and printing the observed users field names without asserting on them (invariants 116, 116a, 116b)' -> 'The live-smoke job on workflow_dispatch only, with vitest.live.config.ts and scripts/live-smoke/ outside src and outside every default Vitest project, probing reachability and shape and printing the observed users field names without asserting on them (invariants 116, 116a, 116b)'; tests: ['the live smoke test file is collected by no default vitest project', 'the live probe asserts the two top-level keys and prints the observed field names'] -> ['the live smoke test file is collected by no default vitest project', 'the real backend serves users.json as JSON with at least one record', 'the real backend serves secrets.json as JSON']",
+    "2026-08-13T18:44:24Z evidence recorded: evidence/steps/step37-red.txt (a9df6a51118a) - the live-smoke isolation test genuinely fails when vitest.config.ts's tooling project glob is temporarily broadened to scripts/**/*.test.ts (collects scripts/live-smoke/live-smoke.test.ts) - reverted immediately after confirming",
+    "2026-08-13T18:44:24Z evidence recorded: evidence/steps/step37-green.txt (4c7991fcc182) - full npm run verify green after vitest.live.config.ts, scripts/live-smoke/live-smoke.test.ts, and the isolation test were added",
+    "2026-08-13T18:44:24Z evidence recorded: evidence/live-smoke.txt (3cda03611b29) - npm run smoke:live run against the real backend (invariants 116a, 116b) - both requests succeeded (200), printed users record field names: email, firstName, id, lastName, password",
+    "2026-08-13T18:44:30Z step 37 -> red",
+    "2026-08-13T18:44:30Z step 37 -> green",
+    "2026-08-13T18:44:30Z step 37 -> done"
   ],
   "milestones": [
     {
@@ -2527,6 +2535,21 @@
       "sha": "3bac7a97c073",
       "recorded": "2026-08-13T18:40:17Z",
       "note": "full npm run verify green after deployment.json, VERIFICATION.md/.env.example production-hostname markers, and the doc-agreement test were added"
+    },
+    "evidence/steps/step37-red.txt": {
+      "sha": "a9df6a51118a",
+      "recorded": "2026-08-13T18:44:24Z",
+      "note": "the live-smoke isolation test genuinely fails when vitest.config.ts's tooling project glob is temporarily broadened to scripts/**/*.test.ts (collects scripts/live-smoke/live-smoke.test.ts) - reverted immediately after confirming"
+    },
+    "evidence/steps/step37-green.txt": {
+      "sha": "4c7991fcc182",
+      "recorded": "2026-08-13T18:44:24Z",
+      "note": "full npm run verify green after vitest.live.config.ts, scripts/live-smoke/live-smoke.test.ts, and the isolation test were added"
+    },
+    "evidence/live-smoke.txt": {
+      "sha": "3cda03611b29",
+      "recorded": "2026-08-13T18:44:24Z",
+      "note": "npm run smoke:live run against the real backend (invariants 116a, 116b) - both requests succeeded (200), printed users record field names: email, firstName, id, lastName, password"
     }
   },
   "test_file_hashes": {}
