@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T14:40:20Z",
+  "updated": "2026-08-13T14:42:54Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 21
+      "steps_done": 22
     },
     "G3": {
       "status": "pending",
@@ -978,8 +978,8 @@
         "every contrast pair holds AA in both themes",
         "every interactive element has a focus indicator meeting 3:1"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T14:42:44Z evidence/steps/step22-red-vitest.txt; evidence/steps/step22-red-typecheck.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1635,7 +1635,11 @@
     "2026-08-13T14:40:07Z step 21 -> red",
     "2026-08-13T14:40:07Z step 21 -> green",
     "2026-08-13T14:40:20Z step 21: shared/theme/theme.css implemented - the token layer (color, radii, motion) declared once in @theme, dark values re-declared over the same names only where they differ (an unspecified token inherits its light value, matching contrastPairs.test.ts's own parsing assumption for step 22), prefers-color-scheme activation with no switcher, a universal prefers-reduced-motion rule covering every future animation including Skeleton's not-yet-built shimmer, and a single :focus-visible rule. One deliberate deviation from docs/reference.md's literal mockup color, computed and verified with a WCAG contrast script before writing any CSS: border-field's mockup value #E2DDEE is only 1.33:1 against white (invariant 72's own example pair asks for 3:1 for this exact pairing), so it's replaced with #8F89A3 (same hue family, verified 3.35:1 light / 5.46:1 dark). Also introduced a new --color-on-primary:#ffffff token, constant across themes, for the button-label-on-primary pair - TECH.md's own example named 'surface' for this role, which breaks in dark mode once surface itself flips to a dark page background (button text would go from white-on-purple to near-black-on-purple). Extended assert-no-physical-properties.mjs per TECH.md's own instruction to also grep for raw hex colors, scoped to src/shared/ui/** and src/app/** only (not shared/theme, which legitimately declares them). Surfaced and fixed a second tsconfig gap of the same shape as step 20's: tsconfig.app.json's explicit types:['vite/client'] array disables TypeScript's automatic @types/* inclusion entirely, so theme.test.ts's node:fs import resolved to any until 'node' was added alongside it. npm run verify green, 127 tests, 98.02%25 coverage.",
-    "2026-08-13T14:40:20Z step 21 -> done"
+    "2026-08-13T14:40:20Z step 21 -> done",
+    "2026-08-13T14:42:44Z step 22 -> red",
+    "2026-08-13T14:42:44Z step 22 -> green",
+    "2026-08-13T14:42:54Z step 22: contrastPairs.ts + automated WCAG AA contrast assertion implemented. contrastPairs.test.ts parses theme.css directly with node:fs (the @theme block for light, the prefers-color-scheme:dark :root block layered over light for dark - an unspecified token inherits, matching step 21's design), handles both #rrggbb and rgb(r g b / a) formats with alpha compositing over the stated background, computes WCAG 2.1 relative luminance, and asserts every pair's ratio in both themes with no skip path (a missing token throws rather than being silently omitted, verified by its own test). All 6 contrastPairs (ink/surface, ink-muted/canvas-app, on-primary/primary, focus-ring/surface, border-field/surface, danger/danger-surface) pass at their required ratio in both themes using step 21's already-computed token values - no new tuning needed here since the contrast math was verified before theme.css was written. The focus-indicator test checks the :focus-visible rule's presence/color plus that contrastPairs registers a focus-ring pair at >=3:1; full interactive-element coverage (invariant 74 on real components) completes in step 23 (kit components) and M5's e2e. npm run verify green, 133 tests, 98.03%25 coverage.",
+    "2026-08-13T14:42:54Z step 22 -> done"
   ],
   "milestones": [
     {
