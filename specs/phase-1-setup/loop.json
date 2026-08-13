@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T15:39:53Z",
+  "updated": "2026-08-13T15:40:44Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -1712,7 +1712,37 @@
     "2026-08-13T15:39:53Z evidence recorded: evidence/steps/m4-review-fix-red-inkfaint.txt (0dbd77dae2e1) - genuine red: ink-faint/surface contrast pair added before darkening the token",
     "2026-08-13T15:39:53Z evidence recorded: evidence/steps/m4-review-fix-red-skeleton-dims.txt (6b4a6f60f800) - genuine red: Skeleton mismatched width/height emits two conflicting classes before the dimensionClass fix",
     "2026-08-13T15:39:53Z evidence recorded: evidence/steps/m4-review-fix-red-avatar.txt (831efdd55f49) - genuine red: Avatar decorative+real-image alt regression before revert",
-    "2026-08-13T15:39:53Z evidence recorded: evidence/steps/m4-review-fix-red-css-glob.txt (db914ce4d972) - genuine red: dist removed, CSS glob assertion fails before rebuild"
+    "2026-08-13T15:39:53Z evidence recorded: evidence/steps/m4-review-fix-red-css-glob.txt (db914ce4d972) - genuine red: dist removed, CSS glob assertion fails before rebuild",
+    "2026-08-13T15:40:41Z evidence recorded: evidence/milestones/m3-suite-post-review.txt (6b47bcb25c93) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:41Z evidence recorded: evidence/milestones/m3-suite.txt (9ab595b8e13d) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:41Z evidence recorded: evidence/steps/step16-green.txt (a337bfedcccc) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:41Z evidence recorded: evidence/steps/step16-red-typecheck.txt (0a3909271176) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:42Z evidence recorded: evidence/steps/step16-red-vitest.txt (da2602137ab1) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:42Z evidence recorded: evidence/steps/step17-green.txt (11dcd7d326e4) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:42Z evidence recorded: evidence/steps/step17-red-typecheck.txt (065719fd45a7) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:42Z evidence recorded: evidence/steps/step17-red-vitest.txt (f8c3e9c45ac0) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:42Z evidence recorded: evidence/steps/step18-green.txt (ee52c2fbcb67) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:42Z evidence recorded: evidence/steps/step18-red-typecheck.txt (47f8c973ab4e) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:42Z evidence recorded: evidence/steps/step18-red-vitest.txt (96e9bb5f365c) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:42Z evidence recorded: evidence/steps/step19-green.txt (f2b6b07dcd79) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:43Z evidence recorded: evidence/steps/step19-red-typecheck.txt (8599d559e899) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:43Z evidence recorded: evidence/steps/step19-red-vitest.txt (5a5e8e0ae331) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:43Z evidence recorded: evidence/steps/step20-green.txt (5414626b2dc8) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:43Z evidence recorded: evidence/steps/step20-red-typecheck.txt (bc8ea6855c7b) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:43Z evidence recorded: evidence/steps/step20-red-vitest.txt (104d8c4bd5ca) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:43Z evidence recorded: evidence/steps/step21-green.txt (7dbf5ff20dbc) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:43Z evidence recorded: evidence/steps/step21-red-vitest-guard.txt (d6208d409e40) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:43Z evidence recorded: evidence/steps/step21-red-vitest.txt (f433c60f5451) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:43Z evidence recorded: evidence/steps/step22-green.txt (602e04d181e9) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step22-red-typecheck.txt (bf73fedc64fa) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step22-red-vitest.txt (6e097203e440) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step23-green.txt (b49e1caa0054) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step23-red-typecheck.txt (2429e00f7662) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step23-red-vitest-lint.txt (c05785596393) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step23-red-vitest.txt (a3e92cb18cc1) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step24-green.txt (1c9ab4f82f1f) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step24-red-typecheck.txt (d9c0fefd2338) - backfilled registration: committed earlier in session, registration was missed at the time",
+    "2026-08-13T15:40:44Z evidence recorded: evidence/steps/step24-red-vitest.txt (2b294641eb81) - backfilled registration: committed earlier in session, registration was missed at the time"
   ],
   "milestones": [
     {
@@ -2072,6 +2102,156 @@
       "sha": "db914ce4d972",
       "recorded": "2026-08-13T15:39:53Z",
       "note": "genuine red: dist removed, CSS glob assertion fails before rebuild"
+    },
+    "evidence/milestones/m3-suite-post-review.txt": {
+      "sha": "6b47bcb25c93",
+      "recorded": "2026-08-13T15:40:41Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/milestones/m3-suite.txt": {
+      "sha": "9ab595b8e13d",
+      "recorded": "2026-08-13T15:40:41Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step16-green.txt": {
+      "sha": "a337bfedcccc",
+      "recorded": "2026-08-13T15:40:41Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step16-red-typecheck.txt": {
+      "sha": "0a3909271176",
+      "recorded": "2026-08-13T15:40:41Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step16-red-vitest.txt": {
+      "sha": "da2602137ab1",
+      "recorded": "2026-08-13T15:40:42Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step17-green.txt": {
+      "sha": "11dcd7d326e4",
+      "recorded": "2026-08-13T15:40:42Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step17-red-typecheck.txt": {
+      "sha": "065719fd45a7",
+      "recorded": "2026-08-13T15:40:42Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step17-red-vitest.txt": {
+      "sha": "f8c3e9c45ac0",
+      "recorded": "2026-08-13T15:40:42Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step18-green.txt": {
+      "sha": "ee52c2fbcb67",
+      "recorded": "2026-08-13T15:40:42Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step18-red-typecheck.txt": {
+      "sha": "47f8c973ab4e",
+      "recorded": "2026-08-13T15:40:42Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step18-red-vitest.txt": {
+      "sha": "96e9bb5f365c",
+      "recorded": "2026-08-13T15:40:42Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step19-green.txt": {
+      "sha": "f2b6b07dcd79",
+      "recorded": "2026-08-13T15:40:42Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step19-red-typecheck.txt": {
+      "sha": "8599d559e899",
+      "recorded": "2026-08-13T15:40:43Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step19-red-vitest.txt": {
+      "sha": "5a5e8e0ae331",
+      "recorded": "2026-08-13T15:40:43Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step20-green.txt": {
+      "sha": "5414626b2dc8",
+      "recorded": "2026-08-13T15:40:43Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step20-red-typecheck.txt": {
+      "sha": "bc8ea6855c7b",
+      "recorded": "2026-08-13T15:40:43Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step20-red-vitest.txt": {
+      "sha": "104d8c4bd5ca",
+      "recorded": "2026-08-13T15:40:43Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step21-green.txt": {
+      "sha": "7dbf5ff20dbc",
+      "recorded": "2026-08-13T15:40:43Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step21-red-vitest-guard.txt": {
+      "sha": "d6208d409e40",
+      "recorded": "2026-08-13T15:40:43Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step21-red-vitest.txt": {
+      "sha": "f433c60f5451",
+      "recorded": "2026-08-13T15:40:43Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step22-green.txt": {
+      "sha": "602e04d181e9",
+      "recorded": "2026-08-13T15:40:43Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step22-red-typecheck.txt": {
+      "sha": "bf73fedc64fa",
+      "recorded": "2026-08-13T15:40:44Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step22-red-vitest.txt": {
+      "sha": "6e097203e440",
+      "recorded": "2026-08-13T15:40:44Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step23-green.txt": {
+      "sha": "b49e1caa0054",
+      "recorded": "2026-08-13T15:40:44Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step23-red-typecheck.txt": {
+      "sha": "2429e00f7662",
+      "recorded": "2026-08-13T15:40:44Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step23-red-vitest-lint.txt": {
+      "sha": "c05785596393",
+      "recorded": "2026-08-13T15:40:44Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step23-red-vitest.txt": {
+      "sha": "a3e92cb18cc1",
+      "recorded": "2026-08-13T15:40:44Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step24-green.txt": {
+      "sha": "1c9ab4f82f1f",
+      "recorded": "2026-08-13T15:40:44Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step24-red-typecheck.txt": {
+      "sha": "d9c0fefd2338",
+      "recorded": "2026-08-13T15:40:44Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
+    },
+    "evidence/steps/step24-red-vitest.txt": {
+      "sha": "2b294641eb81",
+      "recorded": "2026-08-13T15:40:44Z",
+      "note": "backfilled registration: committed earlier in session, registration was missed at the time"
     }
   },
   "test_file_hashes": {}
