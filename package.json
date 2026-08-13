@@ -20,7 +20,7 @@
     "verify:build": "vitest run --config vitest.build-output.config.ts",
     "verify": "npm run typecheck && npm run lint && npm run format:check && npm run test:coverage && npm run build && npm run verify:build && npm run size",
     "e2e": "playwright test",
-    "e2e:deployed": "playwright test --project=deployed",
+    "e2e:deployed": "DEPLOYED_BASE_URL=$(jq -r .productionHostname deployment.json) playwright test --project=deployed",
     "smoke:live": "vitest run --config vitest.live.config.ts"
   },
   "dependencies": {

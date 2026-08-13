@@ -1,0 +1,88 @@
+
+> hierarchy-tree@0.0.0 e2e:deployed
+> DEPLOYED_BASE_URL=$(jq -r .productionHostname deployment.json) playwright test --project=deployed
+
+
+Running 3 tests using 1 worker
+
+  ✘  1 [deployed] › e2e/deployed-smoke.spec.ts:11:1 › the home route renders on the live host (5.3s)
+  ✘  2 [deployed] › e2e/deployed-smoke.spec.ts:20:1 › /login renders with a 200 on direct load and on refresh (5.2s)
+  ✘  3 [deployed] › e2e/deployed-smoke.spec.ts:36:1 › the live response carries frame-ancestors none (197ms)
+
+
+  1) [deployed] › e2e/deployed-smoke.spec.ts:11:1 › the home route renders on the live host ────────
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('heading', { level: 1 })
+    Expected: "The hierarchy view isn't built yet"
+    Received: "Get started"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('heading', { level: 1 })
+        14 × locator resolved to <h1>Get started</h1>
+           - unexpected value "Get started"
+
+
+      13 |
+      14 |   expect(response?.status()).toBe(200);
+    > 15 |   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+         |                                                         ^
+      16 |     "The hierarchy view isn't built yet",
+      17 |   );
+      18 | });
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/deployed-smoke.spec.ts:15:57
+
+    Error Context: test-results/deployed-smoke-the-home-route-renders-on-the-live-host-deployed/error-context.md
+
+  2) [deployed] › e2e/deployed-smoke.spec.ts:20:1 › /login renders with a 200 on direct load and on refresh 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('heading', { level: 1 })
+    Expected: "Sign in isn't built yet"
+    Received: "Get started"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('heading', { level: 1 })
+        14 × locator resolved to <h1>Get started</h1>
+           - unexpected value "Get started"
+
+
+      23 |   const firstLoad = await page.goto('/login');
+      24 |   expect(firstLoad?.status()).toBe(200);
+    > 25 |   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+         |                                                         ^
+      26 |     "Sign in isn't built yet",
+      27 |   );
+      28 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/deployed-smoke.spec.ts:25:57
+
+    Error Context: test-results/deployed-smoke--login-rend-c4364--direct-load-and-on-refresh-deployed/error-context.md
+
+  3) [deployed] › e2e/deployed-smoke.spec.ts:36:1 › the live response carries frame-ancestors none ─
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "frame-ancestors 'none'"
+    Received: undefined
+
+      37 |   const response = await page.goto('/');
+      38 |
+    > 39 |   expect(response?.headers()['content-security-policy']).toBe(
+         |                                                          ^
+      40 |     "frame-ancestors 'none'",
+      41 |   );
+      42 | });
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/deployed-smoke.spec.ts:39:58
+
+    Error Context: test-results/deployed-smoke-the-live-re-02af2-arries-frame-ancestors-none-deployed/error-context.md
+
+  3 failed
+    [deployed] › e2e/deployed-smoke.spec.ts:11:1 › the home route renders on the live host ─────────
+    [deployed] › e2e/deployed-smoke.spec.ts:20:1 › /login renders with a 200 on direct load and on refresh 
+    [deployed] › e2e/deployed-smoke.spec.ts:36:1 › the live response carries frame-ancestors none ──

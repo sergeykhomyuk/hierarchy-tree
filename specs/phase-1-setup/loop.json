@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T18:44:30Z",
+  "updated": "2026-08-13T18:56:27Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -1210,12 +1210,12 @@
       "id": 38,
       "desc": "deployed-smoke.spec.ts and the post-merge obligation of invariant 126a: after merge, e2e:deployed runs against productionHostname read from deployment.json, asserting the home route, /login on direct load and refresh with status 200, and the frame-ancestors header on the live response - captured as evidence/deployed-smoke.txt. The phase is not complete until it passes (invariants 123, 124, 126a, 99a, 119)",
       "tests": [
-        "the deployed home route renders the placeholder",
-        "the deployed login route renders on direct load and refresh with status 200",
-        "the frame-ancestors header arrives on the live response"
+        "the home route renders on the live host",
+        "/login renders with a 200 on direct load and on refresh",
+        "the live response carries frame-ancestors none"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T18:56:19Z evidence/steps/step38-red.txt",
+      "status": "red",
       "milestone": 6
     }
   ],
@@ -1855,7 +1855,11 @@
     "2026-08-13T18:44:24Z evidence recorded: evidence/live-smoke.txt (3cda03611b29) - npm run smoke:live run against the real backend (invariants 116a, 116b) - both requests succeeded (200), printed users record field names: email, firstName, id, lastName, password",
     "2026-08-13T18:44:30Z step 37 -> red",
     "2026-08-13T18:44:30Z step 37 -> green",
-    "2026-08-13T18:44:30Z step 37 -> done"
+    "2026-08-13T18:44:30Z step 37 -> done",
+    "2026-08-13T18:56:18Z step 38 amended: desc: 'deployed-smoke.spec.ts and the post-merge obligation of invariant 126a: after merge, e2e:deployed runs against productionHostname read from deployment.json, asserting the home route, /login on direct load and refresh with status 200, and the frame-ancestors header on the live response - captured as evidence/deployed-smoke.txt. The phase is not complete until it passes (invariants 123, 124, 126a, 99a, 119)' -> 'deployed-smoke.spec.ts and the post-merge obligation of invariant 126a: after merge, e2e:deployed runs against productionHostname read from deployment.json, asserting the home route, /login on direct load and refresh with status 200, and the frame-ancestors header on the live response - captured as evidence/deployed-smoke.txt. The phase is not complete until it passes (invariants 123, 124, 126a, 99a, 119)'; tests: ['the deployed home route renders the placeholder', 'the deployed login route renders on direct load and refresh with status 200', 'the frame-ancestors header arrives on the live response'] -> ['the home route renders on the live host', '/login renders with a 200 on direct load and on refresh', 'the live response carries frame-ancestors none']",
+    "2026-08-13T18:56:18Z evidence recorded: evidence/steps/step38-red.txt (7179f66c476b) - npm run e2e:deployed run against the real https://hierarchy-tree.pages.dev before any merge/deploy of this branch - genuine red, since the live site currently serves unrelated content ('Get started' heading, no CSP header), not this app's build. Confirms deployed-smoke.spec.ts genuinely discriminates. Green is deferred to the post-merge run per invariant 126a - this step cannot be marked done until then.",
+    "2026-08-13T18:56:19Z step 38 -> red",
+    "2026-08-13T18:56:27Z step 38: built deployed-smoke.spec.ts and fixed npm run e2e:deployed to read DEPLOYED_BASE_URL from deployment.json via jq (it previously required the caller to set the variable by hand, contradicting TECH.md 7.4). Ran it for real against https://hierarchy-tree.pages.dev (confirmed via user: a genuine Cloudflare Pages project, not a Workers deployment) - genuinely red, since the live site currently serves an unrelated 'Get started' page with no CSP header, not this app's build. This is expected: no CI run has deployed this branch yet. Per PLAN.md's own explicit design, this step's green state is deferred to the post-merge obligation of invariant 126a and cannot be claimed now - step 38 stays red/pending rather than being marked done, and the M6 milestone verify note will record invariants 123/124/126a as outstanding rather than claim them."
   ],
   "milestones": [
     {
@@ -2550,6 +2554,11 @@
       "sha": "3cda03611b29",
       "recorded": "2026-08-13T18:44:24Z",
       "note": "npm run smoke:live run against the real backend (invariants 116a, 116b) - both requests succeeded (200), printed users record field names: email, firstName, id, lastName, password"
+    },
+    "evidence/steps/step38-red.txt": {
+      "sha": "7179f66c476b",
+      "recorded": "2026-08-13T18:56:18Z",
+      "note": "npm run e2e:deployed run against the real https://hierarchy-tree.pages.dev before any merge/deploy of this branch - genuine red, since the live site currently serves unrelated content ('Get started' heading, no CSP header), not this app's build. Confirms deployed-smoke.spec.ts genuinely discriminates. Green is deferred to the post-merge run per invariant 126a - this step cannot be marked done until then."
     }
   },
   "test_file_hashes": {}
