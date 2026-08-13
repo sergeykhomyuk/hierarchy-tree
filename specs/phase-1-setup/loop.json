@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T18:20:35Z",
+  "updated": "2026-08-13T18:29:03Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 32
+      "steps_done": 35
     },
     "G3": {
       "status": "pending",
@@ -1147,34 +1147,39 @@
       "id": 33,
       "desc": "The CI workflow's verify job: the seven named gating steps in invariant 103's order, the Playwright browser cache, the site artifact uploaded after size and BEFORE e2e so the verified dist is the shipped dist, and the report artifact with if always (invariants 102, 103, 114, 117, 120)",
       "tests": [
-        "the workflow steps match the required gating order",
-        "the site artifact upload precedes the e2e step"
+        "runs the seven gating steps in the documented order",
+        "uploads the site artifact from dist/, only on main, before the e2e step",
+        "uploads the Playwright report unconditionally, even on failure"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T18:29:02Z evidence/steps/step35-red.txt",
+      "status": "done",
       "milestone": 6
     },
     {
       "id": 34,
       "desc": "The deploy job: needs verify, gated on push to main, permissions contents read, the concurrency group, actions/checkout with sparse-checkout of deployment.json, download of the site artifact, the SHA-pinned wrangler action consuming that artifact without rebuilding, and the assertion that the returned deployment URL equals productionHostname (invariants 120, 121, 123, 125)",
       "tests": [
-        "the deploy job declares least-privilege permissions and a concurrency group",
-        "every non-actions uses is pinned to a commit sha",
-        "the deploy job consumes the site artifact and runs no build of its own"
+        "needs verify, runs only on push to main, and carries the smallest permission set",
+        "has its own concurrency group so a newer deploy supersedes an in-flight one",
+        "every non-actions/ uses: step is pinned by commit SHA, not a mutable tag",
+        "checks out only deployment.json via sparse-checkout, and downloads the site artifact rather than rebuilding",
+        "asserts the deployed URL equals the recorded production hostname"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T18:29:02Z evidence/steps/step35-red.txt",
+      "status": "done",
       "milestone": 6
     },
     {
       "id": 35,
       "desc": "The workflow-parse test asserting every gating run line is an npm script or an allow-listed setup command, no continue-on-error, no if false, no skip flag, and the deploy job's if condition - plus a grep asserting no .skip .only or test.fixme in src or e2e (invariants 102, 135, 121)",
       "tests": [
-        "every gating run line is an npm script or an allow-listed setup command",
-        "no verify step carries continue-on-error or a skip flag"
+        "every run: line in the verify job is a gating step, an npm script, or the named infrastructure allow-list",
+        "no verify step skips itself with continue-on-error, if: false, or a skip flag",
+        "runs only when manually dispatched, and blocks no merge",
+        "src and e2e contain no .skip, .only, or test.fixme"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T18:29:02Z evidence/steps/step35-red.txt",
+      "status": "done",
       "milestone": 6
     },
     {
@@ -1819,7 +1824,22 @@
     "2026-08-13T17:59:04Z G4 finding Claude-82 recorded [round: milestone-5]: error-boundary.spec.ts's retry recovery is activated via page.click(), not a keyboard press, even though loop.json step 32's own description and invariant 93 (reachable by keyboard) claim keyboard recovery is exercised. Non-blocking (the underlying button is natively keyboard-operable) but the test doesn't prove the claim.",
     "2026-08-13T18:19:54Z G4 finding Claude-81 dispositioned: fixed - added 'a skeleton box equals the box of the content it stands in for' to kit-route.spec.ts, measuring Skeleton(circle, avatar/avatar) against Avatar(medium) via boundingBox(), both sharing the h-[34px] w-[34px] token pair. npm run e2e green (17/17).",
     "2026-08-13T18:19:54Z G4 finding Claude-82 dispositioned: fixed - error-boundary.spec.ts now focuses the retry button and activates it with keyboard Enter instead of a mouse click, genuinely exercising invariant 93's keyboard-reachability claim. npm run e2e green (17/17).",
-    "2026-08-13T18:20:35Z evidence recorded: evidence/steps/m5-review-fixes-verify.txt (ca2efe101980) - npm run verify green after fixing M5 milestone review findings Claude-81 (skeleton-to-content box measurement) and Claude-82 (keyboard-driven retry)"
+    "2026-08-13T18:20:35Z evidence recorded: evidence/steps/m5-review-fixes-verify.txt (ca2efe101980) - npm run verify green after fixing M5 milestone review findings Claude-81 (skeleton-to-content box measurement) and Claude-82 (keyboard-driven retry)",
+    "2026-08-13T18:20:52Z milestone 5 reviewed: Fresh-context review (agent abb99bf439a474e95) found 2 issues: Claude-81 (blocking, invariant 76/86a's skeleton-to-content box-equality measurement was missing from kit-route.spec.ts) and Claude-82 (non-blocking, error-boundary retry was mouse-activated despite the keyboard-recovery claim). Both fixed and dispositioned; npm run verify and npm run e2e (17/17) green after fixes. Reviewer confirmed no layer-boundary violations, no cross-cutting regressions, and that the /__kit route's import.meta.env.DEV ESLint carve-out is sound (independently verified against the real production build by kit-route-absent.test.ts).",
+    "2026-08-13T18:28:46Z step 33 amended: desc: \"The CI workflow's verify job: the seven named gating steps in invariant 103's order, the Playwright browser cache, the site artifact uploaded after size and BEFORE e2e so the verified dist is the shipped dist, and the report artifact with if always (invariants 102, 103, 114, 117, 120)\" -> \"The CI workflow's verify job: the seven named gating steps in invariant 103's order, the Playwright browser cache, the site artifact uploaded after size and BEFORE e2e so the verified dist is the shipped dist, and the report artifact with if always (invariants 102, 103, 114, 117, 120)\"; tests: ['the workflow steps match the required gating order', 'the site artifact upload precedes the e2e step'] -> ['runs the seven gating steps in the documented order', 'uploads the site artifact from dist/, only on main, before the e2e step', 'uploads the Playwright report unconditionally, even on failure']",
+    "2026-08-13T18:28:46Z step 34 amended: desc: 'The deploy job: needs verify, gated on push to main, permissions contents read, the concurrency group, actions/checkout with sparse-checkout of deployment.json, download of the site artifact, the SHA-pinned wrangler action consuming that artifact without rebuilding, and the assertion that the returned deployment URL equals productionHostname (invariants 120, 121, 123, 125)' -> 'The deploy job: needs verify, gated on push to main, permissions contents read, the concurrency group, actions/checkout with sparse-checkout of deployment.json, download of the site artifact, the SHA-pinned wrangler action consuming that artifact without rebuilding, and the assertion that the returned deployment URL equals productionHostname (invariants 120, 121, 123, 125)'; tests: ['the deploy job declares least-privilege permissions and a concurrency group', 'every non-actions uses is pinned to a commit sha', 'the deploy job consumes the site artifact and runs no build of its own'] -> ['needs verify, runs only on push to main, and carries the smallest permission set', 'has its own concurrency group so a newer deploy supersedes an in-flight one', 'every non-actions/ uses: step is pinned by commit SHA, not a mutable tag', 'checks out only deployment.json via sparse-checkout, and downloads the site artifact rather than rebuilding', 'asserts the deployed URL equals the recorded production hostname']",
+    "2026-08-13T18:28:46Z step 35 amended: desc: \"The workflow-parse test asserting every gating run line is an npm script or an allow-listed setup command, no continue-on-error, no if false, no skip flag, and the deploy job's if condition - plus a grep asserting no .skip .only or test.fixme in src or e2e (invariants 102, 135, 121)\" -> \"The workflow-parse test asserting every gating run line is an npm script or an allow-listed setup command, no continue-on-error, no if false, no skip flag, and the deploy job's if condition - plus a grep asserting no .skip .only or test.fixme in src or e2e (invariants 102, 135, 121)\"; tests: ['every gating run line is an npm script or an allow-listed setup command', 'no verify step carries continue-on-error or a skip flag'] -> ['every run: line in the verify job is a gating step, an npm script, or the named infrastructure allow-list', 'no verify step skips itself with continue-on-error, if: false, or a skip flag', 'runs only when manually dispatched, and blocks no merge', 'src and e2e contain no .skip, .only, or test.fixme']",
+    "2026-08-13T18:28:55Z evidence recorded: evidence/steps/step35-red.txt (a5a4a039e88f) - workflow-configuration.test.ts written before .github/workflows/ci.yml existed - all 17 tests fail with ENOENT, genuine TDD red for steps 33/34/35 (verify job, deploy job, workflow-parse rules) together, since all three were authored as one YAML file against one test file",
+    "2026-08-13T18:28:55Z evidence recorded: evidence/steps/step35-green.txt (a0e4ebc98d0b) - full npm run verify green after .github/workflows/ci.yml and scripts/workflow-configuration.test.ts (18 tests) were added - typecheck, lint, format, 230 unit tests, build, verify:build, size all green",
+    "2026-08-13T18:29:02Z step 33 -> red",
+    "2026-08-13T18:29:02Z step 33 -> green",
+    "2026-08-13T18:29:02Z step 33 -> done",
+    "2026-08-13T18:29:02Z step 34 -> red",
+    "2026-08-13T18:29:02Z step 34 -> green",
+    "2026-08-13T18:29:02Z step 34 -> done",
+    "2026-08-13T18:29:02Z step 35 -> red",
+    "2026-08-13T18:29:03Z step 35 -> green",
+    "2026-08-13T18:29:03Z step 35 -> done"
   ],
   "milestones": [
     {
@@ -1850,7 +1870,7 @@
       "id": 5,
       "title": "M5 - App shell",
       "verified": "2026-08-13T17:50:07Z npm run verify green (typecheck, lint, format, 230 unit tests at 96%+ coverage, build, 8/15 build-output tests, size-limit at revised 150kB entry budget). npm run e2e green (16/16). phase === 'complete' recorded directly in expected-build-output.json, arming declaration-table.test.ts's fail-closed guard - the router now genuinely serves route chunks, catalogue chunks, /__kit gated correctly out of production, and all four conditional declaration-table families are populated. Evidence: specs/phase-1-setup/evidence/steps/step26..32-{red,green}*.txt",
-      "reviewed": null
+      "reviewed": "2026-08-13T18:20:52Z Fresh-context review (agent abb99bf439a474e95) found 2 issues: Claude-81 (blocking, invariant 76/86a's skeleton-to-content box-equality measurement was missing from kit-route.spec.ts) and Claude-82 (non-blocking, error-boundary retry was mouse-activated despite the keyboard-recovery claim). Both fixed and dispositioned; npm run verify and npm run e2e (17/17) green after fixes. Reviewer confirmed no layer-boundary violations, no cross-cutting regressions, and that the /__kit route's import.meta.env.DEV ESLint carve-out is sound (independently verified against the real production build by kit-route-absent.test.ts)."
     },
     {
       "id": 6,
@@ -2479,6 +2499,16 @@
       "sha": "ca2efe101980",
       "recorded": "2026-08-13T18:20:35Z",
       "note": "npm run verify green after fixing M5 milestone review findings Claude-81 (skeleton-to-content box measurement) and Claude-82 (keyboard-driven retry)"
+    },
+    "evidence/steps/step35-red.txt": {
+      "sha": "a5a4a039e88f",
+      "recorded": "2026-08-13T18:28:55Z",
+      "note": "workflow-configuration.test.ts written before .github/workflows/ci.yml existed - all 17 tests fail with ENOENT, genuine TDD red for steps 33/34/35 (verify job, deploy job, workflow-parse rules) together, since all three were authored as one YAML file against one test file"
+    },
+    "evidence/steps/step35-green.txt": {
+      "sha": "a0e4ebc98d0b",
+      "recorded": "2026-08-13T18:28:55Z",
+      "note": "full npm run verify green after .github/workflows/ci.yml and scripts/workflow-configuration.test.ts (18 tests) were added - typecheck, lint, format, 230 unit tests, build, verify:build, size all green"
     }
   },
   "test_file_hashes": {}
