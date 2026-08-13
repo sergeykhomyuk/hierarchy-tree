@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { createAxeBuilder } from './support/axeBuilder';
+import { forceDirection } from './support/forceDirection';
 import { installRouteMocks } from './support/routeMocks';
 
 // Exists only when configuration.developmentRoutes is on, which defaults
@@ -79,5 +80,30 @@ test.describe('kit route', () => {
     expect(avatarBox).not.toBeNull();
     expect(skeletonBox?.width).toBe(avatarBox?.width);
     expect(skeletonBox?.height).toBe(avatarBox?.height);
+  });
+
+  test('mirrors correctly under a forced right-to-left direction', async ({
+    page,
+    baseURL,
+  }) => {
+    await installRouteMocks(page, baseURL ?? '');
+
+    await page.goto('/__kit');
+    await expect(page.getByRole('region').first()).toBeVisible();
+
+    await forceDirection(page, 'rtl');
+    expect(await page.evaluate(() => document.documentElement.dir)).toBe('rtl');
+
+    const overflowsHorizontally = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+    );
+    expect(overflowsHorizontally).toBe(false);
+
+    const results = await createAxeBuilder(page)
+      .disableRules(['page-has-heading-one'])
+      .analyze();
+    expect(results.violations).toEqual([]);
   });
 });

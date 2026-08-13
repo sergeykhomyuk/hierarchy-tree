@@ -301,3 +301,27 @@ describe('npm scripts', () => {
     }
   });
 });
+
+// Invariant 134: exactly this set, so a new runtime dependency is a
+// deliberate edit here rather than a drift a `dependencies` bump slips
+// past unnoticed.
+const RUNTIME_DEPENDENCY_ALLOW_LIST = [
+  'i18next',
+  'react',
+  'react-dom',
+  'react-i18next',
+  'react-router',
+  'web-vitals',
+  'zod',
+].sort();
+
+describe('runtime dependencies', () => {
+  it('package.json dependencies match the allow-list exactly', () => {
+    const packageJson = JSON.parse(readFileSync('package.json', 'utf-8')) as {
+      dependencies?: Record<string, string>;
+    };
+    const actual = Object.keys(packageJson.dependencies ?? {}).sort();
+
+    expect(actual).toEqual(RUNTIME_DEPENDENCY_ALLOW_LIST);
+  });
+});
