@@ -1,10 +1,18 @@
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Card } from '@shared/ui';
+import { useDocumentTitle } from '@shared/hooks';
 
-// No product behavior yet - a bare shell so the layer and the boundary
-// rules that reference it have something real to check against. M5
-// replaces this body with the real placeholder page (invariant 9).
 const AuthPlaceholderPage = memo(function AuthPlaceholderPage() {
-  return null;
+  const { t } = useTranslation('auth');
+  useDocumentTitle(t('login.documentTitle'));
+
+  return (
+    <Card>
+      <h1>{t('login.title')}</h1>
+      <p>{t('login.message')}</p>
+    </Card>
+  );
 });
 
 export { AuthPlaceholderPage };

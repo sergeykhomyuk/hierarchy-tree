@@ -1,0 +1,64 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/features.test.tsx (3 tests | 2 failed) 51ms
+     × each placeholder exposes one h1 inside a main landmark and passes axe 43ms
+     × each placeholder exposes one h1 inside a main landmark and passes axe 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/features.test.tsx > feature slices > each placeholder exposes one h1 inside a main landmark and passes axe
+ FAIL  |ui| src/app/features.test.tsx > feature slices > each placeholder exposes one h1 inside a main landmark and passes axe
+TestingLibraryElementError: Unable to find an accessible element with the role "heading"
+
+Here are the accessible roles:
+
+  link:
+
+  Name "Skip to main content":
+  [36m<a[39m
+    [33mhref[39m=[32m"#main-content"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mid[39m=[32m"main-content"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"#main-content"[39m
+    [36m>[39m
+      [0mSkip to main content[0m
+    [36m</a>[39m
+    [36m<main[39m
+      [33mid[39m=[32m"main-content"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/app/features.test.tsx:52:31
+     50|       );
+     51|
+     52|       const headings = screen.getAllByRole('heading', { level: 1 });
+       |                               ^
+     53|       expect(headings).toHaveLength(1);
+     54|       expect(screen.getByRole('main')).toContainElement(headings[0]!);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  17:10:12
+   Duration  649ms (transform 68ms, setup 90ms, import 101ms, tests 51ms, environment 339ms)
+

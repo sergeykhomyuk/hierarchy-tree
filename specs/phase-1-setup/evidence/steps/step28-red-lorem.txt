@@ -1,0 +1,69 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+node:internal/modules/cjs/loader:1479
+  throw err;
+  ^
+
+Error: Cannot find module '/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/scripts/assert-no-lorem-ipsum.mjs'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1476:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)
+    at Module._load (node:internal/modules/cjs/loader:1262:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v24.15.0
+node:internal/modules/cjs/loader:1479
+  throw err;
+  ^
+
+Error: Cannot find module '/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/scripts/assert-no-lorem-ipsum.mjs'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1476:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)
+    at Module._load (node:internal/modules/cjs/loader:1262:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v24.15.0
+ ❯ |tooling| scripts/guard-scripts.test.ts (11 tests | 1 failed | 10 skipped) 50ms
+     × rejects filler text and leaves real copy alone 49ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/guard-scripts.test.ts > assert-no-lorem-ipsum > rejects filler text and leaves real copy alone
+AssertionError: real copy must not be flagged: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ scripts/guard-scripts.test.ts:189:64
+    187|     rmSync(probeDir, { recursive: true, force: true });
+    188|
+    189|     expect(safeResult.status, 'real copy must not be flagged').toBe(0);
+       |                                                                ^
+    190|     expect(
+    191|       bannedResult.status,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  17:12:17
+   Duration  148ms (transform 21ms, setup 32ms, import 6ms, tests 50ms, environment 0ms)
+

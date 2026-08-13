@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T16:07:45Z",
+  "updated": "2026-08-13T16:13:46Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 27
+      "steps_done": 28
     },
     "G3": {
       "status": "pending",
@@ -1080,8 +1080,8 @@
       "tests": [
         "each placeholder exposes one h1 inside a main landmark and passes axe"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T16:13:27Z evidence/steps/step28-red-features.txt; evidence/steps/step28-red-usedocumenttitle.txt; evidence/steps/step28-red-lorem.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -1757,7 +1757,15 @@
     "2026-08-13T16:07:44Z evidence recorded: evidence/steps/step27-red-loadtranslations.txt (bcb6940f82ca) - genuine red: both features' loadTranslations.ts modules not found",
     "2026-08-13T16:07:44Z evidence recorded: evidence/steps/step27-red-redirect-rule.txt (4c82be0cf770) - genuine red: redirect-import demonstrable-negative test fails before the ESLint rule is added",
     "2026-08-13T16:07:44Z evidence recorded: evidence/steps/step27-red-routing.txt (42428481de81) - genuine red: ApplicationLayout, NotFoundRoute, createApplicationRouter modules not found",
-    "2026-08-13T16:07:45Z evidence recorded: evidence/steps/step27-green.txt (75378945db7c) - full npm run verify green: 198 unit tests + 4 build-output tests, 96.18% coverage"
+    "2026-08-13T16:07:45Z evidence recorded: evidence/steps/step27-green.txt (75378945db7c) - full npm run verify green: 198 unit tests + 4 build-output tests, 96.18% coverage",
+    "2026-08-13T16:13:27Z step 28 -> red",
+    "2026-08-13T16:13:32Z step 28 -> green",
+    "2026-08-13T16:13:39Z step 28: useDocumentTitle.ts (shared/hooks). Both placeholder pages replaced with real content - Card, one h1, one paragraph, useDocumentTitle(t('login.documentTitle'|'home.documentTitle')) - no form, no nav rail, no login card, no brand mark. Each feature's locale catalogue gained title/message strings. src/app/features.test.tsx extended: both pages render one h1 inside ApplicationLayout's main landmark and pass axe. Added assert-no-lorem-ipsum.mjs to lint (the mechanical half of invariants 96/96a/132 - the rest is review-dependent).",
+    "2026-08-13T16:13:40Z step 28 -> done",
+    "2026-08-13T16:13:46Z evidence recorded: evidence/steps/step28-red-features.txt (6585d6023d9e) - genuine red: no h1 found (stub pages return null)",
+    "2026-08-13T16:13:46Z evidence recorded: evidence/steps/step28-red-usedocumenttitle.txt (9bcf2c2adc63) - genuine red: useDocumentTitle.ts module not found",
+    "2026-08-13T16:13:46Z evidence recorded: evidence/steps/step28-red-lorem.txt (71292ea98c8c) - genuine red: assert-no-lorem-ipsum.mjs script not found",
+    "2026-08-13T16:13:46Z evidence recorded: evidence/steps/step28-green.txt (e81966bb9f15) - full npm run verify green: 203 unit tests + 4 build-output tests, 96.24% coverage"
   ],
   "milestones": [
     {
@@ -2302,6 +2310,26 @@
       "sha": "75378945db7c",
       "recorded": "2026-08-13T16:07:45Z",
       "note": "full npm run verify green: 198 unit tests + 4 build-output tests, 96.18% coverage"
+    },
+    "evidence/steps/step28-red-features.txt": {
+      "sha": "6585d6023d9e",
+      "recorded": "2026-08-13T16:13:46Z",
+      "note": "genuine red: no h1 found (stub pages return null)"
+    },
+    "evidence/steps/step28-red-usedocumenttitle.txt": {
+      "sha": "9bcf2c2adc63",
+      "recorded": "2026-08-13T16:13:46Z",
+      "note": "genuine red: useDocumentTitle.ts module not found"
+    },
+    "evidence/steps/step28-red-lorem.txt": {
+      "sha": "71292ea98c8c",
+      "recorded": "2026-08-13T16:13:46Z",
+      "note": "genuine red: assert-no-lorem-ipsum.mjs script not found"
+    },
+    "evidence/steps/step28-green.txt": {
+      "sha": "e81966bb9f15",
+      "recorded": "2026-08-13T16:13:46Z",
+      "note": "full npm run verify green: 203 unit tests + 4 build-output tests, 96.24% coverage"
     }
   },
   "test_file_hashes": {}

@@ -165,6 +165,36 @@ describe('assert-no-physical-properties', () => {
   });
 });
 
+describe('assert-no-lorem-ipsum', () => {
+  it('rejects filler text and leaves real copy alone', () => {
+    const probeDir = mkdtempSync(join(tmpdir(), 'lorem-ipsum-'));
+    const safeFile = join(probeDir, 'Safe.tmp.tsx');
+    const bannedFile = join(probeDir, 'Banned.tmp.tsx');
+
+    writeFileSync(
+      safeFile,
+      'export const Safe = () => <p>This screen is a placeholder.</p>;\n',
+    );
+    writeFileSync(
+      bannedFile,
+      'export const Banned = () => <p>Lorem ipsum dolor sit amet.</p>;\n',
+    );
+
+    const scriptPath = 'scripts/assert-no-lorem-ipsum.mjs';
+    const safeResult = runScript(scriptPath, [safeFile]);
+    const bannedResult = runScript(scriptPath, [bannedFile]);
+
+    rmSync(probeDir, { recursive: true, force: true });
+
+    expect(safeResult.status, 'real copy must not be flagged').toBe(0);
+    expect(
+      bannedResult.status,
+      'lorem ipsum filler text must be flagged',
+    ).not.toBe(0);
+    expect(bannedResult.output).toContain('lorem ipsum');
+  });
+});
+
 describe('assert-no-secrets', () => {
   const scriptPath = 'scripts/assert-no-secrets.mjs';
 
