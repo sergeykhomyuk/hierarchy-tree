@@ -479,7 +479,17 @@ export default defineConfig([
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [...FEATURE_DEEP_IMPORT_PATTERNS, SINKS_IMPORT_PATTERN] },
+        {
+          paths: [
+            {
+              name: 'react-router',
+              importNames: ['redirect', 'redirectDocument'],
+              message:
+                'No loader, guard or redirect exists in this phase (invariant 97).',
+            },
+          ],
+          patterns: [...FEATURE_DEEP_IMPORT_PATTERNS, SINKS_IMPORT_PATTERN],
+        },
       ],
     },
   },
@@ -489,7 +499,20 @@ export default defineConfig([
     // so only the two feature-import groups are dropped here, not the rule.
     files: ['src/features/*/**/*.{ts,tsx}'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: [SINKS_IMPORT_PATTERN] }],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'react-router',
+              importNames: ['redirect', 'redirectDocument'],
+              message:
+                'No loader, guard or redirect exists in this phase (invariant 97).',
+            },
+          ],
+          patterns: [SINKS_IMPORT_PATTERN],
+        },
+      ],
     },
   },
   {

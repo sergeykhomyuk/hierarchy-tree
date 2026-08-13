@@ -191,6 +191,16 @@ describe('demonstrable negatives', () => {
     expect(output).toContain('no-restricted-imports');
     expect(output).toContain('public entry');
   });
+
+  it('lint fails with the restricted-import rule named on a redirect import', () => {
+    const output = lintOutputFor(
+      'src/app/redirectProbe.ts',
+      "import { redirect } from 'react-router';\nexport const _probe = redirect;\n",
+    );
+
+    expect(output).toContain('no-restricted-imports');
+    expect(output).toContain('invariant 97');
+  });
 });
 
 describe('kit literal-string guard', () => {

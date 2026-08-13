@@ -5,3 +5,5 @@ export type {
   RouterState,
   NavigationState,
 } from './createInteractionTracker';
+export { createApplicationRouter } from './createApplicationRouter';
+export { routeDefinitions } from './routeDefinitions';

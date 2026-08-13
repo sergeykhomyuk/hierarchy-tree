@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T15:54:14Z",
+  "updated": "2026-08-13T16:07:45Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 26
+      "steps_done": 27
     },
     "G3": {
       "status": "pending",
@@ -1070,8 +1070,8 @@
         "the router is created with basename taken from configuration rather than a literal",
         "an unmatched path renders the not-found route with a link home"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T16:07:22Z evidence/steps/step27-red-loadtranslations.txt; evidence/steps/step27-red-redirect-rule.txt; evidence/steps/step27-red-routing.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -1749,7 +1749,15 @@
     "2026-08-13T15:54:08Z step 26 -> done",
     "2026-08-13T15:54:14Z evidence recorded: evidence/steps/step26-red-clock.txt (241bfc416835) - genuine red: createSystemClock.ts module not found",
     "2026-08-13T15:54:14Z evidence recorded: evidence/steps/step26-red-vitest.txt (cf1fdb10ff9f) - genuine red: useRuntime.ts, createRuntime.ts, ApplicationRoot/renderRoute modules not found",
-    "2026-08-13T15:54:14Z evidence recorded: evidence/steps/step26-green.txt (5e4c8f119d1a) - full npm run verify green: 189 tests, 98.24% coverage, build/verify:build/size all pass"
+    "2026-08-13T15:54:14Z evidence recorded: evidence/steps/step26-green.txt (5e4c8f119d1a) - full npm run verify green: 189 tests, 98.24% coverage, build/verify:build/size all pass",
+    "2026-08-13T16:07:22Z step 27 -> red",
+    "2026-08-13T16:07:29Z step 27 -> green",
+    "2026-08-13T16:07:38Z step 27: installed react-router@8.3.0 (--legacy-peer-deps, matching the repo's pre-existing eslint/jsx-a11y peer conflict - unrelated to this install). ApplicationLayout.tsx (main landmark + skip link, Outlet for the matched child route). routeDefinitions.ts + createApplicationRouter.ts (basename from configuration.basePath, not a literal). HomeRoute/LoginRoute wrap the M2 feature placeholder stubs; NotFoundRoute is real content with a working link home. Each feature gained loadTranslations.ts (idempotent, module-level promise dedup) + a real locale catalogue, invoked from routeDefinitions.ts's lazy() before resolving the route component. Added an ESLint ban on importing redirect/redirectDocument from react-router (invariant 97's unit half - the storage half was already covered by the existing single-reader rules), with a demonstrable-negative test.",
+    "2026-08-13T16:07:38Z step 27 -> done",
+    "2026-08-13T16:07:44Z evidence recorded: evidence/steps/step27-red-loadtranslations.txt (bcb6940f82ca) - genuine red: both features' loadTranslations.ts modules not found",
+    "2026-08-13T16:07:44Z evidence recorded: evidence/steps/step27-red-redirect-rule.txt (4c82be0cf770) - genuine red: redirect-import demonstrable-negative test fails before the ESLint rule is added",
+    "2026-08-13T16:07:44Z evidence recorded: evidence/steps/step27-red-routing.txt (42428481de81) - genuine red: ApplicationLayout, NotFoundRoute, createApplicationRouter modules not found",
+    "2026-08-13T16:07:45Z evidence recorded: evidence/steps/step27-green.txt (75378945db7c) - full npm run verify green: 198 unit tests + 4 build-output tests, 96.18% coverage"
   ],
   "milestones": [
     {
@@ -2274,6 +2282,26 @@
       "sha": "5e4c8f119d1a",
       "recorded": "2026-08-13T15:54:14Z",
       "note": "full npm run verify green: 189 tests, 98.24% coverage, build/verify:build/size all pass"
+    },
+    "evidence/steps/step27-red-loadtranslations.txt": {
+      "sha": "bcb6940f82ca",
+      "recorded": "2026-08-13T16:07:44Z",
+      "note": "genuine red: both features' loadTranslations.ts modules not found"
+    },
+    "evidence/steps/step27-red-redirect-rule.txt": {
+      "sha": "4c82be0cf770",
+      "recorded": "2026-08-13T16:07:44Z",
+      "note": "genuine red: redirect-import demonstrable-negative test fails before the ESLint rule is added"
+    },
+    "evidence/steps/step27-red-routing.txt": {
+      "sha": "42428481de81",
+      "recorded": "2026-08-13T16:07:44Z",
+      "note": "genuine red: ApplicationLayout, NotFoundRoute, createApplicationRouter modules not found"
+    },
+    "evidence/steps/step27-green.txt": {
+      "sha": "75378945db7c",
+      "recorded": "2026-08-13T16:07:45Z",
+      "note": "full npm run verify green: 198 unit tests + 4 build-output tests, 96.18% coverage"
     }
   },
   "test_file_hashes": {}
