@@ -276,3 +276,29 @@ describe('template cruft removal', () => {
     }
   });
 });
+
+const GATING_SCRIPTS_IN_WORKFLOW_ORDER = [
+  'typecheck',
+  'lint',
+  'format:check',
+  'test:coverage',
+  'build',
+  'verify:build',
+  'size',
+  'e2e',
+];
+
+describe('npm scripts', () => {
+  it('every gating npm script named by the workflow order exists in package.json', () => {
+    const packageJson = JSON.parse(readFileSync('package.json', 'utf-8')) as {
+      scripts?: Record<string, string>;
+    };
+
+    for (const scriptName of GATING_SCRIPTS_IN_WORKFLOW_ORDER) {
+      expect(
+        packageJson.scripts?.[scriptName],
+        `npm script "${scriptName}" is missing`,
+      ).toBeDefined();
+    }
+  });
+});

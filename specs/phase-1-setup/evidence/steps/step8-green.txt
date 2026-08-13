@@ -1,0 +1,81 @@
+
+> hierarchy-tree@0.0.0 verify
+> npm run typecheck && npm run lint && npm run format:check && npm run test:coverage && npm run build && npm run verify:build && npm run size
+
+
+> hierarchy-tree@0.0.0 typecheck
+> tsc -b
+
+
+> hierarchy-tree@0.0.0 lint
+> eslint .
+
+
+> hierarchy-tree@0.0.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> hierarchy-tree@0.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+      Coverage enabled with v8
+
+
+ Test Files  3 passed (3)
+      Tests  15 passed (15)
+   Start at  13:17:28
+   Duration  566ms (transform 49ms, setup 78ms, import 42ms, tests 611ms, environment 374ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 100% ( 3/3 )
+Branches     : 100% ( 0/0 )
+Functions    : 100% ( 2/2 )
+Lines        : 100% ( 3/3 )
+================================================================================
+
+> hierarchy-tree@0.0.0 build
+> tsc -b && vite build
+
+vite v8.2.1 building client environment for production...
+[2Ktransforming...✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:  0.30 kB
+dist/assets/entry-7pMr1spS.js     1.04 kB │ gzip:  0.58 kB
+dist/assets/vendor-BEu8oNmQ.js  189.55 kB │ gzip: 59.58 kB
+
+✓ built in 42ms
+
+> hierarchy-tree@0.0.0 verify:build
+> vitest run --config vitest.build-output.config.ts
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+
+ Test Files  2 passed (2)
+      Tests  2 passed (2)
+   Start at  13:17:29
+   Duration  67ms (transform 16ms, setup 0ms, import 23ms, tests 4ms, environment 0ms)
+
+
+> hierarchy-tree@0.0.0 size
+> size-limit
+
+- Running JS in headless Chrome
+✔ Running JS in headless Chrome
+  
+  Size limit:   100 kB
+  Size:         59.4 kB gzipped
+  Loading time: 1.2 s   on slow 3G
+  

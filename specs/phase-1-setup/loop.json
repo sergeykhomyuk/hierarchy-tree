@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:13:43Z",
+  "updated": "2026-08-13T12:18:19Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 7
+      "steps_done": 8
     },
     "G3": {
       "status": "pending",
@@ -721,8 +721,8 @@
         "every gating npm script named by the workflow order exists in package.json",
         "the declaration table is internally valid at phase building"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T12:16:21Z evidence/steps/step8-red.txt: gating npm scripts missing, expected-build-output.json missing",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -1418,13 +1418,22 @@
     "2026-08-13T12:13:42Z evidence recorded: evidence/steps/step7-red.txt (5efb611519f9) - vitest red: template files present, bootstrap.ts missing",
     "2026-08-13T12:13:42Z evidence recorded: evidence/steps/step7-green.txt (cf4d9485f00f) - vitest green: template gone, bootstrap renders placeholder; real build now 59.4kB gzipped (was 117.28kB with cruft), 100% coverage on new code",
     "2026-08-13T12:13:42Z step 7 -> green",
-    "2026-08-13T12:13:43Z step 7 -> done"
+    "2026-08-13T12:13:43Z step 7 -> done",
+    "2026-08-13T12:16:21Z step 8 -> red",
+    "2026-08-13T12:17:43Z evidence recorded: evidence/steps/step8-red.txt (c66f6c000647) - vitest red: gating npm scripts missing, expected-build-output.json missing",
+    "2026-08-13T12:17:43Z evidence recorded: evidence/steps/step8-green.txt (6fc816e04b59) - npm run verify passes end to end as the full chain: typecheck, lint, format:check, test:coverage (100%), build, verify:build, size (59.4kB/100kB)",
+    "2026-08-13T12:17:43Z step 8 -> green",
+    "2026-08-13T12:17:44Z step 8 -> done",
+    "2026-08-13T12:17:44Z step 8: npm run lint is scoped to 'eslint .' only for now - assert-no-physical-properties.mjs and assert-no-secrets.mjs --source-only (also named in TECH 7.1's lint script) are M2 step 14 deliverables; appending calls to files that don't exist yet would break npm run verify at the M1 boundary. M2 step 14 extends the lint script when those scripts land. Same staging pattern as step 5's theme.css placeholder.",
+    "2026-08-13T12:18:19Z evidence recorded: evidence/milestones/m1-suite.txt (0ce9f241f72f) - npm run verify full chain output at M1 boundary",
+    "2026-08-13T12:18:19Z evidence recorded: evidence/milestones/m1-e2e.txt (8e53066cd79e) - M1 has no e2e specs yet - first real e2e run is at M5 boundary; npm run verify does not include e2e per TECH.md 7.1",
+    "2026-08-13T12:18:19Z milestone 1 boundary verified: npm run verify passes end to end (typecheck, lint, format:check, test:coverage 100%, build, verify:build, size 59.4kB/100kB); evidence/milestones/m1-suite.txt, m1-e2e.txt"
   ],
   "milestones": [
     {
       "id": 1,
       "title": "M1 - Toolchain, cruft removal and the verification harness",
-      "verified": null,
+      "verified": "2026-08-13T12:18:19Z npm run verify passes end to end (typecheck, lint, format:check, test:coverage 100%, build, verify:build, size 59.4kB/100kB); evidence/milestones/m1-suite.txt, m1-e2e.txt",
       "reviewed": null
     },
     {
@@ -1583,6 +1592,26 @@
       "sha": "cf4d9485f00f",
       "recorded": "2026-08-13T12:13:42Z",
       "note": "vitest green: template gone, bootstrap renders placeholder; real build now 59.4kB gzipped (was 117.28kB with cruft), 100% coverage on new code"
+    },
+    "evidence/steps/step8-red.txt": {
+      "sha": "c66f6c000647",
+      "recorded": "2026-08-13T12:17:43Z",
+      "note": "vitest red: gating npm scripts missing, expected-build-output.json missing"
+    },
+    "evidence/steps/step8-green.txt": {
+      "sha": "6fc816e04b59",
+      "recorded": "2026-08-13T12:17:43Z",
+      "note": "npm run verify passes end to end as the full chain: typecheck, lint, format:check, test:coverage (100%), build, verify:build, size (59.4kB/100kB)"
+    },
+    "evidence/milestones/m1-suite.txt": {
+      "sha": "0ce9f241f72f",
+      "recorded": "2026-08-13T12:18:19Z",
+      "note": "npm run verify full chain output at M1 boundary"
+    },
+    "evidence/milestones/m1-e2e.txt": {
+      "sha": "8e53066cd79e",
+      "recorded": "2026-08-13T12:18:19Z",
+      "note": "M1 has no e2e specs yet - first real e2e run is at M5 boundary; npm run verify does not include e2e per TECH.md 7.1"
     }
   },
   "test_file_hashes": {}

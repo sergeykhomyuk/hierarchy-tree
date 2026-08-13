@@ -1,0 +1,10 @@
+{
+  "phase": "building",
+  "alwaysOn": {
+    "basePath": true,
+    "bundleSecrets": true,
+    "sizeLimitEntries": [
+      { "name": "app entry (initial payload)", "limit": "100 kB" }
+    ]
+  }
+}
