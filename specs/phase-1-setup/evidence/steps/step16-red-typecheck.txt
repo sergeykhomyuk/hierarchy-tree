@@ -1,0 +1,30 @@
+src/platform/http/createFetchTransport.test.ts(2,38): error TS2307: Cannot find module './createFetchTransport' or its corresponding type declarations.
+src/platform/http/createHttpClient.test.ts(2,55): error TS2307: Cannot find module '@shared/testing' or its corresponding type declarations.
+src/platform/http/createHttpClient.test.ts(3,42): error TS2307: Cannot find module '@platform/observability' or its corresponding type declarations.
+src/platform/http/createHttpClient.test.ts(4,34): error TS2307: Cannot find module './createHttpClient' or its corresponding type declarations.
+src/platform/http/createHttpClient.test.ts(5,32): error TS2307: Cannot find module './transport' or its corresponding type declarations.
+src/platform/http/createHttpClient.test.ts(6,34): error TS2307: Cannot find module './httpRequest' or its corresponding type declarations.
+src/platform/http/createHttpClient.test.ts(18,33): error TS7006: Parameter 'request' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(52,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(82,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(112,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(138,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(171,15): error TS7006: Parameter 'payload' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(197,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(224,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(252,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(280,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(302,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(313,41): error TS7006: Parameter 'request' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(325,76): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(352,15): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/platform/http/createHttpClient.test.ts(361,5): error TS2578: Unused '@ts-expect-error' directive.
+src/platform/http/createTraceparent.test.ts(2,38): error TS2307: Cannot find module '@shared/testing' or its corresponding type declarations.
+src/platform/http/createTraceparent.test.ts(3,35): error TS2307: Cannot find module './createTraceparent' or its corresponding type declarations.
+src/platform/http/httpFailure.test.ts(2,34): error TS2307: Cannot find module './httpFailure' or its corresponding type declarations.
+src/platform/http/httpFailure.test.ts(4,49): error TS2366: Function lacks ending return statement and return type does not include 'undefined'.
+src/platform/http/retryDelayMilliseconds.test.ts(2,40): error TS2307: Cannot find module './retryDelayMilliseconds' or its corresponding type declarations.
+src/platform/http/shouldRetry.test.ts(2,29): error TS2307: Cannot find module './shouldRetry' or its corresponding type declarations.
+src/platform/observability/createCorrelationId.test.ts(2,38): error TS2307: Cannot find module '@shared/testing' or its corresponding type declarations.
+src/platform/observability/createCorrelationId.test.ts(3,37): error TS2307: Cannot find module './createCorrelationId' or its corresponding type declarations.
+src/shared/testing/createFakeClock.test.ts(2,33): error TS2307: Cannot find module './createFakeClock' or its corresponding type declarations.

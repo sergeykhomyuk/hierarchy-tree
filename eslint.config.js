@@ -133,7 +133,10 @@ const SINKS_IMPORT_PATTERN = {
 };
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // Generated directories a repeat local `npm run verify` would otherwise
+  // leave on disk for the next `lint` step to trip over - the same set
+  // .gitignore already excludes, beyond just the build output.
+  globalIgnores(['dist', 'coverage', 'playwright-report', 'test-results']),
   {
     linterOptions: {
       reportUnusedDisableDirectives: 'error',
@@ -432,8 +435,17 @@ export default defineConfig([
               },
             },
             {
+              // Platform's own tests additionally reach `shared` for the
+              // fakes TECH.md 3.2/6.1 name explicitly (createFakeClock,
+              // createFakeRandomness, createFakeTransport live in
+              // shared/testing, not platform - a platform module still
+              // cannot import shared in production code, which is why this
+              // addition sits only in the test-file override, not the base
+              // rule above).
               from: { element: { type: 'platform' } },
-              allow: { to: { element: { type: 'platform' } } },
+              allow: {
+                to: { element: { types: { anyOf: ['platform', 'shared'] } } },
+              },
             },
           ],
         },

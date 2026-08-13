@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T13:22:01Z",
+  "updated": "2026-08-13T13:53:15Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 15
+      "steps_done": 16
     },
     "G3": {
       "status": "pending",
@@ -873,8 +873,8 @@
         "the failure union is exhaustive without a default branch",
         "an error carries no response body content"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T13:52:46Z evidence/steps/step16-red-vitest.txt; evidence/steps/step16-red-typecheck.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1561,7 +1561,11 @@
     "2026-08-13T13:21:52Z evidence recorded: evidence/steps/step15-green.txt (9d79dd1a0460) - vitest green: all 5 registered-test assertions pass; full npm run verify re-confirmed (65.17kB/100kB budget)",
     "2026-08-13T13:21:52Z step 15 -> green",
     "2026-08-13T13:21:53Z step 15 -> done",
-    "2026-08-13T13:22:01Z step 15: adapted step 15's 4th test ('does not render the router') since the router is M5 - substituted 'does not render the normal startup content (StartupPlaceholder)' as the equivalent claim this milestone can actually make. Configuration failure reports via a plain console.error for now (M3 step 17 wires the real observability facade in); ConfigurationErrorScreen.tsx is plain markup (M4's kit ErrorState doesn't exist yet)."
+    "2026-08-13T13:22:01Z step 15: adapted step 15's 4th test ('does not render the router') since the router is M5 - substituted 'does not render the normal startup content (StartupPlaceholder)' as the equivalent claim this milestone can actually make. Configuration failure reports via a plain console.error for now (M3 step 17 wires the real observability facade in); ConfigurationErrorScreen.tsx is plain markup (M4's kit ErrorState doesn't exist yet).",
+    "2026-08-13T13:52:46Z step 16 -> red",
+    "2026-08-13T13:52:57Z step 16 -> green",
+    "2026-08-13T13:53:11Z step 16: platform/http implemented - createHttpClient with injected transport/clock/randomness/observability, single per-logical-request deadline via AbortController + fake-clock-testable backoff, caller-abort composed via AbortSignal.any and returned as a cancelled outcome sibling to failure (never retried, never error-logged), at-most-one-retry limited to GET on network/timeout/5xx via shouldRetry.ts, exponential-jitter backoff via retryDelayMilliseconds.ts, W3C traceparent per attempt via createTraceparent.ts, HttpFailure as an exhaustive 4-member union proven via a default-branch-free switch test, HttpError carrying only status+statusDescription (never response body/statusText). Two deliberate scope decisions: (1) pulled forward the minimal type-only scaffolding step 17/18 will flesh out - platform/runtime/{clock,randomness}.ts and platform/observability/{createCorrelationId,observabilityFacade,timingRecord,analyticsEvents}.ts plus partial index.ts barrels - since HttpClientDependencies's own signature requires them; createCorrelationId is also what supplies the per-request id used as requestId/traceId/correlationId in phase 1, since nothing wires in the real interaction tracker (step 18) yet, matching TECH.md 3.4's own note that the three-way correlation-id equality is phase-1-untestable end-to-end. (2) amended the M2 boundaries test-file override (eslint.config.js + scripts/eslint-configuration.test.ts's structural-diff test) to add a platform-to-shared allowance scoped to *.test.ts only, because TECH.md 3.2/6.1 explicitly places the http client's own fakes (createFakeClock/createFakeRandomness/createFakeTransport) in shared/testing, which the base boundaries rule (platform imports only platform) would otherwise make unreachable from platform's own tests; production platform code still cannot import shared. Also fixed a pre-existing eslint.config.js gap found while re-running verify twice locally: globalIgnores only listed dist, so a leftover coverage/ directory from a prior local run made a second npm run verify fail lint spuriously - widened it to match .gitignore's existing dist/coverage/playwright-report/test-results set.",
+    "2026-08-13T13:53:15Z step 16 -> done"
   ],
   "milestones": [
     {

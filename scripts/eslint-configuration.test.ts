@@ -135,9 +135,10 @@ describe('eslint configuration', () => {
       overrideRule!.value as [string, { policies: unknown[] }]
     )[1].policies;
 
-    expect(overridePolicies.length, 'only feature and shared rows change').toBe(
-      basePolicies.length,
-    );
+    expect(
+      overridePolicies.length,
+      'only feature, shared and platform rows change',
+    ).toBe(basePolicies.length);
 
     const basePoliciesJson = basePolicies.map((policy) =>
       JSON.stringify(policy),
@@ -149,12 +150,24 @@ describe('eslint configuration', () => {
       (policy, index) => policy !== basePoliciesJson[index],
     );
 
-    expect(changedRows.length, 'exactly feature and shared should differ').toBe(
-      2,
+    // feature and shared additionally reach testing-harness (the real
+    // provider stack a feature/kit test needs - invariant 90); platform
+    // additionally reaches shared, because the http client's own tests
+    // depend on the fakes TECH.md 3.2/6.1 place in shared/testing, and
+    // shared cannot move into platform without becoming domain-aware.
+    expect(
+      changedRows.length,
+      'exactly feature, shared and platform should differ',
+    ).toBe(3);
+    const testingHarnessRows = changedRows.filter((changed) =>
+      changed.includes('testing-harness'),
     );
-    for (const changed of changedRows) {
-      expect(changed).toContain('testing-harness');
-    }
+    const platformSharedRows = changedRows.filter(
+      (changed) =>
+        changed.includes('"type":"platform"') && changed.includes('shared'),
+    );
+    expect(testingHarnessRows.length).toBe(2);
+    expect(platformSharedRows.length).toBe(1);
   });
 });
 
