@@ -21,6 +21,9 @@ test.describe('placeholder routes', () => {
       page.getByRole('link', { name: 'Skip to main content' }),
     ).toBeAttached();
 
+    expect(await page.evaluate(() => document.documentElement.lang)).toBe('en');
+    expect(await page.evaluate(() => document.documentElement.dir)).toBe('ltr');
+
     expect(records).toEqual([]);
   });
 
