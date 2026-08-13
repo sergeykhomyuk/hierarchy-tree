@@ -1,0 +1,46 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ scripts/repository-configuration.test.ts (2 tests | 2 failed) 19ms
+     × node version is pinned consistently in .nvmrc and package.json engines 3ms
+     × evidence logs under specs are not excluded by .gitignore 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  scripts/repository-configuration.test.ts > repository configuration > node version is pinned consistently in .nvmrc and package.json engines
+Error: ENOENT: no such file or directory, open '.nvmrc'
+ ❯ scripts/repository-configuration.test.ts:7:26
+      5| describe('repository configuration', () => {
+      6|   it('node version is pinned consistently in .nvmrc and package.json e…
+      7|     const nvmrcVersion = readFileSync('.nvmrc', 'utf-8').trim();
+       |                          ^
+      8|     const packageJson = JSON.parse(readFileSync('package.json', 'utf-8…
+      9|       engines?: { node?: string };
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  scripts/repository-configuration.test.ts > repository configuration > evidence logs under specs are not excluded by .gitignore
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ scripts/repository-configuration.test.ts:30:23
+     28|     }
+     29|
+     30|     expect(isIgnored).toBe(false);
+       |                       ^
+     31|   });
+     32| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  12:07:02
+   Duration  119ms (transform 12ms, setup 0ms, import 22ms, tests 19ms, environment 0ms)
+

@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "plan",
-  "phase_entered": "2026-08-13T10:55:52Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T11:00:36Z",
+  "updated": "2026-08-13T11:09:00Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 0
+      "steps_done": 1
     },
     "G3": {
       "status": "pending",
@@ -644,8 +644,8 @@
         "node version is pinned consistently in .nvmrc and package.json engines",
         "evidence logs under specs are not excluded by .gitignore"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T11:07:09Z evidence/steps/step1-red.txt: both tests fail - ENOENT on .nvmrc, .gitignore blocks evidence log",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -1376,7 +1376,14 @@
     "2026-08-13T10:59:13Z step 36 added (milestone 6): deployment.json at the repository root carrying projectName and productionHostname as the single machine-readable source, the production-hostname markers added to VERIFICATION.md and .env.example, and the doc-agreement test asserting each marker is PRESENT and its value equals deployment.json (invariant 123)",
     "2026-08-13T10:59:13Z step 37 added (milestone 6): The live-smoke job on workflow_dispatch only, with vitest.live.config.ts and scripts/live-smoke/ outside src and outside every default Vitest project, probing reachability and shape and printing the observed users field names without asserting on them (invariants 116, 116a, 116b)",
     "2026-08-13T10:59:13Z step 38 added (milestone 6): deployed-smoke.spec.ts and the post-merge obligation of invariant 126a: after merge, e2e:deployed runs against productionHostname read from deployment.json, asserting the home route, /login on direct load and refresh with status 200, and the frame-ancestors header on the live response - captured as evidence/deployed-smoke.txt. The phase is not complete until it passes (invariants 123, 124, 126a, 99a, 119)",
-    "2026-08-13T11:00:36Z Plan registered: 6 milestones, 38 steps, sequential. Worktree fan-out rejected and the reason recorded in PLAN.md - M3 and M4 were the only candidate pair, M4 depends on M3's configuration flag, and both would edit package.json, vitest.config.ts and eslint.config.js where a bad merge is SILENT (a dropped ESLint override removes a check without failing a build). Verification profile: the skill's verification-bootstrap path was NOT run, because TECH.md M1 step 1 already specifies VERIFICATION.md's full contents and that specification passed five G1 rounds - running the bootstrap would re-derive a decision the user already signed off. G1's carried risk is written into PLAN.md rather than left in the gate note: the final nine fixes went unconfirmed and concentrate in M1's build config and declaration table and M6's deploy job, which is where to look hardest during implementation."
+    "2026-08-13T11:00:36Z Plan registered: 6 milestones, 38 steps, sequential. Worktree fan-out rejected and the reason recorded in PLAN.md - M3 and M4 were the only candidate pair, M4 depends on M3's configuration flag, and both would edit package.json, vitest.config.ts and eslint.config.js where a bad merge is SILENT (a dropped ESLint override removes a check without failing a build). Verification profile: the skill's verification-bootstrap path was NOT run, because TECH.md M1 step 1 already specifies VERIFICATION.md's full contents and that specification passed five G1 rounds - running the bootstrap would re-derive a decision the user already signed off. G1's carried risk is written into PLAN.md rather than left in the gate note: the final nine fixes went unconfirmed and concentrate in M1's build config and declaration table and M6's deploy job, which is where to look hardest during implementation.",
+    "2026-08-13T11:04:11Z user reviewed 6-milestone/38-step plan, approved proceeding to implement",
+    "2026-08-13T11:04:11Z phase -> implement (reason: plan approved by user, starting M1)",
+    "2026-08-13T11:07:09Z step 1 -> red",
+    "2026-08-13T11:09:00Z evidence recorded: evidence/steps/step1-red.txt (4f8081d4cc19) - vitest red: .nvmrc missing, .gitignore blocks evidence logs",
+    "2026-08-13T11:09:00Z evidence recorded: evidence/steps/step1-green.txt (903f7457e342) - vitest green: both repository-configuration tests pass",
+    "2026-08-13T11:09:00Z step 1 -> green",
+    "2026-08-13T11:09:00Z step 1 -> done"
   ],
   "milestones": [
     {
@@ -1471,6 +1478,17 @@
       "sha": "efc9cbab6ac3",
       "recorded": "2026-08-13T10:53:56Z",
       "note": "G1 delta round 5, SECOND confirmation pass: fresh loop-spec-validator ruled 8 of 10 RESOLVED, 2 PARTIALLY RESOLVED, 6 new defects (1 blocking - the deploy job read deployment.json with jq but had no actions/checkout). Recorded as Claude-68..Claude-74, all fixed. Verbatim."
+    },
+    "evidence/steps/step1-red.txt": {
+      "sha": "4f8081d4cc19",
+      "recorded": "2026-08-13T11:09:00Z",
+      "note": "vitest red: .nvmrc missing, .gitignore blocks evidence logs"
+    },
+    "evidence/steps/step1-green.txt": {
+      "sha": "903f7457e342",
+      "recorded": "2026-08-13T11:09:00Z",
+      "note": "vitest green: both repository-configuration tests pass"
     }
-  }
+  },
+  "test_file_hashes": {}
 }
