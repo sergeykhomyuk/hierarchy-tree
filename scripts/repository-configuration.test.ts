@@ -1,6 +1,68 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+
+type TsconfigLike = {
+  compilerOptions: {
+    strict?: boolean;
+    noUncheckedIndexedAccess?: boolean;
+    exactOptionalPropertyTypes?: boolean;
+    noImplicitOverride?: boolean;
+    paths?: Record<string, string[]>;
+  };
+};
+
+function stripJsonComments(source: string): string {
+  let result = '';
+  let inString = false;
+
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    const next = source[index + 1];
+
+    if (inString) {
+      result += character;
+      if (character === '\\') {
+        result += next;
+        index += 1;
+      } else if (character === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (character === '"') {
+      inString = true;
+      result += character;
+      continue;
+    }
+
+    if (character === '/' && next === '/') {
+      while (index < source.length && source[index] !== '\n') index += 1;
+      continue;
+    }
+
+    if (character === '/' && next === '*') {
+      index += 2;
+      while (index < source.length && !(source[index] === '*' && source[index + 1] === '/')) {
+        index += 1;
+      }
+      index += 1;
+      continue;
+    }
+
+    result += character;
+  }
+
+  return result;
+}
+
+function parseJsonWithComments(source: string): TsconfigLike {
+  return JSON.parse(stripJsonComments(source)) as TsconfigLike;
+}
+
+const ALIASES = ['@app', '@features', '@shared', '@platform'] as const;
 
 describe('repository configuration', () => {
   it('node version is pinned consistently in .nvmrc and package.json engines', () => {
@@ -28,5 +90,34 @@ describe('repository configuration', () => {
     }
 
     expect(isIgnored).toBe(false);
+  });
+
+  it('tsconfig.app.json enables strict and the four strictness flags', () => {
+    const tsconfig = parseJsonWithComments(readFileSync('tsconfig.app.json', 'utf-8'));
+
+    expect(tsconfig.compilerOptions.strict).toBe(true);
+    expect(tsconfig.compilerOptions.noUncheckedIndexedAccess).toBe(true);
+    expect(tsconfig.compilerOptions.exactOptionalPropertyTypes).toBe(true);
+    expect(tsconfig.compilerOptions.noImplicitOverride).toBe(true);
+  });
+
+  it('path aliases resolve identically in tsconfig, Vite and Vitest', async () => {
+    const tsconfig = parseJsonWithComments(readFileSync('tsconfig.app.json', 'utf-8'));
+    const tsconfigPaths = tsconfig.compilerOptions.paths ?? {};
+
+    const viteConfig = (await import('../vite.config.ts')).default;
+    const vitestConfig = (await import('../vitest.config.ts')).default;
+    const viteAlias = viteConfig.resolve?.alias as Record<string, string> | undefined;
+    const vitestAlias = vitestConfig.resolve?.alias as Record<string, string> | undefined;
+
+    for (const alias of ALIASES) {
+      const tsconfigTargets = tsconfigPaths[`${alias}/*`];
+      const tsconfigTarget = tsconfigTargets?.[0]?.replace(/\/\*$/, '');
+      expect(tsconfigTarget, `${alias} missing from tsconfig.app.json paths`).toBeDefined();
+
+      const expected = resolve(tsconfigTarget as string);
+      expect(viteAlias?.[alias], `${alias} missing from vite.config.ts alias`).toBe(expected);
+      expect(vitestAlias?.[alias], `${alias} missing from vitest.config.ts alias`).toBe(expected);
+    }
   });
 });

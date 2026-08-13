@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T11:09:00Z",
+  "updated": "2026-08-13T11:12:44Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 1
+      "steps_done": 2
     },
     "G3": {
       "status": "pending",
@@ -655,8 +655,8 @@
         "tsconfig.app.json enables strict and the four strictness flags",
         "path aliases resolve identically in tsconfig, Vite and Vitest"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T11:11:36Z evidence/steps/step2-red.txt: strict flags undefined, vitest.config.ts missing",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -1383,7 +1383,13 @@
     "2026-08-13T11:09:00Z evidence recorded: evidence/steps/step1-red.txt (4f8081d4cc19) - vitest red: .nvmrc missing, .gitignore blocks evidence logs",
     "2026-08-13T11:09:00Z evidence recorded: evidence/steps/step1-green.txt (903f7457e342) - vitest green: both repository-configuration tests pass",
     "2026-08-13T11:09:00Z step 1 -> green",
-    "2026-08-13T11:09:00Z step 1 -> done"
+    "2026-08-13T11:09:00Z step 1 -> done",
+    "2026-08-13T11:11:36Z step 2 -> red",
+    "2026-08-13T11:12:36Z evidence recorded: evidence/steps/step2-red.txt (d77c0c14076c) - vitest red: strictness flags undefined, vitest.config.ts missing",
+    "2026-08-13T11:12:36Z evidence recorded: evidence/steps/step2-green.txt (e87383a1a41b) - vitest green: all 4 repository-configuration tests pass, tsc -b clean",
+    "2026-08-13T11:12:36Z step 2 -> green",
+    "2026-08-13T11:12:36Z step 2 -> done",
+    "2026-08-13T11:12:44Z step 2: tsconfig.tools.json include broadened from TECH.md's literal scripts/live-smoke to scripts, so scripts/repository-configuration.test.ts (step 1) belongs to a TS project under tsc -b and type-aware lint; scripts/live-smoke stays covered as a subset"
   ],
   "milestones": [
     {
@@ -1488,6 +1494,16 @@
       "sha": "903f7457e342",
       "recorded": "2026-08-13T11:09:00Z",
       "note": "vitest green: both repository-configuration tests pass"
+    },
+    "evidence/steps/step2-red.txt": {
+      "sha": "d77c0c14076c",
+      "recorded": "2026-08-13T11:12:36Z",
+      "note": "vitest red: strictness flags undefined, vitest.config.ts missing"
+    },
+    "evidence/steps/step2-green.txt": {
+      "sha": "e87383a1a41b",
+      "recorded": "2026-08-13T11:12:36Z",
+      "note": "vitest green: all 4 repository-configuration tests pass, tsc -b clean"
     }
   },
   "test_file_hashes": {}

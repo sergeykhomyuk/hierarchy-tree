@@ -1,10 +1,9 @@
 import path from 'node:path'
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vitest/config'
 
-// https://vite.dev/config/
+// Projects and coverage thresholds arrive in milestone 1 step 3; this config
+// starts as the path-alias source of truth shared with vite.config.ts.
 export default defineConfig({
-  plugins: [react()],
   resolve: {
     alias: {
       '@app': path.resolve(import.meta.dirname, './src/app'),
