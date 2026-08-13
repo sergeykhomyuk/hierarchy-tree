@@ -223,6 +223,14 @@ export default defineConfig([
     rules: { 'i18next/no-literal-string': 'off' },
   },
   {
+    // testing-harness (src/app/testing/**) is the same "never ships"
+    // case as *.test.tsx above, just not named that way: kitStates.tsx
+    // is imported by unit tests and by the dev-only kit route, which
+    // invariant 86b's build-output check proves never reaches dist/.
+    files: ['src/app/testing/**/*.{ts,tsx}'],
+    rules: { 'i18next/no-literal-string': 'off' },
+  },
+  {
     files: ['e2e/**/*.ts'],
     extends: [playwright.configs['flat/recommended']],
   },

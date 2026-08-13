@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T14:54:50Z",
+  "updated": "2026-08-13T15:03:00Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 23
+      "steps_done": 24
     },
     "G3": {
       "status": "pending",
@@ -1002,8 +1002,8 @@
         "every documented kit state has zero axe violations",
         "every exported kit component has a state in the inventory"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T15:02:46Z evidence/steps/step24-red-vitest.txt; evidence/steps/step24-red-typecheck.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1643,7 +1643,11 @@
     "2026-08-13T14:54:35Z step 23 -> red",
     "2026-08-13T14:54:35Z step 23 -> green",
     "2026-08-13T14:54:50Z step 23: the eight kit components implemented (Button, Field, Input, Card, Avatar, Skeleton, ErrorState, EmptyState) plus fieldContext.ts, deriveInitials.ts, skeletonSize.ts, sizeClass.ts. Button's busy state calls preventDefault() before anything else and skips onClick, proven against a real form's onSubmit via userEvent for both pointer click and keyboard Enter after focus - both blocked, and the button stays focusable with its visible label as accessible name (aria-busy/aria-disabled set, native disabled never set while busy). Field/Input share state via FieldContext (a default value lets Input render standalone outside a Field without throwing); the association test walks aria-describedby's id list and confirms each id resolves to a real element. Avatar falls back to initials via deriveInitials(displayName) on missing source or image onError (tested with fireEvent.error, not a raw dispatchEvent, so the React state update actually flushes before the assertion). Two real infrastructure gaps surfaced and fixed: (1) @testing-library/react has no /vitest auto-cleanup entry unlike jest-dom, so DOM nodes leaked across tests within a file until vitest.setup.ts registered afterEach(cleanup) explicitly - the first test file in the repo with multiple render() calls per file is what exposed this; (2) toBeInTheDocument() and friends type-checked as missing under tsconfig.app.json (the SAME types-array-disables-auto-inclusion issue as steps 20/21, this time for jest-dom's vitest matcher augmentation, not node) - fixed with a triple-slash reference in vite-env.d.ts. Also found the i18next/no-literal-string rule was flagging ordinary test fixture data (variant=\"primary\", a Button's \"Save\" label in a render() call) since it had no test-file exemption - scoped it off for src/**/*.test.{ts,tsx}, since invariant 60/85 govern what SHIPS and tests never ship; the actual literal-string guard for the kit runs eslint against the real component files only (scripts/eslint-configuration.test.ts's new 'kit literal-string guard' describe block). npm run verify green, 169 tests, 98.33%25 coverage.",
-    "2026-08-13T14:54:50Z step 23 -> done"
+    "2026-08-13T14:54:50Z step 23 -> done",
+    "2026-08-13T15:02:46Z step 24 -> red",
+    "2026-08-13T15:02:47Z step 24 -> green",
+    "2026-08-13T15:03:00Z step 24: state inventory + axe coverage implemented. src/shared/testing/toHaveNoAxeViolations.ts wraps axe-core's run() directly in an expect.extend matcher (axe-core added as an explicit devDependency - it was only present as a transitive dependency of @axe-core/playwright before, which is fragile on a clean install). src/app/testing/kitStates.tsx is the single state inventory (testing-harness element, invariant 87's 'one inventory' requirement) covering all 21 documented states across the 8 kit components. The axe test caught a real finding immediately: the Input 'standalone' state had no associated label - fixed by wrapping it in a real <label htmlFor>, which still proves Input renders without FieldContext (its own invariant) while being genuinely accessible rather than a hollow pass. Completeness is checked against a hardcoded KIT_COMPONENT_NAMES list matching invariant 69's closed set of 8, not derived from @shared/ui's runtime exports (deliberately - a stray non-component export would silently satisfy a dynamic check). Extended the i18next/no-literal-string test-file exemption from step 23 to also cover src/app/testing/**, since kitStates.tsx needs realistic literal text but is testing-harness code that never ships (same invariant-60 reasoning, different file pattern - not a .test.tsx file). Also raised the tooling vitest project's testTimeout to 20s: eslint.config.js has grown enough that a fresh npx eslint child process now genuinely exceeds the 5s default, causing real (non-flaky) timeouts in both the pre-existing demonstrable-negative tests and the new literal-string guard. npm run verify green, 171 tests, 98.33%25 coverage (kitStates.tsx itself is coverage-excluded as testing infrastructure, matching testing/index.ts).",
+    "2026-08-13T15:03:00Z step 24 -> done"
   ],
   "milestones": [
     {

@@ -40,6 +40,12 @@ export default defineConfig({
           // that suite stays outside every default project (invariants 115, 116).
           include: ['scripts/*.test.ts'],
           setupFiles: ['./vitest.setup.ts'],
+          // Several of this project's own tests shell out to a fresh
+          // `npx eslint` per assertion (the demonstrable negatives, the
+          // kit literal-string guard) - type-aware linting's per-process
+          // startup cost already exceeds the 5s default here and will
+          // only grow as more files enter type-aware scope.
+          testTimeout: 20_000,
         },
       },
     ],

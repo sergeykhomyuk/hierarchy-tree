@@ -1,0 +1,4 @@
+src/app/testing/kitStates.test.tsx(3,8): error TS2882: Cannot find module or type declarations for side-effect import of '@shared/testing/toHaveNoAxeViolations'.
+src/app/testing/kitStates.test.tsx(4,48): error TS2307: Cannot find module './kitStates' or its corresponding type declarations.
+src/app/testing/kitStates.test.tsx(8,54): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/app/testing/kitStates.test.tsx(26,9): error TS2339: Property 'toHaveNoAxeViolations' does not exist on type 'Assertion<HTMLElement>'.
