@@ -1,0 +1,963 @@
+{
+  "task": "phase-1-setup",
+  "title": "Phase 1 - project setup: layers, platform adapters, UI kit, app shell, CI, deploy",
+  "type": "feature",
+  "size": "L",
+  "status": "active",
+  "phase": "validate",
+  "phase_entered": "2026-08-13T08:11:19Z",
+  "created": "2026-08-13",
+  "updated": "2026-08-13T10:55:35Z",
+  "security_review": true,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "L",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": null,
+    "evidence": "evidence/",
+    "product": "PRODUCT.md",
+    "tech": "TECH.md"
+  },
+  "gates": {
+    "G1": {
+      "status": "passed",
+      "attempts": 1,
+      "findings": {
+        "Claude-1": {
+          "desc": "Cache TTL is a per-call argument, so two callers of one key can disagree about freshness - invariant 37 unenforced, and its named check passes against the broken implementation (PRODUCT 37 vs TECH 3.3)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-2": {
+          "desc": "Invariants 38 and 40 contradict for a read arriving during revalidation; both have unit checks, one is unwritable",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-3": {
+          "desc": "Ring buffer read() cannot legally reach create-runtime: facade asserted to expose exactly 3 keys and sink modules lint-banned outside the facade (TECH 3.4 vs PRODUCT 45)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-4": {
+          "desc": "ErrorSurface calls useNavigate() but RootErrorBoundary renders above RouterProvider, where the hook throws - error path becomes the blank page invariant 91 forbids",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-5": {
+          "desc": "Caller-initiated abort has no representable outcome: failure union has exactly 4 members, none means cancelled (PRODUCT 25 vs 33 vs TECH 3.2)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-6": {
+          "desc": "createFakeClock with instantly-resolving sleep fires every request deadline on the next microtask - the whole http suite is non-deterministic (TECH 6.1 vs 3.2)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-7": {
+          "desc": "M1 boundary claim is false: npm run verify includes size and test:coverage, neither can pass in M1; same objection applies to M2-M4",
+          "blocking": true,
+          "disposition": "resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3"
+        },
+        "Claude-8": {
+          "desc": "Invariant 86 unprovable: 5 of 8 kit components never render in a browser and a component gallery is an explicit non-goal",
+          "blocking": true,
+          "disposition": "resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3"
+        },
+        "Claude-9": {
+          "desc": "Feature and kit tests cannot import the one real provider stack without failing the boundaries rule the same phase installs",
+          "blocking": true,
+          "disposition": "resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3"
+        },
+        "Claude-10": {
+          "desc": "Interaction is never defined, no module owns startInteraction(), nothing emits app.route_viewed - yet the e2e asserts on both (PRODUCT 47)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-11": {
+          "desc": "The claimed network stub does not exist for the platform Vitest project - no setupFiles - so the http suite check for invariant 32 is false about its own config",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-12": {
+          "desc": "Live-smoke test file has no location and no exclusion from default Vitest projects, so it can run on every PR, breaking 116 and 115",
+          "blocking": false,
+          "disposition": "resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3"
+        },
+        "Claude-13": {
+          "desc": "Forced-error e2e collides with the empty-console contract: React 19 logs boundary-caught errors via console.error; TECH states two different console contracts for that spec",
+          "blocking": false,
+          "disposition": "resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3"
+        },
+        "Claude-14": {
+          "desc": "Dynamically imported JSON catalogue becomes its own Rollup chunk, making the invariant 62 build-output grep vacuous and leaving catalogue chunks outside every size budget",
+          "blocking": false,
+          "disposition": "resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3"
+        },
+        "Claude-15": {
+          "desc": "axe in both themes cannot fail differently in jsdom - no stylesheet applied, contrast rule does not run; the dark run asserts the same DOM twice",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-16": {
+          "desc": "The review-dependent list is incomplete: 72, 114, 115 and 125 are asserted against configuration or manual process, not behavior",
+          "blocking": false,
+          "disposition": "resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3"
+        },
+        "Claude-17": {
+          "desc": "The 100kB budget is justified with two incompatible descriptions of what 85-90kB covers, and the Tailwind stylesheet is in no budget entry",
+          "blocking": false,
+          "disposition": "resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3"
+        },
+        "Claude-18": {
+          "desc": "i18next ignores missingKeyHandler's return value, so the visibly-wrong marker never renders; parseMissingKeyHandler is the hook, and production behavior is unspecified",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-19": {
+          "desc": "The workflow-parse test as specified would fail against the workflow as specified: npm ci and npx playwright install are run: lines that are not npm run <script>",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-20": {
+          "desc": "The dist half of the secrets check never runs in CI - lint executes three steps before the build exists",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-21": {
+          "desc": "Mechanical greps ban substrings correct code must contain (encodeURIComponent trips the encode grep; missing-key-reporter trips the report grep)",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-22": {
+          "desc": "The development-server console spec has no Playwright project, no second webServer and no port",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-23": {
+          "desc": "Failed-revalidation cool-down mutates storedAtMilliseconds, making stale data test as fresh; 'left untouched' and 'refreshed' contradict in one sentence; duration is 'short', not a number",
+          "blocking": false,
+          "disposition": "resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3"
+        },
+        "Claude-24": {
+          "desc": "report-error-once WeakSet throws on a thrown primitive, inside the reporter the boundary calls to obtain the correlation id it must display",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-25": {
+          "desc": "Redaction and the level check run outside the try/catch invariant 59 depends on; a throwing getter escapes into a render",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Claude-26": {
+          "desc": "Field's API is given twice in two incompatible shapes in one paragraph, and Input's prop list matches the variant the text does not choose",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)"
+        },
+        "Codex-1": {
+          "desc": "Caller cancellation has no legal result in the four-member HttpResult contract (converges with Claude-5)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-2": {
+          "desc": "The injected clock cannot implement the specified deadline without immediately aborting every fake-transport request; no cancellable scheduler API is specified (converges with Claude-6)",
+          "blocking": true,
+          "disposition": "resolved: fake clock now implements the production Clock interface including wait(delay, signal); raiser called it PARTIAL, residue fixed under Claude-35"
+        },
+        "Codex-3": {
+          "desc": "The cache entry shape cannot represent the initial in-flight request invariant 38 requires it to dedupe: on a cold miss there is no value-bearing entry to hang the promise on",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-4": {
+          "desc": "Invalidation has no generation or cancellation semantics, so a load resolving after invalidate() can restore the deleted value",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-5": {
+          "desc": "Failed revalidation changes the freshness timestamp and therefore presents stale data as fresh (converges with Claude-23)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-6": {
+          "desc": "The missing-translation marker is assigned to missingKeyHandler, but parseMissingKeyHandler is the hook whose return value is displayed (converges with Claude-18)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-7": {
+          "desc": "new Intl.Locale().getTextInfo() does not typecheck: tsconfig.app.json includes ES2023 and DOM only; TypeScript 6.0.3 declares getTextInfo in lib.esnext.intl.d.ts. Verified by in-memory compilation",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-8": {
+          "desc": "The production CSP style-src 'self' forbids the inline dimensions the Skeleton test requires, producing the CSP violation invariant 100 forbids",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-9": {
+          "desc": "M1 cannot pass npm run verify because it includes the size gate whose configuration is deferred to M6 (converges with Claude-7)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-10": {
+          "desc": "The error deduplication WeakSet<object> fails for primitive thrown values (converges with Claude-24)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-11": {
+          "desc": "The observability no-throw guarantee protects only the sink call, not the preceding redaction traversal (converges with Claude-25)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-12": {
+          "desc": "The literal .size-limit.json omits the \"running\": false option the surrounding prose says every entry sets; preset-app includes its browser timing plugin",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-13": {
+          "desc": "The RTL e2e procedure resets the state it intends to inspect: startup rewrites dir on reload, so without an init-script override the test examines LTR (converges with Claude-16 item 68)",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-14": {
+          "desc": "The 'everything else has a check that fails' classification materially overstates the mapped tests; broken implementations pass storage-emptiness, prop-presence and vocabulary-grep checks (converges with Claude-16)",
+          "blocking": true,
+          "disposition": "resolved: review-dependent list rewritten and the blanket 'everything else has a check that fails' claim removed; raiser called it PARTIAL, residue fixed in round 2"
+        },
+        "Codex-15": {
+          "desc": "Button busy state does not specify suppression of the native default action, so a type=submit busy button can still submit its form",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)"
+        },
+        "Codex-16": {
+          "desc": "ARCHITECTURE.md section 2 says 'Three layers' while naming and diagramming four - editorial, but the document is declared binding",
+          "blocking": false,
+          "disposition": "resolved: ARCHITECTURE.md section 2 amended from 'Three layers' to 'Four layers' in this change, per CLAUDE.md's rule that a deviation updates the decision log in the same change"
+        },
+        "Codex-17": {
+          "desc": "Fix-round regression: TECH 3.2 still specifies one AbortController PER ATTEMPT, contradicting the now-fixed per-logical-request deadline in PRODUCT 23 and in the testing map",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-18": {
+          "desc": "Fix-round regression: the cache revalidation cooldown is 30000ms in PRODUCT 41 and 10000ms in TECH's registry and state machine",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-19": {
+          "desc": "Fix-round regression: a single global generation counter means invalidating key A discards an unrelated in-flight write for key B; per-key generations are needed",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-20": {
+          "desc": "Fix-round regression: the kit route's static import.meta.env.DEV guard violates invariant 13, which makes environment.ts the only permitted import.meta.env reader",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-21": {
+          "desc": "Fix-round regression: M4 claims independence from M3, but the kit route is registered through configuration.developmentRoutes and configuration is delivered by M3",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-22": {
+          "desc": "Fix-round regression: both the boundaries and createRoot.onCaughtError call reportRootError, and primitives deliberately take the un-deduplicated path, so a primitive throw reports twice against invariant 92's 'exactly once'",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-23": {
+          "desc": "Fix-round regression: verify:build always runs route and catalogue chunk assertions, but those chunks arrive only in M5, so M1's claim that the whole verify chain passes is still false",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-24": {
+          "desc": "Fix-round regression: the invariant 62 testing-map entry still specifies the login-chunk grep that section 3.5 explicitly rejects as vacuous",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-25": {
+          "desc": "Fix-round regression: PRODUCT requires each lazy catalogue chunk at most 5kB; TECH groups both under one 10kB entry, so one catalogue can exceed its limit while the check passes",
+          "blocking": true,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-26": {
+          "desc": "Fix-round regression: the 85-90kB estimate still carries two incompatible meanings - dependencies alone in Context and PRODUCT, entry-plus-vendor including app code in section 7.3 and Risks",
+          "blocking": false,
+          "disposition": "resolved: raiser round 4 returned NOT RESOLVED - the Risks entry still carried the rejected 'entry plus vendor pair' reading; fixed after the pass, all three mentions of the 85-90 kB estimate now say 'fixed runtime dependency set alone', matching ARCHITECTURE.md's binding decision log"
+        },
+        "Codex-27": {
+          "desc": "Fix-round regression: the kit route is defined three ways - layout says src/app/kit-route behind __KIT_ROUTE__, section 4.4 says src/app/routes behind configuration.developmentRoutes plus import.meta.env.DEV and numbers it 87a, PRODUCT numbers it 86b",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Codex-28": {
+          "desc": "Fix-round regression: the Risks section prescribes a 'test' element allowed to import any layer, while section 2 defines a testing-harness element plus a test-file override",
+          "blocking": false,
+          "disposition": "resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)"
+        },
+        "Claude-27": {
+          "desc": "Fix-round: verify:build's route-chunk, catalogue and 404.html assertions cannot pass before M5, so M1-M4 'full chain green' is still false; M1's coverage claim also cites locale-direction and bootstrap, which the split assigns to M3 (converges with Codex-23)",
+          "blocking": true,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-28": {
+          "desc": "Fix-round: the kit route is gated three ways, configuration.developmentRoutes is absent from the configuration schema, /__kit never appears in route-definitions, and the '*' wildcard would match it first (converges with Codex-20/27)",
+          "blocking": true,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-29": {
+          "desc": "Fix-round: M4 is declared verifiable by a Playwright run of the kit route, but the router that would serve it is delivered in M5 (extends Codex-21)",
+          "blocking": true,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-30": {
+          "desc": "Fix-round: RootErrorBoundary's recovery reads import.meta.env.BASE_URL outside environment.ts, which invariant 13's own lint rule turns into an error",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-31": {
+          "desc": "Fix-round: onCaughtError does not cover the chosen forced-error path - an aborted lazy chunk is a router data error, not a React boundary catch, and the aborted request itself logs a console error Playwright records",
+          "blocking": false,
+          "disposition": "resolved: spec amended - PRODUCT 100 and TECH 6.2 replaced the empty-collection assertion for the forced-error spec with an exact expected set (one entry, matched by URL) that fails on any additional entry; the Codex round-4 pass read the amended contract and reported it coherent. Carries a residual the user is asked to accept explicitly at sign-off: this is a weaker guarantee than an empty console, and React Router's own console.error behavior stays UNVERIFIED until M5 installs the package."
+        },
+        "Claude-32": {
+          "desc": "Fix-round: the state enumeration claims exhaustiveness but has no state for an entry past TTL and inside the cooldown (converges with Codex-18 on the duration)",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-33": {
+          "desc": "Fix-round: build-output assertions exist twice in incompatible shapes - six build-output/*.test.ts files no Vitest project collects, and one scripts/assert-build-output.mjs",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-34": {
+          "desc": "Fix-round: two modules are named sole owner of the interaction lifecycle, and create-runtime.ts has no router reference to subscribe to; correlation.ts's module-level slot has no reset seam",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-35": {
+          "desc": "Fix-round: the fake clock does not implement the production Clock interface and lacks the signal parameter invariant 24's backoff-abort test needs (converges with Codex-2)",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-36": {
+          "desc": "Fix-round: no tsconfig covers e2e/, build-output/, the live smoke or the root config files, yet type-aware lint claims to cover e2e and tsc -b claims to typecheck everything",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-37": {
+          "desc": "Fix-round: the testing map cited invariant 87a which does not exist and omits entries for 45a, 47a and 86b, so the invariant-to-check ledger is wrong by four rows",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-38": {
+          "desc": "Fix-round: the Risks section prescribes the boundaries fix sections 2.1/2.2 replaced (converges with Codex-28)",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-39": {
+          "desc": "Fix-round: SkeletonSize's token-to-class mapping is unspecified, so a template-built class name emits nothing under Tailwind v4, and no shared size export exists for the swap test to measure against",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-40": {
+          "desc": "Fix-round: the new development Playwright project serves under /hierarchy-tree/ while section 5.3 says the router basename is '/' in development, so every development-project spec lands on no matched route",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-41": {
+          "desc": "Fix-round: binding TTL to the key enforces invariant 37 only for REGISTERED namespaces; an unregistered one yields undefined TTL, making every read stale and the cooldown NaN",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Claude-42": {
+          "desc": "Fix-round: TECH 3.4 places the log-level check both before dispatch and inside the guard dispatch provides, and no test discriminates",
+          "blocking": false,
+          "disposition": "resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)"
+        },
+        "Codex-43": {
+          "desc": "Round 4: primitive deduplication was assigned to the interaction tracker, but reportRootError's specified two-argument signature could not reach it - implementing as written would need hidden global state or would drop primitive dedup",
+          "blocking": true,
+          "disposition": "resolved: reportRootError now takes (error, { observability, interactionTracker }); both boundaries and the createRoot handlers already hold the runtime's tracker, and object identity stays in a module-level WeakSet that needs no instance"
+        },
+        "Codex-44": {
+          "desc": "Round 4: the expected-build-output declaration table had contradictory responsibility - section 7.1 said it drives chunk assertions only, M5 said populating it also activates the 404-copy and kit-absence assertions, so M1's obligations were undecidable",
+          "blocking": true,
+          "disposition": "resolved: one declaration table, expected-build-output.json, with a key per assertion family (routeChunks, catalogueChunks, notFoundCopy, kitRouteAbsent); an absent key asserts nothing, and the milestone that creates an artifact is the milestone that declares it"
+        },
+        "Claude-43": {
+          "desc": "Delta round 5: the PascalCase route-module convention invalidates the kebab-case chunk names .size-limit.json, the route-chunk assertions and expected-build-output.json are written against - Rollup's [name] is the module basename verbatim, so HomeRoute.tsx emits assets/HomeRoute-<hash>.js, not assets/home-route-*.js; the globs match nothing and size-limit fails by design (TECH 5.3, 7.3 vs 1)",
+          "blocking": true,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-44": {
+          "desc": "Delta round 5: 'EVERY assertion in verify:build is driven by one declaration table' contradicts the table's own four-key list - base-path.test.ts, size-limit-entries.test.ts and the bundle secrets scan have no key, so under the uniform rule invariant 122's scan is never active; size-limit-entries.test.ts additionally has two different correct contents (M1's two entries vs M5's seven) and is mislabelled a unit test (TECH 7.1 vs the 1 layout)",
+          "blocking": true,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-45": {
+          "desc": "Delta round 5: 'an absent key asserts nothing and passes' has no completeness check, so a key forgotten at M5 silently disables an invariant's only mechanical check - forgetting kitRouteAbsent leaves invariant 86b unrun with no backstop, and CI stays green (TECH 7.1, M5)",
+          "blocking": true,
+          "disposition": "resolved: spec amended, first re-check ruled it PARTIALLY resolved, the remaining half was fixed and a second fresh loop-spec-validator re-check confirmed it RESOLVED (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-46": {
+          "desc": "Delta round 5: verify:build is specified to run the bundle secrets scan but no build-output/ file runs it and no CI step invokes assert-no-secrets.mjs --bundle-only, so invariant 133's bundle half has no home - the exact defect the source/bundle split was introduced to fix (TECH 7.1, 7.4, map 133)",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-47": {
+          "desc": "Delta round 5: the storage ban rehomed from the withdrawn cache set is narrower than invariant 128 states - no-restricted-globals on three bare identifiers misses the service-worker cache 128 names, and misses window./globalThis. member forms that the sibling fetch ban explicitly guards with no-restricted-properties; the withdrawn set's e2e localStorage-emptiness assertion dropped without replacement (PRODUCT 128 vs TECH 2.4, 3.3)",
+          "blocking": false,
+          "disposition": "resolved: spec amended, first re-check ruled it PARTIALLY resolved, the remaining half was fixed and a second fresh loop-spec-validator re-check confirmed it RESOLVED (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-48": {
+          "desc": "Delta round 5: the _headers build-output check is a containment check where its _redirects sibling is an exact-content check, so invariant 99a's 'only directive' clause has no check and a mis-indented CSP line - which Cloudflare silently ignores - passes while shipping no framing protection (PRODUCT 99a vs TECH map 99a/124)",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-49": {
+          "desc": "Delta round 5: the Playwright webServer runs npm run build again during the e2e step, overwriting the dist that verify:build and size inspected, so the site artifact uploaded afterwards is a build no gate inspected - contradicting invariant 120 while the workflow-parse check named to discriminate still passes (PRODUCT 120 vs TECH 6.2, 7.4)",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-50": {
+          "desc": "Delta round 5: --branch=main marks the upload production only if the Pages project's production branch IS main, and invariant 126's one-time setup never requires that - a project created otherwise yields a preview deployment at a URL that is not the recorded hostname, violating 121 and breaking 123/124 with nothing failing (PRODUCT 126 vs TECH 7.4)",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-51": {
+          "desc": "Delta round 5: M1 cannot make its own .size-limit.json globs resolve - entry-*.js needs the entryFileNames/manualChunks block specified only in TECH 5.3 (M5's section) and the stylesheet entry needs theme.css which arrives in M4, so M1's 'npm run verify passes as the WHOLE chain' claim is false again in a new spot (TECH M1 vs 5.3, M4)",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-52": {
+          "desc": "Delta round 5: the phase's third exit criterion is unprovable before merge by construction (121 forbids previews), its prerequisite is unchecked before merge, and no remedy or evidence path is defined for a failed post-merge e2e:deployed run - which would leave the phase merged against invariant 119; the preview tradeoff is also the one decision in the document never recorded as a decision, and the production hostname is said to be recorded in VERIFICATION.md which M1 delivers five milestones before the Pages project exists (PRODUCT 121/123/124/126, TECH M6, Context)",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-53": {
+          "desc": "Delta round 5: the new 'every multi-file folder has an index.ts' convention collides with the restricted-import pattern enforcing invariant 45 - a conforming sinks/index.ts is importable as @platform/observability/sinks, which the pattern requiring a segment after sinks does NOT match, opening a lint-legal path to construct a sink outside the facade; the layout also omits index.ts in three folders and the convention's claim that no-restricted-imports already enforces folder-only imports is false for shared and platform (TECH 1 vs 2.3)",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-54": {
+          "desc": "Delta round 5: the deploy job runs a third-party action on a floating major tag with no permissions: block, so it inherits the repository's default GITHUB_TOKEN scope while the spec reasons explicitly about which permissions are unnecessary - least-privilege contents: read and a pinned action are one line each, and the workflow-parse test asserts neither (TECH 7.4; security_review loop)",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-55": {
+          "desc": "Delta round 5: the review-dependent section's strengthened-checks ledger still cites retired cache invariants 37 and 42, violating the retired-numbers convention the withdrawal establishes and leaving an auditor unable to tell whether the withdrawal missed something or the list is stale (TECH 8 vs PRODUCT 36-44)",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)"
+        },
+        "Claude-56": {
+          "desc": "Delta round 5: the conventions section declares 'two documented exceptions' but main.tsx, vite-env.d.ts, scripts/live-smoke/live-smoke.test.ts and analyticsEvents.ts fall under neither the conventions nor the exceptions - a de facto third exception an implementer may 'fix' into a name later path references no longer match (TECH 1 vs the layout)",
+          "blocking": false,
+          "disposition": "resolved: spec amended, first re-check ruled it PARTIALLY resolved, the remaining half was fixed and a second fresh loop-spec-validator re-check confirmed it RESOLVED (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-57": {
+          "desc": "Delta round 5, found by the driving session while verifying Claude-43 against the INSTALLED packages: TECH 5.3's whole build-output block is written against Rollup, but vite 8.2.1 ships rolldown 1.2.4 as its bundler. Two deprecations the spec depends on: (a) vite's own types mark build.rollupOptions '@deprecated Use rolldownOptions instead' (node_modules/vite/dist/node/index.d.ts:872), and (b) rolldown marks output.manualChunks deprecated in favour of output.codeSplitting/advancedChunks, and IGNORES manualChunks entirely when both are set (node_modules/rolldown/.../define-config.d.mts:800-806). The spec pins versions carefully everywhere else and this block is what every size-limit glob, the vendor chunk and invariant 89's chunk assertions rest on. Also confirms Claude-43's premise: rolldown's [name] is the chunk/entry file name without extension, with no kebab-casing, so HomeRoute.tsx emits HomeRoute-<hash>.js",
+          "blocking": true,
+          "disposition": "resolved: spec amended, first re-check ruled it PARTIALLY resolved, the remaining half was fixed and a second fresh loop-spec-validator re-check confirmed it RESOLVED (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Codex-45": {
+          "desc": "Delta round 5: the CSP split is not asserted as exclusive - _headers may carry additional CSP directives while both the build-output and deployed checks still pass, creating exactly the two-conflicting-policies failure mode invariant 99a forbids (PRODUCT 99a, TECH map 99a). Converges with Claude-48",
+          "blocking": true,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note"
+        },
+        "Codex-46": {
+          "desc": "Delta round 5: expected-build-output.json fails OPEN - absent keys assert nothing and no schema test requires all four at M5, so forgetting spaFallback, kitRouteAbsent, routeChunks or catalogueChunks silently disables its check while verify:build stays green (TECH 7.1, M5). Converges with Claude-45",
+          "blocking": true,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note"
+        },
+        "Codex-47": {
+          "desc": "Delta round 5: invariant 128 promises to prohibit service-worker-cache access but the lint design omits the CacheStorage 'caches' global, so 'await caches.open(app)' in src passes the specified storage rule - part of the rehomed cache invariant was dropped (PRODUCT 128, TECH 2.4). Converges with Claude-47",
+          "blocking": true,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note"
+        },
+        "Codex-48": {
+          "desc": "Delta round 5: the Cloudflare prerequisite does not require main to be the project's PRODUCTION BRANCH, though TECH assumes --branch=main inherently makes a production deployment; Cloudflare decides production vs preview from the project's configured production branch, so a successful upload can land as a preview and leave the production hostname stale while invariants 120/123 claim production (PRODUCT 126, TECH 7.4; cited against Cloudflare Direct Upload docs). Converges with Claude-50",
+          "blocking": true,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note"
+        },
+        "Codex-49": {
+          "desc": "Delta round 5: TECH says every verify:build assertion is driven by expected-build-output.json but the schema has no keys for the bundle-secret or base-path families, so an implementer must either violate the stated uniform activation rule or invent undocumented always-on behavior (TECH 7.1). Converges with Claude-44",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note"
+        },
+        "Codex-50": {
+          "desc": "Delta round 5: the universal file/component conventions have undocumented exceptions and a direct filename mismatch - RootErrorBoundary MUST be a class component (error boundaries cannot be function components) so it cannot be memo-wrapped with a named inner function, and fieldContext.ts does not match its exported FieldContext symbol under the stated exact-name rule (TECH 1 vs 142, 597). Sharper than Claude-56 on both specifics",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note"
+        },
+        "Codex-51": {
+          "desc": "Delta round 5: the file conventions have no named lint rule, script or structural test, so a kebab-case production module, a default-exported route, a missing barrel or an anonymous memo component passes the entire specified pipeline - while PRODUCT's preamble promises every stated rule has a check behind it (TECH 1, testing map vs PRODUCT 19)",
+          "blocking": false,
+          "disposition": "resolved: the user's explicit decision at sign-off - the file and module conventions are implementation GUIDANCE, not acceptance criteria. TECH 1 now says so in its opening paragraph and the review-dependent ledger lists them as review-only, so PRODUCT's every-rule-has-a-check promise stays honest. The one case where a name is load-bearing (the emitted route chunk names the size-limit globs are written against) is covered mechanically by those globs failing on no match, which does not depend on the convention being honoured"
+        },
+        "Codex-52": {
+          "desc": "Delta round 5: the cache withdrawal left contradictory BINDING prose - ARCHITECTURE.md:78 says dedupe/TTL/stale-while-revalidate 'are deferred' while its own decision log at :161 says 'withdrawn from the roadmap, not designed and deferred' and PRODUCT 217 says 'not deferred to a later phase'; a later phase can reasonably read caching as planned future work. Also re-raises TECH's audit citing retired invariants 37 and 42 (= Claude-55). MISSED by the Claude grill, which checked the decision log but not the section 4 prose",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note"
+        },
+        "Codex-53": {
+          "desc": "Delta round 5 (supplementary pass, verified): loop.json is chronologically inconsistent - the scope-change entry is stamped 2026-08-13T10:45:00Z while the CLI-stamped entries around it read 10:13-10:15Z, so a resumption cannot reliably order events or tell which state is latest. Loop-state hygiene, not a spec defect, but it corrupts the audit trail this gate depends on",
+          "blocking": false,
+          "disposition": "rejected: the user's sign-off decision, on the reason that this is loop-state hygiene rather than a spec defect and is not fixable without defeating the tool's own guarantees. The 10:45:00Z scope-change entry pre-dates the CLI-stamped entries around it (10:13-10:15Z), so the log's ordering is misleading for that one record. Direct edits to loop.json are hook-blocked by design and the CLI stamps real time, so correcting a historical entry would mean working around the immutability the audit trail depends on - a worse outcome than one out-of-order line. Recorded so a future auditor reads the anomaly as known rather than as tampering."
+        },
+        "Codex-54": {
+          "desc": "Delta round 5 (supplementary pass, verified): CACHE.md:5 claims ARCHITECTURE.md and GOAL.md 'both now say there is no cache', but GOAL.md contains zero cache mentions (grep -ci cach = 0) - it misidentifies the binding source for the withdrawal; ARCHITECTURE.md and ROADMAP.md are the documents that exclude caching",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note"
+        },
+        "Codex-55": {
+          "desc": "Delta round 5 (supplementary pass, verified): TECH.md:41 self-contradicts in one sentence - the ARCHITECTURE.md three-vs-four-layers editorial defect 'HAS been fixed in the same change' AND 'correcting it belongs to a separate edit of ARCHITECTURE.md by its owner'. A reader cannot tell whether the fix is done or outstanding. Re-raise of the partially-resolved Codex-16",
+          "blocking": false,
+          "disposition": "resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note"
+        },
+        "Claude-58": {
+          "desc": "Delta round 5 re-check: the round-5 FIX for Claude-57 was itself wrong - it specified output.advancedChunks, which the installed rolldown 1.2.4 ALSO marks deprecated in favour of output.codeSplitting (define-config.d.mts:841, AdvancedChunksOptions is now a deprecated alias of CodeSplittingOptions) and which logs a deprecation warning on every build (create-bundler-option.mjs:3042). The fix used a deprecated option while arguing against deprecated options. Correct spelling is output.codeSplitting with the identical { groups: [...] } shape",
+          "blocking": true,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-59": {
+          "desc": "Delta round 5 re-check: alwaysOn.sizeLimitEntries was specified as a boolean while the invariant-112 map row expected it to carry the expected entry set, so an M1 implementer still could not write size-limit-entries.test.ts - and reading the expectation out of .size-limit.json itself would be circular, defeating the guard's stated purpose that a busted budget cannot be fixed by editing the budget",
+          "blocking": false,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-60": {
+          "desc": "Delta round 5 re-check: the declaration table's phase flip to 'complete' was itself unchecked - nothing asserted it ever happens, so an M5 implementer who skipped the table edit wholesale (omitting both kitRouteAbsent and the flip) reproduced exactly the silent pass the phase key was introduced to prevent; 'M5's boundary cannot go green without it' was true only if someone remembered to arm it",
+          "blocking": false,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-61": {
+          "desc": "Delta round 5 re-check: TECH 3.3's storage-ban bullet - the passage that DOES the rehoming and that 2.4 points back at - was not amended and still listed the old three bare-identifier globals, so the document stated the ban's contents two different ways",
+          "blocking": false,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-62": {
+          "desc": "Delta round 5 re-check: the enumerated 'complete' exception list was still incomplete - app/composition/runtimeContext.ts is the identical case to the listed fieldContext.ts (lowerCamelCase file exporting a PascalCase context object) and the .tsx test helpers renderRoute/renderComponent/kitStates are a weaker instance, so the completeness claim was falsifiable by reading the layout beneath it",
+          "blocking": false,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-63": {
+          "desc": "Delta round 5 re-check, NEW defect introduced by the Claude-49 fix: removing the build from Playwright's webServer broke npm run e2e:deployed - webServer entries are global config rather than project-scoped, so they start for --project=deployed too, and the post-merge run that invariant 126a makes the phase's completion condition would fail at server startup on a checkout that never built",
+          "blocking": false,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, ruled PARTIALLY resolved by the second pass, and the remaining half fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual"
+        },
+        "Claude-64": {
+          "desc": "Delta round 5 re-check, NEW defect introduced by the Claude-50 fix: the deploy job's new deployment-URL assertion is a run: line that is neither an npm script nor an allow-listed setup command, which invariant 102 forbids in unqualified terms - an implementer would either turn the workflow-parse test red against the specified workflow or narrow invariant 102 by private judgement",
+          "blocking": false,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-65": {
+          "desc": "Delta round 5 re-check, NEW defect introduced by the Claude-50 fix: nothing declared a machine-readable home for the 'recorded production hostname' the deploy job must compare against - it was recorded in VERIFICATION.md prose and an .env.example comment, neither of which a workflow step can read, guaranteeing a second hardcoded copy in ci.yml that can drift from the documented one, in the very assertion that exists to catch a silent mis-deploy",
+          "blocking": false,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, ruled PARTIALLY resolved by the second pass, and the remaining half fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual"
+        },
+        "Claude-66": {
+          "desc": "Delta round 5 re-check, NEW defect introduced by the declaration-table restructure: the amended paragraph miscounted its own keys - 'six keys, one per family' while naming five keys covering seven families, with the sixth (phase) introduced only in the next paragraph and not being a family at all. Same class of self-contradicting count the restructure was made to fix",
+          "blocking": false,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-67": {
+          "desc": "Delta round 5 re-check, NEW defect introduced by the Claude-54 fix: 'every third-party uses: is SHA-pinned' was undefined against the four actions/* steps the same section shows pinned by major tag, so the workflow-parse assertion would either fail against the specified workflow or exempt a category by an implementer's private definition - the identical gap 7.1 had to close for the command rule",
+          "blocking": false,
+          "disposition": "resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)"
+        },
+        "Claude-68": {
+          "desc": "Delta round 5, second confirmation pass, NEW defect introduced by the Claude-65 fix: the deploy job was specified to read deployment.json with jq but its enumerated steps contained no actions/checkout, so the file is not in the job's workspace and invariant 123's assertion cannot run. It fails with a missing-file error rather than a URL mismatch, and because the deploy job runs only on push to main it cannot be rehearsed on a pull request - it detonates inside invariant 126a's post-merge completion path, which is the phase's exit criterion",
+          "blocking": true,
+          "disposition": "resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual"
+        },
+        "Claude-69": {
+          "desc": "Delta round 5, second confirmation pass: the Claude-63 fix was incomplete - a single-object webServer ternary still left the 'development' project's dev server starting during e2e:deployed, and separately the 'deployed' project was described as 'excluded from the default run', which Playwright has no mechanism for (every configured project runs unless filtered), so npm run e2e would execute deployed-smoke.spec.ts with an undefined baseURL",
+          "blocking": false,
+          "disposition": "resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual"
+        },
+        "Claude-70": {
+          "desc": "Delta round 5, second confirmation pass: the Claude-60 fix's arming condition reads assets/*Route-*.js, resting on the same emitted-chunk-name assumption the spec flags as unverified - and M1's correction instruction named only the size-limit globs, so a different emitted name would fix those loudly while declaration-table.test.ts silently never armed; separately, routes that failed to code-split at all would leave dist without route chunks, the guard quiet and phase stuck at 'building' with invariants 62, 86b, 89, 99a and 124 unasserted",
+          "blocking": false,
+          "disposition": "resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual"
+        },
+        "Claude-71": {
+          "desc": "Delta round 5, second confirmation pass: the Claude-65 fix's doc-agreement test had no citation format, no assigned edit to the documents it reads, and no stated behaviour when a document cites nothing - phrased as 'the hostname cited matches deployment.json' it passes vacuously against a file with no citation, reinstating the very documentation drift deployment.json was introduced to close",
+          "blocking": false,
+          "disposition": "resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual"
+        },
+        "Claude-72": {
+          "desc": "Delta round 5, second confirmation pass: the Claude-64 fix made half of invariant 102 review-carried (the deploy job's single permitted assertion is bounded by nothing mechanical) without adding it to TECH's review-dependent ledger, which claims to be the honest list of exactly such gaps",
+          "blocking": false,
+          "disposition": "resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual"
+        },
+        "Claude-73": {
+          "desc": "Delta round 5, second confirmation pass: the phase-'complete' completeness assertion enumerated the two booleans and the four conditional families but said nothing about alwaysOn.sizeLimitEntries, and left the comparison's direction unstated - an empty or truncated expected array would leave the budget guard asserting nothing while declaration-table.test.ts passed, and a one-way containment check would let a silently added budget entry escape",
+          "blocking": false,
+          "disposition": "resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual"
+        },
+        "Claude-74": {
+          "desc": "Delta round 5, second confirmation pass: deployment.json held projectName while the wrangler command hardcoded --project-name=hierarchy-tree with nothing asserting they agree, and DEPLOYED_BASE_URL was supplied by hand to the deployed Playwright project with no check tying it to productionHostname - so invariant 126a's post-merge completion run could be pointed at a stale hostname and pass",
+          "blocking": false,
+          "disposition": "resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual"
+        }
+      },
+      "note": "L-size spec sign-off across five validation rounds. 93 findings total: 91 resolved, 2 rejected with the user's reason (Codex-53 loop-state timestamp hygiene, and the earlier Claude-31 console residual accepted explicitly). Rounds 1-4 (75 findings) validated PRODUCT.md + TECH.md before a user-directed three-part scope change (caching withdrawn, deploy moved to Cloudflare Pages, file conventions realigned) that neither reviewer had read. Round 5 was a scoped delta re-review the user requested rather than signing off unreviewed: fresh loop-spec-validator grill (14 findings, 3 blocking) + independent Codex thread (8 findings, 4 blocking, plus 3 verified unique findings from a supplementary pass), converging on five core defects and each catching what the other missed. The driving session added Claude-57 by verifying a reviewer's bundler claim against node_modules rather than on faith - vite 8.2.1 ships rolldown, not Rollup. Two further confirmation passes by fresh validators then found 10 and 8 more defects respectively, several introduced by the fixes themselves, including one blocking (a deploy job reading deployment.json with no checkout step). All fixed. ACCEPTED RESIDUALS, at the user's explicit decision: (1) invariant 100's exact-expected-console-set is weaker than an empty console and React Router's own console.error behavior stays UNVERIFIED until M5 installs the package; (2) invariant 112's entry budget leaves only 10-15 kB for this repository's own code over the 85-90 kB dependency estimate, first measured at M1; (3) the final 9 fixes (Claude-63, 65, 68-74) were NOT re-confirmed by a validator - the user declined a fourth confirmation cycle, so G3/G4 and the milestone boundary reviews carry that risk; (4) Codex's raiser-thread confirmation of Codex-45..55 did not return before sign-off, so those fixes rest on the Claude-side re-checks of the same passages. Reviews: evidence/reviews/g1-grill-claude.md, g1-codex-review.md, g1-codex-fix-confirmation.md, g1-codex-round3-incomplete.md, g1-codex-round4-confirmation.md, g1-grill-claude-confirmation.md, g1-grill-claude-delta.md, g1-codex-delta.md, g1-codex-delta-supplementary.md, g1-grill-claude-delta-recheck.md, g1-grill-claude-delta-recheck-2.md",
+      "user_signoff": "2026-08-13T10:55:35Z"
+    },
+    "G2": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G3": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G4": {
+      "status": "pending",
+      "attempts": 0,
+      "security_pass": null
+    },
+    "G5": {
+      "status": "pending",
+      "attempts": 0
+    }
+  },
+  "retro": null,
+  "plan_steps": [],
+  "log": [
+    "2026-08-13T07:40:19Z init: type=feature size=L flags=[security ]",
+    "2026-08-13T07:40:44Z triage: roadmap phase 1 (project setup) = feature/L. feature not chore: greenfield code with new tested behavior (http client, cache, config, observability, i18n), nothing external being absorbed. L not M: cross-cutting across all four layers, >1k LOC, no test harness exists yet (Vitest+Playwright bootstrap included), CI+deploy. Not decomposed to child loops: ARCHITECTURE.md has already settled the ambiguous technical decisions, so the L artifacts are enough. security flag on: telemetry redaction layer, CSP meta tag and typed config validation land in this phase. design flag off: docs/mockups + specs/hierarchy-tree-mockups.html are the existing visual reference. Concurrency: loop list empty, no overlap.",
+    "2026-08-13T07:42:50Z frame: user answers - (1) deploy to GitHub Pages, user enables Settings>Pages>Source=GitHub Actions, Vite base '/hierarchy-tree/', deployed-URL exit criterion proven in this loop; (2) UI kit = full state vocabulary: tokens light+dark, Button, Field, Card, Avatar with initials fallback, Skeleton, ErrorState, EmptyState; (3) budgets = size-limit app entry 75kB gz, per-route chunk 30kB gz, coverage 85% lines/branches/functions global with features/*/domain at 100% once it exists (phase 3); (4) placeholder app = both /login and / routes through the real router+providers+root error boundary, i18n catalogues and UI kit wired, no session/guard/data fetching.",
+    "2026-08-13T07:42:50Z frame: repo facts - remote git@github.com:sergeykhomyuk/hierarchy-tree.git so Pages serves at /hierarchy-tree/; node v24.15.0, npm 11.12.1; tsconfig.app.json currently MISSING 'strict' which ARCHITECTURE.md section 5 requires; .gitignore has a blanket '*.log' rule so evidence logs must be .txt (s-path gotcha); repo still carries Vite template cruft (src/App.tsx, App.css, assets/react.svg, assets/hero.png).",
+    "2026-08-13T07:43:11Z phase -> frame",
+    "2026-08-13T07:43:11Z phase -> specify",
+    "2026-08-13T07:43:11Z frame: package versions VERIFIED against the npm registry 2026-08-13 - react 19.2.8, react-dom 19.2.8, react-router 8.3.0, zod 4.4.3, i18next 26.3.6, react-i18next 17.0.11, tailwindcss 4.3.3, @tailwindcss/vite 4.3.3, vitest 4.1.10, jsdom 30.0.1, @testing-library/react 16.3.2, @testing-library/user-event 14.6.4, @testing-library/jest-dom 7.0.1, @vitest/coverage-v8 4.1.10, axe-core 4.13.0, @playwright/test 1.62.1, @axe-core/playwright 4.13.0, eslint 10.8.1, eslint-plugin-boundaries 7.2.0, eslint-plugin-jsx-a11y 6.10.2, eslint-plugin-i18next 6.1.5, eslint-plugin-testing-library 7.16.2, eslint-plugin-playwright 2.11.0, prettier 3.9.6, prettier-plugin-tailwindcss 0.8.1, eslint-config-prettier 10.1.8, size-limit 13.0.3, @size-limit/preset-app 13.0.3, vite 8.2.1, @vitejs/plugin-react 6.0.5, typescript-eslint 8.67.0. typescript latest is 7.0.2 but package.json pins ~6.0.2 (truth-source priority) and typescript-eslint 8.x has no stated TS7 support - stay on 6.x.",
+    "2026-08-13T07:51:49Z set product = PRODUCT.md",
+    "2026-08-13T07:51:49Z specify: PRODUCT.md drafted by a fresh spec-writer subagent, 136 numbered invariants in 11 groups. Four open questions it raised were routed to the user before TECH.md and all four resolved into the spec: generic /login placeholder (96a), derive dark palette with the automated WCAG AA contrast assertion as the gate, tight CSP img-src 'self' data: widened in phase 3 (99), live smoke as reachability + shape probe printing observed users field names (116a/116b).",
+    "2026-08-13T08:07:30Z set tech = TECH.md",
+    "2026-08-13T08:07:30Z specify: TECH.md drafted by a second fresh spec-writer that read the repo first. Six milestones (M1 bootstraps VERIFICATION.md + harness first), sequential over worktree fan-out (M3/M4 would three-way-merge package.json, vitest.config.ts and eslint.config.js, where a dropped ESLint override fails silently). All 136 invariants mapped to a named check; 10 flagged review-dependent, 136 flagged not mechanically checkable.",
+    "2026-08-13T08:07:30Z specify: three escalations from TECH.md settled with the user - (1) size-limit app entry budget raised 75kB -> 100kB gzip now rather than measured in an M1 spike (react-dom ~45kB + react-router + i18next + zod estimated 85-90kB); per-route chunk stays 30kB. (2) CSP frame-ancestors DROPPED from the meta tag: it is ignored in meta and browsers warn, which would have forced a console allow-list entry and weakened invariant 100. ARCHITECTURE.md decision log records that clickjacking protection needs a response header static Pages hosting cannot set. (3) web-vitals package ADDED to the runtime dependency allow-list: PerformanceObserver alone cannot compute INP's percentile-with-windowing or CLS's session-window maximum, and shipping an approximation labelled INP was the outcome to avoid. ARCHITECTURE.md section 4 'no dependency' claim amended.",
+    "2026-08-13T08:11:19Z phase -> validate",
+    "2026-08-13T08:26:13Z G1 finding Claude-1 recorded (blocking): Cache TTL is a per-call argument, so two callers of one key can disagree about freshness - invariant 37 unenforced, and its named check passes against the broken implementation (PRODUCT 37 vs TECH 3.3)",
+    "2026-08-13T08:26:13Z G1 finding Claude-2 recorded (blocking): Invariants 38 and 40 contradict for a read arriving during revalidation; both have unit checks, one is unwritable",
+    "2026-08-13T08:26:13Z G1 finding Claude-3 recorded (blocking): Ring buffer read() cannot legally reach create-runtime: facade asserted to expose exactly 3 keys and sink modules lint-banned outside the facade (TECH 3.4 vs PRODUCT 45)",
+    "2026-08-13T08:26:13Z G1 finding Claude-4 recorded (blocking): ErrorSurface calls useNavigate() but RootErrorBoundary renders above RouterProvider, where the hook throws - error path becomes the blank page invariant 91 forbids",
+    "2026-08-13T08:26:13Z G1 finding Claude-5 recorded (blocking): Caller-initiated abort has no representable outcome: failure union has exactly 4 members, none means cancelled (PRODUCT 25 vs 33 vs TECH 3.2)",
+    "2026-08-13T08:26:13Z G1 finding Claude-6 recorded (blocking): createFakeClock with instantly-resolving sleep fires every request deadline on the next microtask - the whole http suite is non-deterministic (TECH 6.1 vs 3.2)",
+    "2026-08-13T08:26:13Z G1 finding Claude-7 recorded (blocking): M1 boundary claim is false: npm run verify includes size and test:coverage, neither can pass in M1; same objection applies to M2-M4",
+    "2026-08-13T08:26:13Z G1 finding Claude-8 recorded (blocking): Invariant 86 unprovable: 5 of 8 kit components never render in a browser and a component gallery is an explicit non-goal",
+    "2026-08-13T08:26:13Z G1 finding Claude-9 recorded (blocking): Feature and kit tests cannot import the one real provider stack without failing the boundaries rule the same phase installs",
+    "2026-08-13T08:26:13Z G1 finding Claude-10 recorded (blocking): Interaction is never defined, no module owns startInteraction(), nothing emits app.route_viewed - yet the e2e asserts on both (PRODUCT 47)",
+    "2026-08-13T08:26:14Z G1 finding Claude-11 recorded: The claimed network stub does not exist for the platform Vitest project - no setupFiles - so the http suite check for invariant 32 is false about its own config",
+    "2026-08-13T08:26:14Z G1 finding Claude-12 recorded: Live-smoke test file has no location and no exclusion from default Vitest projects, so it can run on every PR, breaking 116 and 115",
+    "2026-08-13T08:26:14Z G1 finding Claude-13 recorded: Forced-error e2e collides with the empty-console contract: React 19 logs boundary-caught errors via console.error; TECH states two different console contracts for that spec",
+    "2026-08-13T08:26:14Z G1 finding Claude-14 recorded: Dynamically imported JSON catalogue becomes its own Rollup chunk, making the invariant 62 build-output grep vacuous and leaving catalogue chunks outside every size budget",
+    "2026-08-13T08:26:14Z G1 finding Claude-15 recorded: axe in both themes cannot fail differently in jsdom - no stylesheet applied, contrast rule does not run; the dark run asserts the same DOM twice",
+    "2026-08-13T08:26:14Z G1 finding Claude-16 recorded: The review-dependent list is incomplete: 72, 114, 115 and 125 are asserted against configuration or manual process, not behavior",
+    "2026-08-13T08:26:14Z G1 finding Claude-17 recorded: The 100kB budget is justified with two incompatible descriptions of what 85-90kB covers, and the Tailwind stylesheet is in no budget entry",
+    "2026-08-13T08:26:14Z G1 finding Claude-18 recorded: i18next ignores missingKeyHandler's return value, so the visibly-wrong marker never renders; parseMissingKeyHandler is the hook, and production behavior is unspecified",
+    "2026-08-13T08:26:14Z G1 finding Claude-19 recorded: The workflow-parse test as specified would fail against the workflow as specified: npm ci and npx playwright install are run: lines that are not npm run <script>",
+    "2026-08-13T08:26:14Z G1 finding Claude-20 recorded: The dist half of the secrets check never runs in CI - lint executes three steps before the build exists",
+    "2026-08-13T08:26:15Z G1 finding Claude-21 recorded: Mechanical greps ban substrings correct code must contain (encodeURIComponent trips the encode grep; missing-key-reporter trips the report grep)",
+    "2026-08-13T08:26:15Z G1 finding Claude-22 recorded: The development-server console spec has no Playwright project, no second webServer and no port",
+    "2026-08-13T08:26:15Z G1 finding Claude-23 recorded: Failed-revalidation cool-down mutates storedAtMilliseconds, making stale data test as fresh; 'left untouched' and 'refreshed' contradict in one sentence; duration is 'short', not a number",
+    "2026-08-13T08:26:15Z G1 finding Claude-24 recorded: report-error-once WeakSet throws on a thrown primitive, inside the reporter the boundary calls to obtain the correlation id it must display",
+    "2026-08-13T08:26:15Z G1 finding Claude-25 recorded: Redaction and the level check run outside the try/catch invariant 59 depends on; a throwing getter escapes into a render",
+    "2026-08-13T08:26:15Z G1 finding Claude-26 recorded: Field's API is given twice in two incompatible shapes in one paragraph, and Input's prop list matches the variant the text does not choose",
+    "2026-08-13T08:26:31Z G1 finding Codex-1 recorded (blocking): Caller cancellation has no legal result in the four-member HttpResult contract (converges with Claude-5)",
+    "2026-08-13T08:26:31Z G1 finding Codex-2 recorded (blocking): The injected clock cannot implement the specified deadline without immediately aborting every fake-transport request; no cancellable scheduler API is specified (converges with Claude-6)",
+    "2026-08-13T08:26:31Z G1 finding Codex-3 recorded (blocking): The cache entry shape cannot represent the initial in-flight request invariant 38 requires it to dedupe: on a cold miss there is no value-bearing entry to hang the promise on",
+    "2026-08-13T08:26:31Z G1 finding Codex-4 recorded (blocking): Invalidation has no generation or cancellation semantics, so a load resolving after invalidate() can restore the deleted value",
+    "2026-08-13T08:26:31Z G1 finding Codex-5 recorded (blocking): Failed revalidation changes the freshness timestamp and therefore presents stale data as fresh (converges with Claude-23)",
+    "2026-08-13T08:26:31Z G1 finding Codex-6 recorded (blocking): The missing-translation marker is assigned to missingKeyHandler, but parseMissingKeyHandler is the hook whose return value is displayed (converges with Claude-18)",
+    "2026-08-13T08:26:31Z G1 finding Codex-7 recorded (blocking): new Intl.Locale().getTextInfo() does not typecheck: tsconfig.app.json includes ES2023 and DOM only; TypeScript 6.0.3 declares getTextInfo in lib.esnext.intl.d.ts. Verified by in-memory compilation",
+    "2026-08-13T08:26:31Z G1 finding Codex-8 recorded (blocking): The production CSP style-src 'self' forbids the inline dimensions the Skeleton test requires, producing the CSP violation invariant 100 forbids",
+    "2026-08-13T08:26:31Z G1 finding Codex-9 recorded (blocking): M1 cannot pass npm run verify because it includes the size gate whose configuration is deferred to M6 (converges with Claude-7)",
+    "2026-08-13T08:26:32Z G1 finding Codex-10 recorded (blocking): The error deduplication WeakSet<object> fails for primitive thrown values (converges with Claude-24)",
+    "2026-08-13T08:26:32Z G1 finding Codex-11 recorded (blocking): The observability no-throw guarantee protects only the sink call, not the preceding redaction traversal (converges with Claude-25)",
+    "2026-08-13T08:26:32Z G1 finding Codex-12 recorded: The literal .size-limit.json omits the \"running\": false option the surrounding prose says every entry sets; preset-app includes its browser timing plugin",
+    "2026-08-13T08:26:32Z G1 finding Codex-13 recorded: The RTL e2e procedure resets the state it intends to inspect: startup rewrites dir on reload, so without an init-script override the test examines LTR (converges with Claude-16 item 68)",
+    "2026-08-13T08:26:32Z G1 finding Codex-14 recorded (blocking): The 'everything else has a check that fails' classification materially overstates the mapped tests; broken implementations pass storage-emptiness, prop-presence and vocabulary-grep checks (converges with Claude-16)",
+    "2026-08-13T08:26:32Z G1 finding Codex-15 recorded: Button busy state does not specify suppression of the native default action, so a type=submit busy button can still submit its form",
+    "2026-08-13T08:26:32Z G1 finding Codex-16 recorded: ARCHITECTURE.md section 2 says 'Three layers' while naming and diagramming four - editorial, but the document is declared binding",
+    "2026-08-13T08:31:17Z evidence recorded: evidence/reviews/g1-grill-claude.md (243b954335fd) - G1 adversarial grill, fresh-context loop-spec-validator, read-only: 26 findings (10 blocking) on PRODUCT.md + TECH.md",
+    "2026-08-13T08:31:17Z evidence recorded: evidence/reviews/g1-codex-review.md (c9b80559b35c) - G1 Codex second opinion, codex exec --sandbox read-only, gpt-5.6-sol, fresh thread: 16 findings (12 blocking), file:line cited, verified against node_modules and the npm registry",
+    "2026-08-13T08:31:17Z G1: two independent reviews landed and CONVERGE - no cross-critique round needed (l-path phase 3 step 3 runs one only on material disagreement). Overlapping blocking findings found independently by both: caller-cancellation unrepresentable in the 4-member failure union, fake clock cannot drive both deadline and backoff deterministically, failed revalidation mutating the freshness timestamp, missingKeyHandler vs parseMissingKeyHandler, WeakSet throwing on primitive throws, redaction outside the try/catch, M1 boundary borrowing a later milestone's size harness, and the testability map overstating what its checks discriminate. Codex additionally verified by in-memory compilation that Intl.Locale.getTextInfo does not typecheck under the repo's ES2023+DOM libs, and that eslint-plugin-boundaries 7.2.0 deprecates element-types/no-unknown in favour of boundaries/dependencies.",
+    "2026-08-13T08:31:17Z G1: three forks escalated to the user and settled - (1) invariant 86 kit coverage: add a development-only /__kit route excluded from the production build, Playwright exercises all 8 components at 320px with axe in real light and dark; narrows the 'no component gallery' non-goal deliberately. (2) cancellation is NOT a failure: the client result gets a third arm, so invariant 33's four-member failure union stays exhaustive as written and no caller can mistake an unmount abort for an error. (3) the request deadline is per LOGICAL request including retry and backoff, not per attempt.",
+    "2026-08-13T09:00:58Z evidence recorded: evidence/reviews/g1-codex-fix-confirmation.md (a744763df46e) - G1 Codex raiser fix-confirmation, same thread: 1 of 16 originals NOT RESOLVED, 2 PARTIAL, 13 RESOLVED; 12 NEW findings (Codex-17..28, 9 blocking) introduced by the fixes themselves",
+    "2026-08-13T09:01:13Z G1 finding Codex-17 recorded (blocking): Fix-round regression: TECH 3.2 still specifies one AbortController PER ATTEMPT, contradicting the now-fixed per-logical-request deadline in PRODUCT 23 and in the testing map",
+    "2026-08-13T09:01:13Z G1 finding Codex-18 recorded (blocking): Fix-round regression: the cache revalidation cooldown is 30000ms in PRODUCT 41 and 10000ms in TECH's registry and state machine",
+    "2026-08-13T09:01:13Z G1 finding Codex-19 recorded (blocking): Fix-round regression: a single global generation counter means invalidating key A discards an unrelated in-flight write for key B; per-key generations are needed",
+    "2026-08-13T09:01:13Z G1 finding Codex-20 recorded (blocking): Fix-round regression: the kit route's static import.meta.env.DEV guard violates invariant 13, which makes environment.ts the only permitted import.meta.env reader",
+    "2026-08-13T09:01:13Z G1 finding Codex-21 recorded (blocking): Fix-round regression: M4 claims independence from M3, but the kit route is registered through configuration.developmentRoutes and configuration is delivered by M3",
+    "2026-08-13T09:01:14Z G1 finding Codex-22 recorded (blocking): Fix-round regression: both the boundaries and createRoot.onCaughtError call reportRootError, and primitives deliberately take the un-deduplicated path, so a primitive throw reports twice against invariant 92's 'exactly once'",
+    "2026-08-13T09:01:14Z G1 finding Codex-23 recorded (blocking): Fix-round regression: verify:build always runs route and catalogue chunk assertions, but those chunks arrive only in M5, so M1's claim that the whole verify chain passes is still false",
+    "2026-08-13T09:01:14Z G1 finding Codex-24 recorded (blocking): Fix-round regression: the invariant 62 testing-map entry still specifies the login-chunk grep that section 3.5 explicitly rejects as vacuous",
+    "2026-08-13T09:01:14Z G1 finding Codex-25 recorded (blocking): Fix-round regression: PRODUCT requires each lazy catalogue chunk at most 5kB; TECH groups both under one 10kB entry, so one catalogue can exceed its limit while the check passes",
+    "2026-08-13T09:01:14Z G1 finding Codex-26 recorded: Fix-round regression: the 85-90kB estimate still carries two incompatible meanings - dependencies alone in Context and PRODUCT, entry-plus-vendor including app code in section 7.3 and Risks",
+    "2026-08-13T09:01:14Z G1 finding Codex-27 recorded: Fix-round regression: the kit route is defined three ways - layout says src/app/kit-route behind __KIT_ROUTE__, section 4.4 says src/app/routes behind configuration.developmentRoutes plus import.meta.env.DEV and numbers it 87a, PRODUCT numbers it 86b",
+    "2026-08-13T09:01:14Z G1 finding Codex-28 recorded: Fix-round regression: the Risks section prescribes a 'test' element allowed to import any layer, while section 2 defines a testing-harness element plus a test-file override",
+    "2026-08-13T09:04:48Z G1 finding Claude-27 recorded (blocking): Fix-round: verify:build's route-chunk, catalogue and 404.html assertions cannot pass before M5, so M1-M4 'full chain green' is still false; M1's coverage claim also cites locale-direction and bootstrap, which the split assigns to M3 (converges with Codex-23)",
+    "2026-08-13T09:04:48Z G1 finding Claude-28 recorded (blocking): Fix-round: the kit route is gated three ways, configuration.developmentRoutes is absent from the configuration schema, /__kit never appears in route-definitions, and the '*' wildcard would match it first (converges with Codex-20/27)",
+    "2026-08-13T09:04:48Z G1 finding Claude-29 recorded (blocking): Fix-round: M4 is declared verifiable by a Playwright run of the kit route, but the router that would serve it is delivered in M5 (extends Codex-21)",
+    "2026-08-13T09:04:48Z G1 finding Claude-30 recorded: Fix-round: RootErrorBoundary's recovery reads import.meta.env.BASE_URL outside environment.ts, which invariant 13's own lint rule turns into an error",
+    "2026-08-13T09:04:48Z G1 finding Claude-31 recorded: Fix-round: onCaughtError does not cover the chosen forced-error path - an aborted lazy chunk is a router data error, not a React boundary catch, and the aborted request itself logs a console error Playwright records",
+    "2026-08-13T09:04:48Z G1 finding Claude-32 recorded: Fix-round: the state enumeration claims exhaustiveness but has no state for an entry past TTL and inside the cooldown (converges with Codex-18 on the duration)",
+    "2026-08-13T09:04:48Z G1 finding Claude-33 recorded: Fix-round: build-output assertions exist twice in incompatible shapes - six build-output/*.test.ts files no Vitest project collects, and one scripts/assert-build-output.mjs",
+    "2026-08-13T09:04:48Z G1 finding Claude-34 recorded: Fix-round: two modules are named sole owner of the interaction lifecycle, and create-runtime.ts has no router reference to subscribe to; correlation.ts's module-level slot has no reset seam",
+    "2026-08-13T09:04:48Z G1 finding Claude-35 recorded: Fix-round: the fake clock does not implement the production Clock interface and lacks the signal parameter invariant 24's backoff-abort test needs (converges with Codex-2)",
+    "2026-08-13T09:04:48Z G1 finding Claude-36 recorded: Fix-round: no tsconfig covers e2e/, build-output/, the live smoke or the root config files, yet type-aware lint claims to cover e2e and tsc -b claims to typecheck everything",
+    "2026-08-13T09:04:48Z G1 finding Claude-37 recorded: Fix-round: the testing map cited invariant 87a which does not exist and omits entries for 45a, 47a and 86b, so the invariant-to-check ledger is wrong by four rows",
+    "2026-08-13T09:04:49Z G1 finding Claude-38 recorded: Fix-round: the Risks section prescribes the boundaries fix sections 2.1/2.2 replaced (converges with Codex-28)",
+    "2026-08-13T09:04:49Z G1 finding Claude-39 recorded: Fix-round: SkeletonSize's token-to-class mapping is unspecified, so a template-built class name emits nothing under Tailwind v4, and no shared size export exists for the swap test to measure against",
+    "2026-08-13T09:04:49Z G1 finding Claude-40 recorded: Fix-round: the new development Playwright project serves under /hierarchy-tree/ while section 5.3 says the router basename is '/' in development, so every development-project spec lands on no matched route",
+    "2026-08-13T09:04:49Z G1 finding Claude-41 recorded: Fix-round: binding TTL to the key enforces invariant 37 only for REGISTERED namespaces; an unregistered one yields undefined TTL, making every read stale and the cooldown NaN",
+    "2026-08-13T09:04:49Z G1 finding Claude-42 recorded: Fix-round: TECH 3.4 places the log-level check both before dispatch and inside the guard dispatch provides, and no test discriminates",
+    "2026-08-13T09:05:07Z evidence recorded: evidence/reviews/g1-grill-claude-confirmation.md (1e0b6d146752) - G1 fresh-instance fix-confirmation of the 26 grill findings: 17 resolved, 9 partial, 16 new (Claude-27..42)",
+    "2026-08-13T09:05:07Z G1 round 2: both raisers confirmed independently and CONVERGED again on the fix-round regressions - M1's verify chain still borrowing later-milestone assertions, the kit route gated three incompatible ways with configuration.developmentRoutes absent from the schema, the cooldown disagreeing 30000 vs 10000 across documents, the fake clock not implementing the production Clock interface, and the Risks section prescribing a boundaries model sections 2.1/2.2 replaced. Blocking count fell from 22 to 4 distinct; the new findings are predominantly cross-document consistency rather than design defects, which is the expected shape of a converging second round.",
+    "2026-08-13T09:12:53Z G1 finding Claude-1 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:53Z G1 finding Claude-2 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:53Z G1 finding Claude-3 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:53Z G1 finding Claude-4 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:53Z G1 finding Claude-5 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:53Z G1 finding Claude-6 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-10 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-11 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-15 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-18 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-19 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-20 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-21 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-22 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-24 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-25 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:54Z G1 finding Claude-26 dispositioned: resolved: spec amended, confirmed RESOLVED by a fresh loop-spec-validator instance re-check (evidence/reviews/g1-grill-claude-confirmation.md)",
+    "2026-08-13T09:12:55Z G1 finding Claude-7 dispositioned: resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3",
+    "2026-08-13T09:12:55Z G1 finding Claude-8 dispositioned: resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3",
+    "2026-08-13T09:12:55Z G1 finding Claude-9 dispositioned: resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3",
+    "2026-08-13T09:12:55Z G1 finding Claude-12 dispositioned: resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3",
+    "2026-08-13T09:12:55Z G1 finding Claude-13 dispositioned: resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3",
+    "2026-08-13T09:12:55Z G1 finding Claude-14 dispositioned: resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3",
+    "2026-08-13T09:12:55Z G1 finding Claude-16 dispositioned: resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3",
+    "2026-08-13T09:12:55Z G1 finding Claude-17 dispositioned: resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3",
+    "2026-08-13T09:12:55Z G1 finding Claude-23 dispositioned: resolved: spec amended, re-check returned PARTIAL, residue fixed in round 2 under Claude-27..42 and re-checked by Codex round 3",
+    "2026-08-13T09:12:55Z G1 finding Codex-1 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:55Z G1 finding Codex-3 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-4 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-5 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-6 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-7 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-8 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-9 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-10 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-11 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-12 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-13 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:56Z G1 finding Codex-15 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread (evidence/reviews/g1-codex-fix-confirmation.md)",
+    "2026-08-13T09:12:57Z G1 finding Codex-2 dispositioned: resolved: fake clock now implements the production Clock interface including wait(delay, signal); raiser called it PARTIAL, residue fixed under Claude-35",
+    "2026-08-13T09:12:57Z G1 finding Codex-14 dispositioned: resolved: review-dependent list rewritten and the blanket 'everything else has a check that fails' claim removed; raiser called it PARTIAL, residue fixed in round 2",
+    "2026-08-13T09:12:57Z G1 finding Codex-16 dispositioned: resolved: ARCHITECTURE.md section 2 amended from 'Three layers' to 'Four layers' in this change, per CLAUDE.md's rule that a deviation updates the decision log in the same change",
+    "2026-08-13T09:17:25Z evidence recorded: evidence/reviews/g1-codex-round3-incomplete.md (cb675548da12) - G1 Codex round-3: NO VERDICT - stalled in a web-search retry loop, terminated. Interim reasoning surfaced 2 real contradictions (a third found while verifying them); all 3 fixed.",
+    "2026-08-13T09:17:26Z codex incomplete at G1 round 3: session stalled verifying react-router internals, web-search tool returned empty results in a retry loop, output frozen at 471914 bytes with the process alive; terminated with SIGTERM. No verdict. Its interim reasoning did surface two real contradictions before stalling - Codex-22's primitive double-report was recorded in round 2 but never actually fixed, and PRODUCT 100 still demanded an empty console allow-list for every spec against TECH 6.2's exact-expected-set contract; a third (TECH's invariant-91 map entry) was found while verifying those. All three fixed. Findings Codex-17..28 and Claude-27..42 remain fixed-but-unconfirmed.",
+    "2026-08-13T09:21:40Z evidence recorded: evidence/reviews/g1-codex-round4-confirmation.md (f34cc2423c35) - G1 Codex round-4 raiser confirmation, web search disabled, completed: 11/12 resolved, 3 unresolved (2 blocking), all three fixed after the pass",
+    "2026-08-13T09:21:40Z G1 finding Codex-17 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:40Z G1 finding Codex-18 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:40Z G1 finding Codex-19 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:40Z G1 finding Codex-20 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:40Z G1 finding Codex-21 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:40Z G1 finding Codex-22 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:41Z G1 finding Codex-23 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:41Z G1 finding Codex-24 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:41Z G1 finding Codex-25 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:41Z G1 finding Codex-27 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:41Z G1 finding Codex-28 dispositioned: resolved: spec amended, confirmed RESOLVED by the raiser thread in round 4 with citations (evidence/reviews/g1-codex-round4-confirmation.md)",
+    "2026-08-13T09:21:41Z G1 finding Codex-26 dispositioned: resolved: raiser round 4 returned NOT RESOLVED - the Risks entry still carried the rejected 'entry plus vendor pair' reading; fixed after the pass, all three mentions of the 85-90 kB estimate now say 'fixed runtime dependency set alone', matching ARCHITECTURE.md's binding decision log",
+    "2026-08-13T09:21:59Z G1 finding Codex-43 recorded (blocking): Round 4: primitive deduplication was assigned to the interaction tracker, but reportRootError's specified two-argument signature could not reach it - implementing as written would need hidden global state or would drop primitive dedup",
+    "2026-08-13T09:21:59Z G1 finding Codex-44 recorded (blocking): Round 4: the expected-build-output declaration table had contradictory responsibility - section 7.1 said it drives chunk assertions only, M5 said populating it also activates the 404-copy and kit-absence assertions, so M1's obligations were undecidable",
+    "2026-08-13T09:21:59Z G1 finding Codex-43 dispositioned: resolved: reportRootError now takes (error, { observability, interactionTracker }); both boundaries and the createRoot handlers already hold the runtime's tracker, and object identity stays in a module-level WeakSet that needs no instance",
+    "2026-08-13T09:21:59Z G1 finding Codex-44 dispositioned: resolved: one declaration table, expected-build-output.json, with a key per assertion family (routeChunks, catalogueChunks, notFoundCopy, kitRouteAbsent); an absent key asserts nothing, and the milestone that creates an artifact is the milestone that declares it",
+    "2026-08-13T09:21:59Z G1 finding Claude-27 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:21:59Z G1 finding Claude-28 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:21:59Z G1 finding Claude-29 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:21:59Z G1 finding Claude-30 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:00Z G1 finding Claude-32 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:00Z G1 finding Claude-33 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:00Z G1 finding Claude-34 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:00Z G1 finding Claude-35 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:00Z G1 finding Claude-36 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:00Z G1 finding Claude-37 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:01Z G1 finding Claude-38 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:01Z G1 finding Claude-39 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:01Z G1 finding Claude-40 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:01Z G1 finding Claude-41 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:01Z G1 finding Claude-42 dispositioned: resolved: spec amended; the Codex round-4 pass read these fixes and reported them internally coherent (typed cache namespaces, guarded level check, instance-owned interaction state with tracker.attach, configuration.basePath recovery, identical dev/production base paths, exported sizeClass literals)",
+    "2026-08-13T09:22:25Z G1 finding Claude-31 dispositioned: resolved: spec amended - PRODUCT 100 and TECH 6.2 replaced the empty-collection assertion for the forced-error spec with an exact expected set (one entry, matched by URL) that fails on any additional entry; the Codex round-4 pass read the amended contract and reported it coherent. Carries a residual the user is asked to accept explicitly at sign-off: this is a weaker guarantee than an empty console, and React Router's own console.error behavior stays UNVERIFIED until M5 installs the package.",
+    "2026-08-13T09:23:26Z G1 sign-off deferred at the user's request: they are reading PRODUCT.md and TECH.md before signing. All 75 findings are dispositioned and the specs are on disk unamended since the round-4 fixes; the gate is NOT passed and nothing is committed. Resume by re-presenting the two judgement calls (Claude-31's weakened console guarantee, the thin entry-budget headroom) and taking their sign-off decision.",
+    "2026-08-13T10:45:00Z scope change during G1 review, at the user's direction, before sign-off. (1) CACHING WITHDRAWN from phase 1 and from the roadmap: PRODUCT invariants 36-44 retired (numbers not reused, so 45+ keep their identity in this findings record), TECH 3.3 replaced by a withdrawal note, platform/cache removed from the layout, the storage-global lint rule rehomed under invariant 128. ARCHITECTURE.md decision log and ROADMAP.md updated in the same change. This moots the cache findings Claude-1/2/23/32/41 and Codex-3/4/5/18/19 - their dispositions stand as history, the behavior they governed no longer exists. (2) DEPLOY MOVED to Cloudflare Pages (the repo is private, so GitHub Pages is unavailable): base path is now '/', the 404.html copy is replaced by public/_redirects, public/_headers carries frame-ancestors as a real response header (new invariant 99a - a gap the old hosting could not close), and the deploy job runs cloudflare/wrangler-action@v4 against the verified dist artifact after the gates. Invariants 99, 120-126 rewritten. (3) FILE CONVENTIONS aligned with /typescript-coding and /react-coding across TECH.md: PascalCase components, lowerCamelCase modules named for their one exported symbol, useFoo hooks, index.ts barrels, named exports with a lazy adapter at the route registration site, memo with named inner functions. Two documented exceptions: environment.ts keeps two exports because invariant 13 needs a single import.meta.env reader, and non-module files (configs, .mjs scripts, e2e specs, build-output tests) stay kebab-case. Two latent layout defects fixed on the way: the live smoke path (scripts/live-smoke/) and the missing vitest.build-output.config.ts.",
+    "2026-08-13T10:00:50Z G1 sign-off decision by the user: (1) scoped DELTA RE-REVIEW of the 2026-08-13 10:45 scope change before sign-off - neither reviewer has read the amended specs, so a fresh spec-validator and a fresh Codex thread review only the changed surfaces (cache withdrawal fallout, Cloudflare deploy invariants 99/99a/120-126, TECH sections on layout/naming conventions); (2) BOTH residuals ACCEPTED explicitly - invariant 100's exact-expected-console-set (weaker than an empty console; React Router's own console.error behavior stays UNVERIFIED until M5) and invariant 112's thin entry budget (10-15 kB for this repo's own code over the 85-90 kB dependency estimate, first measured at M1). Two stale references to the withdrawn 404.html copy fixed before the delta review runs, so the reviewers read the current documents: PRODUCT 103's build-output enumeration and TECH 7.2's shared-step prose now name _redirects/_headers.",
+    "2026-08-13T10:13:34Z G1 finding Claude-43 recorded (blocking): Delta round 5: the PascalCase route-module convention invalidates the kebab-case chunk names .size-limit.json, the route-chunk assertions and expected-build-output.json are written against - Rollup's [name] is the module basename verbatim, so HomeRoute.tsx emits assets/HomeRoute-<hash>.js, not assets/home-route-*.js; the globs match nothing and size-limit fails by design (TECH 5.3, 7.3 vs 1)",
+    "2026-08-13T10:13:34Z G1 finding Claude-44 recorded (blocking): Delta round 5: 'EVERY assertion in verify:build is driven by one declaration table' contradicts the table's own four-key list - base-path.test.ts, size-limit-entries.test.ts and the bundle secrets scan have no key, so under the uniform rule invariant 122's scan is never active; size-limit-entries.test.ts additionally has two different correct contents (M1's two entries vs M5's seven) and is mislabelled a unit test (TECH 7.1 vs the 1 layout)",
+    "2026-08-13T10:13:34Z G1 finding Claude-45 recorded (blocking): Delta round 5: 'an absent key asserts nothing and passes' has no completeness check, so a key forgotten at M5 silently disables an invariant's only mechanical check - forgetting kitRouteAbsent leaves invariant 86b unrun with no backstop, and CI stays green (TECH 7.1, M5)",
+    "2026-08-13T10:13:34Z G1 finding Claude-46 recorded: Delta round 5: verify:build is specified to run the bundle secrets scan but no build-output/ file runs it and no CI step invokes assert-no-secrets.mjs --bundle-only, so invariant 133's bundle half has no home - the exact defect the source/bundle split was introduced to fix (TECH 7.1, 7.4, map 133)",
+    "2026-08-13T10:13:34Z G1 finding Claude-47 recorded: Delta round 5: the storage ban rehomed from the withdrawn cache set is narrower than invariant 128 states - no-restricted-globals on three bare identifiers misses the service-worker cache 128 names, and misses window./globalThis. member forms that the sibling fetch ban explicitly guards with no-restricted-properties; the withdrawn set's e2e localStorage-emptiness assertion dropped without replacement (PRODUCT 128 vs TECH 2.4, 3.3)",
+    "2026-08-13T10:13:34Z G1 finding Claude-48 recorded: Delta round 5: the _headers build-output check is a containment check where its _redirects sibling is an exact-content check, so invariant 99a's 'only directive' clause has no check and a mis-indented CSP line - which Cloudflare silently ignores - passes while shipping no framing protection (PRODUCT 99a vs TECH map 99a/124)",
+    "2026-08-13T10:13:34Z G1 finding Claude-49 recorded: Delta round 5: the Playwright webServer runs npm run build again during the e2e step, overwriting the dist that verify:build and size inspected, so the site artifact uploaded afterwards is a build no gate inspected - contradicting invariant 120 while the workflow-parse check named to discriminate still passes (PRODUCT 120 vs TECH 6.2, 7.4)",
+    "2026-08-13T10:13:53Z G1 finding Claude-50 recorded: Delta round 5: --branch=main marks the upload production only if the Pages project's production branch IS main, and invariant 126's one-time setup never requires that - a project created otherwise yields a preview deployment at a URL that is not the recorded hostname, violating 121 and breaking 123/124 with nothing failing (PRODUCT 126 vs TECH 7.4)",
+    "2026-08-13T10:13:53Z G1 finding Claude-51 recorded: Delta round 5: M1 cannot make its own .size-limit.json globs resolve - entry-*.js needs the entryFileNames/manualChunks block specified only in TECH 5.3 (M5's section) and the stylesheet entry needs theme.css which arrives in M4, so M1's 'npm run verify passes as the WHOLE chain' claim is false again in a new spot (TECH M1 vs 5.3, M4)",
+    "2026-08-13T10:13:54Z G1 finding Claude-52 recorded: Delta round 5: the phase's third exit criterion is unprovable before merge by construction (121 forbids previews), its prerequisite is unchecked before merge, and no remedy or evidence path is defined for a failed post-merge e2e:deployed run - which would leave the phase merged against invariant 119; the preview tradeoff is also the one decision in the document never recorded as a decision, and the production hostname is said to be recorded in VERIFICATION.md which M1 delivers five milestones before the Pages project exists (PRODUCT 121/123/124/126, TECH M6, Context)",
+    "2026-08-13T10:13:54Z G1 finding Claude-53 recorded: Delta round 5: the new 'every multi-file folder has an index.ts' convention collides with the restricted-import pattern enforcing invariant 45 - a conforming sinks/index.ts is importable as @platform/observability/sinks, which the pattern requiring a segment after sinks does NOT match, opening a lint-legal path to construct a sink outside the facade; the layout also omits index.ts in three folders and the convention's claim that no-restricted-imports already enforces folder-only imports is false for shared and platform (TECH 1 vs 2.3)",
+    "2026-08-13T10:13:54Z G1 finding Claude-54 recorded: Delta round 5: the deploy job runs a third-party action on a floating major tag with no permissions: block, so it inherits the repository's default GITHUB_TOKEN scope while the spec reasons explicitly about which permissions are unnecessary - least-privilege contents: read and a pinned action are one line each, and the workflow-parse test asserts neither (TECH 7.4; security_review loop)",
+    "2026-08-13T10:13:54Z G1 finding Claude-55 recorded: Delta round 5: the review-dependent section's strengthened-checks ledger still cites retired cache invariants 37 and 42, violating the retired-numbers convention the withdrawal establishes and leaving an auditor unable to tell whether the withdrawal missed something or the list is stale (TECH 8 vs PRODUCT 36-44)",
+    "2026-08-13T10:13:54Z G1 finding Claude-56 recorded: Delta round 5: the conventions section declares 'two documented exceptions' but main.tsx, vite-env.d.ts, scripts/live-smoke/live-smoke.test.ts and analyticsEvents.ts fall under neither the conventions nor the exceptions - a de facto third exception an implementer may 'fix' into a name later path references no longer match (TECH 1 vs the layout)",
+    "2026-08-13T10:14:09Z evidence recorded: evidence/reviews/g1-grill-claude-delta.md (c07c4c6cb3c5) - G1 delta round 5: fresh loop-spec-validator grill scoped to the three unreviewed amendments (cache withdrawal, Cloudflare Pages move, file conventions). 14 findings, 3 blocking, recorded as Claude-43..Claude-56. Verbatim.",
+    "2026-08-13T10:15:20Z G1 finding Claude-57 recorded (blocking): Delta round 5, found by the driving session while verifying Claude-43 against the INSTALLED packages: TECH 5.3's whole build-output block is written against Rollup, but vite 8.2.1 ships rolldown 1.2.4 as its bundler. Two deprecations the spec depends on: (a) vite's own types mark build.rollupOptions '@deprecated Use rolldownOptions instead' (node_modules/vite/dist/node/index.d.ts:872), and (b) rolldown marks output.manualChunks deprecated in favour of output.codeSplitting/advancedChunks, and IGNORES manualChunks entirely when both are set (node_modules/rolldown/.../define-config.d.mts:800-806). The spec pins versions carefully everywhere else and this block is what every size-limit glob, the vendor chunk and invariant 89's chunk assertions rest on. Also confirms Claude-43's premise: rolldown's [name] is the chunk/entry file name without extension, with no kebab-casing, so HomeRoute.tsx emits HomeRoute-<hash>.js",
+    "2026-08-13T10:20:00Z G1 finding Codex-45 recorded (blocking): Delta round 5: the CSP split is not asserted as exclusive - _headers may carry additional CSP directives while both the build-output and deployed checks still pass, creating exactly the two-conflicting-policies failure mode invariant 99a forbids (PRODUCT 99a, TECH map 99a). Converges with Claude-48",
+    "2026-08-13T10:20:00Z G1 finding Codex-46 recorded (blocking): Delta round 5: expected-build-output.json fails OPEN - absent keys assert nothing and no schema test requires all four at M5, so forgetting spaFallback, kitRouteAbsent, routeChunks or catalogueChunks silently disables its check while verify:build stays green (TECH 7.1, M5). Converges with Claude-45",
+    "2026-08-13T10:20:00Z G1 finding Codex-47 recorded (blocking): Delta round 5: invariant 128 promises to prohibit service-worker-cache access but the lint design omits the CacheStorage 'caches' global, so 'await caches.open(app)' in src passes the specified storage rule - part of the rehomed cache invariant was dropped (PRODUCT 128, TECH 2.4). Converges with Claude-47",
+    "2026-08-13T10:20:00Z G1 finding Codex-48 recorded (blocking): Delta round 5: the Cloudflare prerequisite does not require main to be the project's PRODUCTION BRANCH, though TECH assumes --branch=main inherently makes a production deployment; Cloudflare decides production vs preview from the project's configured production branch, so a successful upload can land as a preview and leave the production hostname stale while invariants 120/123 claim production (PRODUCT 126, TECH 7.4; cited against Cloudflare Direct Upload docs). Converges with Claude-50",
+    "2026-08-13T10:20:00Z G1 finding Codex-49 recorded: Delta round 5: TECH says every verify:build assertion is driven by expected-build-output.json but the schema has no keys for the bundle-secret or base-path families, so an implementer must either violate the stated uniform activation rule or invent undocumented always-on behavior (TECH 7.1). Converges with Claude-44",
+    "2026-08-13T10:20:00Z G1 finding Codex-50 recorded: Delta round 5: the universal file/component conventions have undocumented exceptions and a direct filename mismatch - RootErrorBoundary MUST be a class component (error boundaries cannot be function components) so it cannot be memo-wrapped with a named inner function, and fieldContext.ts does not match its exported FieldContext symbol under the stated exact-name rule (TECH 1 vs 142, 597). Sharper than Claude-56 on both specifics",
+    "2026-08-13T10:20:00Z G1 finding Codex-51 recorded: Delta round 5: the file conventions have no named lint rule, script or structural test, so a kebab-case production module, a default-exported route, a missing barrel or an anonymous memo component passes the entire specified pipeline - while PRODUCT's preamble promises every stated rule has a check behind it (TECH 1, testing map vs PRODUCT 19)",
+    "2026-08-13T10:20:00Z G1 finding Codex-52 recorded: Delta round 5: the cache withdrawal left contradictory BINDING prose - ARCHITECTURE.md:78 says dedupe/TTL/stale-while-revalidate 'are deferred' while its own decision log at :161 says 'withdrawn from the roadmap, not designed and deferred' and PRODUCT 217 says 'not deferred to a later phase'; a later phase can reasonably read caching as planned future work. Also re-raises TECH's audit citing retired invariants 37 and 42 (= Claude-55). MISSED by the Claude grill, which checked the decision log but not the section 4 prose",
+    "2026-08-13T10:20:14Z G1 finding Codex-53 recorded: Delta round 5 (supplementary pass, verified): loop.json is chronologically inconsistent - the scope-change entry is stamped 2026-08-13T10:45:00Z while the CLI-stamped entries around it read 10:13-10:15Z, so a resumption cannot reliably order events or tell which state is latest. Loop-state hygiene, not a spec defect, but it corrupts the audit trail this gate depends on",
+    "2026-08-13T10:20:15Z G1 finding Codex-54 recorded: Delta round 5 (supplementary pass, verified): CACHE.md:5 claims ARCHITECTURE.md and GOAL.md 'both now say there is no cache', but GOAL.md contains zero cache mentions (grep -ci cach = 0) - it misidentifies the binding source for the withdrawal; ARCHITECTURE.md and ROADMAP.md are the documents that exclude caching",
+    "2026-08-13T10:20:15Z G1 finding Codex-55 recorded: Delta round 5 (supplementary pass, verified): TECH.md:41 self-contradicts in one sentence - the ARCHITECTURE.md three-vs-four-layers editorial defect 'HAS been fixed in the same change' AND 'correcting it belongs to a separate edit of ARCHITECTURE.md by its owner'. A reader cannot tell whether the fix is done or outstanding. Re-raise of the partially-resolved Codex-16",
+    "2026-08-13T10:20:31Z evidence recorded: evidence/reviews/g1-codex-delta.md (0331df2298ad) - G1 delta round 5, OPERATIVE Codex pass (session 019ffa93, job task-msrcp1xo-yexaci): 8 findings, 4 blocking, recorded as Codex-45..Codex-52. Received the full A-E delta brief. Verbatim.",
+    "2026-08-13T10:20:31Z evidence recorded: evidence/reviews/g1-codex-delta-supplementary.md (0dc970f93d43) - G1 delta round 5, SUPPLEMENTARY Codex pass (session 019ffa92, job task-msrcn25z-44hdzd): launched before the A-E brief was sent, preserved per the codex contract's reconcile-visibly rule. Three unique findings verified against the files and recorded as Codex-53..Codex-55; the rest duplicate the operative pass or the Claude grill. Verbatim.",
+    "2026-08-13T10:20:32Z G1 delta round 5 complete, both reviewers returned. Claude grill: 14 findings (3 blocking) - Claude-43..Claude-56. Driving session found a 15th while VERIFYING Claude-43 against the installed packages rather than taking it on faith: Claude-57 (blocking) - vite 8.2.1 ships rolldown 1.2.4, not Rollup, so TECH 5.3's build block is written against a doubly-deprecated API (vite's own types mark build.rollupOptions deprecated in favour of rolldownOptions; rolldown marks manualChunks deprecated in favour of output.codeSplitting and IGNORES it when both are set). Codex: 8 findings (4 blocking) - Codex-45..Codex-52 - plus 3 verified unique findings from a supplementary pass, Codex-53..Codex-55. TWO Codex passes exist and both are preserved with the operative one named by brief rather than by verdict, per the codex contract. Convergence is high on the delta's core: both reviewers independently raised the expected-build-output.json fail-open hole (Claude-45/Codex-46), the _headers exclusivity gap (Claude-48/Codex-45), the dropped 'caches' global in the rehomed storage ban (Claude-47/Codex-47), the unstated Cloudflare production-branch prerequisite (Claude-50/Codex-48) and the declaration-table key gap (Claude-44/Codex-49) - convergent, not contested, so no cross-critique round is needed. Each reviewer also caught what the other missed: Claude alone found the PascalCase-chunk-name break (Claude-43) that would turn M5 red; Codex alone found the ARCHITECTURE.md:78 'deferred' contradiction in the BINDING document (Codex-52), the RootErrorBoundary class-vs-memo collision and the fieldContext.ts symbol mismatch (Codex-50). 26 findings now await disposition.",
+    "2026-08-13T10:39:02Z G1 finding Claude-58 recorded (blocking): Delta round 5 re-check: the round-5 FIX for Claude-57 was itself wrong - it specified output.advancedChunks, which the installed rolldown 1.2.4 ALSO marks deprecated in favour of output.codeSplitting (define-config.d.mts:841, AdvancedChunksOptions is now a deprecated alias of CodeSplittingOptions) and which logs a deprecation warning on every build (create-bundler-option.mjs:3042). The fix used a deprecated option while arguing against deprecated options. Correct spelling is output.codeSplitting with the identical { groups: [...] } shape",
+    "2026-08-13T10:39:02Z G1 finding Claude-59 recorded: Delta round 5 re-check: alwaysOn.sizeLimitEntries was specified as a boolean while the invariant-112 map row expected it to carry the expected entry set, so an M1 implementer still could not write size-limit-entries.test.ts - and reading the expectation out of .size-limit.json itself would be circular, defeating the guard's stated purpose that a busted budget cannot be fixed by editing the budget",
+    "2026-08-13T10:39:02Z G1 finding Claude-60 recorded: Delta round 5 re-check: the declaration table's phase flip to 'complete' was itself unchecked - nothing asserted it ever happens, so an M5 implementer who skipped the table edit wholesale (omitting both kitRouteAbsent and the flip) reproduced exactly the silent pass the phase key was introduced to prevent; 'M5's boundary cannot go green without it' was true only if someone remembered to arm it",
+    "2026-08-13T10:39:02Z G1 finding Claude-61 recorded: Delta round 5 re-check: TECH 3.3's storage-ban bullet - the passage that DOES the rehoming and that 2.4 points back at - was not amended and still listed the old three bare-identifier globals, so the document stated the ban's contents two different ways",
+    "2026-08-13T10:39:02Z G1 finding Claude-62 recorded: Delta round 5 re-check: the enumerated 'complete' exception list was still incomplete - app/composition/runtimeContext.ts is the identical case to the listed fieldContext.ts (lowerCamelCase file exporting a PascalCase context object) and the .tsx test helpers renderRoute/renderComponent/kitStates are a weaker instance, so the completeness claim was falsifiable by reading the layout beneath it",
+    "2026-08-13T10:39:02Z G1 finding Claude-63 recorded: Delta round 5 re-check, NEW defect introduced by the Claude-49 fix: removing the build from Playwright's webServer broke npm run e2e:deployed - webServer entries are global config rather than project-scoped, so they start for --project=deployed too, and the post-merge run that invariant 126a makes the phase's completion condition would fail at server startup on a checkout that never built",
+    "2026-08-13T10:39:02Z G1 finding Claude-64 recorded: Delta round 5 re-check, NEW defect introduced by the Claude-50 fix: the deploy job's new deployment-URL assertion is a run: line that is neither an npm script nor an allow-listed setup command, which invariant 102 forbids in unqualified terms - an implementer would either turn the workflow-parse test red against the specified workflow or narrow invariant 102 by private judgement",
+    "2026-08-13T10:39:02Z G1 finding Claude-65 recorded: Delta round 5 re-check, NEW defect introduced by the Claude-50 fix: nothing declared a machine-readable home for the 'recorded production hostname' the deploy job must compare against - it was recorded in VERIFICATION.md prose and an .env.example comment, neither of which a workflow step can read, guaranteeing a second hardcoded copy in ci.yml that can drift from the documented one, in the very assertion that exists to catch a silent mis-deploy",
+    "2026-08-13T10:39:03Z G1 finding Claude-66 recorded: Delta round 5 re-check, NEW defect introduced by the declaration-table restructure: the amended paragraph miscounted its own keys - 'six keys, one per family' while naming five keys covering seven families, with the sixth (phase) introduced only in the next paragraph and not being a family at all. Same class of self-contradicting count the restructure was made to fix",
+    "2026-08-13T10:39:03Z G1 finding Claude-67 recorded: Delta round 5 re-check, NEW defect introduced by the Claude-54 fix: 'every third-party uses: is SHA-pinned' was undefined against the four actions/* steps the same section shows pinned by major tag, so the workflow-parse assertion would either fail against the specified workflow or exempt a category by an implementer's private definition - the identical gap 7.1 had to close for the command rule",
+    "2026-08-13T10:40:31Z evidence recorded: evidence/reviews/g1-grill-claude-delta-recheck.md (aedbcb0fa90d) - G1 delta round 5 confirmation pass: fresh loop-spec-validator re-check of all 15 delta findings against the amended specs. 10 RESOLVED, 5 PARTIALLY RESOLVED, 0 NOT RESOLVED, plus 5 new defects introduced by the amendments. Recorded as Claude-58..Claude-67. Refuted the driving session's own Claude-57 fix (advancedChunks is also deprecated). Verbatim.",
+    "2026-08-13T10:40:32Z G1 delta round 5, confirmation pass: a fresh validator ruled 10 of 15 delta findings RESOLVED, 5 PARTIALLY RESOLVED, 0 NOT RESOLVED, and found 5 NEW defects the amendments themselves introduced - recorded as Claude-58..Claude-67 and all ten now fixed. The pass earned its keep twice over. It REFUTED the driving session's own fix for Claude-57: that fix specified output.advancedChunks, which the installed rolldown 1.2.4 also deprecates in favour of output.codeSplitting and which logs a warning on every build - a fix that used a deprecated option while arguing against deprecated options. Verified independently against node_modules before accepting (define-config.d.mts:841 deprecation, :1243 AdvancedChunksOptions alias, create-bundler-option.mjs:3042 warning) and corrected to codeSplitting. It also caught three defects the amendments introduced in adjacent places: removing the build from Playwright's webServer broke e2e:deployed (webServer is global config, not project-scoped, so it starts for --project=deployed too - and that run is the phase's completion condition under 126a); the new deployment-URL assertion violated invariant 102's unqualified no-checks-in-the-workflow rule; and the 'recorded production hostname' had no machine-readable home, guaranteeing a second drifting copy in ci.yml. Fixes: deployment.json at the repository root as the single source read by jq, invariant 102 scoped to the verify job with the deploy job's one deployment-level assertion named as the sole permitted exception, webServer skipped when DEPLOYED_BASE_URL is set, alwaysOn.sizeLimitEntries carrying the expected entry array rather than a boolean (a boolean made the guard circular), the phase flip self-armed from dist rather than trusted, TECH 3.3's stale storage list removed, runtimeContext.ts and the .tsx test helpers added to the exception list, the key count corrected, and the SHA-pinning rule bounded to non-actions/* owners.",
+    "2026-08-13T10:52:36Z G1 finding Claude-68 recorded (blocking): Delta round 5, second confirmation pass, NEW defect introduced by the Claude-65 fix: the deploy job was specified to read deployment.json with jq but its enumerated steps contained no actions/checkout, so the file is not in the job's workspace and invariant 123's assertion cannot run. It fails with a missing-file error rather than a URL mismatch, and because the deploy job runs only on push to main it cannot be rehearsed on a pull request - it detonates inside invariant 126a's post-merge completion path, which is the phase's exit criterion",
+    "2026-08-13T10:52:36Z G1 finding Claude-69 recorded: Delta round 5, second confirmation pass: the Claude-63 fix was incomplete - a single-object webServer ternary still left the 'development' project's dev server starting during e2e:deployed, and separately the 'deployed' project was described as 'excluded from the default run', which Playwright has no mechanism for (every configured project runs unless filtered), so npm run e2e would execute deployed-smoke.spec.ts with an undefined baseURL",
+    "2026-08-13T10:52:36Z G1 finding Claude-70 recorded: Delta round 5, second confirmation pass: the Claude-60 fix's arming condition reads assets/*Route-*.js, resting on the same emitted-chunk-name assumption the spec flags as unverified - and M1's correction instruction named only the size-limit globs, so a different emitted name would fix those loudly while declaration-table.test.ts silently never armed; separately, routes that failed to code-split at all would leave dist without route chunks, the guard quiet and phase stuck at 'building' with invariants 62, 86b, 89, 99a and 124 unasserted",
+    "2026-08-13T10:52:36Z G1 finding Claude-71 recorded: Delta round 5, second confirmation pass: the Claude-65 fix's doc-agreement test had no citation format, no assigned edit to the documents it reads, and no stated behaviour when a document cites nothing - phrased as 'the hostname cited matches deployment.json' it passes vacuously against a file with no citation, reinstating the very documentation drift deployment.json was introduced to close",
+    "2026-08-13T10:52:37Z G1 finding Claude-72 recorded: Delta round 5, second confirmation pass: the Claude-64 fix made half of invariant 102 review-carried (the deploy job's single permitted assertion is bounded by nothing mechanical) without adding it to TECH's review-dependent ledger, which claims to be the honest list of exactly such gaps",
+    "2026-08-13T10:52:37Z G1 finding Claude-73 recorded: Delta round 5, second confirmation pass: the phase-'complete' completeness assertion enumerated the two booleans and the four conditional families but said nothing about alwaysOn.sizeLimitEntries, and left the comparison's direction unstated - an empty or truncated expected array would leave the budget guard asserting nothing while declaration-table.test.ts passed, and a one-way containment check would let a silently added budget entry escape",
+    "2026-08-13T10:52:37Z G1 finding Claude-74 recorded: Delta round 5, second confirmation pass: deployment.json held projectName while the wrangler command hardcoded --project-name=hierarchy-tree with nothing asserting they agree, and DEPLOYED_BASE_URL was supplied by hand to the deployed Playwright project with no check tying it to productionHostname - so invariant 126a's post-merge completion run could be pointed at a stale hostname and pass",
+    "2026-08-13T10:53:56Z evidence recorded: evidence/reviews/g1-grill-claude-delta-recheck-2.md (efc9cbab6ac3) - G1 delta round 5, SECOND confirmation pass: fresh loop-spec-validator ruled 8 of 10 RESOLVED, 2 PARTIALLY RESOLVED, 6 new defects (1 blocking - the deploy job read deployment.json with jq but had no actions/checkout). Recorded as Claude-68..Claude-74, all fixed. Verbatim.",
+    "2026-08-13T10:53:57Z G1 delta round 5, second confirmation pass: 8 of 10 RESOLVED, 2 PARTIALLY RESOLVED, 6 new defects (1 BLOCKING) - Claude-68..Claude-74, all now fixed. The blocking one was introduced by the previous round's own deployment.json fix: the deploy job was specified to read the file with jq but had no actions/checkout step, so the file was not in its workspace - and since that job runs only on push to main, it could not be rehearsed on a pull request and would have detonated inside invariant 126a's post-merge completion path, the phase's exit criterion. Fixed with a sparse checkout of deployment.json, plus projectName read from the same file instead of hardcoded in the wrangler command, and e2e:deployed sourcing DEPLOYED_BASE_URL from it too, closing the last two drift paths. Also fixed: Playwright's webServer AND projects arrays are now both built conditionally (a single-object ternary still started the development project's dev server, and 'excluded from the default run' is not something Playwright expresses - npm run e2e would have run deployed-smoke.spec.ts against an undefined baseURL); the declaration-table arming glob is named in M1's correction instruction alongside the size-limit globs and backstopped by M5's boundary asserting phase === 'complete' directly; the doc-agreement test got a literal marker format, an owning milestone and a fail-on-absent-citation rule; invariant 102's newly review-carried half was added to the review-dependent ledger; and the phase-complete assertion now covers sizeLimitEntries with a stated two-way equality. PROCESS SIGNAL, recorded rather than buried: three amend-and-recheck cycles, each of which introduced 5-6 new defects in the amended surfaces (round 1 fixes -> 5 new, round 2 fixes -> 6 new). The defects are narrowing in character - from contradictions of intent to mechanical omissions like a missing checkout step - and stay confined to the deploy and build-output surfaces the scope change touched, so this reads as convergence rather than churn. But it is the user's call whether a fourth pass is proportionate; escalating rather than grinding.",
+    "2026-08-13T10:54:44Z G1 finding Claude-43 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-44 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-46 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-48 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-49 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-50 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-51 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-52 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-53 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-54 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:44Z G1 finding Claude-55 dispositioned: resolved: spec amended in the round-5 delta fix pass and confirmed RESOLVED by a fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md)",
+    "2026-08-13T10:54:45Z G1 finding Claude-45 dispositioned: resolved: spec amended, first re-check ruled it PARTIALLY resolved, the remaining half was fixed and a second fresh loop-spec-validator re-check confirmed it RESOLVED (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:54:45Z G1 finding Claude-47 dispositioned: resolved: spec amended, first re-check ruled it PARTIALLY resolved, the remaining half was fixed and a second fresh loop-spec-validator re-check confirmed it RESOLVED (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:54:45Z G1 finding Claude-56 dispositioned: resolved: spec amended, first re-check ruled it PARTIALLY resolved, the remaining half was fixed and a second fresh loop-spec-validator re-check confirmed it RESOLVED (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:54:45Z G1 finding Claude-57 dispositioned: resolved: spec amended, first re-check ruled it PARTIALLY resolved, the remaining half was fixed and a second fresh loop-spec-validator re-check confirmed it RESOLVED (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:54:58Z G1 finding Codex-45 dispositioned: resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note",
+    "2026-08-13T10:54:58Z G1 finding Codex-46 dispositioned: resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note",
+    "2026-08-13T10:54:58Z G1 finding Codex-47 dispositioned: resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note",
+    "2026-08-13T10:54:58Z G1 finding Codex-48 dispositioned: resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note",
+    "2026-08-13T10:54:58Z G1 finding Codex-49 dispositioned: resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note",
+    "2026-08-13T10:54:58Z G1 finding Codex-50 dispositioned: resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note",
+    "2026-08-13T10:54:58Z G1 finding Codex-52 dispositioned: resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note",
+    "2026-08-13T10:54:58Z G1 finding Codex-54 dispositioned: resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note",
+    "2026-08-13T10:54:58Z G1 finding Codex-55 dispositioned: resolved: spec amended in the round-5 delta fix pass; the fix was confirmed by fresh loop-spec-validator re-checks reading the amended text (evidence/reviews/g1-grill-claude-delta-recheck.md and -2.md). Codex's own raiser-thread confirmation was requested but did not return before the user's sign-off; the Claude-side confirmation covers the same amended passages, and this substitution is disclosed in the gate note",
+    "2026-08-13T10:54:58Z G1 finding Codex-51 dispositioned: resolved: the user's explicit decision at sign-off - the file and module conventions are implementation GUIDANCE, not acceptance criteria. TECH 1 now says so in its opening paragraph and the review-dependent ledger lists them as review-only, so PRODUCT's every-rule-has-a-check promise stays honest. The one case where a name is load-bearing (the emitted route chunk names the size-limit globs are written against) is covered mechanically by those globs failing on no match, which does not depend on the convention being honoured",
+    "2026-08-13T10:55:06Z G1 finding Codex-53 dispositioned: rejected: the user's sign-off decision, on the reason that this is loop-state hygiene rather than a spec defect and is not fixable without defeating the tool's own guarantees. The 10:45:00Z scope-change entry pre-dates the CLI-stamped entries around it (10:13-10:15Z), so the log's ordering is misleading for that one record. Direct edits to loop.json are hook-blocked by design and the CLI stamps real time, so correcting a historical entry would mean working around the immutability the audit trail depends on - a worse outcome than one out-of-order line. Recorded so a future auditor reads the anomaly as known rather than as tampering.",
+    "2026-08-13T10:55:18Z G1 finding Claude-58 dispositioned: resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:55:18Z G1 finding Claude-59 dispositioned: resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:55:18Z G1 finding Claude-60 dispositioned: resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:55:18Z G1 finding Claude-61 dispositioned: resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:55:18Z G1 finding Claude-62 dispositioned: resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:55:18Z G1 finding Claude-64 dispositioned: resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:55:18Z G1 finding Claude-66 dispositioned: resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:55:18Z G1 finding Claude-67 dispositioned: resolved: raised by the first confirmation pass, fixed, and confirmed RESOLVED by a SECOND fresh loop-spec-validator re-check that read the amended text (evidence/reviews/g1-grill-claude-delta-recheck-2.md)",
+    "2026-08-13T10:55:18Z G1 finding Claude-63 dispositioned: resolved: raised by the first confirmation pass, fixed, ruled PARTIALLY resolved by the second pass, and the remaining half fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
+    "2026-08-13T10:55:18Z G1 finding Claude-65 dispositioned: resolved: raised by the first confirmation pass, fixed, ruled PARTIALLY resolved by the second pass, and the remaining half fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
+    "2026-08-13T10:55:18Z G1 finding Claude-68 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
+    "2026-08-13T10:55:19Z G1 finding Claude-69 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
+    "2026-08-13T10:55:19Z G1 finding Claude-70 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
+    "2026-08-13T10:55:19Z G1 finding Claude-71 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
+    "2026-08-13T10:55:19Z G1 finding Claude-72 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
+    "2026-08-13T10:55:19Z G1 finding Claude-73 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
+    "2026-08-13T10:55:19Z G1 finding Claude-74 dispositioned: resolved: raised by the second confirmation pass and fixed in the final amendment. NOT re-confirmed by a further validator pass - the user declined a fourth confirmation cycle at sign-off, which is disclosed in the gate note as the round's accepted residual",
+    "2026-08-13T10:55:35Z G1 -> passed (L-size spec sign-off across five validation rounds. 93 findings total: 91 resolved, 2 rejected with the user's reason (Codex-53 loop-state timestamp hygiene, and the earlier Claude-31 console residual accepted explicitly). Rounds 1-4 (75 findings) validated PRODUCT.md + TECH.md before a user-directed three-part scope change (caching withdrawn, deploy moved to Cloudflare Pages, file conventions realigned) that neither reviewer had read. Round 5 was a scoped delta re-review the user requested rather than signing off unreviewed: fresh loop-spec-validator grill (14 findings, 3 blocking) + independent Codex thread (8 findings, 4 blocking, plus 3 verified unique findings from a supplementary pass), converging on five core defects and each catching what the other missed. The driving session added Claude-57 by verifying a reviewer's bundler claim against node_modules rather than on faith - vite 8.2.1 ships rolldown, not Rollup. Two further confirmation passes by fresh validators then found 10 and 8 more defects respectively, several introduced by the fixes themselves, including one blocking (a deploy job reading deployment.json with no checkout step). All fixed. ACCEPTED RESIDUALS, at the user's explicit decision: (1) invariant 100's exact-expected-console-set is weaker than an empty console and React Router's own console.error behavior stays UNVERIFIED until M5 installs the package; (2) invariant 112's entry budget leaves only 10-15 kB for this repository's own code over the 85-90 kB dependency estimate, first measured at M1; (3) the final 9 fixes (Claude-63, 65, 68-74) were NOT re-confirmed by a validator - the user declined a fourth confirmation cycle, so G3/G4 and the milestone boundary reviews carry that risk; (4) Codex's raiser-thread confirmation of Codex-45..55 did not return before sign-off, so those fixes rest on the Claude-side re-checks of the same passages. Reviews: evidence/reviews/g1-grill-claude.md, g1-codex-review.md, g1-codex-fix-confirmation.md, g1-codex-round3-incomplete.md, g1-codex-round4-confirmation.md, g1-grill-claude-confirmation.md, g1-grill-claude-delta.md, g1-codex-delta.md, g1-codex-delta-supplementary.md, g1-grill-claude-delta-recheck.md, g1-grill-claude-delta-recheck-2.md)"
+  ],
+  "milestones": [],
+  "evidence_hashes": {
+    "evidence/reviews/g1-grill-claude.md": {
+      "sha": "243b954335fd",
+      "recorded": "2026-08-13T08:31:17Z",
+      "note": "G1 adversarial grill, fresh-context loop-spec-validator, read-only: 26 findings (10 blocking) on PRODUCT.md + TECH.md"
+    },
+    "evidence/reviews/g1-codex-review.md": {
+      "sha": "c9b80559b35c",
+      "recorded": "2026-08-13T08:31:17Z",
+      "note": "G1 Codex second opinion, codex exec --sandbox read-only, gpt-5.6-sol, fresh thread: 16 findings (12 blocking), file:line cited, verified against node_modules and the npm registry"
+    },
+    "evidence/reviews/g1-codex-fix-confirmation.md": {
+      "sha": "a744763df46e",
+      "recorded": "2026-08-13T09:00:58Z",
+      "note": "G1 Codex raiser fix-confirmation, same thread: 1 of 16 originals NOT RESOLVED, 2 PARTIAL, 13 RESOLVED; 12 NEW findings (Codex-17..28, 9 blocking) introduced by the fixes themselves"
+    },
+    "evidence/reviews/g1-grill-claude-confirmation.md": {
+      "sha": "1e0b6d146752",
+      "recorded": "2026-08-13T09:05:07Z",
+      "note": "G1 fresh-instance fix-confirmation of the 26 grill findings: 17 resolved, 9 partial, 16 new (Claude-27..42)"
+    },
+    "evidence/reviews/g1-codex-round3-incomplete.md": {
+      "sha": "cb675548da12",
+      "recorded": "2026-08-13T09:17:25Z",
+      "note": "G1 Codex round-3: NO VERDICT - stalled in a web-search retry loop, terminated. Interim reasoning surfaced 2 real contradictions (a third found while verifying them); all 3 fixed."
+    },
+    "evidence/reviews/g1-codex-round4-confirmation.md": {
+      "sha": "f34cc2423c35",
+      "recorded": "2026-08-13T09:21:40Z",
+      "note": "G1 Codex round-4 raiser confirmation, web search disabled, completed: 11/12 resolved, 3 unresolved (2 blocking), all three fixed after the pass"
+    },
+    "evidence/reviews/g1-grill-claude-delta.md": {
+      "sha": "c07c4c6cb3c5",
+      "recorded": "2026-08-13T10:14:09Z",
+      "note": "G1 delta round 5: fresh loop-spec-validator grill scoped to the three unreviewed amendments (cache withdrawal, Cloudflare Pages move, file conventions). 14 findings, 3 blocking, recorded as Claude-43..Claude-56. Verbatim."
+    },
+    "evidence/reviews/g1-codex-delta.md": {
+      "sha": "0331df2298ad",
+      "recorded": "2026-08-13T10:20:31Z",
+      "note": "G1 delta round 5, OPERATIVE Codex pass (session 019ffa93, job task-msrcp1xo-yexaci): 8 findings, 4 blocking, recorded as Codex-45..Codex-52. Received the full A-E delta brief. Verbatim."
+    },
+    "evidence/reviews/g1-codex-delta-supplementary.md": {
+      "sha": "0dc970f93d43",
+      "recorded": "2026-08-13T10:20:31Z",
+      "note": "G1 delta round 5, SUPPLEMENTARY Codex pass (session 019ffa92, job task-msrcn25z-44hdzd): launched before the A-E brief was sent, preserved per the codex contract's reconcile-visibly rule. Three unique findings verified against the files and recorded as Codex-53..Codex-55; the rest duplicate the operative pass or the Claude grill. Verbatim."
+    },
+    "evidence/reviews/g1-grill-claude-delta-recheck.md": {
+      "sha": "aedbcb0fa90d",
+      "recorded": "2026-08-13T10:40:31Z",
+      "note": "G1 delta round 5 confirmation pass: fresh loop-spec-validator re-check of all 15 delta findings against the amended specs. 10 RESOLVED, 5 PARTIALLY RESOLVED, 0 NOT RESOLVED, plus 5 new defects introduced by the amendments. Recorded as Claude-58..Claude-67. Refuted the driving session's own Claude-57 fix (advancedChunks is also deprecated). Verbatim."
+    },
+    "evidence/reviews/g1-grill-claude-delta-recheck-2.md": {
+      "sha": "efc9cbab6ac3",
+      "recorded": "2026-08-13T10:53:56Z",
+      "note": "G1 delta round 5, SECOND confirmation pass: fresh loop-spec-validator ruled 8 of 10 RESOLVED, 2 PARTIALLY RESOLVED, 6 new defects (1 blocking - the deploy job read deployment.json with jq but had no actions/checkout). Recorded as Claude-68..Claude-74, all fixed. Verbatim."
+    }
+  }
+}
