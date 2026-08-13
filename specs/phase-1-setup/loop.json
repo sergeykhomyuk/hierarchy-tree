@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T13:59:44Z",
+  "updated": "2026-08-13T14:03:14Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 17
+      "steps_done": 18
     },
     "G3": {
       "status": "pending",
@@ -898,8 +898,8 @@
         "a new correlation id is issued per navigation including the initial load",
         "a failed navigation emits no route_viewed"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T14:03:03Z evidence/steps/step18-red-vitest.txt; evidence/steps/step18-red-typecheck.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1569,7 +1569,11 @@
     "2026-08-13T13:59:33Z step 17 -> red",
     "2026-08-13T13:59:34Z step 17 -> green",
     "2026-08-13T13:59:44Z step 17: platform/observability implemented - createObservability.ts returns {facade, bufferHandle} per invariant 45a; facade exposes exactly logger/tracer/analytics (invariant 45); sink chosen once from configuration.observabilitySink (console/buffer/none, invariant 46); createRingBufferSink.ts is a fixed 256-capacity array with a write cursor, dropping oldest past capacity and reading oldest-first across a wrap (invariants 48, 49); redact.ts walks objects/arrays to any depth with a WeakSet for cycles, matches /password|secret|token/i case-insensitively against keys, and additionally rewrites matching search parameters on any string that parses as a URL (invariants 54-56); the single private dispatch() function every facade method funnels through wraps the level check + redaction + sink call in one try/catch so nothing - a below-threshold call, a throwing property getter during redaction, or a throwing sink - escapes into application code (invariants 57, 59), proven by two separate tests per TECH.md's explicit instruction (a throwing getter, and a throwing console.error mocked via vi.spyOn). tracer.startInteraction() generates a correlation id via the createCorrelationId.ts built in step 16, since the real interaction tracker (step 18) doesn't exist yet. Coverage 96.96%25 overall; npm run verify green.",
-    "2026-08-13T13:59:44Z step 17 -> done"
+    "2026-08-13T13:59:44Z step 17 -> done",
+    "2026-08-13T14:03:03Z step 18 -> red",
+    "2026-08-13T14:03:04Z step 18 -> green",
+    "2026-08-13T14:03:13Z step 18: interaction tracker implemented at src/app/routing/createInteractionTracker.ts (app layer, not platform - TECH.md's own directory tree places it there since it needs a router reference; PLAN.md groups the step under M3 organizationally only). createInteractionTracker(observability) returns {attach(router), currentCorrelationId()}: attach() immediately starts an interaction (covering the initial load as its own navigation per invariant 47a), then subscribes to the router and starts a fresh interaction via tracer.startInteraction() each time navigation.state transitions away from idle, settling (and emitting exactly one app.route_viewed with the matched route id) each time it transitions back to idle with no errors, and emitting nothing when errors are present or no route matched. The id lives on the tracker instance (a closure variable), not a module-level slot, so two tracker instances in one test file cannot leak an id between them. Router/RouterState are a minimal hand-rolled structural type (react-router isn't installed until M5's step 27) - the shape (navigation.state, matches[].route.id, errors) mirrors React Router's actual RouterState and needs empirical confirmation against the installed package once M5 wires in the real router. Tested entirely against a fake router object capturing the subscribed listener, per M3's own boundary note that the whole platform-adapters milestone needs no e2e. npm run verify green, 97.71%25 coverage.",
+    "2026-08-13T14:03:14Z step 18 -> done"
   ],
   "milestones": [
     {

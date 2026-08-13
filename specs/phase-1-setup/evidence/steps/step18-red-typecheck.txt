@@ -1,0 +1,3 @@
+src/app/routing/createInteractionTracker.test.ts(2,42): error TS2307: Cannot find module './createInteractionTracker' or its corresponding type declarations.
+src/app/routing/createInteractionTracker.test.ts(3,42): error TS2307: Cannot find module './createInteractionTracker' or its corresponding type declarations.
+src/app/routing/createInteractionTracker.test.ts(8,17): error TS7006: Parameter 'nextListener' implicitly has an 'any' type.

@@ -1,0 +1,32 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/routing/createInteractionTracker.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/routing/createInteractionTracker.test.ts [ src/app/routing/createInteractionTracker.test.ts ]
+Error: Failed to resolve import "./createInteractionTracker" from "src/app/routing/createInteractionTracker.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/routing/createInteractionTracker.test.ts:2:41
+  1  |  import { describe, expect, it, vi } from "vitest";
+  2  |  import { createInteractionTracker } from "./createInteractionTracker";
+     |                                            ^
+  3  |  function createFakeRouter() {
+  4  |  	let listener;
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  15:01:27
+   Duration  488ms (transform 8ms, setup 59ms, import 0ms, tests 0ms, environment 346ms)
+
