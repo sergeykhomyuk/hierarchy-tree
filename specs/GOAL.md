@@ -2,7 +2,7 @@
 
 Build a small web application that lets a user log in and view the full organizational hierarchy of users as a tree.
 
-Specified in `docs/task.pdf`.
+Specified in `../docs/task.md`.
 
 ## Core flow
 

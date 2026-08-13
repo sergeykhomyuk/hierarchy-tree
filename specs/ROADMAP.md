@@ -1,0 +1,123 @@
+# Roadmap
+
+What gets built, in what order, and how each phase proves it is done. Three phases.
+
+The goal is in [GOAL.md](./GOAL.md), the technical decisions are in [ARCHITECTURE.md](./ARCHITECTURE.md), the screens are in [docs/hierarchy-tree-mockups.html](./docs/hierarchy-tree-mockups.html), and the facts already extracted from the brief are in [docs/reference.md](./docs/reference.md). This file stays above all of that: goals and outcomes, not tasks.
+
+## Status
+
+- **Phase 1 - Project setup**: not started (0/6 outcomes, 0/3 exit criteria)
+- **Phase 2 - Login page**: not started (0/5 outcomes, 0/4 exit criteria)
+- **Phase 3 - Hierarchy Tree page**: not started (0/7 outcomes, 0/5 exit criteria)
+
+**Next up**: write the phase 1 spec, then execute it.
+
+**Last updated**: 2026-08-13 - roadmap created, no code written
+
+## How to use this
+
+- Each phase gets its own detailed spec before work on it starts. This file records what the phase is for and how it will be judged; the spec records how to do it.
+- `GOAL.md` and `ARCHITECTURE.md` stay binding. This file orders the work; it does not re-open decisions. If a phase appears to require deviating from `ARCHITECTURE.md`, stop and ask, then update the decision log in the same change.
+- Phases run in order. Each assumes the one before it is complete.
+- A phase is done when its exit criteria pass on a suite you actually ran. An unrun suite is not evidence.
+
+### Recording progress
+
+- Tick an outcome or exit criterion only when it is done *and* verified. Half-done stays unticked.
+- A phase that is underway but incomplete gets `IN PROGRESS -` on the outcome being worked, naming what remains. A blocked one gets `BLOCKED -` with the reason and what would unblock it. Do not tick around a blocker; leave it visible.
+- Update the **Status** board in the same edit: counts, what is next, and the last-updated line.
+- Append a line to the **Progress log** when a phase closes, or when something happens that a later reader would need to know. That log is how a fresh agent reconstructs what happened without reading the diff.
+- If reality diverges from what a phase promised, edit the phase and say so in the log. A roadmap that lies is worse than no roadmap.
+
+---
+
+## Phase 1 - Project setup
+
+**Goal**: a deployable, fully instrumented skeleton with no features in it, so that later phases only ever add feature code and always land green.
+
+Everything expensive to retrofit happens here: the layer boundaries, the platform adapters, the design system, and the whole quality pipeline. Getting this wrong is what turns phases 2 and 3 into rework.
+
+**Outcomes**
+
+- [ ] The four layers exist and the import rules between them are enforced by lint, not by convention
+- [ ] The platform layer adapts the outside world: configuration, HTTP, caching, observability, i18n
+- [ ] A shared, domain-free UI kit carries the mockups' visual language in both light and dark
+- [ ] The router, provider stack and root error boundary compose a placeholder app
+- [ ] The full quality pipeline runs in CI: types, lint, formatting, unit tests, e2e, size budgets
+- [ ] `main` deploys itself, so review starts with a URL rather than an install
+
+**Exit criteria**
+
+- [ ] Every pipeline check passes locally and in CI
+- [ ] A deliberate cross-feature import fails lint (demonstrated, then reverted)
+- [ ] The deployed URL renders a placeholder login route
+
+---
+
+## Phase 2 - Login page
+
+**Goal**: a user signs in with their email and password and arrives at the hierarchy page; a failed attempt tells them so without guesswork.
+
+Screens `1a`-`1d`. The interesting risk here is the credential derivation recovered from the brief — it is easy to port in a way that looks right and produces the wrong bytes.
+
+**Outcomes**
+
+- [ ] The credential-to-secret derivation is ported and proven against a real account, not just unit-tested for shape
+- [ ] Signing in looks up only the secret; the user table, with its plaintext passwords, is never fetched to authenticate
+- [ ] A session survives a reload, dies with the tab, and holds nothing sensitive
+- [ ] Access control runs before data fetching, and returns the user to where they were headed
+- [ ] The login page renders all four of its states
+
+**Exit criteria**
+
+- [ ] A real credential signs in and lands on the hierarchy page; a wrong one stays put and says why
+- [ ] The four states match the mockups
+- [ ] No credential material reaches any URL, log line, telemetry event or storage entry - asserted, not eyeballed
+- [ ] Full pipeline green
+
+---
+
+## Phase 3 - Hierarchy Tree page
+
+**Goal**: the complete organizational tree, shown to every user regardless of who is signed in, fully operable from the keyboard and unbothered by bad data.
+
+Screens `1e`-`1h`. This is where the depth goes: the tree domain is pure and heavily tested, and the widget honours the accessibility contract it claims.
+
+**Outcomes**
+
+- [ ] Tree construction is pure, framework-free and exhaustively tested, including multiple roots, missing managers and cycles
+- [ ] A malformed record is dropped and reported rather than taking the page down
+- [ ] The page renders all four of its states
+- [ ] Expand and collapse survive a refresh, a shared link and the back button
+- [ ] The tree implements the full ARIA tree keyboard contract, asserted in tests rather than claimed in prose
+- [ ] Signing out returns to the login page and cannot be undone with the back button
+- [ ] `README.md` describes this project rather than the Vite template, and the decision log reflects anything that deviated
+
+**Exit criteria**
+
+- [ ] The full tree renders from the live database, with multiple roots, correct nesting and correct manager detection
+- [ ] Toggles work by mouse and by keyboard; the tree is a single tab stop; accessibility checks pass on rendered pages
+- [ ] All four states are reachable in e2e, failure paths included
+- [ ] Expansion state survives a refresh and the back button
+- [ ] The whole pipeline is green and `main` is deployed
+
+---
+
+## Not in scope
+
+Carried from `ARCHITECTURE.md` section 7 so that reading only this file does not lead somewhere it should not. Each omission is a decision, with the seam that makes it cheap later.
+
+- **Virtualized rendering** - unnecessary at 33 rows; the tree domain already emits the row model a windowing layer consumes.
+- **Real authentication** - impossible against this API from a static client. The auth feature isolates the lookup so a server-issued cookie replaces one module.
+- **Offline and service workers** - a 9KB public payload does not justify a cache lifecycle. The repository layer is where a persistent cache would attach.
+- **Search, filtering, org editing** - the tree domain already returns the row model a filter would narrow, but none of this is asked for.
+- **A second locale, SSR, a component library** - the infrastructure supports each; none is needed.
+- **Vendor telemetry** - the observability facade defines the contract; a real sink is a one-line swap.
+
+---
+
+## Progress log
+
+Newest last. One line per phase closed, or per event a later reader would need to know: date, what happened, evidence, commit sha.
+
+- 2026-08-13 - roadmap created from GOAL.md, ARCHITECTURE.md and the mockups. The database URL, the credential derivation and the design tokens were extracted from `docs/task.md` and recorded in `docs/reference.md`; package versions verified against the npm registry.

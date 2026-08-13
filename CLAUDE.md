@@ -4,8 +4,8 @@ Guidance for Claude Code when working in this repository.
 
 ## Read first
 
-- [GOAL.md](./GOAL.md) - what the app must do. The feature scope is closed: if it is not in GOAL.md, do not build it.
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - how it is built and why. Every technical decision is already made and recorded there.
+- [specs/GOAL.md](./specs/GOAL.md) - what the app must do. The feature scope is closed: if it is not in GOAL.md, do not build it.
+- [specs/ARCHITECTURE.md](./specs/ARCHITECTURE.md) - how it is built and why. Every technical decision is already made and recorded there.
 
 Treat both as binding. If a task seems to require deviating from ARCHITECTURE.md, say so and ask before writing code; if the deviation is right, update the decision log in the same change.
 
