@@ -1,3 +1,4 @@
+import '@shared/theme/theme.css';
 import { createConfiguration, readEnvironment } from '@platform/configuration';
 import { bootstrap } from './bootstrap';
 

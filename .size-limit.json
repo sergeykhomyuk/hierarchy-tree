@@ -5,5 +5,12 @@
     "limit": "100 kB",
     "gzip": true,
     "running": false
+  },
+  {
+    "name": "stylesheet",
+    "path": "dist/assets/*.css",
+    "limit": "15 kB",
+    "gzip": true,
+    "running": false
   }
 ]

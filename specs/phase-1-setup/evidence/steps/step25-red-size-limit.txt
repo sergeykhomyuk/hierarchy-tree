@@ -1,0 +1,41 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ build-output/size-limit-entries.test.ts (2 tests | 1 failed | 1 skipped) 3ms
+     × size-limit entries equal the declaration table expected set 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  build-output/size-limit-entries.test.ts > size-limit entries > size-limit entries equal the declaration table expected set
+AssertionError: expected [ { …(2) } ] to deeply equal [ { …(2) }, …(1) ]
+
+- Expected
++ Received
+
+  [
+    {
+      "limit": "100 kB",
+      "name": "app entry (initial payload)",
+    },
+-   {
+-     "limit": "15 kB",
+-     "name": "stylesheet",
+-   },
+  ]
+
+ ❯ build-output/size-limit-entries.test.ts:31:30
+     29|     }));
+     30|
+     31|     expect(actualProjection).toEqual(table.alwaysOn.sizeLimitEntries);
+       |                              ^
+     32|   });
+     33|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+   Start at  16:09:59
+   Duration  71ms (transform 8ms, setup 0ms, import 12ms, tests 3ms, environment 0ms)
+

@@ -4,7 +4,8 @@
     "basePath": true,
     "bundleSecrets": true,
     "sizeLimitEntries": [
-      { "name": "app entry (initial payload)", "limit": "100 kB" }
+      { "name": "app entry (initial payload)", "limit": "100 kB" },
+      { "name": "stylesheet", "limit": "15 kB" }
     ]
   }
 }

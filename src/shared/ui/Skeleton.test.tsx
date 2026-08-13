@@ -27,4 +27,13 @@ describe('Skeleton', () => {
 
     expect(container.firstElementChild?.className).toContain('rounded-card');
   });
+
+  it('the skeleton emits no style attribute', () => {
+    const { container } = render(
+      <Skeleton shape="text" width="line" height="line" />,
+    );
+
+    // eslint-disable-next-line testing-library/no-node-access -- asserting absence of an attribute the production CSP blocks, not a role or text query.
+    expect(container.firstElementChild).not.toHaveAttribute('style');
+  });
 });

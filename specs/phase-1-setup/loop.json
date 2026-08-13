@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T15:03:00Z",
+  "updated": "2026-08-13T15:13:11Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 24
+      "steps_done": 25
     },
     "G3": {
       "status": "pending",
@@ -1013,8 +1013,8 @@
         "the skeleton emits no style attribute",
         "size-limit entries equal the declaration table expected set"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T15:12:54Z evidence/steps/step25-red-skeleton.txt; evidence/steps/step25-red-size-limit.txt; evidence/steps/step25-red-kitroute.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1647,7 +1647,15 @@
     "2026-08-13T15:02:46Z step 24 -> red",
     "2026-08-13T15:02:47Z step 24 -> green",
     "2026-08-13T15:03:00Z step 24: state inventory + axe coverage implemented. src/shared/testing/toHaveNoAxeViolations.ts wraps axe-core's run() directly in an expect.extend matcher (axe-core added as an explicit devDependency - it was only present as a transitive dependency of @axe-core/playwright before, which is fragile on a clean install). src/app/testing/kitStates.tsx is the single state inventory (testing-harness element, invariant 87's 'one inventory' requirement) covering all 21 documented states across the 8 kit components. The axe test caught a real finding immediately: the Input 'standalone' state had no associated label - fixed by wrapping it in a real <label htmlFor>, which still proves Input renders without FieldContext (its own invariant) while being genuinely accessible rather than a hollow pass. Completeness is checked against a hardcoded KIT_COMPONENT_NAMES list matching invariant 69's closed set of 8, not derived from @shared/ui's runtime exports (deliberately - a stray non-component export would silently satisfy a dynamic check). Extended the i18next/no-literal-string test-file exemption from step 23 to also cover src/app/testing/**, since kitStates.tsx needs realistic literal text but is testing-harness code that never ships (same invariant-60 reasoning, different file pattern - not a .test.tsx file). Also raised the tooling vitest project's testTimeout to 20s: eslint.config.js has grown enough that a fresh npx eslint child process now genuinely exceeds the 5s default, causing real (non-flaky) timeouts in both the pre-existing demonstrable-negative tests and the new literal-string guard. npm run verify green, 171 tests, 98.33%25 coverage (kitStates.tsx itself is coverage-excluded as testing infrastructure, matching testing/index.ts).",
-    "2026-08-13T15:03:00Z step 24 -> done"
+    "2026-08-13T15:03:00Z step 24 -> done",
+    "2026-08-13T15:12:54Z step 25 -> red",
+    "2026-08-13T15:12:59Z step 25 -> green",
+    "2026-08-13T15:13:04Z step 25: KitRoute.tsx (inert module, not yet routed - M5 wires it), skeleton no-style-attribute assertion, theme.css wired into main.tsx and imported for the first time, stylesheet size-limit entry (15 kB, actual 3.76 kB gzip) appended to .size-limit.json + expected-build-output.json. M4 complete.",
+    "2026-08-13T15:13:04Z step 25 -> done",
+    "2026-08-13T15:13:10Z evidence recorded: evidence/steps/step25-red-skeleton.txt (7a2c20112be9) - genuine red: skeleton style-attribute regression injected, test fails, then reverted",
+    "2026-08-13T15:13:10Z evidence recorded: evidence/steps/step25-red-size-limit.txt (c7c1a653198d) - genuine red: expected-build-output.json stylesheet entry added alone, .size-limit.json mismatch",
+    "2026-08-13T15:13:10Z evidence recorded: evidence/steps/step25-red-kitroute.txt (1f00f49edf8b) - genuine red: KitRoute.tsx module not found",
+    "2026-08-13T15:13:11Z evidence recorded: evidence/steps/step25-green.txt (2987e62d9d4a) - full npm run verify green: 174 tests, 98.34% coverage, build + verify:build + size all pass"
   ],
   "milestones": [
     {
@@ -1957,6 +1965,26 @@
       "sha": "9d79dd1a0460",
       "recorded": "2026-08-13T13:21:52Z",
       "note": "vitest green: all 5 registered-test assertions pass; full npm run verify re-confirmed (65.17kB/100kB budget)"
+    },
+    "evidence/steps/step25-red-skeleton.txt": {
+      "sha": "7a2c20112be9",
+      "recorded": "2026-08-13T15:13:10Z",
+      "note": "genuine red: skeleton style-attribute regression injected, test fails, then reverted"
+    },
+    "evidence/steps/step25-red-size-limit.txt": {
+      "sha": "c7c1a653198d",
+      "recorded": "2026-08-13T15:13:10Z",
+      "note": "genuine red: expected-build-output.json stylesheet entry added alone, .size-limit.json mismatch"
+    },
+    "evidence/steps/step25-red-kitroute.txt": {
+      "sha": "1f00f49edf8b",
+      "recorded": "2026-08-13T15:13:10Z",
+      "note": "genuine red: KitRoute.tsx module not found"
+    },
+    "evidence/steps/step25-green.txt": {
+      "sha": "2987e62d9d4a",
+      "recorded": "2026-08-13T15:13:11Z",
+      "note": "full npm run verify green: 174 tests, 98.34% coverage, build + verify:build + size all pass"
     }
   },
   "test_file_hashes": {}
