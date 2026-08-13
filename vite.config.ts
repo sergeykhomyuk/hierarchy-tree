@@ -14,4 +14,15 @@ export default defineConfig({
       '@platform': path.resolve(import.meta.dirname, './src/platform'),
     },
   },
+  build: {
+    rolldownOptions: {
+      output: {
+        entryFileNames: 'assets/entry-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        codeSplitting: {
+          groups: [{ name: 'vendor', test: /node_modules/ }],
+        },
+      },
+    },
+  },
 });

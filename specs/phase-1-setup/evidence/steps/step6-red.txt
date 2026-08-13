@@ -1,0 +1,39 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/repository-configuration.test.ts (10 tests | 2 failed) 783ms
+     × the built entry and vendor chunks match their size-limit globs 679ms
+     × size-limit entries equal the declaration table expected set 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/repository-configuration.test.ts > build output > the built entry and vendor chunks match their size-limit globs
+AssertionError: no dist/assets/entry-*.js emitted: expected 0 to be greater than 0
+ ❯ scripts/repository-configuration.test.ts:244:9
+    242|         entryMatches.length,
+    243|         'no dist/assets/entry-*.js emitted',
+    244|       ).toBeGreaterThan(0);
+       |         ^
+    245|       expect(
+    246|         vendorMatches.length,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |tooling| scripts/repository-configuration.test.ts > build output > size-limit entries equal the declaration table expected set
+Error: ENOENT: no such file or directory, open '.size-limit.json'
+ ❯ scripts/repository-configuration.test.ts:254:40
+    252|
+    253|   it('size-limit entries equal the declaration table expected set', ()…
+    254|     const sizeLimitConfig = JSON.parse(readFileSync('.size-limit.json'…
+       |                                        ^
+    255|
+    256|     expect(sizeLimitConfig).toEqual(M1_SIZE_LIMIT_ENTRIES);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  13:09:42
+   Duration  869ms (transform 19ms, setup 10ms, import 9ms, tests 783ms, environment 0ms)
+

@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:07:57Z",
+  "updated": "2026-08-13T12:10:59Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 5
+      "steps_done": 6
     },
     "G3": {
       "status": "pending",
@@ -699,8 +699,8 @@
         "the built entry and vendor chunks match their size-limit globs",
         "size-limit entries equal the declaration table expected set"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T12:09:48Z evidence/steps/step6-red.txt: build emits no entry-*/vendor-* chunks, .size-limit.json missing",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -1407,7 +1407,13 @@
     "2026-08-13T12:07:49Z evidence recorded: evidence/steps/step5-green.txt (df0282bd8155) - vitest green: tailwind stylesheet path test passes, tsc/eslint clean",
     "2026-08-13T12:07:49Z step 5 -> green",
     "2026-08-13T12:07:49Z step 5 -> done",
-    "2026-08-13T12:07:57Z step 5 gap: prettier-plugin-tailwindcss (v4 mode) eagerly loads the tailwindStylesheet path for every file it formats, not only files with tailwind classes - with theme.css absent (arrives M4) this made npm run format:check error on every file, not just fail on style. Fixed by creating a minimal src/shared/theme/theme.css placeholder (@import 'tailwindcss'; only, unimported) now; M4 step 21 fleshes it out with the real token layer. Also added specs/ and docs/ to .prettierignore - specs/ holds hash-registered immutable evidence and G1-validated spec docs that are not Prettier's to reformat as a side effect of a toolchain step."
+    "2026-08-13T12:07:57Z step 5 gap: prettier-plugin-tailwindcss (v4 mode) eagerly loads the tailwindStylesheet path for every file it formats, not only files with tailwind classes - with theme.css absent (arrives M4) this made npm run format:check error on every file, not just fail on style. Fixed by creating a minimal src/shared/theme/theme.css placeholder (@import 'tailwindcss'; only, unimported) now; M4 step 21 fleshes it out with the real token layer. Also added specs/ and docs/ to .prettierignore - specs/ holds hash-registered immutable evidence and G1-validated spec docs that are not Prettier's to reformat as a side effect of a toolchain step.",
+    "2026-08-13T12:09:48Z step 6 -> red",
+    "2026-08-13T12:10:59Z evidence recorded: evidence/steps/step6-red.txt (2e767fe800ce) - vitest red: no chunks matching entry-*/vendor-* globs, .size-limit.json missing",
+    "2026-08-13T12:10:59Z evidence recorded: evidence/steps/step6-green.txt (2f1c30695b26) - vitest green: build emits matching chunks, size-limit config matches expected set; empirically confirmed rolldownOptions.output.entryFileNames/chunkFileNames/codeSplitting against installed vite 8.2.1/rolldown ~1.2.1",
+    "2026-08-13T12:10:59Z step 6 -> green",
+    "2026-08-13T12:10:59Z step 6 -> done",
+    "2026-08-13T12:10:59Z step 6: empirically confirmed against installed vite 8.2.1 (bundles rolldown ~1.2.1 natively) - rolldownOptions.output.entryFileNames/chunkFileNames use the same [hash] placeholder syntax as documented, and vendor grouping uses output.codeSplitting.groups (rolldown's own API, not rollupOptions.output.manualChunks). npm run size currently exceeds the 100kB budget (117.28kB) because template cruft (App.tsx, hero.png, App.css) is still bundled - expected to resolve at step 7 when that cruft is deleted; not required to pass until the M1 boundary."
   ],
   "milestones": [
     {
@@ -1552,6 +1558,16 @@
       "sha": "df0282bd8155",
       "recorded": "2026-08-13T12:07:48Z",
       "note": "vitest green: tailwind stylesheet path test passes, tsc/eslint clean"
+    },
+    "evidence/steps/step6-red.txt": {
+      "sha": "2e767fe800ce",
+      "recorded": "2026-08-13T12:10:59Z",
+      "note": "vitest red: no chunks matching entry-*/vendor-* globs, .size-limit.json missing"
+    },
+    "evidence/steps/step6-green.txt": {
+      "sha": "2f1c30695b26",
+      "recorded": "2026-08-13T12:10:59Z",
+      "note": "vitest green: build emits matching chunks, size-limit config matches expected set; empirically confirmed rolldownOptions.output.entryFileNames/chunkFileNames/codeSplitting against installed vite 8.2.1/rolldown ~1.2.1"
     }
   },
   "test_file_hashes": {}

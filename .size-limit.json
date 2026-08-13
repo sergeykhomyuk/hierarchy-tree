@@ -1,0 +1,9 @@
+[
+  {
+    "name": "app entry (initial payload)",
+    "path": ["dist/assets/entry-*.js", "dist/assets/vendor-*.js"],
+    "limit": "100 kB",
+    "gzip": true,
+    "running": false
+  }
+]
