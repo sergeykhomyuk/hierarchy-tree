@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:53:47Z",
+  "updated": "2026-08-13T12:59:25Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 13
+      "steps_done": 14
     },
     "G3": {
       "status": "pending",
@@ -810,8 +810,8 @@
         "the vocabulary script matches whole identifier segments and not substrings",
         "the physical-properties script rejects a physical-direction utility"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T12:57:50Z evidence/steps/step14-red.txt: assert-domain-vocabulary.mjs and assert-no-physical-properties.mjs do not exist",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1496,7 +1496,12 @@
     "2026-08-13T12:53:46Z evidence recorded: evidence/negatives/boundaries-platform-to-shared.txt (9bcd25703bc5) - demonstrable negative: captured lint failure, reverted in the same change",
     "2026-08-13T12:53:47Z evidence recorded: evidence/negatives/single-reader-env.txt (9dd9a29d3462) - demonstrable negative: captured lint failure, reverted in the same change",
     "2026-08-13T12:53:47Z evidence recorded: evidence/negatives/single-reader-fetch.txt (8600726ea0ff) - demonstrable negative: captured lint failure, reverted in the same change",
-    "2026-08-13T12:53:47Z evidence recorded: evidence/steps/step13-na.txt (f60e29385ed5) - vitest: both permanent regression tests (cross-feature, deep-import) pass immediately, confirming steps 10-11's rules"
+    "2026-08-13T12:53:47Z evidence recorded: evidence/steps/step13-na.txt (f60e29385ed5) - vitest: both permanent regression tests (cross-feature, deep-import) pass immediately, confirming steps 10-11's rules",
+    "2026-08-13T12:57:50Z step 14 -> red",
+    "2026-08-13T12:59:25Z evidence recorded: evidence/steps/step14-red.txt (77e0cfc7a432) - node: assert-domain-vocabulary.mjs and assert-no-physical-properties.mjs did not exist",
+    "2026-08-13T12:59:25Z evidence recorded: evidence/steps/step14-green.txt (dcf17989a125) - vitest green: both scripts correctly distinguish safe substring collisions from banned whole identifiers; wired into npm run lint; full npm run verify re-confirmed green",
+    "2026-08-13T12:59:25Z step 14 -> green",
+    "2026-08-13T12:59:25Z step 14 -> done"
   ],
   "milestones": [
     {
@@ -1766,6 +1771,16 @@
       "sha": "f60e29385ed5",
       "recorded": "2026-08-13T12:53:47Z",
       "note": "vitest: both permanent regression tests (cross-feature, deep-import) pass immediately, confirming steps 10-11's rules"
+    },
+    "evidence/steps/step14-red.txt": {
+      "sha": "77e0cfc7a432",
+      "recorded": "2026-08-13T12:59:25Z",
+      "note": "node: assert-domain-vocabulary.mjs and assert-no-physical-properties.mjs did not exist"
+    },
+    "evidence/steps/step14-green.txt": {
+      "sha": "dcf17989a125",
+      "recorded": "2026-08-13T12:59:25Z",
+      "note": "vitest green: both scripts correctly distinguish safe substring collisions from banned whole identifiers; wired into npm run lint; full npm run verify re-confirmed green"
     }
   },
   "test_file_hashes": {}
