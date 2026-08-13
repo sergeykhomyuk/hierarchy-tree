@@ -2,9 +2,9 @@
 
 Browser UI (React + Vite, deployed to Cloudflare Pages). This file is the repository's
 verification profile: what to run locally, what "passing" means, and where evidence for a
-loop's proof document comes from. It is authored in `specs/phase-1-setup/` milestone 1 and
-grows two markers later in the same phase (M6): the `production-hostname` value once the
-Cloudflare Pages project exists.
+loop's proof document comes from. It is authored in `specs/phase-1-setup/` milestone 1;
+milestone 6 adds the `production-hostname` marker below once the Cloudflare Pages project
+exists.
 
 ## Environment
 
@@ -76,7 +76,7 @@ Milestone boundaries land their own evidence under `specs/phase-1-setup/evidence
 as `m<N>-suite.txt` and `m<N>-e2e.txt`; step-level red/green evidence lands under
 `specs/phase-1-setup/evidence/steps/`.
 
-<!-- production-hostname: added in M6 once the Cloudflare Pages project exists -->
+<!-- production-hostname: https://hierarchy-tree.pages.dev -->
 
 ## Notes carried from specification
 

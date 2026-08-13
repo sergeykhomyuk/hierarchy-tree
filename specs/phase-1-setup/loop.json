@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T18:29:03Z",
+  "updated": "2026-08-13T18:40:17Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -619,7 +619,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 38,
-      "steps_done": 35
+      "steps_done": 36
     },
     "G3": {
       "status": "pending",
@@ -1186,10 +1186,12 @@
       "id": 36,
       "desc": "deployment.json at the repository root carrying projectName and productionHostname as the single machine-readable source, the production-hostname markers added to VERIFICATION.md and .env.example, and the doc-agreement test asserting each marker is PRESENT and its value equals deployment.json (invariant 123)",
       "tests": [
-        "the production hostname markers are present and agree with deployment.json"
+        "carries a project name and an https production hostname",
+        "VERIFICATION.md carries the production-hostname marker, and its value agrees",
+        ".env.example carries the production-hostname marker, and its value agrees"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-13T18:40:17Z evidence/steps/step36-red.txt",
+      "status": "done",
       "milestone": 6
     },
     {
@@ -1839,7 +1841,13 @@
     "2026-08-13T18:29:02Z step 34 -> done",
     "2026-08-13T18:29:02Z step 35 -> red",
     "2026-08-13T18:29:03Z step 35 -> green",
-    "2026-08-13T18:29:03Z step 35 -> done"
+    "2026-08-13T18:29:03Z step 35 -> done",
+    "2026-08-13T18:40:17Z step 36 amended: desc: 'deployment.json at the repository root carrying projectName and productionHostname as the single machine-readable source, the production-hostname markers added to VERIFICATION.md and .env.example, and the doc-agreement test asserting each marker is PRESENT and its value equals deployment.json (invariant 123)' -> 'deployment.json at the repository root carrying projectName and productionHostname as the single machine-readable source, the production-hostname markers added to VERIFICATION.md and .env.example, and the doc-agreement test asserting each marker is PRESENT and its value equals deployment.json (invariant 123)'; tests: ['the production hostname markers are present and agree with deployment.json'] -> ['carries a project name and an https production hostname', 'VERIFICATION.md carries the production-hostname marker, and its value agrees', '.env.example carries the production-hostname marker, and its value agrees']",
+    "2026-08-13T18:40:17Z evidence recorded: evidence/steps/step36-red.txt (4947b9136277) - deployment-configuration.test.ts red against no deployment.json (stashed VERIFICATION.md's marker edit, moved deployment.json/.env.example aside)",
+    "2026-08-13T18:40:17Z evidence recorded: evidence/steps/step36-green.txt (3bac7a97c073) - full npm run verify green after deployment.json, VERIFICATION.md/.env.example production-hostname markers, and the doc-agreement test were added",
+    "2026-08-13T18:40:17Z step 36 -> red",
+    "2026-08-13T18:40:17Z step 36 -> green",
+    "2026-08-13T18:40:17Z step 36 -> done"
   ],
   "milestones": [
     {
@@ -2509,6 +2517,16 @@
       "sha": "a0e4ebc98d0b",
       "recorded": "2026-08-13T18:28:55Z",
       "note": "full npm run verify green after .github/workflows/ci.yml and scripts/workflow-configuration.test.ts (18 tests) were added - typecheck, lint, format, 230 unit tests, build, verify:build, size all green"
+    },
+    "evidence/steps/step36-red.txt": {
+      "sha": "4947b9136277",
+      "recorded": "2026-08-13T18:40:17Z",
+      "note": "deployment-configuration.test.ts red against no deployment.json (stashed VERIFICATION.md's marker edit, moved deployment.json/.env.example aside)"
+    },
+    "evidence/steps/step36-green.txt": {
+      "sha": "3bac7a97c073",
+      "recorded": "2026-08-13T18:40:17Z",
+      "note": "full npm run verify green after deployment.json, VERIFICATION.md/.env.example production-hostname markers, and the doc-agreement test were added"
     }
   },
   "test_file_hashes": {}
