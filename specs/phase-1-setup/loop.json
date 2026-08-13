@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-13T11:04:11Z",
   "created": "2026-08-13",
-  "updated": "2026-08-13T12:18:19Z",
+  "updated": "2026-08-13T12:31:31Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -628,7 +628,33 @@
     "G4": {
       "status": "pending",
       "attempts": 0,
-      "security_pass": null
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "scripts/repository-configuration.test.ts runs a live vite build as a side effect of the default (tooling project) test suite, making npm test non-hermetic and duplicating verify:build's check out of order",
+          "blocking": true,
+          "disposition": "fixed: moved the chunk-existence check into build-output/size-limit-entries.test.ts (runs post-build under verify:build only); removed the vite build trigger and the duplicate size-limit-entries assertion from scripts/repository-configuration.test.ts. npm run test is hermetic again (13 tests, no dist/ write).",
+          "round": "milestone-1"
+        },
+        "Claude-2": {
+          "desc": "tsconfig.tools.json deviation rationale given to the reviewer conflated tsconfig include glob semantics with Vitest glob semantics; persisted loop.json log entry itself is accurate, no code defect",
+          "blocking": false,
+          "disposition": "accepted: the wrong claim was in my review-agent briefing paraphrase, not in the persisted loop.json log (step 2's entry is accurate). No code or log change needed.",
+          "round": "milestone-1"
+        },
+        "Claude-3": {
+          "desc": "VERIFICATION.md described npm run verify as covering invariant 103's full order (implying e2e) while the script covers only 7 of 8 steps",
+          "blocking": false,
+          "disposition": "fixed: VERIFICATION.md now states npm run verify covers 7 of invariant 103's 8 ordered steps and explicitly does not include e2e, with the reason (e2e needs the already-verified artifact served, not rebuilt).",
+          "round": "milestone-1"
+        },
+        "Claude-4": {
+          "desc": "declaration table's alwaysOn.basePath/bundleSecrets are true without a backing build-output test yet - base-path.test.ts is PLAN M5 step 31, bundle-secrets.test.ts needs M2 step 14's assert-no-secrets.mjs",
+          "blocking": false,
+          "disposition": "accepted: matches PLAN.md's own staged rollout - base-path.test.ts is M5 step 31, bundle-secrets.test.ts needs M2 step 14's assert-no-secrets.mjs. Not an M1 defect.",
+          "round": "milestone-1"
+        }
+      }
     },
     "G5": {
       "status": "pending",
@@ -1427,14 +1453,25 @@
     "2026-08-13T12:17:44Z step 8: npm run lint is scoped to 'eslint .' only for now - assert-no-physical-properties.mjs and assert-no-secrets.mjs --source-only (also named in TECH 7.1's lint script) are M2 step 14 deliverables; appending calls to files that don't exist yet would break npm run verify at the M1 boundary. M2 step 14 extends the lint script when those scripts land. Same staging pattern as step 5's theme.css placeholder.",
     "2026-08-13T12:18:19Z evidence recorded: evidence/milestones/m1-suite.txt (0ce9f241f72f) - npm run verify full chain output at M1 boundary",
     "2026-08-13T12:18:19Z evidence recorded: evidence/milestones/m1-e2e.txt (8e53066cd79e) - M1 has no e2e specs yet - first real e2e run is at M5 boundary; npm run verify does not include e2e per TECH.md 7.1",
-    "2026-08-13T12:18:19Z milestone 1 boundary verified: npm run verify passes end to end (typecheck, lint, format:check, test:coverage 100%, build, verify:build, size 59.4kB/100kB); evidence/milestones/m1-suite.txt, m1-e2e.txt"
+    "2026-08-13T12:18:19Z milestone 1 boundary verified: npm run verify passes end to end (typecheck, lint, format:check, test:coverage 100%, build, verify:build, size 59.4kB/100kB); evidence/milestones/m1-suite.txt, m1-e2e.txt",
+    "2026-08-13T12:30:00Z evidence recorded: evidence/reviews/m1-claude-review.md (13547e9666e7) - M1 milestone boundary review, fresh-context loop-reviewer",
+    "2026-08-13T12:30:01Z G4 finding Claude-1 recorded (blocking) [round: milestone-1]: scripts/repository-configuration.test.ts runs a live vite build as a side effect of the default (tooling project) test suite, making npm test non-hermetic and duplicating verify:build's check out of order",
+    "2026-08-13T12:30:01Z G4 finding Claude-2 recorded [round: milestone-1]: tsconfig.tools.json deviation rationale given to the reviewer conflated tsconfig include glob semantics with Vitest glob semantics; persisted loop.json log entry itself is accurate, no code defect",
+    "2026-08-13T12:30:01Z G4 finding Claude-3 recorded [round: milestone-1]: VERIFICATION.md described npm run verify as covering invariant 103's full order (implying e2e) while the script covers only 7 of 8 steps",
+    "2026-08-13T12:30:01Z G4 finding Claude-4 recorded [round: milestone-1]: declaration table's alwaysOn.basePath/bundleSecrets are true without a backing build-output test yet - base-path.test.ts is PLAN M5 step 31, bundle-secrets.test.ts needs M2 step 14's assert-no-secrets.mjs",
+    "2026-08-13T12:31:24Z G4 finding Claude-1 dispositioned: fixed: moved the chunk-existence check into build-output/size-limit-entries.test.ts (runs post-build under verify:build only); removed the vite build trigger and the duplicate size-limit-entries assertion from scripts/repository-configuration.test.ts. npm run test is hermetic again (13 tests, no dist/ write).",
+    "2026-08-13T12:31:24Z G4 finding Claude-2 dispositioned: accepted: the wrong claim was in my review-agent briefing paraphrase, not in the persisted loop.json log (step 2's entry is accurate). No code or log change needed.",
+    "2026-08-13T12:31:24Z G4 finding Claude-3 dispositioned: fixed: VERIFICATION.md now states npm run verify covers 7 of invariant 103's 8 ordered steps and explicitly does not include e2e, with the reason (e2e needs the already-verified artifact served, not rebuilt).",
+    "2026-08-13T12:31:24Z G4 finding Claude-4 dispositioned: accepted: matches PLAN.md's own staged rollout - base-path.test.ts is M5 step 31, bundle-secrets.test.ts needs M2 step 14's assert-no-secrets.mjs. Not an M1 defect.",
+    "2026-08-13T12:31:31Z evidence recorded: evidence/milestones/m1-suite-post-review.txt (0ea09211ebc2) - npm run verify re-run after fixing Claude-1/Claude-3; confirms npm test is hermetic (13 tests) and verify still passes end to end",
+    "2026-08-13T12:31:31Z milestone 1 reviewed: Fresh-context loop-reviewer on the full M1 diff; evidence/reviews/m1-claude-review.md. 4 findings, 1 blocking (Claude-1: npm test triggered a live vite build - fixed by relocating the check to build-output/, verified post-review). Claude-3 (VERIFICATION.md e2e scope overclaim) fixed. Claude-2, Claude-4 accepted as non-defects / already-tracked staged rollout."
   ],
   "milestones": [
     {
       "id": 1,
       "title": "M1 - Toolchain, cruft removal and the verification harness",
       "verified": "2026-08-13T12:18:19Z npm run verify passes end to end (typecheck, lint, format:check, test:coverage 100%, build, verify:build, size 59.4kB/100kB); evidence/milestones/m1-suite.txt, m1-e2e.txt",
-      "reviewed": null
+      "reviewed": "2026-08-13T12:31:31Z Fresh-context loop-reviewer on the full M1 diff; evidence/reviews/m1-claude-review.md. 4 findings, 1 blocking (Claude-1: npm test triggered a live vite build - fixed by relocating the check to build-output/, verified post-review). Claude-3 (VERIFICATION.md e2e scope overclaim) fixed. Claude-2, Claude-4 accepted as non-defects / already-tracked staged rollout."
     },
     {
       "id": 2,
@@ -1612,6 +1649,16 @@
       "sha": "8e53066cd79e",
       "recorded": "2026-08-13T12:18:19Z",
       "note": "M1 has no e2e specs yet - first real e2e run is at M5 boundary; npm run verify does not include e2e per TECH.md 7.1"
+    },
+    "evidence/reviews/m1-claude-review.md": {
+      "sha": "13547e9666e7",
+      "recorded": "2026-08-13T12:30:00Z",
+      "note": "M1 milestone boundary review, fresh-context loop-reviewer"
+    },
+    "evidence/milestones/m1-suite-post-review.txt": {
+      "sha": "0ea09211ebc2",
+      "recorded": "2026-08-13T12:31:31Z",
+      "note": "npm run verify re-run after fixing Claude-1/Claude-3; confirms npm test is hermetic (13 tests) and verify still passes end to end"
     }
   },
   "test_file_hashes": {}

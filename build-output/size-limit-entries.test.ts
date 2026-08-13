@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { globSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 type SizeLimitEntry = {
@@ -29,5 +29,23 @@ describe('size-limit entries', () => {
     }));
 
     expect(actualProjection).toEqual(table.alwaysOn.sizeLimitEntries);
+  });
+
+  it('the built entry and vendor chunks match their size-limit globs', () => {
+    // Runs under vitest.build-output.config.ts (npm run verify:build), which
+    // is invoked immediately after npm run build - dist/ already exists by
+    // the time this runs, so this checks the existing build output rather
+    // than triggering a build of its own.
+    const entryMatches = globSync('dist/assets/entry-*.js');
+    const vendorMatches = globSync('dist/assets/vendor-*.js');
+
+    expect(
+      entryMatches.length,
+      'no dist/assets/entry-*.js emitted',
+    ).toBeGreaterThan(0);
+    expect(
+      vendorMatches.length,
+      'no dist/assets/vendor-*.js emitted',
+    ).toBeGreaterThan(0);
   });
 });

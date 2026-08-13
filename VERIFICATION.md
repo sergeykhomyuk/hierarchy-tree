@@ -36,8 +36,11 @@ Cloudflare Pages project exists.
   graph, kit-route absence, SPA fallback and header files, size-limit entry parity). Runs
   only after `npm run build`, and fails rather than skips when `dist/` is missing.
 - `npm run size` - `size-limit` against `.size-limit.json`.
-- `npm run verify` - the full local gate, chained with `&&` in the same order CI runs them:
-  `typecheck && lint && format:check && test:coverage && build && verify:build && size`.
+- `npm run verify` - the seven CI "verify job" gating scripts chained with `&&`, in
+  invariant 103's order: `typecheck && lint && format:check && test:coverage && build &&
+verify:build && size`. **Does not include `e2e`** - e2e is the CI verify job's eighth
+  and final gating step, run separately (`npm run e2e`) because it needs the artifact
+  `verify:build`/`size` just inspected already served, not rebuilt.
 - `npm run e2e` - Playwright, against the production preview build (`vite preview`, no
   rebuild) unless `DEPLOYED_BASE_URL` is set, in which case it runs against that URL
   instead with no local `webServer`.

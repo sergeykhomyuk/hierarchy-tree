@@ -219,42 +219,6 @@ describe('prettier configuration', () => {
   });
 });
 
-const M1_SIZE_LIMIT_ENTRIES = [
-  {
-    name: 'app entry (initial payload)',
-    path: ['dist/assets/entry-*.js', 'dist/assets/vendor-*.js'],
-    limit: '100 kB',
-    gzip: true,
-    running: false,
-  },
-];
-
-describe('build output', () => {
-  it('the built entry and vendor chunks match their size-limit globs', () => {
-    execFileSync('npx', ['vite', 'build'], { stdio: 'pipe' });
-
-    const entryMatches = globSync('dist/assets/entry-*.js');
-    const vendorMatches = globSync('dist/assets/vendor-*.js');
-
-    expect(
-      entryMatches.length,
-      'no dist/assets/entry-*.js emitted',
-    ).toBeGreaterThan(0);
-    expect(
-      vendorMatches.length,
-      'no dist/assets/vendor-*.js emitted',
-    ).toBeGreaterThan(0);
-  }, 30_000);
-
-  it('size-limit entries equal the declaration table expected set', () => {
-    const sizeLimitConfig = JSON.parse(
-      readFileSync('.size-limit.json', 'utf-8'),
-    );
-
-    expect(sizeLimitConfig).toEqual(M1_SIZE_LIMIT_ENTRIES);
-  });
-});
-
 describe('template cruft removal', () => {
   it('the Vite template files no longer exist', () => {
     const removedPaths = [
