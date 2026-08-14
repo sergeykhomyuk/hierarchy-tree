@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T22:07:32Z",
+  "updated": "2026-08-14T22:33:45Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 14
+      "steps_done": 15
     },
     "G3": {
       "status": "pending",
@@ -484,8 +484,8 @@
         "src/features/auth/loadTranslations.test.ts::loadTranslations > registers every key the login card renders",
         "src/platform/observability/analyticsEvents.test.ts::the analytics catalogue > carries the three sign-in events with their payloads"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T22:33:45Z evidence/steps/step15-red.txt",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -908,7 +908,12 @@
     "2026-08-14T21:56:56Z G4 finding Claude-2 dispositioned: accepted: worst case is one extra redirect hop, no open-redirect risk (origin check still holds), and no trailing-slash login route currently exists. User's decision.",
     "2026-08-14T21:56:56Z G4 finding Claude-3 dispositioned: accepted, deferred to M4: not consumed by any UI until the header lands; the retry-vs-stable-fallback tradeoff is concrete only once that consumer exists. User's decision - revisit at M4.",
     "2026-08-14T22:07:32Z evidence recorded: evidence/reviews/m1-claude-review.md (95cba6b4a572) - M1 boundary review, fresh-context loop-reviewer: 3 findings, 0 blocking, all accepted (Claude-3 deferred to M4)",
-    "2026-08-14T22:07:32Z milestone 1 reviewed: Fresh-context Claude review of the M1 diff (73 files, ~2820 insertions): 3 non-blocking findings (redact over-redaction scope, resolveDestination trailing-slash gap, createSignedInUserStore permanent failure cache), all accepted by the user (Claude-3 deferred to M4). evidence/reviews/m1-claude-review.md"
+    "2026-08-14T22:07:32Z milestone 1 reviewed: Fresh-context Claude review of the M1 diff (73 files, ~2820 insertions): 3 non-blocking findings (redact over-redaction scope, resolveDestination trailing-slash gap, createSignedInUserStore permanent failure cache), all accepted by the user (Claude-3 deferred to M4). evidence/reviews/m1-claude-review.md",
+    "2026-08-14T22:33:45Z evidence recorded: evidence/steps/step15-red.txt (49790844bf74) - Step 15 red: analyticsEvents.test.ts fails typecheck (TS2339) before the three sign-in event payload types existed - this test is type-level, so tsc -b is its red signal rather than vitest run",
+    "2026-08-14T22:33:45Z step 15 -> red",
+    "2026-08-14T22:33:45Z step 15 -> green",
+    "2026-08-14T22:33:45Z step 15 -> done",
+    "2026-08-14T22:33:45Z step 15: auth.json keeps AuthPlaceholderPage's title/message keys alongside the new login card keys - PLAN.md's own step ordering has the catalogue rewrite (step 15) land before LoginPage replaces AuthPlaceholderPage in the route (step 22/23), so removing the placeholder's keys now would break the still-active placeholder page and violate 'the tree is never left broken at a step boundary'. Both loadTranslations.test.ts checks updated to include them; they're removed when step 23 deletes AuthPlaceholderPage.tsx."
   ],
   "milestones": [
     {
@@ -1041,6 +1046,11 @@
       "sha": "95cba6b4a572",
       "recorded": "2026-08-14T22:07:32Z",
       "note": "M1 boundary review, fresh-context loop-reviewer: 3 findings, 0 blocking, all accepted (Claude-3 deferred to M4)"
+    },
+    "evidence/steps/step15-red.txt": {
+      "sha": "49790844bf74",
+      "recorded": "2026-08-14T22:33:45Z",
+      "note": "Step 15 red: analyticsEvents.test.ts fails typecheck (TS2339) before the three sign-in event payload types existed - this test is type-level, so tsc -b is its red signal rather than vitest run"
     }
   },
   "test_file_hashes": {
@@ -1181,6 +1191,18 @@
       "step": 14,
       "recorded": "2026-08-14T21:29:56Z",
       "log_index": 208
+    },
+    "src/features/auth/loadTranslations.test.ts": {
+      "sha": "4f6ed2de732c",
+      "step": 15,
+      "recorded": "2026-08-14T22:33:45Z",
+      "log_index": 222
+    },
+    "src/platform/observability/analyticsEvents.test.ts": {
+      "sha": "47d175af906e",
+      "step": 15,
+      "recorded": "2026-08-14T22:33:45Z",
+      "log_index": 222
     }
   }
 }

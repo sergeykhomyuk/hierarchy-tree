@@ -14,6 +14,13 @@ export type Router = {
 export type InteractionTracker = {
   attach: (router: Router) => () => void;
   currentCorrelationId: () => string | null;
+  // A submission is an interaction but not a navigation, so the
+  // router-driven tracker does not open one for it - the login form opens
+  // its own via this, sharing the same private slot currentCorrelationId()
+  // reads (so the id on the http client's timing record, the analytics
+  // events and the correlation id rendered to the user are all literally
+  // the same string).
+  beginInteraction: () => string;
   // Primitive-throw dedup for reportRootError.ts (invariant 92): a WeakSet
   // covers object errors, but WeakSet.add rejects primitives outright, so
   // they need this string-keyed sibling instead. Scoped to the current
@@ -29,10 +36,11 @@ export function createInteractionTracker(
   let tracking = false;
   let reportedPrimitives = new Set<string>();
 
-  function startInteraction(): void {
+  function startInteraction(): string {
     tracking = true;
     correlationId = observability.tracer.startInteraction();
     reportedPrimitives = new Set();
+    return correlationId;
   }
 
   function settle(state: RouterState): void {
@@ -68,6 +76,7 @@ export function createInteractionTracker(
   return {
     attach,
     currentCorrelationId: () => correlationId,
+    beginInteraction: startInteraction,
     shouldReportPrimitive,
   };
 }

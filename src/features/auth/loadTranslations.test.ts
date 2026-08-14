@@ -55,8 +55,26 @@ describe('auth loadTranslations', () => {
     expect(testInstance.getResourceBundle(Locale.Test, 'auth')).toEqual({
       login: {
         documentTitle: 'login.documentTitle',
+        // title/message are the AuthPlaceholderPage's own strings, kept
+        // until step 23 deletes that page and its five migrated
+        // assertions - removing them now would break the still-active
+        // placeholder route before its replacement exists.
         title: 'login.title',
         message: 'login.message',
+        wordmark: 'login.wordmark',
+        heading: 'login.heading',
+        subtext: 'login.subtext',
+        emailLabel: 'login.emailLabel',
+        emailPlaceholder: 'login.emailPlaceholder',
+        passwordLabel: 'login.passwordLabel',
+        footerNote: 'login.footerNote',
+        footerNoteSubmitting: 'login.footerNoteSubmitting',
+        submit: 'login.submit',
+        submitting: 'login.submitting',
+        noMatchMessage: 'login.noMatchMessage',
+        serviceProblemMessage: 'login.serviceProblemMessage',
+        serviceProblemCorrelationLabel: 'login.serviceProblemCorrelationLabel',
+        retry: 'login.retry',
       },
     });
 
@@ -70,5 +88,34 @@ describe('auth loadTranslations', () => {
     // every dynamic import above - none of the three registrations may
     // mutate it.
     expect(authCatalogue).toEqual(englishSnapshot);
+  });
+
+  it('registers every key the login card renders', () => {
+    // TECH.md section 8's enumerated list, plus the still-active
+    // AuthPlaceholderPage's own title/message (removed at step 23) - every
+    // one is a surface invariant 116 requires to come from a catalogue.
+    const expectedKeys = [
+      'documentTitle',
+      'title',
+      'message',
+      'wordmark',
+      'heading',
+      'subtext',
+      'emailLabel',
+      'emailPlaceholder',
+      'passwordLabel',
+      'footerNote',
+      'footerNoteSubmitting',
+      'submit',
+      'submitting',
+      'noMatchMessage',
+      'serviceProblemMessage',
+      'serviceProblemCorrelationLabel',
+      'retry',
+    ];
+
+    expect(Object.keys(authCatalogue.login).sort()).toEqual(
+      [...expectedKeys].sort(),
+    );
   });
 });
