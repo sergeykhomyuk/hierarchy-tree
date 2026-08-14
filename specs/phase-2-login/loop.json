@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:47:26Z",
+  "updated": "2026-08-14T20:49:13Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 5
+      "steps_done": 6
     },
     "G3": {
       "status": "pending",
@@ -356,8 +356,8 @@
         "src/features/auth/data/lookupResultSchema.test.ts::lookupResultSchema > reads a string and a number id as the same identifier",
         "src/features/auth/data/lookupResultSchema.test.ts::lookupResultSchema > rejects an object, an array, an empty string, a boolean and a fractional number"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T20:49:01Z evidence/steps/step6-red.txt: import resolution failure before the module existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -838,7 +838,12 @@
     "2026-08-14T20:47:26Z step 5 -> red",
     "2026-08-14T20:47:26Z step 5 -> green",
     "2026-08-14T20:47:26Z step 5 -> done",
-    "2026-08-14T20:47:26Z step 5: assert-domain-vocabulary.mjs now flags secretResourcePath.ts's /secrets literal, exactly as TECH.md section 3 predicts - the narrowing is step 14's WHOLE_SCOPE_FILE_ALLOWLIST mechanism; npm run lint stays red on this one check until then, tests/typecheck/eslint are clean"
+    "2026-08-14T20:47:26Z step 5: assert-domain-vocabulary.mjs now flags secretResourcePath.ts's /secrets literal, exactly as TECH.md section 3 predicts - the narrowing is step 14's WHOLE_SCOPE_FILE_ALLOWLIST mechanism; npm run lint stays red on this one check until then, tests/typecheck/eslint are clean",
+    "2026-08-14T20:49:01Z evidence recorded: evidence/steps/step6-red.txt (d4c8131d03bf) - Step 6 red: lookupResultSchema module missing",
+    "2026-08-14T20:49:01Z step 6 -> red",
+    "2026-08-14T20:49:02Z step 6 -> green",
+    "2026-08-14T20:49:02Z step 6 -> done",
+    "2026-08-14T20:49:13Z step 6: TECH.md section 3's exact Zod snippet (z.int().check(z.finite())) does not match installed zod@4.4.3 - z.finite is not a function. z.int() alone already rejects fractional/Infinity/NaN, verified directly against the installed package, so lookupResultSchema.ts uses z.union([z.null(), z.string().regex(USER_IDENTIFIER_PATTERN), z.int()]) with no behavioural change from what TECH specified, just corrected API surface."
   ],
   "milestones": [
     {
@@ -916,6 +921,11 @@
       "sha": "6bf1523ec623",
       "recorded": "2026-08-14T20:47:26Z",
       "note": "Step 5 red: secretResourcePath/userResourcePath modules missing"
+    },
+    "evidence/steps/step6-red.txt": {
+      "sha": "d4c8131d03bf",
+      "recorded": "2026-08-14T20:49:01Z",
+      "note": "Step 6 red: lookupResultSchema module missing"
     }
   },
   "test_file_hashes": {
@@ -966,6 +976,12 @@
       "step": 5,
       "recorded": "2026-08-14T20:47:26Z",
       "log_index": 167
+    },
+    "src/features/auth/data/lookupResultSchema.test.ts": {
+      "sha": "f9417774883b",
+      "step": 6,
+      "recorded": "2026-08-14T20:49:01Z",
+      "log_index": 172
     }
   }
 }

@@ -6,7 +6,7 @@ export type UserIdentifier = (string | number) & {
 // has one source of truth. A string may reach a resource path via
 // userResourcePath and a raw record via storage, and either can carry a
 // traversal or a URL-structural character (invariant 18a).
-const USER_IDENTIFIER_PATTERN = /^[A-Za-z0-9_-]+$/;
+export const USER_IDENTIFIER_PATTERN = /^[A-Za-z0-9_-]+$/;
 
 export function userIdentifier(value: string | number): UserIdentifier {
   if (typeof value === 'number') {
