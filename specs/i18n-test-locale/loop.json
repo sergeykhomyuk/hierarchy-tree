@@ -1,0 +1,146 @@
+{
+  "task": "i18n-test-locale",
+  "title": "Key-echoing test locale, locale enum, browser-locale detection with fallback",
+  "type": "feature",
+  "size": "M",
+  "status": "active",
+  "phase": "validate",
+  "phase_entered": "2026-08-14T10:53:04Z",
+  "created": "2026-08-14",
+  "updated": "2026-08-14T11:24:25Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "M",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": "SPEC.md",
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": null,
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "passed",
+      "attempts": 1,
+      "findings": {
+        "Claude-1": {
+          "desc": "Spec updates ARCHITECTURE.md decision log + PRODUCT.md invariant 65 only, but leaves 3 other 'a second locale is deliberately not built' statements standing untouched and now contradicted: ARCHITECTURE.md:187 (section 7), ROADMAP.md:115 (explicitly carried from ARCHITECTURE.md section 7 so it reads standalone), PRODUCT.md:224 (separate not-built list). None make the product-vs-test distinction the spec's new decision-log entry relies on.",
+          "blocking": true,
+          "disposition": "resolved: SPEC.md now edits all 5 locations (ARCHITECTURE.md decision log + \u00a77, ROADMAP.md:115, PRODUCT.md invariant 65 + not-built list) with concrete before/after text; confirmed by a fresh loop-spec-validator instance re-reading the current spec + live docs"
+        },
+        "Claude-2": {
+          "desc": "Invariant 8 (createRuntime.ts wiring detectLocale(navigator.languages) into i18next's language) has no committed test. src/app/composition/createRuntime.test.ts already exists (4 tests, none touching navigator.languages/i18n.language) but the spec's testing plan hedges with 'if one exists, or added' and falls back to detectLocale's isolated unit coverage + 'a read of the diff' - insufficient to catch e.g. a swapped-argument or navigator.language-vs-languages typo in the actual wiring.",
+          "blocking": true,
+          "disposition": "resolved: invariant 8 and the testing plan now unconditionally commit to a new test case in the existing createRuntime.test.ts stubbing navigator.languages and asserting runtime.i18n.language; confirmed by a fresh loop-spec-validator instance"
+        },
+        "Claude-3": {
+          "desc": "createKeyEchoCatalogue's generic signature (Catalogue extends Record<string,unknown> -> Catalogue) is asserted sound but not demonstrated; JSON-imported catalogue leaf strings may type as string literals rather than widened string, which could make the recursive walker's string-typed replacement value unassignable back into Catalogue without a cast this repo's conventions forbid. Resolvable by the implementer prototyping against tsc before committing to the signature - non-blocking.",
+          "blocking": false,
+          "disposition": "resolved: createKeyEchoCatalogue's tech-approach bullet now carries an explicit implementer note acknowledging the generic-signature risk with a documented cast-free fallback (narrow to Record<string,unknown>); confirmed by a fresh loop-spec-validator instance"
+        },
+        "Codex-1": {
+          "desc": "Literal string 'test' is not valid BCP-47 syntax - Intl.getCanonicalLocales('test') and new Intl.DateTimeFormat('test') both throw RangeError (verified by direct node execution, not from training), and would fail axe-core's html-lang-valid rule (accessibility.spec.ts, right-to-left.spec.ts). Locale.Test's underlying value must be a syntactically valid BCP-47 tag. Verified 'qtz' (ISO 639-2 private-use range qaa-qtz, single-segment, exactly what pseudo-localization tooling conventionally uses) canonicalizes cleanly with no exceptions and needs no change to the subtag-splitting detection design.",
+          "blocking": true,
+          "disposition": "resolved: locale value changed to 'zxx' (IANA-registered ISO 639-2, meaning 'no linguistic content') after 'pseudo' (round-1 fix) was found by Codex's own executed axe-core 4.13.0 probe to fail html-lang-valid despite passing Intl's grammar-only check. 'zxx' verified against both Intl.getCanonicalLocales/DateTimeFormat AND a real axe-core run - confirmed both by Codex's own round-2 statement and by this session's independent re-execution against the repo's installed axe-core"
+        },
+        "Codex-2": {
+          "desc": "createKeyEchoCatalogue's contract never requires non-mutation of the source catalogue object; an in-place recursive walker would mutate the cached JSON module import, so a later English registration in the same process could receive key-echoed values instead of real English, contradicting invariant 10. Generator must build a new object tree and never mutate its input; needs a test asserting the source catalogue is unchanged after generation and after a test-then-English registration sequence.",
+          "blocking": true,
+          "disposition": "resolved: invariant 6 now requires non-mutation explicitly with a corresponding test requirement; confirmed by Codex round-2 pass"
+        },
+        "Codex-3": {
+          "desc": "Invariant 16 ('both loadTranslations.test.ts need no change') contradicts the Testing and validation section (which requires adding Locale.Test cases to the same files per invariants 9-10). Reword invariant 16: the existing explicit language:'en' case needs no change, but new test cases are ADDED to the same files for the Locale.Test branch.",
+          "blocking": true,
+          "disposition": "resolved: invariant 16 reworded to state both files gain a new test case while the existing case is unchanged, matching the testing plan; confirmed by Codex round-2 pass"
+        },
+        "Codex-4": {
+          "desc": "Invariant 20's claim that the generator lands in each route's lazy chunk (not the entry) is an unverified assumption about Vite/Rollup's chunking algorithm - a module statically imported by two independent lazy route graphs could get hoisted into a shared chunk outside any budget .size-limit.json currently names. Soften the invariant to not claim a specific chunk assignment; require running npm run size/verify:build and treat any new/unbudgeted chunk as a G3 finding to address then, not something SPEC.md can fully predict pre-implementation.",
+          "blocking": false,
+          "disposition": "resolved: invariant 20 no longer claims a specific chunk assignment, requires inspecting real build output and treats any unbudgeted chunk as a G3 finding; confirmed by Codex round-2 pass"
+        }
+      },
+      "note": "7 findings across 2 review rounds (Claude-1,2,3 + Codex-1,2,3,4): 7 resolved, 0 rejected. reviews: evidence/reviews/g1-claude-validator.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-claude-validator-recheck.md, evidence/reviews/g1-codex-review-round2.md. Key correction across rounds: locale tag 'test' -> 'pseudo' -> 'zxx' (final value verified via both Intl.getCanonicalLocales/DateTimeFormat and a real executed axe-core 4.13.0 html-lang-valid run, not syntax inspection alone). User signed off via AskUserQuestion.",
+      "user_signoff": "2026-08-14T11:24:25Z"
+    },
+    "G2": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G3": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G4": {
+      "status": "pending",
+      "attempts": 0,
+      "security_pass": null
+    },
+    "G5": {
+      "status": "pending",
+      "attempts": 0
+    }
+  },
+  "retro": null,
+  "plan_steps": [],
+  "log": [
+    "2026-08-14T10:40:43Z init: type=feature size=M flags=[]",
+    "2026-08-14T10:40:57Z triage: feature/M. Adds a key-echoing 'test' i18next locale (real populated catalogue generated from the English catalogue's key shape at init time - vitest.setup.ts asserts missingKeyReports empty after every test, ruling out leaning on the missing-key fallback), a Locale const-object enum (platform/internationalization), and a detectLocale helper that reads the browser's language and falls back to English when unsupported - wired into createRuntime.ts for real (replacing the hardcoded RUNTIME_LANGUAGE constant), so e2e reaches the test locale via Playwright's per-project locale option through the same mechanism a real visitor's browser preference would use. Both feature loadTranslations.ts files hardcode addResourceBundle('en', ...) - a latent bug for any non-en default, fixed as part of this work. Existing unit/e2e tests asserting hardcoded English strings switch to asserting the key-echo instead; deployed-smoke.spec.ts stays on real English (exercises the actual production deployment) and right-to-left.spec.ts's invariant-65 comment gets revisited. Touches ARCHITECTURE.md's English-only decision log and PRODUCT.md invariant 65 (test locale ships in the same build that deploys to production, though it is not reachable from the UI) - flagged and confirmed with the user via AskUserQuestion before scoping, same pattern as the earlier bytesToHex boundary exception. Scoped as a separate feature loop (not folded into the paused phase-1-conventions refactor loop) since it changes behavior rather than preserving it - confirmed with the user. No overlapping open loops (phase-1-conventions touches app/bootstrap.ts, platform/configuration, platform/observability, app/routing/error-boundary components - disjoint from the i18n/locale files this touches).",
+    "2026-08-14T10:42:34Z phase -> frame",
+    "2026-08-14T10:42:50Z frame: requirements. R1: Locale const-object enum (platform/internationalization) listing supported locales - English ('en') and Test ('test'). R2: a generated 'test' catalogue - one function walks each real catalogue's (common/auth/hierarchy) key shape and returns each dot-path as its own value, registered the same way loadTranslations.ts registers 'en' bundles today - no static test/*.json files, zero drift risk. R3: detectLocale(candidates) plain function (platform/internationalization, mirrors localeDirection.ts) - takes an ordered language-preference list, normalizes each candidate to its base subtag (split on '-', same approach localeDirection.ts uses), matches against Locale enum members, falls back to Locale.English when nothing matches. No hook wrapper (no component-level caller exists or is requested). R4: createRuntime.ts's hardcoded RUNTIME_LANGUAGE='en' constant is replaced by a real call to detectLocale(navigator.languages) at boot. R5: both features' loadTranslations.ts stop hardcoding addResourceBundle('en', ...) and use the instance's active language instead - latent bug independent of this feature, fixed here since it blocks any non-en default from working. R6: buildTestRuntime (src/app/testing/renderRoute.tsx) defaults to Locale.Test instead of 'en', loading the generated test catalogue for common/auth/hierarchy. R7: existing unit tests asserting hardcoded English catalogue strings (ErrorSurface.test.tsx, RootErrorBoundary.test.tsx, RouteErrorBoundary.test.tsx, ApplicationLayout.test.tsx, NotFoundRoute.test.tsx, bootstrap.test.tsx) switch to asserting the key-echo string instead. R8: e2e specs with hardcoded English assertions (accessibility.spec.ts, error-boundary.spec.ts, placeholder-routes.spec.ts, not-found.spec.ts, right-to-left.spec.ts, telemetry-buffer.spec.ts) switch to asserting key-echo strings via Playwright's per-project locale:'test' context option, which now reaches the app for real through R4's detection. R9 (non-goal): deployed-smoke.spec.ts keeps asserting real English - it exercises the actual production deployment over the network, must reflect what a real visitor sees. R10: right-to-left.spec.ts's comment citing invariant 65 ('English is the only shipped locale... no product path switches direction') gets revisited/updated to reflect that a second, non-product-facing locale now exists. R11 (non-goal): no locale-switcher UI, no user-facing way to select a locale - Locale.Test is reachable only via a browser/e2e language preference, never through the app's own UI. R12: ARCHITECTURE.md decision log + PRODUCT.md invariant 65 need a short update recording that a test-only 'test' locale now ships in the same build as production, analogous to the earlier bytesToHex boundary exception - flagged to the user as a real architecture-doc deviation, to be written as part of this loop's spec/implementation.",
+    "2026-08-14T10:43:01Z phase -> specify",
+    "2026-08-14T10:53:03Z set spec = SPEC.md",
+    "2026-08-14T10:53:04Z phase -> validate",
+    "2026-08-14T11:01:36Z G1 finding Claude-1 recorded (blocking): Spec updates ARCHITECTURE.md decision log + PRODUCT.md invariant 65 only, but leaves 3 other 'a second locale is deliberately not built' statements standing untouched and now contradicted: ARCHITECTURE.md:187 (section 7), ROADMAP.md:115 (explicitly carried from ARCHITECTURE.md section 7 so it reads standalone), PRODUCT.md:224 (separate not-built list). None make the product-vs-test distinction the spec's new decision-log entry relies on.",
+    "2026-08-14T11:01:36Z G1 finding Claude-2 recorded (blocking): Invariant 8 (createRuntime.ts wiring detectLocale(navigator.languages) into i18next's language) has no committed test. src/app/composition/createRuntime.test.ts already exists (4 tests, none touching navigator.languages/i18n.language) but the spec's testing plan hedges with 'if one exists, or added' and falls back to detectLocale's isolated unit coverage + 'a read of the diff' - insufficient to catch e.g. a swapped-argument or navigator.language-vs-languages typo in the actual wiring.",
+    "2026-08-14T11:01:36Z G1 finding Claude-3 recorded: createKeyEchoCatalogue's generic signature (Catalogue extends Record<string,unknown> -> Catalogue) is asserted sound but not demonstrated; JSON-imported catalogue leaf strings may type as string literals rather than widened string, which could make the recursive walker's string-typed replacement value unassignable back into Catalogue without a cast this repo's conventions forbid. Resolvable by the implementer prototyping against tsc before committing to the signature - non-blocking.",
+    "2026-08-14T11:04:33Z G1 finding Codex-1 recorded (blocking): Literal string 'test' is not valid BCP-47 syntax - Intl.getCanonicalLocales('test') and new Intl.DateTimeFormat('test') both throw RangeError (verified by direct node execution, not from training), and would fail axe-core's html-lang-valid rule (accessibility.spec.ts, right-to-left.spec.ts). Locale.Test's underlying value must be a syntactically valid BCP-47 tag. Verified 'qtz' (ISO 639-2 private-use range qaa-qtz, single-segment, exactly what pseudo-localization tooling conventionally uses) canonicalizes cleanly with no exceptions and needs no change to the subtag-splitting detection design.",
+    "2026-08-14T11:04:33Z G1 finding Codex-2 recorded (blocking): createKeyEchoCatalogue's contract never requires non-mutation of the source catalogue object; an in-place recursive walker would mutate the cached JSON module import, so a later English registration in the same process could receive key-echoed values instead of real English, contradicting invariant 10. Generator must build a new object tree and never mutate its input; needs a test asserting the source catalogue is unchanged after generation and after a test-then-English registration sequence.",
+    "2026-08-14T11:04:33Z G1 finding Codex-3 recorded (blocking): Invariant 16 ('both loadTranslations.test.ts need no change') contradicts the Testing and validation section (which requires adding Locale.Test cases to the same files per invariants 9-10). Reword invariant 16: the existing explicit language:'en' case needs no change, but new test cases are ADDED to the same files for the Locale.Test branch.",
+    "2026-08-14T11:04:33Z G1 finding Codex-4 recorded: Invariant 20's claim that the generator lands in each route's lazy chunk (not the entry) is an unverified assumption about Vite/Rollup's chunking algorithm - a module statically imported by two independent lazy route graphs could get hoisted into a shared chunk outside any budget .size-limit.json currently names. Soften the invariant to not claim a specific chunk assignment; require running npm run size/verify:build and treat any new/unbudgeted chunk as a G3 finding to address then, not something SPEC.md can fully predict pre-implementation.",
+    "2026-08-14T11:12:09Z evidence recorded: evidence/reviews/g1-claude-validator.md (d07b778bb1c1) - G1 Claude validator: 3 findings (2 blocking)",
+    "2026-08-14T11:12:09Z evidence recorded: evidence/reviews/g1-codex-review.md (5f600dc4575b) - G1 Codex second opinion: 4 findings (4 blocking)",
+    "2026-08-14T11:14:56Z G1 finding Claude-1 dispositioned: resolved: SPEC.md now edits all 5 locations (ARCHITECTURE.md decision log + \u00a77, ROADMAP.md:115, PRODUCT.md invariant 65 + not-built list) with concrete before/after text; confirmed by a fresh loop-spec-validator instance re-reading the current spec + live docs",
+    "2026-08-14T11:14:56Z G1 finding Claude-2 dispositioned: resolved: invariant 8 and the testing plan now unconditionally commit to a new test case in the existing createRuntime.test.ts stubbing navigator.languages and asserting runtime.i18n.language; confirmed by a fresh loop-spec-validator instance",
+    "2026-08-14T11:14:56Z G1 finding Claude-3 dispositioned: resolved: createKeyEchoCatalogue's tech-approach bullet now carries an explicit implementer note acknowledging the generic-signature risk with a documented cast-free fallback (narrow to Record<string,unknown>); confirmed by a fresh loop-spec-validator instance",
+    "2026-08-14T11:19:53Z evidence recorded: evidence/reviews/g1-codex-review-round2.md (3bf90250adb2) - Codex round-2 fix confirmation: 3/4 resolved, Codex-1 partially (pseudo failed real axe-core execution); resolved on round 3 by switching to 'zxx', verified by Codex's own round-2 check + independent re-verification",
+    "2026-08-14T11:19:53Z G1 finding Codex-1 dispositioned: resolved: locale value changed to 'zxx' (IANA-registered ISO 639-2, meaning 'no linguistic content') after 'pseudo' (round-1 fix) was found by Codex's own executed axe-core 4.13.0 probe to fail html-lang-valid despite passing Intl's grammar-only check. 'zxx' verified against both Intl.getCanonicalLocales/DateTimeFormat AND a real axe-core run - confirmed both by Codex's own round-2 statement and by this session's independent re-execution against the repo's installed axe-core",
+    "2026-08-14T11:19:54Z G1 finding Codex-2 dispositioned: resolved: invariant 6 now requires non-mutation explicitly with a corresponding test requirement; confirmed by Codex round-2 pass",
+    "2026-08-14T11:19:54Z G1 finding Codex-3 dispositioned: resolved: invariant 16 reworded to state both files gain a new test case while the existing case is unchanged, matching the testing plan; confirmed by Codex round-2 pass",
+    "2026-08-14T11:19:54Z G1 finding Codex-4 dispositioned: resolved: invariant 20 no longer claims a specific chunk assignment, requires inspecting real build output and treats any unbudgeted chunk as a G3 finding; confirmed by Codex round-2 pass",
+    "2026-08-14T11:20:14Z evidence recorded: evidence/reviews/g1-claude-validator-recheck.md (806866b83c5a) - fresh loop-spec-validator fix-confirmation pass: all 5 tracked findings resolved (at the time, against 'pseudo' - superseded by round-2 Codex axe-core execution finding)",
+    "2026-08-14T11:24:25Z G1 -> passed (7 findings across 2 review rounds (Claude-1,2,3 + Codex-1,2,3,4): 7 resolved, 0 rejected. reviews: evidence/reviews/g1-claude-validator.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-claude-validator-recheck.md, evidence/reviews/g1-codex-review-round2.md. Key correction across rounds: locale tag 'test' -> 'pseudo' -> 'zxx' (final value verified via both Intl.getCanonicalLocales/DateTimeFormat and a real executed axe-core 4.13.0 html-lang-valid run, not syntax inspection alone). User signed off via AskUserQuestion.)"
+  ],
+  "evidence_hashes": {
+    "evidence/reviews/g1-claude-validator.md": {
+      "sha": "d07b778bb1c1",
+      "recorded": "2026-08-14T11:12:09Z",
+      "note": "G1 Claude validator: 3 findings (2 blocking)"
+    },
+    "evidence/reviews/g1-codex-review.md": {
+      "sha": "5f600dc4575b",
+      "recorded": "2026-08-14T11:12:09Z",
+      "note": "G1 Codex second opinion: 4 findings (4 blocking)"
+    },
+    "evidence/reviews/g1-codex-review-round2.md": {
+      "sha": "3bf90250adb2",
+      "recorded": "2026-08-14T11:19:53Z",
+      "note": "Codex round-2 fix confirmation: 3/4 resolved, Codex-1 partially (pseudo failed real axe-core execution); resolved on round 3 by switching to 'zxx', verified by Codex's own round-2 check + independent re-verification"
+    },
+    "evidence/reviews/g1-claude-validator-recheck.md": {
+      "sha": "806866b83c5a",
+      "recorded": "2026-08-14T11:20:14Z",
+      "note": "fresh loop-spec-validator fix-confirmation pass: all 5 tracked findings resolved (at the time, against 'pseudo' - superseded by round-2 Codex axe-core execution finding)"
+    }
+  }
+}
