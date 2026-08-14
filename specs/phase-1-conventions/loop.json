@@ -3,11 +3,11 @@
   "title": "Align code with react-coding/typescript-coding conventions",
   "type": "refactor",
   "size": "S",
-  "status": "active",
+  "status": "paused",
   "phase": "implement",
   "phase_entered": "2026-08-14T08:57:06Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T09:28:34Z",
+  "updated": "2026-08-14T09:59:07Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -151,7 +151,8 @@
     "2026-08-14T09:28:34Z evidence recorded: evidence/step5-typecheck.txt (e3b0c44298fc) - tsc -b clean after wrapping 6 components in memo",
     "2026-08-14T09:28:34Z evidence recorded: evidence/step5-green.txt (3537931af19a) - full vitest suite green: 65 files, 271 tests",
     "2026-08-14T09:28:34Z step 5 -> green",
-    "2026-08-14T09:28:34Z step 5 -> done"
+    "2026-08-14T09:28:34Z step 5 -> done",
+    "2026-08-14T09:59:07Z paused: Switching to a separate feature loop for the i18n test-locale/detection work (behavior-changing, doesn't fit the refactor contract). Resume here for any further pure convention-alignment tweaks."
   ],
   "test_file_hashes": {
     "src/shared/utils/bytesToHex.test.ts": {
