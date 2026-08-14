@@ -85,4 +85,13 @@ describe('createRuntime', () => {
       failure: { kind: 'network' },
     });
   });
+
+  it('exposes tab storage and the signed-in user store', async () => {
+    const runtime = await createRuntime(TEST_CONFIGURATION);
+
+    expect(typeof runtime.tabStorage.read).toBe('function');
+    expect(typeof runtime.tabStorage.write).toBe('function');
+    expect(typeof runtime.tabStorage.remove).toBe('function');
+    expect(typeof runtime.signedInUserStore.read).toBe('function');
+  });
 });

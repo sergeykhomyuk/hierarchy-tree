@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T21:03:59Z",
+  "updated": "2026-08-14T21:05:53Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 12
+      "steps_done": 13
     },
     "G3": {
       "status": "pending",
@@ -441,8 +441,8 @@
       "tests": [
         "src/app/composition/createRuntime.test.ts::createRuntime > exposes tab storage and the signed-in user store"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T21:05:53Z evidence/steps/step13-red.txt: TypeError reading tabStorage.read on undefined before the fields existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -870,7 +870,11 @@
     "2026-08-14T21:03:59Z step 12 -> red",
     "2026-08-14T21:03:59Z step 12 -> green",
     "2026-08-14T21:03:59Z step 12 -> done",
-    "2026-08-14T21:03:59Z step 12: signedInUserSchema uses firstName/lastName, the one field name confirmed by docs/task.md's own element-access example (users[1].firstName) - the live database's exact shape is otherwise unconfirmed per docs/reference.md and gets verified for real by step 31's live-smoke suite"
+    "2026-08-14T21:03:59Z step 12: signedInUserSchema uses firstName/lastName, the one field name confirmed by docs/task.md's own element-access example (users[1].firstName) - the live database's exact shape is otherwise unconfirmed per docs/reference.md and gets verified for real by step 31's live-smoke suite",
+    "2026-08-14T21:05:53Z evidence recorded: evidence/steps/step13-red.txt (fb2b6821bb9e) - Step 13 red: exposes-tab-storage-and-the-signed-in-user-store test fails against pre-change createRuntime/renderRoute/auth-barrel",
+    "2026-08-14T21:05:53Z step 13 -> red",
+    "2026-08-14T21:05:53Z step 13 -> green",
+    "2026-08-14T21:05:53Z step 13 -> done"
   ],
   "milestones": [
     {
@@ -983,6 +987,11 @@
       "sha": "8a54e7ad0cc1",
       "recorded": "2026-08-14T21:03:59Z",
       "note": "Step 12 red: fetchSignedInUser/createSignedInUserStore modules missing"
+    },
+    "evidence/steps/step13-red.txt": {
+      "sha": "fb2b6821bb9e",
+      "recorded": "2026-08-14T21:05:53Z",
+      "note": "Step 13 red: exposes-tab-storage-and-the-signed-in-user-store test fails against pre-change createRuntime/renderRoute/auth-barrel"
     }
   },
   "test_file_hashes": {
@@ -1105,6 +1114,12 @@
       "step": 12,
       "recorded": "2026-08-14T21:03:59Z",
       "log_index": 199
+    },
+    "src/app/composition/createRuntime.test.ts": {
+      "sha": "d1c5550008ef",
+      "step": 13,
+      "recorded": "2026-08-14T21:05:53Z",
+      "log_index": 204
     }
   }
 }
