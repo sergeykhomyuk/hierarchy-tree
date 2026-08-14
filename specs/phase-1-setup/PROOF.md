@@ -8,14 +8,29 @@ runtime), a domain-free UI kit with WCAG AA tokens, the app shell (router, error
 CSP), and the CI/deploy pipeline to Cloudflare Pages. Delivered as an L-size loop across
 PRODUCT.md's 135 numbered invariants, PLAN.md's six milestones and 38 TDD steps.
 
-## Status: pre-merge PR, one obligation outstanding
+## Status: complete
 
-This PR closes every step, milestone, and gate that can be closed before merge. It does **not**
-close invariants 123, 124 and 126a, which PRODUCT.md and PLAN.md's own "post-merge obligation"
-section define as provable only after a real deployment exists - no pull-request run produces a
-production URL to test against (invariant 121 forbids preview deployments). Step 38
-(`e2e/deployed-smoke.spec.ts`) is deliberately registered `red`, not `green`/`done`; milestone 6
-and gates G2/G5 remain open for the same reason. See "The post-merge obligation" below.
+PR #1 merged to `main` at 2026-08-14T07:24:08Z (commit `0953a42`). Two post-merge defects
+surfaced and were fixed on their own reviewed PRs before the post-merge obligation could close:
+
+- **PR #2** (`945d5a8`, merged separately before #2 itself): `npm ci` failed in CI with an
+  ERESOLVE peer-dependency conflict between `eslint@^10.8.0` and `eslint-plugin-jsx-a11y@6.10.2`'s
+  peer range (`^9` max) - a pre-existing incompatibility never caught locally because a clean
+  install was never exercised. Fixed with a narrow `package.json` `overrides` entry.
+- **PR #2** (`9f02b72`): the deploy job's final assertion compared Wrangler's reported
+  `deployment-url` against the recorded production hostname and failed every time, even though
+  the deployment was genuinely reaching production - `wrangler pages deployment list` confirmed
+  the rejected deployment was correctly `Environment: Production, Branch: main`. Root cause:
+  Wrangler always reports the deployment's own permanent per-deployment URL for Cloudflare Pages,
+  never the production alias, regardless of environment. The assertion was unsatisfiable by
+  construction. Fixed by dropping it; invariant 126a's `e2e:deployed` run is the real check.
+
+Both fixes went through their own fresh-context review, CI verification, and merge to `main`
+(PR #2 merged at 2026-08-14T07:57:39Z, commit `7c08053`). The deploy job then succeeded for real,
+and `npm run e2e:deployed` was run against `https://hierarchy-tree.pages.dev` - 3/3 passed
+(`evidence/deployed-smoke.txt`). Step 38, milestone 6, and gates G2/G4/G5 are closed. See "The
+post-merge obligation" below for the full sequence, and the milestone 6 section for the
+post-merge fixes' own review record.
 
 ## Requirements -> evidence, by milestone
 
@@ -227,13 +242,15 @@ and gates G2/G5 remain open for the same reason. See "The post-merge obligation"
   live site currently serves an unrelated placeholder page, not this app.
   Evidence: `evidence/steps/step38-red.txt`. This is expected and by design - see "The post-merge
   obligation" below.
-- **Boundary**: not formally closed. `loop milestone verify 6` and `gate G2 pass` both refuse
-  while step 38 is pending, by the loop tool's own design - a milestone boundary requires every
-  registered step in it to be `done`, and step 38 structurally cannot reach `done` before a real
-  deployment exists. Steps 33-37 are individually `done` with their own red/green evidence under
-  `evidence/steps/`. The G3 verification pass and the G4 dual review (below) both covered the
-  full M6 diff in place of the formal milestone verify/review, and are the operative evidence for
-  everything in M6 except the post-merge obligation itself.
+- **Boundary**: verified and reviewed post-merge. Steps 33-37 were individually `done` with their
+  own red/green evidence under `evidence/steps/` before merge; step 38 reached `done` after the
+  real deploy succeeded and `npm run e2e:deployed` passed 3/3 (`evidence/deployed-smoke.txt`).
+  `loop milestone verify 6` cites the real production deploy and the live smoke run;
+  `loop milestone review 6` cites the fresh-context review of the two post-merge fix commits
+  (`Claude-85..90`). Two real defects were found and fixed on the way here, both after merge:
+  the `npm ci` ERESOLVE failure and the unsatisfiable deploy-URL assertion (PR #2, see "The
+  post-merge obligation" above) - the G3 verification pass and the pre-merge G4 dual review below
+  covered everything in M6 up to that point.
 
 ## G3 verification (gate: passed)
 
@@ -382,28 +399,36 @@ Claude-83..84 (`evidence/g4-final-review-fix-verify.txt`, `evidence/g4-final-rev
 - `npm run e2e:deployed` - **red by design**, run for real against the live production host
   before merge; see "The post-merge obligation".
 
-## The post-merge obligation
+## The post-merge obligation (fulfilled)
 
-Mirroring PLAN.md's own "post-merge obligation" section, restated here as the operative record:
+Mirroring PLAN.md's own "post-merge obligation" section, restated here as the closed record:
 
 Invariant 121 forbids preview deployments, so no pull-request run produces a URL to test.
-Invariants 123 and 124 are provable only after the merge to `main`, and invariant 126a makes that
+Invariants 123 and 124 were provable only after the merge to `main`, and invariant 126a made that
 an obligation rather than a gap.
 
-**After the user merges this PR:**
+**What actually happened after merge, in order:**
 
-1. The `deploy` job runs on push to `main`, deploys `dist/` via the SHA-pinned wrangler action,
-   and asserts the returned deployment URL equals `deployment.json`'s `productionHostname`.
-2. `npm run e2e:deployed` runs against that same `productionHostname`, exercising step 38's three
-   tests for real.
-3. Its output is captured as `specs/phase-1-setup/evidence/deployed-smoke.txt` and this PROOF.md
-   is updated to cite it.
-4. Only then: `loop step 38 green` -> `done`, `loop milestone verify 6` -> `review 6`,
-   `gate G2 pass`, `gate G5 pass`, `loop transition retro` -> `done`.
+1. PR #1 merged to `main` (`0953a42`, 2026-08-14T07:24:08Z). The `verify` job passed. The `deploy`
+   job failed twice in sequence: first on a missing `CLOUDFLARE_API_TOKEN` (the user completed the
+   one-time Cloudflare secret setup and re-ran), then on the deployment-URL assertion described
+   above, which turned out to be checking something Wrangler structurally cannot report for
+   Cloudflare Pages.
+2. The assertion defect was root-caused live against the real Cloudflare project (`wrangler pages
+   deployment list` proved the rejected deployment was genuinely production) and fixed on PR #2
+   (`945d5a8` + `9f02b72`, merged 2026-08-14T07:57:39Z as `7c08053`), with its own fresh-context
+   review (`Claude-85..90`, 2 blocking findings, both fixed - see milestone 6 above).
+3. The `deploy` job then ran successfully on `main` at `7c08053` - `verify` and `deploy` both
+   green, `live-smoke` correctly skipped (not a `workflow_dispatch` run).
+4. `npm run e2e:deployed` ran for real against `https://hierarchy-tree.pages.dev`: all 3 tests
+   passed (`evidence/deployed-smoke.txt`) - the home route renders, `/login` returns 200 on direct
+   load and refresh, and the live response carries `frame-ancestors none`.
+5. `loop step 38 green` -> `done`, `loop milestone verify 6` -> `review 6`, `gate G2 pass`,
+   `gate G5 pass`, `loop transition retro` -> `done`.
 
-**The phase is not complete until step 4 happens.** This PR is not the phase closing quietly on a
-green pull request (invariant 119) - it is the documented handoff point the loop's own gates
-refuse to skip past.
+The phase did not close quietly on a green pull request (invariant 119) - two real defects
+surfaced only once a genuine merge and a genuine deployment existed to test against, and both are
+part of this record rather than smoothed over.
 
 ## Reviews (summary)
 
@@ -414,12 +439,14 @@ refuse to skip past.
   concentrated in M1/M6 - matches where this PR's own G4 findings concentrated: CI permissions,
   CSP, secret scan). User sign-off recorded (`gate G1 pass --signoff`).
 - **G3 verification**: see above - passed, 3 gaps found and covered.
-- **G4 review** (gate: passed): 5 milestone-boundary rounds (22 findings, 6 blocking, all fixed)
-  + 1 final-round Codex second opinion (8 findings, Codex-56..63, 6 blocking, all fixed) + 1
-  final-round Claude fresh-context confirmation (2 findings, Claude-83..84, 1 blocking, both
-  fixed) + 1 independently-found lint coverage gap (fixed). 32 findings total across the whole
-  loop's G4 ledger, 14 blocking, all fixed; 3 accepted as tracked non-defects. See above for the
-  full findings ledger.
+- **G4 review** (gate: passed): 5 pre-merge milestone-boundary rounds (22 findings, 6 blocking,
+  all fixed) + 1 final-round Codex second opinion (8 findings, Codex-56..63, 6 blocking, all
+  fixed) + 1 final-round Claude fresh-context confirmation (2 findings, Claude-83..84, 1 blocking,
+  both fixed) + 1 independently-found lint coverage gap (fixed) + 1 post-merge milestone-6 review
+  of the two follow-up fix commits (6 findings, Claude-85..90, 2 blocking, both fixed; 3 accepted,
+  2 of those as false positives disproven by direct re-verification - see "Known limitations").
+  38 findings total across the whole loop's G4 ledger, 16 blocking, all fixed; 4 accepted as
+  tracked non-defects or false positives. See above for the full findings ledger.
 - Security pass: `security_review: true` at triage (this phase touches CSP, secret scanning, and
   the deploy job's credential handling). Findings Codex-56, 57, 58, 61 above are the
   security-relevant outcomes of that review; all fixed. Recorded via `loop set security-pass`.
@@ -438,5 +465,14 @@ refuse to skip past.
   returned and a fourth round was declined as disproportionate. Carried as risk in PLAN.md;
   concentrated in the same M1/M6 surfaces this PR's G4 review re-examined and found real (now
   fixed) defects in.
-- **Invariants 123, 124, 126a**: explicitly outstanding, not accepted-as-limitation - see "The
-  post-merge obligation" above.
+- **Invariants 123, 124, 126a**: closed post-merge - see "The post-merge obligation" above.
+- **Claude-85, Claude-86** (milestone 6 review, accepted as false positives after direct
+  re-verification): a reviewer with no Bash access flagged the `npm ci` fix as possibly
+  unapplied, reasoning from an assumption about how npm echoes `overrides` into a lockfile that
+  did not hold for this npm version, and from a stale git-status snapshot predating this session's
+  commits. A genuinely clean `rm -rf node_modules && npm ci`, run twice against the actual
+  committed state, disproved both.
+- **Claude-90** (milestone 6 review, accepted): the deploy-record step's test pins presence of
+  both URL outputs and absence of a forced failure, but would not catch a reintroduced
+  non-failing comparison. Judged not worth tightening at the cost of test fragility for a step
+  that only ever writes to the job summary.

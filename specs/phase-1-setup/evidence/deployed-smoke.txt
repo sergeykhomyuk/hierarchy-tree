@@ -1,0 +1,12 @@
+
+> hierarchy-tree@0.0.0 e2e:deployed
+> DEPLOYED_BASE_URL=$(jq -r .productionHostname deployment.json) playwright test --project=deployed
+
+
+Running 3 tests using 1 worker
+
+  ✓  1 [deployed] › e2e/deployed-smoke.spec.ts:11:1 › the home route renders on the live host (431ms)
+  ✓  2 [deployed] › e2e/deployed-smoke.spec.ts:20:1 › /login renders with a 200 on direct load and on refresh (376ms)
+  ✓  3 [deployed] › e2e/deployed-smoke.spec.ts:36:1 › the live response carries frame-ancestors none (150ms)
+
+  3 passed (1.4s)

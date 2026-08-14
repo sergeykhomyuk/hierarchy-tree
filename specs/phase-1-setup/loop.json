@@ -3,11 +3,11 @@
   "title": "Phase 1 - project setup: layers, platform adapters, UI kit, app shell, CI, deploy",
   "type": "feature",
   "size": "L",
-  "status": "active",
-  "phase": "implement",
-  "phase_entered": "2026-08-13T11:04:11Z",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-14T08:13:01Z",
   "created": "2026-08-13",
-  "updated": "2026-08-14T07:52:13Z",
+  "updated": "2026-08-14T08:13:01Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -616,10 +616,11 @@
       "user_signoff": "2026-08-13T10:55:35Z"
     },
     "G2": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "steps_total": 38,
-      "steps_done": 37
+      "steps_done": 38,
+      "note": "All 6 milestone boundaries verified and reviewed. M6 verified against the real production deployment (deploy job succeeded on main at 7c08053, npm run e2e:deployed 3/3 against https://hierarchy-tree.pages.dev) and reviewed via a fresh-context pass over both post-merge fix commits (6 findings, 2 blocking, both fixed - see G4 round milestone-6)."
     },
     "G3": {
       "status": "passed",
@@ -851,16 +852,56 @@
           "blocking": false,
           "disposition": "fixed: the meta-test now runs eslint against a real probe file (new Image().src = '...') via the existing lintOutputFor helper and asserts on the no-restricted-syntax rule name in the output, mirroring the file's own 'demonstrable negatives' pattern, instead of string-inspecting the selector's source text.",
           "round": "final"
+        },
+        "Claude-85": {
+          "desc": "package-lock.json has no visible 'overrides' echo for the eslint-plugin-jsx-a11y peer override package.json declares, which the reviewer read as evidence a fresh npm ci would fail or silently drop the override.",
+          "blocking": false,
+          "disposition": "accepted: re-verified directly, twice, with a genuinely clean rm -rf node_modules && npm ci against the exact committed package.json/package-lock.json (commit 945d5a8) - exit 0 both times, npm run verify green. npm 11.12.1 with lockfileVersion 3 does not echo the overrides field or an 'overridden' marker into the lockfile in this environment, but the override is genuinely applied at resolution time regardless - the reviewer's assumption about lockfile echoing was unverified (it has no Bash tool) and turned out not to hold for this npm version. No code change; the finding does not describe a real defect.",
+          "round": "milestone-6"
+        },
+        "Claude-86": {
+          "desc": "Session context showed package.json as an uncommitted modification with no corresponding lockfile change, read by the reviewer as evidence the npm ci fix was never actually committed.",
+          "blocking": false,
+          "disposition": "accepted: this was the session's very first git-status snapshot from before any of this session's commits, carried in stale context the reviewer had no way to distinguish from current state (it also has no Bash tool to check git log/status directly). The npm ci fix is genuinely committed at 945d5a8, merged via PR #1, and independently confirmed via a fresh clean install. Not a real defect.",
+          "round": "milestone-6"
+        },
+        "Claude-87": {
+          "desc": "PRODUCT.md invariant 126 still said 'Invariant 123's URL assertion is what turns that silent case into a failure', contradicting the corrected invariant 123 text three lines above it in the same file.",
+          "blocking": true,
+          "disposition": "fixed: PRODUCT.md invariant 126 rewritten to say the post-merge e2e:deployed run (126a) is what converts a mis-set production branch into a failure, not invariant 123's removed assertion.",
+          "round": "milestone-6"
+        },
+        "Claude-88": {
+          "desc": "TECH.md's invariant 126 entry still said 'That is why invariant 123's deployment-URL assertion exists... it converts the silent case into a failed job', contradicting TECH.md's own already-corrected invariant 123 entry immediately above it.",
+          "blocking": true,
+          "disposition": "fixed: TECH.md's invariant 126 entry rewritten to match, crediting invariant 126a's post-merge e2e:deployed run rather than the removed deployment-URL assertion.",
+          "round": "milestone-6"
+        },
+        "Claude-89": {
+          "desc": "No ARCHITECTURE.md decision-log entry documented the eslint-plugin-jsx-a11y peer-override decision, unlike the parallel deploy-assertion fix which added one.",
+          "blocking": false,
+          "disposition": "fixed: added a dated ARCHITECTURE.md decision-log entry for the eslint-plugin-jsx-a11y peer override, matching the style and rigor of the deploy-assertion entry beside it.",
+          "round": "milestone-6"
+        },
+        "Claude-90": {
+          "desc": "The rewritten workflow-configuration.test.ts assertion for the deploy record step pins presence of both URL references and absence of 'exit 1', but would not catch a reintroduced non-failing comparison (e.g. an if-block that only echoes a warning).",
+          "blocking": false,
+          "disposition": "accepted: real gap but low severity - the test already pins the two required substrings present and no forced failure, which is the behavior that actually matters (the job must not fail on this step); tightening it to reject any comparison logic at all would make the test brittle against legitimate future informational echoes. Not worth the added test fragility for a step that, per this same fix, only ever prints to the job summary.",
+          "round": "milestone-6"
         }
       },
       "note": "Dual review complete: 5 milestone-boundary loop-reviewer rounds (22 findings, 6 blocking, all fixed) + final-round Codex second opinion (Codex-56..63, 8 findings, 6 blocking, all fixed) + final-round fresh-context Claude review (Claude-83..84, 2 findings, 1 blocking, both fixed) + an independently-found invariant-21 lint coverage gap (fixed). Evidence: evidence/reviews/{m1..m5}-claude-review.md, evidence/reviews/g4-codex-raw-output.txt, evidence/reviews/g4-claude-final-review.md, evidence/g4-fix-verify.txt, evidence/g4-fix-e2e.txt, evidence/g4-final-review-fix-verify.txt, evidence/g4-final-review-fix-e2e.txt. npm run verify and npm run e2e (19/19) green after every fix."
     },
     "G5": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "All gates G1-G4 passed. PROOF.md complete with the full requirement->evidence map, updated for post-merge closure. All 135 PRODUCT.md invariants proven, including 123/124/126a against the real production deployment."
     }
   },
-  "retro": null,
+  "retro": {
+    "outcome": "What went well: the milestone verify/review boundary discipline (G3/G4 per-milestone rounds) caught real, load-bearing defects early and cheaply (M3's injected-correlation-id gap, M4's WCAG contrast failure, M5's missing skeleton-measurement test) rather than letting them accumulate to a single overwhelming final review. TDD discipline (red before green, registered test names verbatim in source) held throughout all 38 steps with no shortcuts. What the user corrected: nothing mid-implementation - the one explicit decision point (deploy sequencing: open a PR now vs wait for Cloudflare setup) was handled via AskUserQuestion and followed exactly as chosen. What reviewers caught late that a genuinely independent check should have caught earlier: two real defects only surfaced post-merge because they were only exercisable against a clean environment / a real deployment - (1) npm ci had never actually been run from a cold node_modules before merge, so a genuine peer-dependency conflict (eslint-plugin-jsx-a11y capping eslint at ^9 against this project's eslint ^10.8.0) went undetected through the entire loop; (2) the deploy job's production-URL assertion was checking something Wrangler structurally cannot report for Cloudflare Pages deployments, so it was guaranteed to fail even against a correctly configured project - this was a design-time assumption baked into PRODUCT.md invariant 123 that no amount of pre-merge code review could catch, because it required a real Cloudflare deployment to falsify. Process lesson worth carrying into VERIFICATION.md or the skill itself: for any CI pipeline step whose correctness depends on a third-party platform's actual runtime behavior (not just its documented API), a genuine end-to-end dry run against that platform - not just a code review of the workflow YAML - should be treated as a pre-merge gate requirement, not deferred to the post-merge obligation, wherever the platform allows a safe dry run (e.g. wrangler pages deploy to a throwaway branch before wiring the assertion into main's gating path). A fresh-context milestone-6 review after these post-merge fixes also caught two real doc-consistency defects (stale cross-references between PRODUCT.md/TECH.md invariants 123 and 126 after 123 was corrected but 126's own prose wasn't) and two false-positive findings from a reviewer with no Bash access, both resolved by direct re-verification rather than trusting either side's claim uncritically - worth noting as a case where 'verify findings actually cite evidence' (the G4 contract's own rule) paid off in both directions, catching real defects and correctly overturning unverifiable ones.",
+    "date": "2026-08-14T08:12:34Z"
+  },
   "plan_steps": [
     {
       "id": 1,
@@ -1294,7 +1335,7 @@
         "the live response carries frame-ancestors none"
       ],
       "red_observed": "2026-08-13T18:56:19Z evidence/steps/step38-red.txt",
-      "status": "red",
+      "status": "done",
       "milestone": 6
     }
   ],
@@ -1986,7 +2027,33 @@
     "2026-08-13T20:46:21Z Autonomous check found CI's verify job failing on npm ci with ERESOLVE: eslint-plugin-jsx-a11y@6.10.2's peerDependencies caps eslint at ^9, but the project pins eslint@^10.8.0 - a real, pre-existing incompatibility that was never caught locally because npm ci (a clean, from-scratch install) was never actually exercised; every local verify run reused an already-warmed node_modules built up incrementally. Confirmed via the npm registry that jsx-a11y has no eslint-10-compatible release yet. Fixed with a narrow package.json overrides entry (eslint-plugin-jsx-a11y.eslint -> $eslint) rather than downgrading eslint or using a blanket --legacy-peer-deps, so strict peer checking stays intact for every other dependency. Verified in an isolated git worktree and then on the real repo: rm -rf node_modules && npm ci succeeds, npm run verify green, npm run e2e green (19/19).",
     "2026-08-14T07:28:23Z Merged to main (0953a42) at 2026-08-14T07:24:08Z. CI's verify job passed again on main (confirming the npm ci fix holds). The deploy job failed: wrangler reported 'In a non-interactive environment, it's necessary to set a CLOUDFLARE_API_TOKEN environment variable' - this is exactly PLAN.md's documented prerequisite item 3 failure mode (repository secrets CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not yet stored), not a code defect. Cannot proceed with step 38/e2e:deployed until a real deployment exists. Waiting on the user to complete the one-time Cloudflare setup (PLAN.md's 'Prerequisite outside the repository' section) and re-run the deploy job.",
     "2026-08-14T07:39:14Z Deploy job re-ran after CLOUDFLARE_API_TOKEN/CLOUDFLARE_ACCOUNT_ID secrets were added: wrangler successfully uploaded and reported https://3f59e5d7.hierarchy-tree.pages.dev, but invariant 123's deployment-url assertion correctly failed the job because that is not the recorded productionHostname (https://hierarchy-tree.pages.dev). This is exactly PLAN.md prerequisite item 2's documented failure mode: Cloudflare decides production-vs-preview by comparing --branch=main against the Pages project's configured production branch, and they currently disagree - the project's production branch is not set to main. Not a code defect; the assertion did exactly what invariant 123 designed it to do (catch this rather than silently ship to an unwatched preview while staying green). Waiting on the user to set the Pages project's production branch to main in the Cloudflare dashboard, then re-run the deploy job.",
-    "2026-08-14T07:52:13Z Root-caused the deploy job failure via wrangler pages deployment list: all four main-branch deploys, including the one CI rejected, are correctly Environment=Production, Branch=main. Cloudflare's dashboard settings were correct the whole time (production branch = main, Git integration disconnected). The actual defect is in ci.yml's own assertion: wrangler pages deploy's CLI output (and the wrangler-action's deployment-url output) always reports the deployment's permanent per-deployment permalink (https://<hash>.hierarchy-tree.pages.dev), never the stable production hostname, regardless of whether Cloudflare internally flags the deployment production or preview - confirmed against the wrangler-action README's own documented example, which itself turned out not to match observed wrangler 4.123.0 Pages behavior. Invariant 123's assertion (deployment-url === productionHostname) was structurally incapable of ever passing, even for a fully correct deploy. User chose to skip adding a replacement verification step (environment-field query or post-deploy content fetch) rather than build either - the real production-reached verification remains npm run e2e:deployed / invariant 126a's post-merge obligation, which already fetches the real production hostname directly. Removing the broken assertion from ci.yml and correcting PRODUCT.md/TECH.md's decision log on a new branch (loop/fix/phase-1-setup-deploy-verification) off main, since main is protected."
+    "2026-08-14T07:52:13Z Root-caused the deploy job failure via wrangler pages deployment list: all four main-branch deploys, including the one CI rejected, are correctly Environment=Production, Branch=main. Cloudflare's dashboard settings were correct the whole time (production branch = main, Git integration disconnected). The actual defect is in ci.yml's own assertion: wrangler pages deploy's CLI output (and the wrangler-action's deployment-url output) always reports the deployment's permanent per-deployment permalink (https://<hash>.hierarchy-tree.pages.dev), never the stable production hostname, regardless of whether Cloudflare internally flags the deployment production or preview - confirmed against the wrangler-action README's own documented example, which itself turned out not to match observed wrangler 4.123.0 Pages behavior. Invariant 123's assertion (deployment-url === productionHostname) was structurally incapable of ever passing, even for a fully correct deploy. User chose to skip adding a replacement verification step (environment-field query or post-deploy content fetch) rather than build either - the real production-reached verification remains npm run e2e:deployed / invariant 126a's post-merge obligation, which already fetches the real production hostname directly. Removing the broken assertion from ci.yml and correcting PRODUCT.md/TECH.md's decision log on a new branch (loop/fix/phase-1-setup-deploy-verification) off main, since main is protected.",
+    "2026-08-14T08:02:24Z evidence recorded: evidence/deployed-smoke.txt (7d0cda320770) - npm run e2e:deployed run for real against https://hierarchy-tree.pages.dev post-merge - all 3 tests pass (home route renders, /login 200 on direct load and refresh, frame-ancestors none header present)",
+    "2026-08-14T08:02:29Z step 38 -> green",
+    "2026-08-14T08:02:29Z step 38 -> done",
+    "2026-08-14T08:02:38Z milestone 6 boundary verified: npm run verify green on main (0953a42, then 7c08053 after the deploy-assertion fix); npm run e2e green (19/19); deploy job succeeded on main (7c08053), Cloudflare confirmed Environment=Production/Branch=main via wrangler pages deployment list; npm run e2e:deployed run for real against https://hierarchy-tree.pages.dev - 3/3 passed (evidence/deployed-smoke.txt). Invariants 123, 124, 99a, 119, 126a all proven against the live production deployment. Two post-merge defects were found and fixed along the way, both on separate reviewed PRs: PR #1's npm ci ERESOLVE (eslint-plugin-jsx-a11y vs eslint 10, package.json overrides fix) and PR #2's unsatisfiable deploy-job production-URL assertion (wrangler pages deploy never reports the production alias hostname, confirmed empirically - assertion dropped, ARCHITECTURE.md decision log updated, invariant 126a's e2e:deployed is the real verification).",
+    "2026-08-14T08:09:06Z G4 finding Claude-85 recorded [round: milestone-6]: package-lock.json has no visible 'overrides' echo for the eslint-plugin-jsx-a11y peer override package.json declares, which the reviewer read as evidence a fresh npm ci would fail or silently drop the override.",
+    "2026-08-14T08:09:06Z G4 finding Claude-86 recorded [round: milestone-6]: Session context showed package.json as an uncommitted modification with no corresponding lockfile change, read by the reviewer as evidence the npm ci fix was never actually committed.",
+    "2026-08-14T08:09:06Z G4 finding Claude-87 recorded (blocking) [round: milestone-6]: PRODUCT.md invariant 126 still said 'Invariant 123's URL assertion is what turns that silent case into a failure', contradicting the corrected invariant 123 text three lines above it in the same file.",
+    "2026-08-14T08:09:06Z G4 finding Claude-88 recorded (blocking) [round: milestone-6]: TECH.md's invariant 126 entry still said 'That is why invariant 123's deployment-URL assertion exists... it converts the silent case into a failed job', contradicting TECH.md's own already-corrected invariant 123 entry immediately above it.",
+    "2026-08-14T08:09:06Z G4 finding Claude-89 recorded [round: milestone-6]: No ARCHITECTURE.md decision-log entry documented the eslint-plugin-jsx-a11y peer-override decision, unlike the parallel deploy-assertion fix which added one.",
+    "2026-08-14T08:09:06Z G4 finding Claude-90 recorded [round: milestone-6]: The rewritten workflow-configuration.test.ts assertion for the deploy record step pins presence of both URL references and absence of 'exit 1', but would not catch a reintroduced non-failing comparison (e.g. an if-block that only echoes a warning).",
+    "2026-08-14T08:09:21Z G4 finding Claude-85 dispositioned: accepted: re-verified directly, twice, with a genuinely clean rm -rf node_modules && npm ci against the exact committed package.json/package-lock.json (commit 945d5a8) - exit 0 both times, npm run verify green. npm 11.12.1 with lockfileVersion 3 does not echo the overrides field or an 'overridden' marker into the lockfile in this environment, but the override is genuinely applied at resolution time regardless - the reviewer's assumption about lockfile echoing was unverified (it has no Bash tool) and turned out not to hold for this npm version. No code change; the finding does not describe a real defect.",
+    "2026-08-14T08:09:21Z G4 finding Claude-86 dispositioned: accepted: this was the session's very first git-status snapshot from before any of this session's commits, carried in stale context the reviewer had no way to distinguish from current state (it also has no Bash tool to check git log/status directly). The npm ci fix is genuinely committed at 945d5a8, merged via PR #1, and independently confirmed via a fresh clean install. Not a real defect.",
+    "2026-08-14T08:09:21Z G4 finding Claude-87 dispositioned: fixed: PRODUCT.md invariant 126 rewritten to say the post-merge e2e:deployed run (126a) is what converts a mis-set production branch into a failure, not invariant 123's removed assertion.",
+    "2026-08-14T08:09:21Z G4 finding Claude-88 dispositioned: fixed: TECH.md's invariant 126 entry rewritten to match, crediting invariant 126a's post-merge e2e:deployed run rather than the removed deployment-URL assertion.",
+    "2026-08-14T08:09:21Z G4 finding Claude-89 dispositioned: fixed: added a dated ARCHITECTURE.md decision-log entry for the eslint-plugin-jsx-a11y peer override, matching the style and rigor of the deploy-assertion entry beside it.",
+    "2026-08-14T08:09:21Z G4 finding Claude-90 dispositioned: accepted: real gap but low severity - the test already pins the two required substrings present and no forced failure, which is the behavior that actually matters (the job must not fail on this step); tightening it to reject any comparison logic at all would make the test brittle against legitimate future informational echoes. Not worth the added test fragility for a step that, per this same fix, only ever prints to the job summary.",
+    "2026-08-14T08:09:30Z milestone 6 reviewed: Fresh-context loop-reviewer over the two post-merge fix commits (npm ci ERESOLVE fix, deploy-assertion fix). 6 findings (Claude-85..90), 2 blocking. Both blocking findings were real and fixed: PRODUCT.md and TECH.md's invariant 126 entries still credited the removed deployment-URL assertion instead of invariant 126a's e2e:deployed run - both corrected. One non-blocking finding fixed (missing ARCHITECTURE.md decision-log entry for the jsx-a11y override, added). Two non-blocking findings accepted after direct re-verification proved them false positives (a stale-context git-status artifact, and an unverified assumption about npm lockfile echoing that a genuinely clean rm -rf node_modules && npm ci - run twice - disproved). One non-blocking finding accepted as a real but low-severity test-pinning gap not worth the added fragility. npm run verify green after fixes.",
+    "2026-08-14T08:09:41Z G2 -> passed (All 6 milestone boundaries verified and reviewed. M6 verified against the real production deployment (deploy job succeeded on main at 7c08053, npm run e2e:deployed 3/3 against https://hierarchy-tree.pages.dev) and reviewed via a fresh-context pass over both post-merge fix commits (6 findings, 2 blocking, both fixed - see G4 round milestone-6).)",
+    "2026-08-14T08:11:31Z G5 -> passed (All gates G1-G4 passed. PROOF.md complete with the full requirement->evidence map, updated for post-merge closure. All 135 PRODUCT.md invariants proven, including 123/124/126a against the real production deployment.)",
+    "2026-08-14T08:12:05Z phase -> verify (reason: G3 passed, all milestones verified including M6 against the real production deployment)",
+    "2026-08-14T08:12:11Z phase -> review (reason: G4 passed, all review rounds including the post-merge milestone-6 round complete)",
+    "2026-08-14T08:12:16Z phase -> prove (reason: G5 passed, PROOF.md complete with all 135 invariants mapped to evidence)",
+    "2026-08-14T08:12:34Z set retro = What went well: the milestone verify/review boundary discipline (G3/G4 per-milestone rounds) caught real, load-bearing defects early and cheaply (M3's injected-correlation-id gap, M4's WCAG contrast failure, M5's missing skeleton-measurement test) rather than letting them accumulate to a single overwhelming final review. TDD discipline (red before green, registered test names verbatim in source) held throughout all 38 steps with no shortcuts. What the user corrected: nothing mid-implementation - the one explicit decision point (deploy sequencing: open a PR now vs wait for Cloudflare setup) was handled via AskUserQuestion and followed exactly as chosen. What reviewers caught late that a genuinely independent check should have caught earlier: two real defects only surfaced post-merge because they were only exercisable against a clean environment / a real deployment - (1) npm ci had never actually been run from a cold node_modules before merge, so a genuine peer-dependency conflict (eslint-plugin-jsx-a11y capping eslint at ^9 against this project's eslint ^10.8.0) went undetected through the entire loop; (2) the deploy job's production-URL assertion was checking something Wrangler structurally cannot report for Cloudflare Pages deployments, so it was guaranteed to fail even against a correctly configured project - this was a design-time assumption baked into PRODUCT.md invariant 123 that no amount of pre-merge code review could catch, because it required a real Cloudflare deployment to falsify. Process lesson worth carrying into VERIFICATION.md or the skill itself: for any CI pipeline step whose correctness depends on a third-party platform's actual runtime behavior (not just its documented API), a genuine end-to-end dry run against that platform - not just a code review of the workflow YAML - should be treated as a pre-merge gate requirement, not deferred to the post-merge obligation, wherever the platform allows a safe dry run (e.g. wrangler pages deploy to a throwaway branch before wiring the assertion into main's gating path). A fresh-context milestone-6 review after these post-merge fixes also caught two real doc-consistency defects (stale cross-references between PRODUCT.md/TECH.md invariants 123 and 126 after 123 was corrected but 126's own prose wasn't) and two false-positive findings from a reviewer with no Bash access, both resolved by direct re-verification rather than trusting either side's claim uncritically - worth noting as a case where 'verify findings actually cite evidence' (the G4 contract's own rule) paid off in both directions, catching real defects and correctly overturning unverifiable ones.",
+    "2026-08-14T08:12:39Z phase -> retro (reason: Retro recorded)",
+    "2026-08-14T08:12:57Z Phase complete. Merged to main (0953a42), two post-merge defects found and fixed on their own reviewed PR (945d5a8 npm ci ERESOLVE fix + 9f02b72 unsatisfiable deploy-assertion fix, merged as 7c08053), deploy succeeded on main, npm run e2e:deployed passed 3/3 against the real production hostname (evidence/deployed-smoke.txt). Milestone 6 fresh-context reviewed post-merge (Claude-85..90, 2 blocking fixed, 3 accepted after re-verification, 1 pending non-blocking accepted). All gates G1-G5 passed. PROOF.md finalized covering all 135 invariants including 123/124/126a against the real deployment. Retro recorded. Transitioning to done.",
+    "2026-08-14T08:13:01Z phase -> done"
   ],
   "milestones": [
     {
@@ -2022,8 +2089,8 @@
     {
       "id": 6,
       "title": "M6 - Pipeline and deploy",
-      "verified": null,
-      "reviewed": null
+      "verified": "2026-08-14T08:02:38Z npm run verify green on main (0953a42, then 7c08053 after the deploy-assertion fix); npm run e2e green (19/19); deploy job succeeded on main (7c08053), Cloudflare confirmed Environment=Production/Branch=main via wrangler pages deployment list; npm run e2e:deployed run for real against https://hierarchy-tree.pages.dev - 3/3 passed (evidence/deployed-smoke.txt). Invariants 123, 124, 99a, 119, 126a all proven against the live production deployment. Two post-merge defects were found and fixed along the way, both on separate reviewed PRs: PR #1's npm ci ERESOLVE (eslint-plugin-jsx-a11y vs eslint 10, package.json overrides fix) and PR #2's unsatisfiable deploy-job production-URL assertion (wrangler pages deploy never reports the production alias hostname, confirmed empirically - assertion dropped, ARCHITECTURE.md decision log updated, invariant 126a's e2e:deployed is the real verification).",
+      "reviewed": "2026-08-14T08:09:30Z Fresh-context loop-reviewer over the two post-merge fix commits (npm ci ERESOLVE fix, deploy-assertion fix). 6 findings (Claude-85..90), 2 blocking. Both blocking findings were real and fixed: PRODUCT.md and TECH.md's invariant 126 entries still credited the removed deployment-URL assertion instead of invariant 126a's e2e:deployed run - both corrected. One non-blocking finding fixed (missing ARCHITECTURE.md decision-log entry for the jsx-a11y override, added). Two non-blocking findings accepted after direct re-verification proved them false positives (a stale-context git-status artifact, and an unverified assumption about npm lockfile echoing that a genuinely clean rm -rf node_modules && npm ci - run twice - disproved). One non-blocking finding accepted as a real but low-severity test-pinning gap not worth the added fragility. npm run verify green after fixes."
     }
   ],
   "evidence_hashes": {
@@ -2746,6 +2813,11 @@
       "sha": "e09033ac6977",
       "recorded": "2026-08-13T19:56:41Z",
       "note": "npm run e2e green (19/19) after fixing Claude-83 and Claude-84"
+    },
+    "evidence/deployed-smoke.txt": {
+      "sha": "7d0cda320770",
+      "recorded": "2026-08-14T08:02:24Z",
+      "note": "npm run e2e:deployed run for real against https://hierarchy-tree.pages.dev post-merge - all 3 tests pass (home route renders, /login 200 on direct load and refresh, frame-ancestors none header present)"
     }
   },
   "test_file_hashes": {}
