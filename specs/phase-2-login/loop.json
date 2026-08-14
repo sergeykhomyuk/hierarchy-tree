@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:46:10Z",
+  "updated": "2026-08-14T20:47:26Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 4
+      "steps_done": 5
     },
     "G3": {
       "status": "pending",
@@ -344,8 +344,8 @@
         "src/features/auth/data/secretResourcePath.test.ts::secretResourcePath > builds the secrets path for a derived secret",
         "src/features/auth/data/userResourcePath.test.ts::userResourcePath > percent-encodes the identifier into the path segment"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T20:47:26Z evidence/steps/step5-red.txt: import resolution failures before the modules existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -833,7 +833,12 @@
     "2026-08-14T20:46:09Z evidence recorded: evidence/steps/step4-red.txt (e94668ba3148) - Step 4 red: userIdentifier module missing",
     "2026-08-14T20:46:10Z step 4 -> red",
     "2026-08-14T20:46:10Z step 4 -> green",
-    "2026-08-14T20:46:10Z step 4 -> done"
+    "2026-08-14T20:46:10Z step 4 -> done",
+    "2026-08-14T20:47:26Z evidence recorded: evidence/steps/step5-red.txt (6bf1523ec623) - Step 5 red: secretResourcePath/userResourcePath modules missing",
+    "2026-08-14T20:47:26Z step 5 -> red",
+    "2026-08-14T20:47:26Z step 5 -> green",
+    "2026-08-14T20:47:26Z step 5 -> done",
+    "2026-08-14T20:47:26Z step 5: assert-domain-vocabulary.mjs now flags secretResourcePath.ts's /secrets literal, exactly as TECH.md section 3 predicts - the narrowing is step 14's WHOLE_SCOPE_FILE_ALLOWLIST mechanism; npm run lint stays red on this one check until then, tests/typecheck/eslint are clean"
   ],
   "milestones": [
     {
@@ -906,6 +911,11 @@
       "sha": "e94668ba3148",
       "recorded": "2026-08-14T20:46:09Z",
       "note": "Step 4 red: userIdentifier module missing"
+    },
+    "evidence/steps/step5-red.txt": {
+      "sha": "6bf1523ec623",
+      "recorded": "2026-08-14T20:47:26Z",
+      "note": "Step 5 red: secretResourcePath/userResourcePath modules missing"
     }
   },
   "test_file_hashes": {
@@ -944,6 +954,18 @@
       "step": 4,
       "recorded": "2026-08-14T20:46:10Z",
       "log_index": 163
+    },
+    "src/features/auth/data/secretResourcePath.test.ts": {
+      "sha": "62835c4f1e05",
+      "step": 5,
+      "recorded": "2026-08-14T20:47:26Z",
+      "log_index": 167
+    },
+    "src/features/auth/data/userResourcePath.test.ts": {
+      "sha": "432d5137e271",
+      "step": 5,
+      "recorded": "2026-08-14T20:47:26Z",
+      "log_index": 167
     }
   }
 }
