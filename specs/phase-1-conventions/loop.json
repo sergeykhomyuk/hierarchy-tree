@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "review",
-  "phase_entered": "2026-08-14T13:49:42Z",
+  "phase": "retro",
+  "phase_entered": "2026-08-14T14:03:02Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T14:01:08Z",
+  "updated": "2026-08-14T14:03:02Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -26,7 +26,7 @@
     "spec": null,
     "plan": "PLAN.md",
     "design": null,
-    "proof": null,
+    "proof": "PROOF.md",
     "evidence": "evidence/"
   },
   "gates": {
@@ -70,11 +70,15 @@
       "note": "Dual review complete: Claude fresh-context (evidence/reviews/g4-claude-review.md, 1 non-blocking finding) + Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking). Claude-1/Codex-2 (stale eslint message) fixed. Codex-1 (relative-import bypass of the sink-construction ban) verified as a pre-existing gap unchanged by this diff's SINKS_IMPORT_PATTERN glob; user accepted it as out of scope for this S refactor loop."
     },
     "G5": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md written and registered (specs/phase-1-conventions/PROOF.md), all 7 acceptance criteria mapped to passing tests + evidence, both G4 reviews referenced with outcomes, loop check clean, evidence registry parity ok (20 registered)."
     }
   },
-  "retro": null,
+  "retro": {
+    "outcome": "What did the user correct? Nothing during this session's added scope (file decomposition) - the user's only decision point was accepting Codex-1 (pre-existing sink-import bypass) as out of scope rather than expanding the loop. What did reviewers catch that an earlier phase should have? Both reviewers independently caught the stale eslint diagnostic message (Claude-1/Codex-2) from moving the sinks override between files - a mechanical file-move detail that's easy to miss without a fresh-context pass; worth remembering that any eslint.config.js files-array move should prompt a grep for the matching error-message text referencing the old filename. Codex additionally surfaced a real, pre-existing lint-enforcement gap (relative imports bypassing a no-restricted-imports group glob) that Claude's review did not catch - a genuine case for keeping both reviewers rather than treating them as redundant. Where did this playbook not answer? Resuming a paused S loop to add clearly-scoped follow-on work (the file-decomposition ask) mid-implement, after steps were already done, worked fine with the existing step-add/na/green/done machinery, but the skill docs don't explicitly say whether new plan steps for added scope should go through a frame/plan phase revisit or can just be appended in implement - handled it by logging an explicit frame-style rationale entry first, which read as the right level of ceremony for a same-character mechanical addition. Nothing durable enough to propose a skill diff for.",
+    "date": "2026-08-14T14:02:46Z"
+  },
   "plan_steps": [
     {
       "id": 1,
@@ -227,7 +231,12 @@
     "2026-08-14T13:59:33Z G4 finding Claude-1 dispositioned: fixed: eslint.config.js SINKS_IMPORT_PATTERN message now reads 'Sinks are constructed only by createSink.ts (platform/observability).' - verified lint still passes",
     "2026-08-14T13:59:34Z G4 finding Codex-2 dispositioned: fixed: same fix as Claude-1 (identical finding from the second reviewer), already applied",
     "2026-08-14T14:01:00Z G4 finding Codex-1 dispositioned: accepted: pre-existing gap, verified unchanged by this diff (SINKS_IMPORT_PATTERN's group glob is byte-identical before/after - only its message string moved). User decided out of scope for this S-size behavior-preservation refactor loop; not fixed here.",
-    "2026-08-14T14:01:08Z G4 -> passed (Dual review complete: Claude fresh-context (evidence/reviews/g4-claude-review.md, 1 non-blocking finding) + Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking). Claude-1/Codex-2 (stale eslint message) fixed. Codex-1 (relative-import bypass of the sink-construction ban) verified as a pre-existing gap unchanged by this diff's SINKS_IMPORT_PATTERN glob; user accepted it as out of scope for this S refactor loop.)"
+    "2026-08-14T14:01:08Z G4 -> passed (Dual review complete: Claude fresh-context (evidence/reviews/g4-claude-review.md, 1 non-blocking finding) + Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking). Claude-1/Codex-2 (stale eslint message) fixed. Codex-1 (relative-import bypass of the sink-construction ban) verified as a pre-existing gap unchanged by this diff's SINKS_IMPORT_PATTERN glob; user accepted it as out of scope for this S refactor loop.)",
+    "2026-08-14T14:01:46Z phase -> prove (reason: G4 passed, dual review complete with dispositions recorded)",
+    "2026-08-14T14:02:35Z set proof = PROOF.md",
+    "2026-08-14T14:02:46Z set retro = What did the user correct? Nothing during this session's added scope (file decomposition) - the user's only decision point was accepting Codex-1 (pre-existing sink-import bypass) as out of scope rather than expanding the loop. What did reviewers catch that an earlier phase should have? Both reviewers independently caught the stale eslint diagnostic message (Claude-1/Codex-2) from moving the sinks override between files - a mechanical file-move detail that's easy to miss without a fresh-context pass; worth remembering that any eslint.config.js files-array move should prompt a grep for the matching error-message text referencing the old filename. Codex additionally surfaced a real, pre-existing lint-enforcement gap (relative imports bypassing a no-restricted-imports group glob) that Claude's review did not catch - a genuine case for keeping both reviewers rather than treating them as redundant. Where did this playbook not answer? Resuming a paused S loop to add clearly-scoped follow-on work (the file-decomposition ask) mid-implement, after steps were already done, worked fine with the existing step-add/na/green/done machinery, but the skill docs don't explicitly say whether new plan steps for added scope should go through a frame/plan phase revisit or can just be appended in implement - handled it by logging an explicit frame-style rationale entry first, which read as the right level of ceremony for a same-character mechanical addition. Nothing durable enough to propose a skill diff for.",
+    "2026-08-14T14:02:57Z G5 -> passed (PROOF.md written and registered (specs/phase-1-conventions/PROOF.md), all 7 acceptance criteria mapped to passing tests + evidence, both G4 reviews referenced with outcomes, loop check clean, evidence registry parity ok (20 registered).)",
+    "2026-08-14T14:03:02Z phase -> retro (reason: G5 passed, PROOF.md complete)"
   ],
   "test_file_hashes": {
     "src/shared/utils/bytesToHex.test.ts": {
