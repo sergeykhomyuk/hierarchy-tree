@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T21:29:56Z",
+  "updated": "2026-08-14T22:07:32Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -273,7 +273,27 @@
     "G4": {
       "status": "pending",
       "attempts": 0,
-      "security_pass": null
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "redact()'s new path-segment redaction applies to EVERY string, not just resource paths, using a loose substring pattern (REDACTED_KEY_PATTERN) - a future path like /api/tokens/42 would have its next segment scrubbed even though it isn't secret data. Safe-direction (over-redaction) but broader scope than this milestone's own invariant needed.",
+          "blocking": false,
+          "disposition": "accepted: over-redaction is the safe failure mode; narrowing is speculative for paths that don't exist yet. User's decision.",
+          "round": "milestone-1"
+        },
+        "Claude-2": {
+          "desc": "resolveDestination's login-route fallback (invariant 93) is an exact string match against '/login', so a trailing-slash variant '/login/' is not caught and passes through unchanged - worst case is an extra redirect hop (not an open redirect, origin check still holds), and it's not covered by resolveDestination.test.ts.",
+          "blocking": false,
+          "disposition": "accepted: worst case is one extra redirect hop, no open-redirect risk (origin check still holds), and no trailing-slash login route currently exists. User's decision.",
+          "round": "milestone-1"
+        },
+        "Claude-3": {
+          "desc": "createSignedInUserStore permanently caches a failed lookup's null result for the page's lifetime with no retry path - a single transient network failure means the signed-in display name can never resolve again without a full reload. Not wired to any UI yet (M4 builds the header); not documented as an accepted trade-off the way other session/derivation invariants are.",
+          "blocking": false,
+          "disposition": "accepted, deferred to M4: not consumed by any UI until the header lands; the retry-vs-stable-fallback tradeoff is concrete only once that consumer exists. User's decision - revisit at M4.",
+          "round": "milestone-1"
+        }
+      }
     },
     "G5": {
       "status": "pending",
@@ -878,14 +898,24 @@
     "2026-08-14T21:29:55Z evidence recorded: evidence/steps/step14-red.txt (759b7270aced) - Step 14 red: /secrets allowlist test + sessionStorage-narrowing test fail against unmodified guard scripts",
     "2026-08-14T21:29:56Z step 14 -> red",
     "2026-08-14T21:29:56Z step 14 -> green",
-    "2026-08-14T21:29:56Z step 14 -> done"
+    "2026-08-14T21:29:56Z step 14 -> done",
+    "2026-08-14T21:34:08Z evidence recorded: evidence/milestones/m1-suite.txt (86497f35f1fc) - M1 boundary: npm run verify green as a whole chain (typecheck, lint, format:check, test:coverage 96.4%/94.86%/96.07%/96.37%, build, verify:build, size)",
+    "2026-08-14T21:34:08Z milestone 1 boundary verified: npm run verify green end to end; evidence/milestones/m1-suite.txt. Domain coverage 100% (arms vitest.config.ts's threshold). No e2e claimed for M1 per PLAN.md.",
+    "2026-08-14T21:40:47Z G4 finding Claude-1 recorded [round: milestone-1]: redact()'s new path-segment redaction applies to EVERY string, not just resource paths, using a loose substring pattern (REDACTED_KEY_PATTERN) - a future path like /api/tokens/42 would have its next segment scrubbed even though it isn't secret data. Safe-direction (over-redaction) but broader scope than this milestone's own invariant needed.",
+    "2026-08-14T21:40:47Z G4 finding Claude-2 recorded [round: milestone-1]: resolveDestination's login-route fallback (invariant 93) is an exact string match against '/login', so a trailing-slash variant '/login/' is not caught and passes through unchanged - worst case is an extra redirect hop (not an open redirect, origin check still holds), and it's not covered by resolveDestination.test.ts.",
+    "2026-08-14T21:40:47Z G4 finding Claude-3 recorded [round: milestone-1]: createSignedInUserStore permanently caches a failed lookup's null result for the page's lifetime with no retry path - a single transient network failure means the signed-in display name can never resolve again without a full reload. Not wired to any UI yet (M4 builds the header); not documented as an accepted trade-off the way other session/derivation invariants are.",
+    "2026-08-14T21:56:56Z G4 finding Claude-1 dispositioned: accepted: over-redaction is the safe failure mode; narrowing is speculative for paths that don't exist yet. User's decision.",
+    "2026-08-14T21:56:56Z G4 finding Claude-2 dispositioned: accepted: worst case is one extra redirect hop, no open-redirect risk (origin check still holds), and no trailing-slash login route currently exists. User's decision.",
+    "2026-08-14T21:56:56Z G4 finding Claude-3 dispositioned: accepted, deferred to M4: not consumed by any UI until the header lands; the retry-vs-stable-fallback tradeoff is concrete only once that consumer exists. User's decision - revisit at M4.",
+    "2026-08-14T22:07:32Z evidence recorded: evidence/reviews/m1-claude-review.md (95cba6b4a572) - M1 boundary review, fresh-context loop-reviewer: 3 findings, 0 blocking, all accepted (Claude-3 deferred to M4)",
+    "2026-08-14T22:07:32Z milestone 1 reviewed: Fresh-context Claude review of the M1 diff (73 files, ~2820 insertions): 3 non-blocking findings (redact over-redaction scope, resolveDestination trailing-slash gap, createSignedInUserStore permanent failure cache), all accepted by the user (Claude-3 deferred to M4). evidence/reviews/m1-claude-review.md"
   ],
   "milestones": [
     {
       "id": 1,
       "title": "M1 - The pieces below React: derivation, lookup, session, the guards' pure core, and the runtime fields",
-      "verified": null,
-      "reviewed": null
+      "verified": "2026-08-14T21:34:08Z npm run verify green end to end; evidence/milestones/m1-suite.txt. Domain coverage 100% (arms vitest.config.ts's threshold). No e2e claimed for M1 per PLAN.md.",
+      "reviewed": "2026-08-14T22:07:32Z Fresh-context Claude review of the M1 diff (73 files, ~2820 insertions): 3 non-blocking findings (redact over-redaction scope, resolveDestination trailing-slash gap, createSignedInUserStore permanent failure cache), all accepted by the user (Claude-3 deferred to M4). evidence/reviews/m1-claude-review.md"
     },
     {
       "id": 2,
@@ -1001,6 +1031,16 @@
       "sha": "759b7270aced",
       "recorded": "2026-08-14T21:29:55Z",
       "note": "Step 14 red: /secrets allowlist test + sessionStorage-narrowing test fail against unmodified guard scripts"
+    },
+    "evidence/milestones/m1-suite.txt": {
+      "sha": "86497f35f1fc",
+      "recorded": "2026-08-14T21:34:08Z",
+      "note": "M1 boundary: npm run verify green as a whole chain (typecheck, lint, format:check, test:coverage 96.4%/94.86%/96.07%/96.37%, build, verify:build, size)"
+    },
+    "evidence/reviews/m1-claude-review.md": {
+      "sha": "95cba6b4a572",
+      "recorded": "2026-08-14T22:07:32Z",
+      "note": "M1 boundary review, fresh-context loop-reviewer: 3 findings, 0 blocking, all accepted (Claude-3 deferred to M4)"
     }
   },
   "test_file_hashes": {
