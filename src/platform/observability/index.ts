@@ -4,8 +4,8 @@ export { createObservability } from './createObservability';
 export type {
   Observability,
   ObservabilityDependencies,
-  BufferHandle,
 } from './createObservability';
+export type { BufferHandle } from './createSink';
 export type { ObservabilityFacade } from './observabilityFacade';
 export type { TimingRecord } from './timingRecord';
 export type { TelemetryRecord } from './telemetryRecord';

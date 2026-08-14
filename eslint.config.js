@@ -594,7 +594,7 @@ export default defineConfig([
   {
     // The one file allowed to construct sinks (invariant 45) - it imports
     // them directly by design, so the ban is off for this file alone.
-    files: ['src/platform/observability/createObservability.ts'],
+    files: ['src/platform/observability/createSink.ts'],
     rules: { 'no-restricted-imports': 'off' },
   },
   {

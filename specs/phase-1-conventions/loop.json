@@ -3,11 +3,11 @@
   "title": "Align code with react-coding/typescript-coding conventions",
   "type": "refactor",
   "size": "S",
-  "status": "paused",
-  "phase": "implement",
-  "phase_entered": "2026-08-14T08:57:06Z",
+  "status": "active",
+  "phase": "review",
+  "phase_entered": "2026-08-14T13:49:42Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T09:59:07Z",
+  "updated": "2026-08-14T13:49:42Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -35,14 +35,16 @@
       "attempts": 0
     },
     "G2": {
-      "status": "pending",
-      "attempts": 0,
-      "steps_total": 5,
-      "steps_done": 5
+      "status": "passed",
+      "attempts": 1,
+      "steps_total": 7,
+      "steps_done": 7,
+      "note": "all 7 refactor steps done: bytesToHex extraction, LogLevel/ObservabilitySink/NavigationState/WebVitalMetricName const-object enums, memo() on 6 app-layer components, createObservability.ts + createHttpClient.ts file decomposition. Full vitest suite green (283/283) after every step; tsc -b and eslint clean throughout."
     },
     "G3": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "npm run verify green end-to-end (typecheck/lint/format/coverage/build/verify:build/size), evidence/verify-full.txt. Pure structural refactor - no new user-facing surface, no e2e delta; unit/component suite (283 tests, 68 files) and coverage (96.28%25 statements, 96.33%25 branches) are the relevant verification for a behavior-preserving file decomposition. Step 5's guarded-test hash drift was from the separately reviewed i18n-test-locale loop's merge, not this loop's work - logged as approved-change and rebased."
     },
     "G4": {
       "status": "pending",
@@ -107,6 +109,25 @@
       ],
       "red_observed": "n/a: case (c): refactor step guarded by pre-existing tests (ApplicationRoot.test.tsx, KitRoute.test.tsx, ApplicationLayout.test.tsx, RouteErrorBoundary.test.tsx, ErrorSurface.test.tsx, NotFoundRoute.test.tsx) which must stay green throughout; wrapping each component in memo() is a pure render-optimization change with no behavior change",
       "status": "done"
+    },
+    {
+      "id": 6,
+      "desc": "Decompose createObservability.ts into single-purpose sibling files (logLevelSeverity.ts, logRecord.ts, createSink.ts); move eslint sink-import exception to createSink.ts",
+      "tests": [
+        "src/platform/observability/createObservability.test.ts::createObservability",
+        "src/platform/observability/sinks/sinkImportGraph.test.ts::sink import graph"
+      ],
+      "red_observed": "n/a: case (c): pure file-split refactor guarded by pre-existing createObservability.test.ts + sinkImportGraph.test.ts which must stay green throughout; no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 7,
+      "desc": "Decompose createHttpClient.ts into single-purpose sibling files (buildUrl.ts, statusDescription.ts, performAttempt.ts+AttemptOutcome)",
+      "tests": [
+        "src/platform/http/createHttpClient.test.ts::createHttpClient"
+      ],
+      "red_observed": "n/a: case (c): pure file-split refactor guarded by pre-existing createHttpClient.test.ts which must stay green throughout; no behavior change",
+      "status": "done"
     }
   ],
   "log": [
@@ -152,7 +173,34 @@
     "2026-08-14T09:28:34Z evidence recorded: evidence/step5-green.txt (3537931af19a) - full vitest suite green: 65 files, 271 tests",
     "2026-08-14T09:28:34Z step 5 -> green",
     "2026-08-14T09:28:34Z step 5 -> done",
-    "2026-08-14T09:59:07Z paused: Switching to a separate feature loop for the i18n test-locale/detection work (behavior-changing, doesn't fit the refactor contract). Resume here for any further pure convention-alignment tweaks."
+    "2026-08-14T09:59:07Z paused: Switching to a separate feature loop for the i18n test-locale/detection work (behavior-changing, doesn't fit the refactor contract). Resume here for any further pure convention-alignment tweaks.",
+    "2026-08-14T13:41:40Z resumed: resuming for file decomposition: split entity-heavy files (createObservability etc.) into folders per typescript-coding module-splitting guidance",
+    "2026-08-14T13:43:42Z frame (added scope): decompose entity-heavy files into single-purpose sibling files per typescript-coding module-splitting guidance. Target 1: createObservability.ts (8 top-level entities: FALLBACK_CORRELATION_ID const, LOG_LEVEL_SEVERITY const, 3 types, createObservability/logRecord/createSink functions spanning 3 distinct concerns) - split logRecord() and createSink() out to sibling files, matching the existing one-function-per-file convention already used by sinks/*.ts and http/retryDelayMilliseconds.ts+shouldRetry.ts. Target 2: createHttpClient.ts (buildUrl/statusDescription/performAttempt helpers + AttemptOutcome type bundled with the main factory) - same treatment. Both files' only non-test importer is their own index.ts barrel (verified via grep), so no consumer import paths change. eslint.config.js's sink-import exception (files: ['src/platform/observability/createObservability.ts'], the 'one file allowed to construct sinks' override) must move to the new createSink.ts. Behavior-preservation contract: pure file-split, zero logic change, guarded by the existing createObservability.test.ts and createHttpClient.test.ts (both import only the public factory + its types, never internals) plus full lint/typecheck/test suite staying green throughout - case (c), no new red test needed.",
+    "2026-08-14T13:43:48Z step 6 added: Decompose createObservability.ts into single-purpose sibling files (logLevelSeverity.ts, logRecord.ts, createSink.ts); move eslint sink-import exception to createSink.ts",
+    "2026-08-14T13:43:48Z step 7 added: Decompose createHttpClient.ts into single-purpose sibling files (buildUrl.ts, statusDescription.ts, performAttempt.ts+AttemptOutcome)",
+    "2026-08-14T13:43:53Z step 6 -> na",
+    "2026-08-14T13:45:46Z evidence recorded: evidence/step6-typecheck.txt (fded5744f291) - tsc -b clean after createObservability.ts decomposition",
+    "2026-08-14T13:45:46Z evidence recorded: evidence/step6-lint.txt (910a4a61d1f7) - eslint clean after moving sink-import exception to createSink.ts",
+    "2026-08-14T13:45:46Z evidence recorded: evidence/step6-green.txt (0cab8159f6e7) - full vitest suite green: 68 files, 283 tests",
+    "2026-08-14T13:45:47Z step 6 -> green",
+    "2026-08-14T13:45:47Z step 6 -> done",
+    "2026-08-14T13:45:51Z step 7 -> na",
+    "2026-08-14T13:47:31Z evidence recorded: evidence/step7-typecheck.txt (fded5744f291) - tsc -b clean after createHttpClient.ts decomposition",
+    "2026-08-14T13:47:31Z evidence recorded: evidence/step7-lint.txt (910a4a61d1f7) - eslint clean after createHttpClient.ts decomposition",
+    "2026-08-14T13:47:32Z evidence recorded: evidence/step7-green.txt (923f6d4a21e6) - full vitest suite green: 68 files, 283 tests",
+    "2026-08-14T13:47:32Z step 7 -> green",
+    "2026-08-14T13:47:32Z step 7 -> done",
+    "2026-08-14T13:47:58Z G2 -> passed (all 7 refactor steps done: bytesToHex extraction, LogLevel/ObservabilitySink/NavigationState/WebVitalMetricName const-object enums, memo() on 6 app-layer components, createObservability.ts + createHttpClient.ts file decomposition. Full vitest suite green (283/283) after every step; tsc -b and eslint clean throughout.)",
+    "2026-08-14T13:48:03Z phase -> verify (reason: all plan steps done and green; moving to verification per s-path)",
+    "2026-08-14T13:48:56Z evidence recorded: evidence/verify-full.txt (229f273baf8a) - full npm run verify chain green: typecheck, lint, format:check, test:coverage (96.28%25 stmts), build, verify:build (15/15), size (112.92kB/150kB entry budget)",
+    "2026-08-14T13:49:23Z approved-change: src/app/ApplicationRoot.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:23Z approved-change: src/app/layout/ApplicationLayout.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:23Z approved-change: src/app/error-boundary/RouteErrorBoundary.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:23Z approved-change: src/app/error-boundary/ErrorSurface.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:23Z approved-change: src/app/routing/routes/NotFoundRoute.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:29Z step 5 hash rebased (src/app/ApplicationRoot.test.tsx, src/app/layout/ApplicationLayout.test.tsx, src/app/error-boundary/RouteErrorBoundary.test.tsx, src/app/error-boundary/ErrorSurface.test.tsx, src/app/routing/routes/NotFoundRoute.test.tsx): approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)",
+    "2026-08-14T13:49:38Z G3 -> passed (npm run verify green end-to-end (typecheck/lint/format/coverage/build/verify:build/size), evidence/verify-full.txt. Pure structural refactor - no new user-facing surface, no e2e delta; unit/component suite (283 tests, 68 files) and coverage (96.28%25 statements, 96.33%25 branches) are the relevant verification for a behavior-preserving file decomposition. Step 5's guarded-test hash drift was from the separately reviewed i18n-test-locale loop's merge, not this loop's work - logged as approved-change and rebased.)",
+    "2026-08-14T13:49:42Z phase -> review (reason: verification complete, moving to dual review)"
   ],
   "test_file_hashes": {
     "src/shared/utils/bytesToHex.test.ts": {
@@ -169,9 +217,9 @@
     },
     "src/platform/observability/createObservability.test.ts": {
       "sha": "c618fe36c87d",
-      "step": 2,
-      "recorded": "2026-08-14T09:23:04Z",
-      "log_index": 22
+      "step": 6,
+      "recorded": "2026-08-14T13:43:53Z",
+      "log_index": 47
     },
     "src/app/routing/createInteractionTracker.test.ts": {
       "sha": "1ab66dca5c3d",
@@ -186,10 +234,11 @@
       "log_index": 32
     },
     "src/app/ApplicationRoot.test.tsx": {
-      "sha": "6a2e3167d61a",
+      "sha": "5431dc2a3063",
       "step": 5,
-      "recorded": "2026-08-14T09:27:23Z",
-      "log_index": 37
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
     },
     "src/app/kit-route/KitRoute.test.tsx": {
       "sha": "4472da6da398",
@@ -198,28 +247,44 @@
       "log_index": 37
     },
     "src/app/layout/ApplicationLayout.test.tsx": {
-      "sha": "44a65967aa12",
+      "sha": "ec33f62ae680",
       "step": 5,
-      "recorded": "2026-08-14T09:27:23Z",
-      "log_index": 37
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
     },
     "src/app/error-boundary/RouteErrorBoundary.test.tsx": {
-      "sha": "aa40269e27b3",
+      "sha": "21297f7130dc",
       "step": 5,
-      "recorded": "2026-08-14T09:27:23Z",
-      "log_index": 37
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
     },
     "src/app/error-boundary/ErrorSurface.test.tsx": {
-      "sha": "a5f331a4ab95",
+      "sha": "777304d2032a",
       "step": 5,
-      "recorded": "2026-08-14T09:27:23Z",
-      "log_index": 37
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
     },
     "src/app/routing/routes/NotFoundRoute.test.tsx": {
-      "sha": "aa8b5dc8a643",
+      "sha": "8a5a771cf260",
       "step": 5,
-      "recorded": "2026-08-14T09:27:23Z",
-      "log_index": 37
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
+    },
+    "src/platform/observability/sinks/sinkImportGraph.test.ts": {
+      "sha": "fc703290babc",
+      "step": 6,
+      "recorded": "2026-08-14T13:43:53Z",
+      "log_index": 47
+    },
+    "src/platform/http/createHttpClient.test.ts": {
+      "sha": "1af39d7cbc4a",
+      "step": 7,
+      "recorded": "2026-08-14T13:45:51Z",
+      "log_index": 53
     }
   },
   "evidence_hashes": {
@@ -277,6 +342,41 @@
       "sha": "3537931af19a",
       "recorded": "2026-08-14T09:28:34Z",
       "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step6-typecheck.txt": {
+      "sha": "fded5744f291",
+      "recorded": "2026-08-14T13:45:46Z",
+      "note": "tsc -b clean after createObservability.ts decomposition"
+    },
+    "evidence/step6-lint.txt": {
+      "sha": "910a4a61d1f7",
+      "recorded": "2026-08-14T13:45:46Z",
+      "note": "eslint clean after moving sink-import exception to createSink.ts"
+    },
+    "evidence/step6-green.txt": {
+      "sha": "0cab8159f6e7",
+      "recorded": "2026-08-14T13:45:46Z",
+      "note": "full vitest suite green: 68 files, 283 tests"
+    },
+    "evidence/step7-typecheck.txt": {
+      "sha": "fded5744f291",
+      "recorded": "2026-08-14T13:47:31Z",
+      "note": "tsc -b clean after createHttpClient.ts decomposition"
+    },
+    "evidence/step7-lint.txt": {
+      "sha": "910a4a61d1f7",
+      "recorded": "2026-08-14T13:47:31Z",
+      "note": "eslint clean after createHttpClient.ts decomposition"
+    },
+    "evidence/step7-green.txt": {
+      "sha": "923f6d4a21e6",
+      "recorded": "2026-08-14T13:47:32Z",
+      "note": "full vitest suite green: 68 files, 283 tests"
+    },
+    "evidence/verify-full.txt": {
+      "sha": "229f273baf8a",
+      "recorded": "2026-08-14T13:48:56Z",
+      "note": "full npm run verify chain green: typecheck, lint, format:check, test:coverage (96.28%25 stmts), build, verify:build (15/15), size (112.92kB/150kB entry budget)"
     }
   }
 }
