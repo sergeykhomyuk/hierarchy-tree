@@ -1,4 +1,5 @@
-import type { Configuration } from '@platform/configuration';
+import type { Configuration, LogLevel } from '@platform/configuration';
+import { ObservabilitySink } from '@platform/configuration';
 import type { Randomness } from '@platform/runtime';
 import { createCorrelationId } from './createCorrelationId';
 import type { ObservabilityFacade } from './observabilityFacade';
@@ -10,13 +11,13 @@ import type { TelemetryRecord } from './telemetryRecord';
 
 const FALLBACK_CORRELATION_ID = '0'.repeat(32);
 
-const LOG_LEVEL_SEVERITY = {
+const LOG_LEVEL_SEVERITY: Record<LogLevel, number> = {
   debug: 0,
   info: 1,
   warn: 2,
   error: 3,
   silent: 4,
-} as const;
+};
 
 export type ObservabilityDependencies = {
   configuration: Pick<Configuration, 'observabilitySink' | 'logLevel'>;
@@ -101,11 +102,11 @@ function createSink(sinkKind: Configuration['observabilitySink']): {
   sink: (record: TelemetryRecord) => void;
   bufferHandle: BufferHandle;
 } {
-  if (sinkKind === 'buffer') {
+  if (sinkKind === ObservabilitySink.Buffer) {
     const ringBuffer = createRingBufferSink();
     return { sink: ringBuffer.write, bufferHandle: { read: ringBuffer.read } };
   }
-  if (sinkKind === 'console') {
+  if (sinkKind === ObservabilitySink.Console) {
     return { sink: createConsoleSink(), bufferHandle: null };
   }
   return { sink: createNoOpSink(), bufferHandle: null };

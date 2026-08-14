@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T08:57:06Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T09:22:46Z",
+  "updated": "2026-08-14T09:24:43Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 5,
-      "steps_done": 1
+      "steps_done": 2
     },
     "G3": {
       "status": "pending",
@@ -73,8 +73,8 @@
         "src/platform/configuration/createConfiguration.test.ts::createConfiguration",
         "src/platform/observability/createObservability.test.ts::createObservability"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor step guarded by pre-existing tests (createConfiguration.test.ts, createObservability.test.ts) which must stay green throughout; introducing LogLevel/ObservabilitySink const-object enums is a pure type-shape change with no behavior change",
+      "status": "done"
     },
     {
       "id": 3,
@@ -131,7 +131,12 @@
     "2026-08-14T09:22:03Z evidence recorded: evidence/step1-green.txt (e7c758d6acd8) - full vitest suite green: 65 files, 271 tests",
     "2026-08-14T09:22:03Z step 1 -> green",
     "2026-08-14T09:22:03Z step 1 -> done",
-    "2026-08-14T09:22:46Z architecture: recorded decision-log entry + diagram update in ARCHITECTURE.md for the new platform -> shared/utils boundaries exception (scoped, zero-dependency shared-utils element, avoids a shared<->platform cycle). User confirmed both the shared/utils location and the cycle-avoidance scoping via AskUserQuestion before this was written."
+    "2026-08-14T09:22:46Z architecture: recorded decision-log entry + diagram update in ARCHITECTURE.md for the new platform -> shared/utils boundaries exception (scoped, zero-dependency shared-utils element, avoids a shared<->platform cycle). User confirmed both the shared/utils location and the cycle-avoidance scoping via AskUserQuestion before this was written.",
+    "2026-08-14T09:23:04Z step 2 -> na",
+    "2026-08-14T09:24:43Z evidence recorded: evidence/step2-typecheck.txt (e3b0c44298fc) - tsc -b clean after LogLevel/ObservabilitySink enum introduction",
+    "2026-08-14T09:24:43Z evidence recorded: evidence/step2-green.txt (0e6df5180829) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:24:43Z step 2 -> green",
+    "2026-08-14T09:24:43Z step 2 -> done"
   ],
   "test_file_hashes": {
     "src/shared/utils/bytesToHex.test.ts": {
@@ -139,6 +144,18 @@
       "step": 1,
       "recorded": "2026-08-14T08:57:21Z",
       "log_index": 15
+    },
+    "src/platform/configuration/createConfiguration.test.ts": {
+      "sha": "441799ec6f79",
+      "step": 2,
+      "recorded": "2026-08-14T09:23:04Z",
+      "log_index": 22
+    },
+    "src/platform/observability/createObservability.test.ts": {
+      "sha": "c618fe36c87d",
+      "step": 2,
+      "recorded": "2026-08-14T09:23:04Z",
+      "log_index": 22
     }
   },
   "evidence_hashes": {
@@ -155,6 +172,16 @@
     "evidence/step1-green.txt": {
       "sha": "e7c758d6acd8",
       "recorded": "2026-08-14T09:22:03Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step2-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:24:43Z",
+      "note": "tsc -b clean after LogLevel/ObservabilitySink enum introduction"
+    },
+    "evidence/step2-green.txt": {
+      "sha": "0e6df5180829",
+      "recorded": "2026-08-14T09:24:43Z",
       "note": "full vitest suite green: 65 files, 271 tests"
     }
   }

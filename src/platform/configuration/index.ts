@@ -3,3 +3,5 @@ export type { RawEnvironment } from './environment';
 export { createConfiguration } from './createConfiguration';
 export type { ConfigurationResult } from './createConfiguration';
 export type { Configuration } from './configuration';
+export { LogLevel } from './logLevel';
+export { ObservabilitySink } from './observabilitySink';

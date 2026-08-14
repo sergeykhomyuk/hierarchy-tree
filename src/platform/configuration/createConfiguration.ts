@@ -1,6 +1,8 @@
 import { configurationSchema } from './configurationSchema';
 import type { RawEnvironment } from './environment';
 import type { Configuration } from './configuration';
+import { LogLevel } from './logLevel';
+import { ObservabilitySink } from './observabilitySink';
 
 export type ConfigurationResult =
   | { ok: true; configuration: Configuration }
@@ -15,10 +17,15 @@ function withModeAppropriateDefaults(raw: RawEnvironment): RawEnvironment {
 
   return {
     ...raw,
-    VITE_LOG_LEVEL: raw.VITE_LOG_LEVEL ?? (isDevelopment ? 'debug' : 'warn'),
+    VITE_LOG_LEVEL:
+      raw.VITE_LOG_LEVEL ?? (isDevelopment ? LogLevel.Debug : LogLevel.Warn),
     VITE_OBSERVABILITY_SINK:
       raw.VITE_OBSERVABILITY_SINK ??
-      (isTest ? 'none' : isDevelopment ? 'console' : 'buffer'),
+      (isTest
+        ? ObservabilitySink.None
+        : isDevelopment
+          ? ObservabilitySink.Console
+          : ObservabilitySink.Buffer),
     VITE_DEVELOPMENT_ROUTES:
       raw.VITE_DEVELOPMENT_ROUTES ?? String(isDevelopment),
   };

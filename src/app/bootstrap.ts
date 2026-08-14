@@ -2,6 +2,7 @@ import { StrictMode, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import type { ConfigurationResult } from '@platform/configuration';
+import { LogLevel, ObservabilitySink } from '@platform/configuration';
 import { createObservability } from '@platform/observability';
 import { createSystemRandomness } from '@platform/runtime';
 import { ApplicationRoot } from './ApplicationRoot';
@@ -24,7 +25,10 @@ export async function bootstrap(
     // configuration, which is unavailable here by definition. No router,
     // no feature code and no partially configured UI is mounted either way.
     const { facade } = createObservability({
-      configuration: { observabilitySink: 'console', logLevel: 'error' },
+      configuration: {
+        observabilitySink: ObservabilitySink.Console,
+        logLevel: LogLevel.Error,
+      },
       randomness: createSystemRandomness(),
     });
     facade.logger.error('app.configuration_invalid', {

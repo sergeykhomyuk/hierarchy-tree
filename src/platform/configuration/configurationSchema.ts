@@ -1,4 +1,6 @@
 import * as z from 'zod/mini';
+import { LogLevel } from './logLevel';
+import { ObservabilitySink } from './observabilitySink';
 
 // A .default() on every key (invariant 18) - a checkout with no .env file
 // validates. zod/mini is imported for its tree-shakable build (the entry
@@ -8,13 +10,10 @@ export const configurationSchema = z.object({
     z.url({ protocol: /^https$/ }),
     'https://gongfetest.firebaseio.com',
   ),
-  VITE_LOG_LEVEL: z._default(
-    z.enum(['debug', 'info', 'warn', 'error', 'silent']),
-    'debug',
-  ),
+  VITE_LOG_LEVEL: z._default(z.enum(LogLevel), LogLevel.Debug),
   VITE_OBSERVABILITY_SINK: z._default(
-    z.enum(['console', 'buffer', 'none']),
-    'console',
+    z.enum(ObservabilitySink),
+    ObservabilitySink.Console,
   ),
   VITE_REQUEST_TIMEOUT_MILLISECONDS: z._default(
     z.coerce.number().check(z.minimum(1), z.maximum(60_000)),
