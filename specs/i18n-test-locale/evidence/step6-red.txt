@@ -1,0 +1,433 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/ApplicationRoot.test.tsx (2 tests | 1 failed) 23ms
+     × sets document.documentElement.lang and dir from the active i18next language 5ms
+stderr | src/app/error-boundary/RootErrorBoundary.test.tsx > RootErrorBoundary > the root boundary renders the error surface above any router without throwing
+Error: boom
+    at Bomb (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/error-boundary/RootErrorBoundary.test.tsx:7:9)
+    at Object.react_stack_bottom_frame (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'boom'
+}
+
+The above error occurred in the <Bomb> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RootErrorBoundary.
+
+
+ ❯ |ui| src/app/error-boundary/RootErrorBoundary.test.tsx (2 tests | 1 failed) 26ms
+     × the root boundary renders the error surface above any router without throwing 22ms
+stderr | src/app/error-boundary/RouteErrorBoundary.test.tsx > RouteErrorBoundary > renders the error surface when a route throws while rendering
+Error: boom
+    at Bomb (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/error-boundary/RouteErrorBoundary.test.tsx:8:9)
+    at Object.react_stack_bottom_frame (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'boom'
+}
+
+The above error occurred in the <Bomb> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render Error: boom
+    at Bomb (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/error-boundary/RouteErrorBoundary.test.tsx:8:9)
+    at Object.react_stack_bottom_frame (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+ ❯ |ui| src/app/error-boundary/RouteErrorBoundary.test.tsx (1 test | 1 failed) 33ms
+     × renders the error surface when a route throws while rendering 33ms
+ ❯ |ui| src/app/error-boundary/ErrorSurface.test.tsx (2 tests | 2 failed) 62ms
+     × renders the catalogue copy and the correlation id, and calls no router hook 23ms
+     × activates the recovery action when the retry button is pressed 38ms
+ ❯ |ui| src/app/routing/routes/NotFoundRoute.test.tsx (1 test | 1 failed) 61ms
+     × an unmatched path renders the not-found route with a link home 60ms
+ ❯ |ui| src/app/layout/ApplicationLayout.test.tsx (2 tests | 1 failed) 66ms
+     × renders a skip link pointing at the main landmark 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/ApplicationRoot.test.tsx > ApplicationRoot > sets document.documentElement.lang and dir from the active i18next language
+AssertionError: expected 'en' to be 'zxx' // Object.is equality
+
+Expected: "zxx"
+Received: "en"
+
+ ❯ src/app/ApplicationRoot.test.tsx:30:43
+     28|     await renderRoute(<ProbeRoute />);
+     29|
+     30|     expect(document.documentElement.lang).toBe(Locale.Test);
+       |                                           ^
+     31|     expect(document.documentElement.dir).toBe('ltr');
+     32|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |ui| src/app/error-boundary/ErrorSurface.test.tsx > ErrorSurface > renders the catalogue copy and the correlation id, and calls no router hook
+TestingLibraryElementError: Unable to find an element with the text: errorSurface.title. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"font-semibold text-ink"[39m
+      [36m>[39m
+        [0mSomething went wrong[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-muted"[39m
+      [36m>[39m
+        [0mAn unexpected error occurred.[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-faint"[39m
+      [36m>[39m
+        [0mabc123[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"rounded-control bg-primary px-4 py-2 text-on-primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mTry again[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/app/error-boundary/ErrorSurface.test.tsx:13:19
+     11|     );
+     12|
+     13|     expect(screen.getByText('errorSurface.title')).toBeInTheDocument();
+       |                   ^
+     14|     expect(screen.getByText('errorSurface.message')).toBeInTheDocument…
+     15|     expect(screen.getByText('abc123')).toBeInTheDocument();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |ui| src/app/error-boundary/ErrorSurface.test.tsx > ErrorSurface > activates the recovery action when the retry button is pressed
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "errorSurface.retry"
+
+Here are the accessible roles:
+
+  alert:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"font-semibold text-ink"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"text-ink-muted"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"text-ink-faint"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Try again":
+  [36m<button[39m
+    [33mclass[39m=[32m"rounded-control bg-primary px-4 py-2 text-on-primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"font-semibold text-ink"[39m
+      [36m>[39m
+        [0mSomething went wrong[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-muted"[39m
+      [36m>[39m
+        [0mAn unexpected error occurred.[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-faint"[39m
+      [36m>[39m
+        [0mabc123[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"rounded-control bg-primary px-4 py-2 text-on-primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mTry again[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/app/error-boundary/ErrorSurface.test.tsx:25:14
+     23|
+     24|     await userEvent.click(
+     25|       screen.getByRole('button', { name: 'errorSurface.retry' }),
+       |              ^
+     26|     );
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  |ui| src/app/error-boundary/RootErrorBoundary.test.tsx > RootErrorBoundary > the root boundary renders the error surface above any router without throwing
+TestingLibraryElementError: Unable to find an element with the text: errorSurface.title. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"font-semibold text-ink"[39m
+      [36m>[39m
+        [0mSomething went wrong[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-muted"[39m
+      [36m>[39m
+        [0mAn unexpected error occurred.[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-faint"[39m
+      [36m>[39m
+        [0m000102030405060708090a0b0c0d0e0f[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"rounded-control bg-primary px-4 py-2 text-on-primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mTry again[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/app/error-boundary/RootErrorBoundary.test.tsx:14:19
+     12|     await expect(renderRoute(<Bomb />)).resolves.toBeDefined();
+     13|
+     14|     expect(screen.getByText('errorSurface.title')).toBeInTheDocument();
+       |                   ^
+     15|   });
+     16|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  |ui| src/app/error-boundary/RouteErrorBoundary.test.tsx > RouteErrorBoundary > renders the error surface when a route throws while rendering
+TestingLibraryElementError: Unable to find an element with the text: errorSurface.title. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"font-semibold text-ink"[39m
+      [36m>[39m
+        [0mSomething went wrong[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-muted"[39m
+      [36m>[39m
+        [0mAn unexpected error occurred.[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-faint"[39m
+      [36m>[39m
+        [0m0102030405060708090a0b0c0d0e0f10[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"rounded-control bg-primary px-4 py-2 text-on-primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mTry again[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/app/error-boundary/RouteErrorBoundary.test.tsx:19:19
+     17|     await renderRoute(<RouterProvider router={router} />);
+     18|
+     19|     expect(screen.getByText('errorSurface.title')).toBeInTheDocument();
+       |                   ^
+     20|     // Keyboard recovery (invariant 93) and that the retry actually
+     21|     // re-runs the route rather than reloading are e2e-only checks
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  |ui| src/app/layout/ApplicationLayout.test.tsx > ApplicationLayout > renders a skip link pointing at the main landmark
+TestingLibraryElementError: Unable to find an accessible element with the role "link" and name "layout.skipLink"
+
+Here are the accessible roles:
+
+  link:
+
+  Name "Skip to main content":
+  [36m<a[39m
+    [33mhref[39m=[32m"#main-content"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mid[39m=[32m"main-content"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Probe page":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"#main-content"[39m
+    [36m>[39m
+      [0mSkip to main content[0m
+    [36m</a>[39m
+    [36m<main[39m
+      [33mid[39m=[32m"main-content"[39m
+    [36m>[39m
+      [36m<h1>[39m
+        [0mProbe page[0m
+      [36m</h1>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/app/layout/ApplicationLayout.test.tsx:32:29
+     30|     await renderLayout();
+     31|
+     32|     const skipLink = screen.getByRole('link', { name: 'layout.skipLink…
+       |                             ^
+     33|     const main = screen.getByRole('main');
+     34|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  |ui| src/app/routing/routes/NotFoundRoute.test.tsx > NotFoundRoute > an unmatched path renders the not-found route with a link home
+TestingLibraryElementError: Unable to find an accessible element with the role "link" and name "notFound.linkHome"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Page not found":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Back to home":
+  [36m<a[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<h1>[39m
+      [0mPage not found[0m
+    [36m</h1>[39m
+    [36m<a[39m
+      [33mdata-discover[39m=[32m"true"[39m
+      [33mhref[39m=[32m"/"[39m
+    [36m>[39m
+      [0mBack to home[0m
+    [36m</a>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/app/routing/routes/NotFoundRoute.test.tsx:15:25
+     13|     );
+     14|
+     15|     const link = screen.getByRole('link', { name: 'notFound.linkHome' …
+       |                         ^
+     16|     expect(link).toHaveAttribute('href', '/');
+     17|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  6 failed (6)
+      Tests  7 failed | 3 passed (10)
+   Start at  12:40:28
+   Duration  881ms (transform 421ms, setup 940ms, import 460ms, tests 271ms, environment 2.89s)
+

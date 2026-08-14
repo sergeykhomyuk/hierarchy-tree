@@ -12,7 +12,7 @@ describe('NotFoundRoute', () => {
       </MemoryRouter>,
     );
 
-    const link = screen.getByRole('link', { name: 'Back to home' });
+    const link = screen.getByRole('link', { name: 'notFound.linkHome' });
     expect(link).toHaveAttribute('href', '/');
   });
 });

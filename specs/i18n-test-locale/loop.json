@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T11:27:37Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:39:17Z",
+  "updated": "2026-08-14T11:41:26Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -77,7 +77,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 7,
-      "steps_done": 5
+      "steps_done": 6
     },
     "G3": {
       "status": "pending",
@@ -155,8 +155,8 @@
         "src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute > an unmatched path renders the not-found route with a link home",
         "src/app/ApplicationRoot.test.tsx::ApplicationRoot > sets document.documentElement.lang and dir from the active i18next language"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-14T11:40:36Z evidence/step6-red.txt: 7 test failures across 6 files, all expecting key-echo strings but rendering real English text (buildTestRuntime still English-defaulted)",
+      "status": "done"
     },
     {
       "id": 7,
@@ -235,7 +235,13 @@
     "2026-08-14T11:39:17Z evidence recorded: evidence/step5-green-hierarchy.txt (928f649bdb7c) - hierarchy loadTranslations green: 3/3",
     "2026-08-14T11:39:17Z evidence recorded: evidence/step5-full-suite.txt (12690189cb0f) - full suite green: 67 files, 279 tests",
     "2026-08-14T11:39:17Z step 5 -> green",
-    "2026-08-14T11:39:17Z step 5 -> done"
+    "2026-08-14T11:39:17Z step 5 -> done",
+    "2026-08-14T11:40:36Z step 6 -> red",
+    "2026-08-14T11:41:26Z evidence recorded: evidence/step6-red.txt (16a24be86c21) - 7 tests red across 6 files, right reason (still English)",
+    "2026-08-14T11:41:26Z evidence recorded: evidence/step6-green.txt (affb6c688a37) - 10/10 tests green across 6 files",
+    "2026-08-14T11:41:26Z evidence recorded: evidence/step6-full-suite.txt (c94792a5dffb) - full suite green: 67 files, 279 tests, no regressions in other buildTestRuntime consumers",
+    "2026-08-14T11:41:26Z step 6 -> green",
+    "2026-08-14T11:41:26Z step 6 -> done"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
@@ -327,6 +333,21 @@
       "sha": "12690189cb0f",
       "recorded": "2026-08-14T11:39:17Z",
       "note": "full suite green: 67 files, 279 tests"
+    },
+    "evidence/step6-red.txt": {
+      "sha": "16a24be86c21",
+      "recorded": "2026-08-14T11:41:26Z",
+      "note": "7 tests red across 6 files, right reason (still English)"
+    },
+    "evidence/step6-green.txt": {
+      "sha": "affb6c688a37",
+      "recorded": "2026-08-14T11:41:26Z",
+      "note": "10/10 tests green across 6 files"
+    },
+    "evidence/step6-full-suite.txt": {
+      "sha": "c94792a5dffb",
+      "recorded": "2026-08-14T11:41:26Z",
+      "note": "full suite green: 67 files, 279 tests, no regressions in other buildTestRuntime consumers"
     }
   },
   "test_file_hashes": {
@@ -365,6 +386,42 @@
       "step": 5,
       "recorded": "2026-08-14T11:37:46Z",
       "log_index": 59
+    },
+    "src/app/error-boundary/ErrorSurface.test.tsx": {
+      "sha": "777304d2032a",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/error-boundary/RootErrorBoundary.test.tsx": {
+      "sha": "ec6358278f14",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/error-boundary/RouteErrorBoundary.test.tsx": {
+      "sha": "21297f7130dc",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/layout/ApplicationLayout.test.tsx": {
+      "sha": "ec33f62ae680",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/routing/routes/NotFoundRoute.test.tsx": {
+      "sha": "8a5a771cf260",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/ApplicationRoot.test.tsx": {
+      "sha": "5431dc2a3063",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
     }
   }
 }

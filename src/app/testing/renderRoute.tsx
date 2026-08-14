@@ -2,7 +2,11 @@ import type { ReactNode } from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import type { Configuration } from '@platform/configuration';
 import { createObservability } from '@platform/observability';
-import { createInternationalization } from '@platform/internationalization';
+import {
+  createInternationalization,
+  createKeyEchoCatalogue,
+  Locale,
+} from '@platform/internationalization';
 import { createHttpClient } from '@platform/http';
 import {
   createFakeClock,
@@ -52,8 +56,8 @@ export async function buildTestRuntime(
       interactionTracker.currentCorrelationId() ?? 'test-correlation-id',
   });
   const i18n = await createInternationalization({
-    resources: { common: commonCatalogue },
-    language: 'en',
+    resources: { common: createKeyEchoCatalogue(commonCatalogue) },
+    language: Locale.Test,
     observability,
   });
 
