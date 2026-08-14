@@ -112,7 +112,7 @@ Carried from `ARCHITECTURE.md` section 7 so that reading only this file does not
 - **Offline and service workers** - a 9KB public payload does not justify a cache lifecycle. The repository layer is where a persistent cache would attach.
 - **Response caching** - in-flight dedupe, TTL and stale-while-revalidate. Withdrawn from the roadmap on 2026-08-13: the design cost more than the one 9KB request it saves. Every phase fetches through the http client directly, and the repository per resource is the seam a cache attaches behind later. The withdrawn design is kept in [CACHE.md](./CACHE.md) for whenever that is worth doing.
 - **Search, filtering, org editing** - the tree domain already returns the row model a filter would narrow, but none of this is asked for.
-- **A second locale, SSR, a component library** - the infrastructure supports each; none is needed.
+- **A second *product* locale, SSR, a component library** - the infrastructure supports each; none is needed. (A test-only locale for unit/e2e assertions ships separately - see ARCHITECTURE.md's decision log.)
 - **Vendor telemetry** - the observability facade defines the contract; a real sink is a one-line swap.
 
 ---

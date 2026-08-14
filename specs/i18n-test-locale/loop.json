@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T11:27:37Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:47:44Z",
+  "updated": "2026-08-14T11:49:28Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -251,7 +251,8 @@
     "2026-08-14T11:47:40Z evidence recorded: evidence/step7-e2e-development-project.txt (1f22d406896f) - development project unaffected: 7/7 passing, confirms non-goal",
     "2026-08-14T11:47:40Z evidence recorded: evidence/step7-size.txt (2f22fba4c8ef) - npm run size: all budgets pass, entry 112.84kB/150kB, no unbudgeted chunk",
     "2026-08-14T11:47:44Z step 7 -> green",
-    "2026-08-14T11:47:44Z step 7 -> done"
+    "2026-08-14T11:47:44Z step 7 -> done",
+    "2026-08-14T11:49:28Z implement: applied the 5 documented decision-log/invariant text edits (R12) to ARCHITECTURE.md decision log + section 7, ROADMAP.md, PRODUCT.md invariant 65 + not-built list - closes the Claude-1 G1 finding's doc-consistency gap for real, not just in SPEC.md's proposed text."
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
