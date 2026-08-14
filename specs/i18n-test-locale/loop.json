@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T11:27:37Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:29:07Z",
+  "updated": "2026-08-14T11:35:23Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -77,7 +77,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 7,
-      "steps_done": 2
+      "steps_done": 3
     },
     "G3": {
       "status": "pending",
@@ -122,8 +122,8 @@
         "src/platform/internationalization/createKeyEchoCatalogue.test.ts::createKeyEchoCatalogue > replaces every leaf with its own dot-path key",
         "src/platform/internationalization/createKeyEchoCatalogue.test.ts::createKeyEchoCatalogue > never mutates the source catalogue"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-14T11:32:58Z evidence/step3-red.txt: createKeyEchoCatalogue module does not exist yet",
+      "status": "done"
     },
     {
       "id": 4,
@@ -215,7 +215,13 @@
     "2026-08-14T11:29:07Z evidence recorded: evidence/step2-red.txt (0d26e79ad391) - detectLocale red: module did not exist",
     "2026-08-14T11:29:07Z evidence recorded: evidence/step2-green.txt (ebdc0867c432) - detectLocale green: 4/4 tests passing",
     "2026-08-14T11:29:07Z step 2 -> green",
-    "2026-08-14T11:29:07Z step 2 -> done"
+    "2026-08-14T11:29:07Z step 2 -> done",
+    "2026-08-14T11:32:58Z step 3 -> red",
+    "2026-08-14T11:35:16Z implement/step3: found and fixed a spec defect neither G1 review round caught - createKeyEchoCatalogue.test.ts (platform/internationalization) cannot import real app/feature catalogue JSON directly (boundaries/dependencies disallows platform -> app/feature even in test files). Switched the generator's own unit test to a synthetic fixture catalogue (same shape diversity as the real ones); real-catalogue + mutation-sequence coverage moves to loadTranslations.test.ts (step 5, feature layer). SPEC.md's testing section updated to match. No invariant's substance changed, only the proof mechanism.",
+    "2026-08-14T11:35:22Z evidence recorded: evidence/step3-red.txt (97f38c5ca50c) - createKeyEchoCatalogue red: module did not exist",
+    "2026-08-14T11:35:23Z evidence recorded: evidence/step3-green.txt (95c585816cfa) - createKeyEchoCatalogue green: 2/2 tests passing (fixture-based, corrected from real-catalogue imports per boundary constraint)",
+    "2026-08-14T11:35:23Z step 3 -> green",
+    "2026-08-14T11:35:23Z step 3 -> done"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
@@ -257,6 +263,16 @@
       "sha": "ebdc0867c432",
       "recorded": "2026-08-14T11:29:07Z",
       "note": "detectLocale green: 4/4 tests passing"
+    },
+    "evidence/step3-red.txt": {
+      "sha": "97f38c5ca50c",
+      "recorded": "2026-08-14T11:35:22Z",
+      "note": "createKeyEchoCatalogue red: module did not exist"
+    },
+    "evidence/step3-green.txt": {
+      "sha": "95c585816cfa",
+      "recorded": "2026-08-14T11:35:23Z",
+      "note": "createKeyEchoCatalogue green: 2/2 tests passing (fixture-based, corrected from real-catalogue imports per boundary constraint)"
     }
   },
   "test_file_hashes": {
@@ -271,6 +287,12 @@
       "step": 2,
       "recorded": "2026-08-14T11:28:40Z",
       "log_index": 42
+    },
+    "src/platform/internationalization/createKeyEchoCatalogue.test.ts": {
+      "sha": "63510cd9d76b",
+      "step": 3,
+      "recorded": "2026-08-14T11:32:58Z",
+      "log_index": 47
     }
   }
 }

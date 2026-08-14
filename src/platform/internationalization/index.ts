@@ -3,6 +3,7 @@ export type { InternationalizationDependencies } from './createInternationalizat
 export { localeDirection } from './localeDirection';
 export { Locale } from './locale';
 export { detectLocale } from './detectLocale';
+export { createKeyEchoCatalogue } from './createKeyEchoCatalogue';
 export { formatMissingKey } from './formatMissingKey';
 export { createMissingKeyHandler, missingKeyReports } from './reportMissingKey';
 export type { MissingKeyEntry } from './reportMissingKey';
