@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T11:27:37Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:36:54Z",
+  "updated": "2026-08-14T11:39:17Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -77,7 +77,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 7,
-      "steps_done": 4
+      "steps_done": 5
     },
     "G3": {
       "status": "pending",
@@ -141,8 +141,8 @@
         "src/features/auth/loadTranslations.test.ts::auth loadTranslations > registers the key-echoed catalogue under Locale.Test",
         "src/features/hierarchy/loadTranslations.test.ts::hierarchy loadTranslations > registers the key-echoed catalogue under Locale.Test"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-14T11:37:46Z evidence/step5-red.txt: auth loadTranslations registers under literal 'en' regardless of instance language, getResourceBundle(Locale.Test,...) undefined",
+      "status": "done"
     },
     {
       "id": 6,
@@ -227,7 +227,15 @@
     "2026-08-14T11:36:54Z evidence recorded: evidence/step4-green.txt (294cf9eb691e) - createRuntime wiring green: 5/5 tests",
     "2026-08-14T11:36:54Z evidence recorded: evidence/step4-full-suite.txt (04a3d7dde52e) - full suite green: 67 files, 277 tests - confirms invariant 15 (bootstrap.test.tsx unmodified, still passes with jsdom default navigator.languages)",
     "2026-08-14T11:36:54Z step 4 -> green",
-    "2026-08-14T11:36:54Z step 4 -> done"
+    "2026-08-14T11:36:54Z step 4 -> done",
+    "2026-08-14T11:37:46Z step 5 -> red",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-red.txt (1492a75a60a9) - auth loadTranslations red",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-red-hierarchy.txt (1b374f038394) - hierarchy loadTranslations red",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-green-auth.txt (61ea10766d0c) - auth loadTranslations green: 3/3",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-green-hierarchy.txt (928f649bdb7c) - hierarchy loadTranslations green: 3/3",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-full-suite.txt (12690189cb0f) - full suite green: 67 files, 279 tests",
+    "2026-08-14T11:39:17Z step 5 -> green",
+    "2026-08-14T11:39:17Z step 5 -> done"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
@@ -294,6 +302,31 @@
       "sha": "04a3d7dde52e",
       "recorded": "2026-08-14T11:36:54Z",
       "note": "full suite green: 67 files, 277 tests - confirms invariant 15 (bootstrap.test.tsx unmodified, still passes with jsdom default navigator.languages)"
+    },
+    "evidence/step5-red.txt": {
+      "sha": "1492a75a60a9",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "auth loadTranslations red"
+    },
+    "evidence/step5-red-hierarchy.txt": {
+      "sha": "1b374f038394",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "hierarchy loadTranslations red"
+    },
+    "evidence/step5-green-auth.txt": {
+      "sha": "61ea10766d0c",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "auth loadTranslations green: 3/3"
+    },
+    "evidence/step5-green-hierarchy.txt": {
+      "sha": "928f649bdb7c",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "hierarchy loadTranslations green: 3/3"
+    },
+    "evidence/step5-full-suite.txt": {
+      "sha": "12690189cb0f",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "full suite green: 67 files, 279 tests"
     }
   },
   "test_file_hashes": {
@@ -320,6 +353,18 @@
       "step": 4,
       "recorded": "2026-08-14T11:36:08Z",
       "log_index": 53
+    },
+    "src/features/auth/loadTranslations.test.ts": {
+      "sha": "48f3f259a394",
+      "step": 5,
+      "recorded": "2026-08-14T11:37:46Z",
+      "log_index": 59
+    },
+    "src/features/hierarchy/loadTranslations.test.ts": {
+      "sha": "bb0585392ef3",
+      "step": 5,
+      "recorded": "2026-08-14T11:37:46Z",
+      "log_index": 59
     }
   }
 }

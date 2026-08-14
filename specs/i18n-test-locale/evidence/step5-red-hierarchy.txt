@@ -1,0 +1,39 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/loadTranslations.test.ts (3 tests | 1 failed) 6ms
+     × registers the key-echoed catalogue under Locale.Test 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/loadTranslations.test.ts > hierarchy loadTranslations > registers the key-echoed catalogue under Locale.Test
+AssertionError: expected undefined to deeply equal { home: { …(3) } }
+
+- Expected:
+{
+  "home": {
+    "documentTitle": "home.documentTitle",
+    "message": "home.message",
+    "title": "home.title",
+  },
+}
+
++ Received:
+undefined
+
+ ❯ src/features/hierarchy/loadTranslations.test.ts:52:70
+     50|     const testInstance = await createTestI18n(Locale.Test);
+     51|     await loadTranslations(testInstance);
+     52|     expect(testInstance.getResourceBundle(Locale.Test, 'hierarchy')).t…
+       |                                                                      ^
+     53|       home: {
+     54|         documentTitle: 'home.documentTitle',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  12:38:24
+   Duration  530ms (transform 47ms, setup 122ms, import 7ms, tests 6ms, environment 337ms)
+

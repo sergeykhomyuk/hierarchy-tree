@@ -1,0 +1,39 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/loadTranslations.test.ts (3 tests | 1 failed) 6ms
+     × registers the key-echoed catalogue under Locale.Test 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/loadTranslations.test.ts > auth loadTranslations > registers the key-echoed catalogue under Locale.Test
+AssertionError: expected undefined to deeply equal { login: { …(3) } }
+
+- Expected:
+{
+  "login": {
+    "documentTitle": "login.documentTitle",
+    "message": "login.message",
+    "title": "login.title",
+  },
+}
+
++ Received:
+undefined
+
+ ❯ src/features/auth/loadTranslations.test.ts:52:65
+     50|     const testInstance = await createTestI18n(Locale.Test);
+     51|     await loadTranslations(testInstance);
+     52|     expect(testInstance.getResourceBundle(Locale.Test, 'auth')).toEqua…
+       |                                                                 ^
+     53|       login: {
+     54|         documentTitle: 'login.documentTitle',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  12:37:40
+   Duration  563ms (transform 25ms, setup 100ms, import 4ms, tests 6ms, environment 390ms)
+
