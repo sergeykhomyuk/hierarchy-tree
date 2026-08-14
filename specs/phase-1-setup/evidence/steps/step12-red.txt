@@ -1,0 +1,33 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/eslint-configuration.test.ts (4 tests | 1 failed) 516ms
+     × the testing-harness override is scoped to test files and no wider 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/eslint-configuration.test.ts > eslint configuration > the testing-harness override is scoped to test files and no wider
+AssertionError: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ scripts/eslint-configuration.test.ts:107:34
+    105|     const boundaryRules = collectRules(config, 'boundaries/dependencie…
+    106|
+    107|     expect(boundaryRules.length).toBe(2);
+       |                                  ^
+    108|     const [baseRule, overrideRule] = boundaryRules;
+    109|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  13:46:50
+   Duration  590ms (transform 22ms, setup 10ms, import 8ms, tests 516ms, environment 0ms)
+

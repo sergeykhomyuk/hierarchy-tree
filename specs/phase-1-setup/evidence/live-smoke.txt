@@ -1,0 +1,44 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+stdout | scripts/live-smoke/live-smoke.test.ts > live smoke > the real backend serves users.json as JSON with at least one record
+timing {
+  kind: 'timing',
+  timing: {
+    method: 'GET',
+    resourcePath: '/users.json',
+    outcome: 'success',
+    durationMilliseconds: 337,
+    correlationId: '7425c9d78646d687e3cbdd616274de0b',
+    attempt: 0,
+    requestId: 'cf28109a6357b8ce7ef022218f20bddb',
+    status: 200
+  }
+}
+
+stdout | scripts/live-smoke/live-smoke.test.ts > live smoke > the real backend serves users.json as JSON with at least one record
+users record field names: [ 'email', 'firstName', 'id', 'lastName', 'password' ]
+
+ ✓ scripts/live-smoke/live-smoke.test.ts > live smoke > the real backend serves users.json as JSON with at least one record 341ms
+stdout | scripts/live-smoke/live-smoke.test.ts > live smoke > the real backend serves secrets.json as JSON
+timing {
+  kind: 'timing',
+  timing: {
+    method: 'GET',
+    resourcePath: '/secrets.json',
+    outcome: 'success',
+    durationMilliseconds: 289,
+    correlationId: '88163ef44839dbd0ce8d254f1dcf7136',
+    attempt: 0,
+    requestId: '0d866d1f035e3860760cbcaffd91f0ad',
+    status: 200
+  }
+}
+
+ ✓ scripts/live-smoke/live-smoke.test.ts > live smoke > the real backend serves secrets.json as JSON 290ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  19:42:02
+   Duration  734ms (transform 29ms, setup 0ms, import 40ms, tests 632ms, environment 0ms)
+

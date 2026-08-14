@@ -1,0 +1,32 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/eslint-configuration.test.ts (8 tests | 1 failed | 7 skipped) 1518ms
+     × lint fails with the restricted-import rule named on a redirect import 1518ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/eslint-configuration.test.ts > demonstrable negatives > lint fails with the restricted-import rule named on a redirect import
+AssertionError: expected '' to contain 'no-restricted-imports'
+
+- Expected
++ Received
+
+- no-restricted-imports
+
+ ❯ scripts/eslint-configuration.test.ts:201:20
+    199|     );
+    200|
+    201|     expect(output).toContain('no-restricted-imports');
+       |                    ^
+    202|     expect(output).toContain('invariant 97');
+    203|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  17:05:24
+   Duration  1.62s (transform 21ms, setup 32ms, import 5ms, tests 1.52s, environment 0ms)
+

@@ -1,0 +1,251 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/workflow-configuration.test.ts (17 tests | 17 failed) 5ms
+     × parses as valid YAML with the three named jobs 2ms
+     × triggers on pull_request and push to main, with a top-level concurrency group keyed by ref 0ms
+       × checks out, sets up Node from .nvmrc with npm caching, and runs npm ci 0ms
+       × runs the seven gating steps in the documented order 0ms
+       × every run: line in the verify job is a gating step, an npm script, or the named infrastructure allow-list 0ms
+       × caches the Playwright browsers before installing them 0ms
+       × uploads the site artifact from dist/, only on main, before the e2e step 0ms
+       × uploads the Playwright report unconditionally, even on failure 0ms
+       × no verify step skips itself with continue-on-error, if: false, or a skip flag 0ms
+       × needs verify, runs only on push to main, and carries the smallest permission set 0ms
+       × has its own concurrency group so a newer deploy supersedes an in-flight one 0ms
+       × checks out only deployment.json via sparse-checkout, and downloads the site artifact rather than rebuilding 0ms
+       × deploys with the wrangler action, SHA-pinned rather than tagged, reading projectName from deployment.json 0ms
+       × asserts the deployed URL equals the recorded production hostname 0ms
+       × every non-actions/ uses: step is pinned by commit SHA, not a mutable tag 0ms
+       × runs only when manually dispatched, and blocks no merge 0ms
+       × runs npm run smoke:live 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > parses as valid YAML with the three named jobs
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:57:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > triggers on pull_request and push to main, with a top-level concurrency group keyed by ref
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:67:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > verify job > checks out, sets up Node from .nvmrc with npm caching, and runs npm ci
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:80:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > verify job > runs the seven gating steps in the documented order
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:95:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > verify job > every run: line in the verify job is a gating step, an npm script, or the named infrastructure allow-list
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:116:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > verify job > caches the Playwright browsers before installing them
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:131:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > verify job > uploads the site artifact from dist/, only on main, before the e2e step
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:146:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > verify job > uploads the Playwright report unconditionally, even on failure
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:164:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > verify job > no verify step skips itself with continue-on-error, if: false, or a skip flag
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:176:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > deploy job > needs verify, runs only on push to main, and carries the smallest permission set
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:189:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > deploy job > has its own concurrency group so a newer deploy supersedes an in-flight one
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:199:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > deploy job > checks out only deployment.json via sparse-checkout, and downloads the site artifact rather than rebuilding
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:206:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > deploy job > deploys with the wrangler action, SHA-pinned rather than tagged, reading projectName from deployment.json
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:221:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > deploy job > asserts the deployed URL equals the recorded production hostname
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:236:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > deploy job > every non-actions/ uses: step is pinned by commit SHA, not a mutable tag
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:249:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > live-smoke job > runs only when manually dispatched, and blocks no merge
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:266:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/17]⎯
+
+ FAIL  |tooling| scripts/workflow-configuration.test.ts > CI workflow > live-smoke job > runs npm run smoke:live
+Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
+ ❯ readWorkflow scripts/workflow-configuration.test.ts:47:5
+     45| function readWorkflow(): Workflow {
+     46|   return parse(
+     47|     readFileSync('.github/workflows/ci.yml', 'utf-8'),
+       |     ^
+     48|   ) as Workflow;
+     49| }
+ ❯ scripts/workflow-configuration.test.ts:290:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/17]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  17 failed (17)
+   Start at  19:24:32
+   Duration  128ms (transform 22ms, setup 32ms, import 21ms, tests 5ms, environment 0ms)
+

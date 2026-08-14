@@ -1,0 +1,25 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |platform| src/shared/theme/contrastPairs.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |platform| src/shared/theme/contrastPairs.test.ts [ src/shared/theme/contrastPairs.test.ts ]
+Error: Cannot find module './contrastPairs' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/theme/contrastPairs.test.ts
+ ❯ src/shared/theme/contrastPairs.test.ts:3:1
+      1| import { readFileSync } from 'node:fs';
+      2| import { describe, expect, it } from 'vitest';
+      3| import { contrastPairs } from './contrastPairs';
+       | ^
+      4|
+      5| const themeSource = readFileSync('src/shared/theme/theme.css', 'utf-8'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  15:41:38
+   Duration  107ms (transform 24ms, setup 36ms, import 0ms, tests 0ms, environment 0ms)
+

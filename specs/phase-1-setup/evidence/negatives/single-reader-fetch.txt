@@ -1,0 +1,6 @@
+
+/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/demonstrableFetchProbe.ts
+  1:33  error  Unexpected use of 'fetch'. Use the http client. Only platform/http/createFetchTransport.ts calls fetch  no-restricted-globals
+
+✖ 1 problem (1 error, 0 warnings)
+

@@ -1,0 +1,6 @@
+
+/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/demonstrableNegativeProbe.ts
+  1:23  error  platform may not import shared (@shared/demonstrableNegativeProbe)  boundaries/dependencies
+
+✖ 1 problem (1 error, 0 warnings)
+

@@ -1,0 +1,5 @@
+src/platform/internationalization/createInternationalization.test.ts(2,44): error TS2307: Cannot find module './createInternationalization' or its corresponding type declarations.
+src/platform/internationalization/createInternationalization.test.ts(3,35): error TS2307: Cannot find module './reportMissingKey' or its corresponding type declarations.
+src/platform/internationalization/formatMissingKey.test.ts(2,34): error TS2307: Cannot find module './formatMissingKey' or its corresponding type declarations.
+src/platform/internationalization/localeDirection.test.ts(2,33): error TS2307: Cannot find module './localeDirection' or its corresponding type declarations.
+src/platform/internationalization/reportMissingKey.test.ts(2,60): error TS2307: Cannot find module './reportMissingKey' or its corresponding type declarations.

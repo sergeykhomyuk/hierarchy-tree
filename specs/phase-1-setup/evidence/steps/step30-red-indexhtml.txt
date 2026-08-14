@@ -1,0 +1,94 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/index-html.test.ts (4 tests | 3 failed) 4ms
+     × declares the document language as en 2ms
+     × carries a responsive viewport meta tag 0ms
+     × the favicon link resolves to a file that is not the Vite logo 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/index-html.test.ts > index.html > declares the document language as en
+AssertionError: expected '<!doctype html>\n<html>\n  <head>\n  …' to match /<html[^>]*\blang="en"/
+
+- Expected:
+/<html[^>]*\blang="en"/
+
++ Received:
+"<!doctype html>
+<html>
+  <head>
+    <meta charset=\"UTF-8\" />
+    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/vite.svg\" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id=\"root\"></div>
+    <script type=\"module\" src=\"/src/app/main.tsx\"></script>
+  </body>
+</html>
+"
+
+ ❯ scripts/index-html.test.ts:8:18
+      6| describe('index.html', () => {
+      7|   it('declares the document language as en', () => {
+      8|     expect(html).toMatch(/<html[^>]*\blang="en"/);
+       |                  ^
+      9|   });
+     10|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |tooling| scripts/index-html.test.ts > index.html > carries a responsive viewport meta tag
+AssertionError: expected '<!doctype html>\n<html>\n  <head>\n  …' to match /<meta\s+name="viewport"\s+content="wi…/
+
+- Expected:
+/<meta\s+name="viewport"\s+content="width=device-width, initial-scale=1\.0"/
+
++ Received:
+"<!doctype html>
+<html>
+  <head>
+    <meta charset=\"UTF-8\" />
+    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/vite.svg\" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id=\"root\"></div>
+    <script type=\"module\" src=\"/src/app/main.tsx\"></script>
+  </body>
+</html>
+"
+
+ ❯ scripts/index-html.test.ts:12:18
+     10|
+     11|   it('carries a responsive viewport meta tag', () => {
+     12|     expect(html).toMatch(
+       |                  ^
+     13|       /<meta\s+name="viewport"\s+content="width=device-width, initial-…
+     14|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |tooling| scripts/index-html.test.ts > index.html > the favicon link resolves to a file that is not the Vite logo
+AssertionError: expected '/vite.svg' not to contain 'vite.svg'
+
+Expected: "vite.svg"
+Received: "/vite.svg"
+
+ ❯ scripts/index-html.test.ts:26:22
+     24|
+     25|     const href = match?.[1] ?? '';
+     26|     expect(href).not.toContain('vite.svg');
+       |                      ^
+     27|   });
+     28| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed (4)
+   Start at  17:34:24
+   Duration  95ms (transform 16ms, setup 29ms, import 2ms, tests 4ms, environment 0ms)
+

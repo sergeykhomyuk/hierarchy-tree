@@ -1,0 +1,25 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |platform| src/platform/observability/reportWebVitals.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |platform| src/platform/observability/reportWebVitals.test.ts [ src/platform/observability/reportWebVitals.test.ts ]
+Error: Cannot find module '/src/platform/observability/reportWebVitals' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/observability/reportWebVitals.test.ts
+ ❯ src/platform/observability/reportWebVitals.test.ts:15:1
+     13| }));
+     14|
+     15| import { reportWebVitals } from './reportWebVitals';
+       | ^
+     16|
+     17| describe('reportWebVitals', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  15:05:32
+   Duration  81ms (transform 13ms, setup 9ms, import 0ms, tests 0ms, environment 0ms)
+

@@ -1,0 +1,15 @@
+M2 boundary - e2e and lint-negative status
+============================================
+
+M2's own boundary claim (PLAN.md) is "npm run lint green on the tree,
+demonstrably red on each injected violation with the rule named in the
+captured output" - not an e2e claim. No e2e specs exist yet (unchanged
+from M1; see m1-e2e.txt), so there is nothing new to run here.
+
+The demonstrable-negatives half of M2's boundary is captured in
+specs/phase-1-setup/evidence/negatives/ (six negatives: cross-feature
+import, deep feature import, stray unclassified file, platform-to-shared
+import, second import.meta.env read, direct fetch call) plus two
+permanent regression tests in scripts/eslint-configuration.test.ts and
+two in scripts/guard-scripts.test.ts that assert the same rules fire
+against fresh probe files on every run.

@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run test:coverage
+      - run: npm run build
+      - run: npm run verify:build
+      - run: npm run size
+      - name: Read Playwright version
+        id: playwright-version
+        run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+      - run: npx playwright install --with-deps chromium
+      - uses: actions/upload-artifact@v7
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: site
+          path: dist/
+      - run: npm run e2e
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+
+  deploy:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: cloudflare-pages-deploy
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: deployment.json
+      - uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: dist
+      - name: Read deployment.json
+        id: deployment
+        run: |
+          echo "projectName=$(jq -r .projectName deployment.json)" >> "$GITHUB_OUTPUT"
+          echo "productionHostname=$(jq -r .productionHostname deployment.json)" >> "$GITHUB_OUTPUT"
+      - uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        id: deploy
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ steps.deployment.outputs.projectName }} --branch=main
+      - name: Assert the deployment reached production
+        run: |
+          echo "Deployed to: ${{ steps.deploy.outputs.deployment-url }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.deploy.outputs.deployment-url }}" != "${{ steps.deployment.outputs.productionHostname }}" ]; then
+            echo "deployment-url (${{ steps.deploy.outputs.deployment-url }}) does not equal the recorded productionHostname (${{ steps.deployment.outputs.productionHostname }}) - the Pages project's production branch is likely not set to main"
+            exit 1
+          fi
+
+  live-smoke:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run smoke:live

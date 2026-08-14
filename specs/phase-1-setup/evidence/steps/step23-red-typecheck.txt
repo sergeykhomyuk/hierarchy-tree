@@ -1,0 +1,11 @@
+src/shared/ui/Avatar.test.tsx(3,24): error TS2307: Cannot find module './Avatar' or its corresponding type declarations.
+src/shared/ui/Button.test.tsx(4,24): error TS2307: Cannot find module './Button' or its corresponding type declarations.
+src/shared/ui/Card.test.tsx(3,22): error TS2307: Cannot find module './Card' or its corresponding type declarations.
+src/shared/ui/deriveInitials.test.ts(2,32): error TS2307: Cannot find module './deriveInitials' or its corresponding type declarations.
+src/shared/ui/EmptyState.test.tsx(4,28): error TS2307: Cannot find module './EmptyState' or its corresponding type declarations.
+src/shared/ui/ErrorState.test.tsx(4,28): error TS2307: Cannot find module './ErrorState' or its corresponding type declarations.
+src/shared/ui/Field.test.tsx(4,23): error TS2307: Cannot find module './Field' or its corresponding type declarations.
+src/shared/ui/Field.test.tsx(5,23): error TS2307: Cannot find module './Input' or its corresponding type declarations.
+src/shared/ui/sizeClass.test.ts(2,27): error TS2307: Cannot find module './sizeClass' or its corresponding type declarations.
+src/shared/ui/sizeClass.test.ts(3,30): error TS2307: Cannot find module './skeletonSize' or its corresponding type declarations.
+src/shared/ui/Skeleton.test.tsx(3,26): error TS2307: Cannot find module './Skeleton' or its corresponding type declarations.

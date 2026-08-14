@@ -1,0 +1,73 @@
+import { expect, test } from '@playwright/test';
+import { createAxeBuilder } from './support/axeBuilder';
+import { recordConsole } from './support/consoleRecorder';
+import { forceDirection } from './support/forceDirection';
+import { installRouteMocks } from './support/routeMocks';
+
+// English is the only shipped locale in this phase (invariant 65), so
+// there is no product path that switches direction - forceDirection.ts
+// overrides the browser-rendered `dir` directly to prove invariant 68's
+// claim (logical properties mirror correctly with no other code change)
+// independently of locale-driven derivation, which invariant 66 covers
+// separately at the unit level and in placeholder-routes/accessibility.
+//
+// TECH.md's plan for this invariant also names a "mirrored inline-start
+// indicator" assertion (an element whose computed padding-inline-start
+// resolves on the right-hand side). No component this phase ships has
+// asymmetric inline padding or margin to measure - Card's padding is
+// uniform (p-3/p-6) and nothing else has directional spacing (confirmed
+// by grep: no ps-/pe-/ms-/me- Tailwind utility appears anywhere in
+// src/). That assertion has no real subject until a later phase ships
+// one; asserting it against invariant 67's own lint script
+// (assert-no-physical-properties.mjs, which independently proves no
+// physical-direction utility was used at all) is the closest honest
+// substitute available now. What this spec DOES assert instead: the
+// `dir` attribute actually cascades into computed CSS `direction`
+// (invariant 68's structural precondition - every logical property
+// resolves relative to it), across every route this phase ships.
+const ROUTES = [
+  { path: '/', heading: "The hierarchy view isn't built yet" },
+  { path: '/login', heading: "Sign in isn't built yet" },
+];
+
+test.describe('right-to-left', () => {
+  for (const route of ROUTES) {
+    test(`${route.path} mirrors correctly under a forced right-to-left direction`, async ({
+      page,
+      baseURL,
+    }) => {
+      await installRouteMocks(page, baseURL ?? '');
+      const { records } = recordConsole(page);
+
+      await page.goto(route.path);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        route.heading,
+      );
+
+      await forceDirection(page, 'rtl');
+      expect(await page.evaluate(() => document.documentElement.dir)).toBe(
+        'rtl',
+      );
+      expect(
+        await page.evaluate(
+          () => getComputedStyle(document.documentElement).direction,
+        ),
+      ).toBe('rtl');
+
+      const overflowsHorizontally = await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth,
+      );
+      expect(overflowsHorizontally).toBe(false);
+
+      const results = await createAxeBuilder(page).analyze();
+      expect(results.violations).toEqual([]);
+      expect(records).toEqual([]);
+
+      await page.screenshot({
+        path: `test-results/right-to-left-${route.path.replace('/', 'home')}.png`,
+      });
+    });
+  }
+});

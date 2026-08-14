@@ -1,0 +1,26 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/eslint-configuration.test.ts (7 tests | 1 failed | 6 skipped) 4ms
+     × no kit component contains a user-visible literal 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/eslint-configuration.test.ts > kit literal-string guard > no kit component contains a user-visible literal
+AssertionError: expected the eight kit components to exist: expected 0 to be greater than 0
+ ❯ scripts/eslint-configuration.test.ts:201:72
+    199|       (file) => !file.endsWith('.test.tsx'),
+    200|     );
+    201|     expect(files.length, 'expected the eight kit components to exist')…
+       |                                                                        ^
+    202|
+    203|     let output = '';
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  15:50:03
+   Duration  91ms (transform 19ms, setup 27ms, import 5ms, tests 4ms, environment 0ms)
+

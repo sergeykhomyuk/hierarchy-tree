@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tools.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    // vite/client is needed here too, not just in tsconfig.app.json:
+    // vitest.setup.ts (checked under this project) imports
+    // @platform/internationalization, which transitively reaches
+    // environment.ts's import.meta.env through the observability barrel.
+    "types": ["node", "vite/client"],
+    "skipLibCheck": true,
+
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    "paths": {
+      "@app/*": ["./src/app/*"],
+      "@features/*": ["./src/features/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@platform/*": ["./src/platform/*"]
+    },
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": [
+    "e2e",
+    "build-output",
+    "scripts",
+    "vitest.setup.ts",
+    "vitest*.config.ts",
+    "playwright.config.ts"
+  ]
+}

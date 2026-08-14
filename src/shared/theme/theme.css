@@ -1,0 +1,106 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --color-primary: #7b2bf0;
+  --color-primary-pressed: #6a22d6;
+  --color-primary-deep: #5b15c4;
+  --color-primary-tint: #ede4ff;
+  --color-primary-tint-hover: #f1eafe;
+  --color-on-primary: #ffffff;
+  --color-nav-rail: #240b4e;
+  --color-canvas-login: #f3eeff;
+  --color-canvas-app: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f7f5fd;
+  --color-surface-selected: #f7f3fe;
+  --color-ink: #1b1230;
+  --color-ink-muted: #55506b;
+  --color-ink-muted-soft: #6a6a85;
+  --color-ink-faint: #726e85;
+  --color-ink-placeholder: #a9a5b8;
+  --color-border-hairline: rgb(36 11 78 / 0.08);
+  --color-border-field: #8f89a3;
+  --color-border-indent-rail: #eae6f3;
+  --color-border-control: #dcd7ea;
+  --color-danger: #c81e4a;
+  --color-danger-surface: #fde9ee;
+  --color-focus-ring: #5b15c4;
+
+  --radius-toggle: 0.375rem;
+  --radius-control: 0.625rem;
+  --radius-card: 0.875rem;
+  --radius-login-card: 1rem;
+
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+}
+
+/* Dark values re-declared over the same token names only where they
+   differ from light (invariant 71) - an unspecified token inherits its
+   light value, which is why border-field, primary, on-primary, radii
+   and motion tokens have no entry here: they already hold in both
+   themes (verified by contrastPairs.test.ts). border-field is darkened
+   from docs/reference.md's literal #E2DDEE (a 1.33:1 hairline) to
+   #8F89A3 so the same "UI boundary" pair holds AA 3:1 in both themes -
+   invariant 72 is the binding rule where it and invariant 70's mockup
+   fidelity would otherwise conflict. ink-faint is darkened in light
+   (#8E8AA0 -> #726E85) and lightened in dark (#7C7891 -> #847F95) for
+   the same reason: ErrorState renders the correlation id (invariant 92)
+   in this token on --color-surface, and the mockup value held only
+   3.34:1 light / 4.31:1 dark against AA's 4.5:1 body-text floor. Both
+   deviations are recorded here rather than in docs/reference.md because
+   the mockup's literal values are what is being knowingly overridden. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary-tint: #2f2350;
+    --color-primary-tint-hover: #362a5c;
+    --color-canvas-login: #1a1330;
+    --color-canvas-app: #121018;
+    --color-surface: #17131f;
+    --color-surface-hover: #1e1929;
+    --color-surface-selected: #211a30;
+    --color-ink: #f3f1f8;
+    --color-ink-muted: #b7b2c9;
+    --color-ink-muted-soft: #9d97b3;
+    --color-ink-faint: #847f95;
+    --color-ink-placeholder: #66627c;
+    --color-border-hairline: rgb(255 255 255 / 0.08);
+    --color-border-indent-rail: #2a2338;
+    --color-border-control: #3a3050;
+    --color-danger: #ff6b8f;
+    --color-danger-surface: #3a1420;
+    --color-focus-ring: #9b7bf5;
+  }
+}
+
+/* The one place default text and page colour are set from the token
+   layer - without it, plain text with no explicit text-* class (Card's
+   children, the placeholder pages, not-found) inherits the browser's
+   default black rather than --color-ink, which only fails contrast once
+   the surface actually goes dark (invariant 87's jsdom unit run applies
+   no stylesheet, so it cannot catch this; the kit route's real dark-mode
+   axe pass is what did). */
+body {
+  color: var(--color-ink);
+  background-color: var(--color-canvas-app);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

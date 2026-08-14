@@ -1,0 +1,26 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/repository-configuration.test.ts (11 tests | 1 failed | 10 skipped) 59ms
+     × the live smoke test file is collected by no default vitest project 58ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/repository-configuration.test.ts > vitest configuration > the live smoke test file is collected by no default vitest project
+AssertionError: project pattern "scripts/**/*.test.ts" unexpectedly collects the live smoke file: expected [ …(9) ] to not include 'scripts/live-smoke/live-smoke.test.ts'
+ ❯ scripts/repository-configuration.test.ts:233:15
+    231|           matches,
+    232|           `project pattern "${pattern}" unexpectedly collects the live…
+    233|         ).not.toContain(liveSmokeFile);
+       |               ^
+    234|       }
+    235|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  19:43:04
+   Duration  169ms (transform 25ms, setup 34ms, import 6ms, tests 59ms, environment 0ms)
+

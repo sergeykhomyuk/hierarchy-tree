@@ -1,0 +1,51 @@
+[
+  {
+    "name": "app entry (initial payload)",
+    "path": ["dist/assets/entry-*.js", "dist/assets/vendor-*.js"],
+    "limit": "150 kB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "stylesheet",
+    "path": "dist/assets/*.css",
+    "limit": "15 kB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "route: home",
+    "path": "dist/assets/HomeRoute-*.js",
+    "limit": "30 kB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "route: login",
+    "path": "dist/assets/LoginRoute-*.js",
+    "limit": "30 kB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "route: not-found",
+    "path": "dist/assets/NotFoundRoute-*.js",
+    "limit": "30 kB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "catalogue: auth",
+    "path": "dist/assets/auth-*.js",
+    "limit": "5 kB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "catalogue: hierarchy",
+    "path": "dist/assets/hierarchy-*.js",
+    "limit": "5 kB",
+    "gzip": true,
+    "running": false
+  }
+]

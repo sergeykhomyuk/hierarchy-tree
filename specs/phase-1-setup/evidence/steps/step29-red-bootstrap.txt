@@ -1,0 +1,47 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/bootstrap.test.tsx (2 tests | 1 failed) 1032ms
+     × renders the real app through the router when configuration is valid 1023ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/bootstrap.test.tsx > bootstrap > renders the real app through the router when configuration is valid
+AssertionError: expected '' to contain 'The hierarchy view isn\'t built yet'
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<main[39m
+        [33mdata-testid[39m=[32m"startup-placeholder"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected
++ Received
+
+- The hierarchy view isn't built yet
+
+ ❯ src/app/bootstrap.test.tsx:29:37
+     27|
+     28|     await waitFor(() => {
+     29|       expect(container.textContent).toContain(
+       |                                     ^
+     30|         "The hierarchy view isn't built yet",
+     31|       );
+ ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  17:24:12
+   Duration  1.60s (transform 38ms, setup 99ms, import 26ms, tests 1.03s, environment 387ms)
+

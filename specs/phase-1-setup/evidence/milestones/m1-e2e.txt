@@ -1,0 +1,18 @@
+M1 boundary - e2e status
+=========================
+
+M1 delivers playwright.config.ts and e2e/support/* (consoleRecorder.ts,
+axeBuilder.ts, routeMocks.ts, forceDirection.ts) but no e2e spec files yet.
+No user-visible behavior exists to exercise: the app renders a single
+static startup placeholder, not a routed page.
+
+`npx playwright test` currently matches zero specs under e2e/ (testDir:
+./e2e), consistent with PLAN.md's own milestone boundary description:
+"The e2e suite runs for the first time" at M5's boundary, once routes,
+pages and the provider stack exist to visit.
+
+npm run verify does not include e2e (see TECH.md 7.1 / section 918-919):
+the local verify script is the seven CI "verify job" gating scripts
+(typecheck, lint, format:check, test:coverage, build, verify:build, size).
+e2e is a separate CI step, gated by invariant 103's order, first
+meaningfully run at the M5 boundary.

@@ -1,0 +1,36 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/shared/ui/Avatar.test.tsx (6 tests | 1 failed) 63ms
+     × renders a decorative image with an empty alt instead of the display name 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/shared/ui/Avatar.test.tsx > Avatar > renders a decorative image with an empty alt instead of the display name
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <img
+  alt="Grace Hopper"
+  class="h-6 w-6 text-xs rounded-full object-cover"
+  height="24"
+  loading="lazy"
+  referrerpolicy="no-referrer"
+  src="https://example.com/avatar.jpg"
+  width="24"
+/> instead[39m
+ ❯ src/shared/ui/Avatar.test.tsx:75:43
+     73|     // so it is unreachable through getByRole - the decorative contract
+     74|     // itself is what is being asserted here.
+     75|     expect(screen.queryByRole('img')).not.toBeInTheDocument();
+       |                                           ^
+     76|
+     77|     // eslint-disable-next-line testing-library/no-node-access -- the …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  16:36:24
+   Duration  727ms (transform 36ms, setup 177ms, import 13ms, tests 63ms, environment 391ms)
+

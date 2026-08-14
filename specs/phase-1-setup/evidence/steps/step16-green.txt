@@ -1,0 +1,101 @@
+
+> hierarchy-tree@0.0.0 verify
+> npm run typecheck && npm run lint && npm run format:check && npm run test:coverage && npm run build && npm run verify:build && npm run size
+
+
+> hierarchy-tree@0.0.0 typecheck
+> tsc -b
+
+
+> hierarchy-tree@0.0.0 lint
+> eslint . && node scripts/assert-no-physical-properties.mjs && node scripts/assert-domain-vocabulary.mjs && node scripts/assert-no-secrets.mjs --source-only
+
+
+> hierarchy-tree@0.0.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> hierarchy-tree@0.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+      Coverage enabled with v8
+
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-fxEhyJ/banned.tmp.ts: identifier "buildForest" carries banned reference-system name "buildForest"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-alias-xk9i8o/src/shared/banned-alias.tmp.ts: exported identifier "sessionToken" carries the banned domain word "session"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-8R9hgi/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "manager"
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-8R9hgi/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "session"
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/physical-properties-CKk2Y7/Banned.tmp.tsx: physical property/utility "ml-*" found - use the logical equivalent
+assert-no-secrets: pass --source-only or --bundle-only
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-keyword-vkx0fK/banned.tmp.ts: matches secret keyword pattern /apiKey/i
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-entropy-lgiwcC/banned.tmp.ts: high-entropy literal found (9f8a7b6c5d4e...)
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-suppression-LBl5W8/banned.tmp.ts: eslint-disable suppresses "no-restricted-" - suppression is not permitted for this rule
+assert-no-secrets --bundle-only: dist/ is missing - run npm run build first
+
+ Test Files  16 passed (16)
+      Tests  76 passed (76)
+   Start at  14:52:27
+   Duration  2.74s (transform 295ms, setup 290ms, import 379ms, tests 3.33s, environment 1.25s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |      96 |    95.31 |     100 |   96.52 |                   
+ platform/http     |   94.44 |    93.47 |     100 |   95.06 |                   
+  ...HttpClient.ts |   92.64 |     92.5 |     100 |   93.75 | 145-146,173,181   
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 96% ( 120/125 )
+Branches     : 95.31% ( 61/64 )
+Functions    : 100% ( 26/26 )
+Lines        : 96.52% ( 111/115 )
+================================================================================
+
+> hierarchy-tree@0.0.0 build
+> tsc -b && vite build
+
+vite v8.2.1 building client environment for production...
+[2Ktransforming...✓ 97 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:  0.29 kB
+dist/assets/entry-PUrYH-mj.js     2.75 kB │ gzip:  1.34 kB
+dist/assets/vendor-DHdUnWhO.js  205.97 kB │ gzip: 64.65 kB
+
+✓ built in 47ms
+
+> hierarchy-tree@0.0.0 verify:build
+> vitest run --config vitest.build-output.config.ts
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+
+ Test Files  2 passed (2)
+      Tests  3 passed (3)
+   Start at  14:52:31
+   Duration  65ms (transform 16ms, setup 0ms, import 24ms, tests 6ms, environment 0ms)
+
+
+> hierarchy-tree@0.0.0 size
+> size-limit
+
+- Running JS in headless Chrome
+✔ Running JS in headless Chrome
+  
+  Size limit:   100 kB
+  Size:         65.17 kB gzipped
+  Loading time: 1.3 s    on slow 3G
+  

@@ -1,0 +1,2 @@
+src/shared/theme/contrastPairs.test.ts(3,31): error TS2307: Cannot find module './contrastPairs' or its corresponding type declarations.
+src/shared/theme/contrastPairs.test.ts(138,8): error TS7006: Parameter 'pair' implicitly has an 'any' type.

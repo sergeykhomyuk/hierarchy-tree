@@ -12,7 +12,7 @@ The goal is in [GOAL.md](./GOAL.md), the technical decisions are in [ARCHITECTUR
 
 **Next up**: write the phase 1 spec, then execute it.
 
-**Last updated**: 2026-08-13 - roadmap created, no code written
+**Last updated**: 2026-08-13 - phase 1 spec in review; caching withdrawn from the roadmap and deployment moved to Cloudflare Pages
 
 ## How to use this
 
@@ -40,7 +40,7 @@ Everything expensive to retrofit happens here: the layer boundaries, the platfor
 **Outcomes**
 
 - [ ] The four layers exist and the import rules between them are enforced by lint, not by convention
-- [ ] The platform layer adapts the outside world: configuration, HTTP, caching, observability, i18n
+- [ ] The platform layer adapts the outside world: configuration, HTTP, observability, i18n
 - [ ] A shared, domain-free UI kit carries the mockups' visual language in both light and dark
 - [ ] The router, provider stack and root error boundary compose a placeholder app
 - [ ] The full quality pipeline runs in CI: types, lint, formatting, unit tests, e2e, size budgets
@@ -110,6 +110,7 @@ Carried from `ARCHITECTURE.md` section 7 so that reading only this file does not
 - **Virtualized rendering** - unnecessary at 33 rows; the tree domain already emits the row model a windowing layer consumes.
 - **Real authentication** - impossible against this API from a static client. The auth feature isolates the lookup so a server-issued cookie replaces one module.
 - **Offline and service workers** - a 9KB public payload does not justify a cache lifecycle. The repository layer is where a persistent cache would attach.
+- **Response caching** - in-flight dedupe, TTL and stale-while-revalidate. Withdrawn from the roadmap on 2026-08-13: the design cost more than the one 9KB request it saves. Every phase fetches through the http client directly, and the repository per resource is the seam a cache attaches behind later. The withdrawn design is kept in [CACHE.md](./CACHE.md) for whenever that is worth doing.
 - **Search, filtering, org editing** - the tree domain already returns the row model a filter would narrow, but none of this is asked for.
 - **A second locale, SSR, a component library** - the infrastructure supports each; none is needed.
 - **Vendor telemetry** - the observability facade defines the contract; a real sink is a one-line swap.
@@ -121,3 +122,4 @@ Carried from `ARCHITECTURE.md` section 7 so that reading only this file does not
 Newest last. One line per phase closed, or per event a later reader would need to know: date, what happened, evidence, commit sha.
 
 - 2026-08-13 - roadmap created from GOAL.md, ARCHITECTURE.md and the mockups. The database URL, the credential derivation and the design tokens were extracted from `docs/task.md` and recorded in `docs/reference.md`; package versions verified against the npm registry.
+- 2026-08-13 - two scope changes made while specifying phase 1, both recorded in ARCHITECTURE.md's decision log. Response caching is withdrawn from the roadmap (the design outweighed the single 9KB request it saves), so `platform/cache` is not built in any phase. Deployment moves from GitHub Pages to Cloudflare Pages, because the repository is private; the site now serves at the root, so the Vite base is `/` and SPA deep links come from a `_redirects` rule rather than a `404.html` copy.

@@ -1,0 +1,9 @@
+src/platform/observability/createObservability.test.ts(3,37): error TS2307: Cannot find module './createObservability' or its corresponding type declarations.
+src/platform/observability/createObservability.test.ts(59,46): error TS7006: Parameter 'record' implicitly has an 'any' type.
+src/platform/observability/redact.test.ts(2,24): error TS2307: Cannot find module './redact' or its corresponding type declarations.
+src/platform/observability/sinks/createConsoleSink.test.ts(2,35): error TS2307: Cannot find module './createConsoleSink' or its corresponding type declarations.
+src/platform/observability/sinks/createNoOpSink.test.ts(2,32): error TS2307: Cannot find module './createNoOpSink' or its corresponding type declarations.
+src/platform/observability/sinks/createRingBufferSink.test.ts(2,38): error TS2307: Cannot find module './createRingBufferSink' or its corresponding type declarations.
+src/platform/observability/sinks/createRingBufferSink.test.ts(3,38): error TS2307: Cannot find module '../telemetryRecord' or its corresponding type declarations.
+src/platform/observability/sinks/createRingBufferSink.test.ts(16,35): error TS7006: Parameter 'record' implicitly has an 'any' type.
+src/platform/observability/sinks/createRingBufferSink.test.ts(30,44): error TS7006: Parameter 'record' implicitly has an 'any' type.

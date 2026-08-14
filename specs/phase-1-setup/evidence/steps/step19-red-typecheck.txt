@@ -1,0 +1,1 @@
+src/platform/observability/reportWebVitals.test.ts(15,33): error TS2307: Cannot find module './reportWebVitals' or its corresponding type declarations.

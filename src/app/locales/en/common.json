@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "skipLink": "Skip to main content"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "linkHome": "Back to home"
+  },
+  "errorSurface": {
+    "title": "Something went wrong",
+    "message": "An unexpected error occurred.",
+    "retry": "Try again"
+  },
+  "configurationError": {
+    "title": "Configuration invalid",
+    "message": "The app cannot start because these settings failed validation:"
+  }
+}

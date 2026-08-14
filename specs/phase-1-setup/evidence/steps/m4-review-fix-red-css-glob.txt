@@ -1,0 +1,26 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ build-output/size-limit-entries.test.ts (3 tests | 1 failed | 2 skipped) 4ms
+     × the built stylesheet matches its size-limit glob 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  build-output/size-limit-entries.test.ts > size-limit entries > the built stylesheet matches its size-limit glob
+AssertionError: no dist/assets/*.css emitted: expected 0 to be greater than 0
+ ❯ build-output/size-limit-entries.test.ts:58:7
+     56|       stylesheetMatches.length,
+     57|       'no dist/assets/*.css emitted',
+     58|     ).toBeGreaterThan(0);
+       |       ^
+     59|   });
+     60| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 skipped (3)
+   Start at  16:36:50
+   Duration  75ms (transform 8ms, setup 0ms, import 12ms, tests 4ms, environment 0ms)
+

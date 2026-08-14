@@ -1,0 +1,13 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-eiXEOy/banned.tmp.ts: identifier "buildForest" carries banned reference-system name "buildForest"
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/physical-properties-EnJDJo/Banned.tmp.tsx: physical property/utility "ml-*" found - use the logical equivalent
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  13:59:24
+   Duration  162ms (transform 10ms, setup 8ms, import 7ms, tests 94ms, environment 0ms)
+

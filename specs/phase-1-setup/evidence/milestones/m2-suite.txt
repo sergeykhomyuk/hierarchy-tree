@@ -1,0 +1,85 @@
+
+> hierarchy-tree@0.0.0 verify
+> npm run typecheck && npm run lint && npm run format:check && npm run test:coverage && npm run build && npm run verify:build && npm run size
+
+
+> hierarchy-tree@0.0.0 typecheck
+> tsc -b
+
+
+> hierarchy-tree@0.0.0 lint
+> eslint . && node scripts/assert-no-physical-properties.mjs && node scripts/assert-domain-vocabulary.mjs && node scripts/assert-no-secrets.mjs --source-only
+
+
+> hierarchy-tree@0.0.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> hierarchy-tree@0.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+      Coverage enabled with v8
+
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-iJ4yFX/banned.tmp.ts: identifier "buildForest" carries banned reference-system name "buildForest"
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/physical-properties-j5LTVA/Banned.tmp.tsx: physical property/utility "ml-*" found - use the logical equivalent
+
+ Test Files  6 passed (6)
+      Tests  22 passed (22)
+   Start at  14:00:01
+   Duration  2.52s (transform 101ms, setup 173ms, import 96ms, tests 2.91s, environment 861ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 100% ( 7/7 )
+Branches     : 100% ( 0/0 )
+Functions    : 100% ( 4/4 )
+Lines        : 100% ( 7/7 )
+================================================================================
+
+> hierarchy-tree@0.0.0 build
+> tsc -b && vite build
+
+vite v8.2.1 building client environment for production...
+[2Ktransforming...✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:  0.30 kB
+dist/assets/entry-BaDwA9XU.js     1.02 kB │ gzip:  0.58 kB
+dist/assets/vendor-BEu8oNmQ.js  189.55 kB │ gzip: 59.58 kB
+
+✓ built in 45ms
+
+> hierarchy-tree@0.0.0 verify:build
+> vitest run --config vitest.build-output.config.ts
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+
+ Test Files  2 passed (2)
+      Tests  3 passed (3)
+   Start at  14:00:04
+   Duration  69ms (transform 16ms, setup 0ms, import 24ms, tests 6ms, environment 0ms)
+
+
+> hierarchy-tree@0.0.0 size
+> size-limit
+
+- Running JS in headless Chrome
+✔ Running JS in headless Chrome
+  
+  Size limit:   100 kB
+  Size:         59.4 kB gzipped
+  Loading time: 1.2 s   on slow 3G
+  

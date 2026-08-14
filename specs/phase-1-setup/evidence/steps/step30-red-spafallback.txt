@@ -1,0 +1,39 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ build-output/spa-fallback.test.ts (2 tests | 2 failed) 2ms
+     × dist/_redirects contains exactly the spa fallback rule 2ms
+     × dist/_headers matches its exact expected content 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  build-output/spa-fallback.test.ts > spa fallback and framing header files > dist/_redirects contains exactly the spa fallback rule
+Error: ENOENT: no such file or directory, open 'dist/_redirects'
+ ❯ build-output/spa-fallback.test.ts:6:21
+      4| describe('spa fallback and framing header files', () => {
+      5|   it('dist/_redirects contains exactly the spa fallback rule', () => {
+      6|     const content = readFileSync('dist/_redirects', 'utf-8');
+       |                     ^
+      7|
+      8|     expect(content).toBe('/* /index.html 200\n');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  build-output/spa-fallback.test.ts > spa fallback and framing header files > dist/_headers matches its exact expected content
+Error: ENOENT: no such file or directory, open 'dist/_headers'
+ ❯ build-output/spa-fallback.test.ts:12:21
+     10|
+     11|   it('dist/_headers matches its exact expected content', () => {
+     12|     const content = readFileSync('dist/_headers', 'utf-8');
+       |                     ^
+     13|
+     14|     expect(content).toBe(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  17:32:01
+   Duration  69ms (transform 7ms, setup 0ms, import 10ms, tests 2ms, environment 0ms)
+
