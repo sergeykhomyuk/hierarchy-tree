@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "plan",
-  "phase_entered": "2026-08-14T08:55:26Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-14T08:57:06Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T08:56:55Z",
+  "updated": "2026-08-14T09:22:46Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 5,
-      "steps_done": 0
+      "steps_done": 1
     },
     "G3": {
       "status": "pending",
@@ -63,8 +63,8 @@
         "src/shared/utils/bytesToHex.test.ts::bytesToHex > converts bytes to zero-padded lowercase hex",
         "src/shared/utils/bytesToHex.test.ts::bytesToHex > returns an empty string for an empty byte array"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-14T08:57:21Z evidence/step1-red.txt: bytesToHex module does not exist yet, import unresolved",
+      "status": "done"
     },
     {
       "id": 2,
@@ -123,6 +123,39 @@
     "2026-08-14T08:56:55Z step 2 amended: desc: 'Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration' -> 'Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration'; tests: ['src/platform/configuration/createConfiguration.test.ts', 'src/platform/observability/createObservability.test.ts'] -> ['src/platform/configuration/createConfiguration.test.ts::createConfiguration', 'src/platform/observability/createObservability.test.ts::createObservability']",
     "2026-08-14T08:56:55Z step 3 amended: desc: 'Introduce NavigationState const-object enum in app/routing' -> 'Introduce NavigationState const-object enum in app/routing'; tests: ['src/app/routing/createInteractionTracker.test.ts'] -> ['src/app/routing/createInteractionTracker.test.ts::createInteractionTracker']",
     "2026-08-14T08:56:55Z step 4 amended: desc: 'Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts' -> 'Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts'; tests: ['src/platform/observability/reportWebVitals.test.ts'] -> ['src/platform/observability/reportWebVitals.test.ts::reportWebVitals']",
-    "2026-08-14T08:56:55Z step 5 amended: desc: 'Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo' -> 'Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo'; tests: ['src/app/ApplicationRoot.test.tsx', 'src/app/kit-route/KitRoute.test.tsx', 'src/app/layout/ApplicationLayout.test.tsx', 'src/app/error-boundary/RouteErrorBoundary.test.tsx', 'src/app/error-boundary/ErrorSurface.test.tsx', 'src/app/routing/routes/NotFoundRoute.test.tsx'] -> ['src/app/ApplicationRoot.test.tsx::ApplicationRoot', 'src/app/kit-route/KitRoute.test.tsx::KitRoute', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary', 'src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute']"
-  ]
+    "2026-08-14T08:56:55Z step 5 amended: desc: 'Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo' -> 'Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo'; tests: ['src/app/ApplicationRoot.test.tsx', 'src/app/kit-route/KitRoute.test.tsx', 'src/app/layout/ApplicationLayout.test.tsx', 'src/app/error-boundary/RouteErrorBoundary.test.tsx', 'src/app/error-boundary/ErrorSurface.test.tsx', 'src/app/routing/routes/NotFoundRoute.test.tsx'] -> ['src/app/ApplicationRoot.test.tsx::ApplicationRoot', 'src/app/kit-route/KitRoute.test.tsx::KitRoute', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary', 'src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute']",
+    "2026-08-14T08:57:06Z phase -> implement",
+    "2026-08-14T08:57:21Z step 1 -> red",
+    "2026-08-14T09:22:02Z evidence recorded: evidence/step1-red.txt (3502801c187e) - bytesToHex red: module not found before extraction",
+    "2026-08-14T09:22:02Z evidence recorded: evidence/step1-typecheck.txt (e3b0c44298fc) - tsc -b clean after boundaries policy update",
+    "2026-08-14T09:22:03Z evidence recorded: evidence/step1-green.txt (e7c758d6acd8) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:22:03Z step 1 -> green",
+    "2026-08-14T09:22:03Z step 1 -> done",
+    "2026-08-14T09:22:46Z architecture: recorded decision-log entry + diagram update in ARCHITECTURE.md for the new platform -> shared/utils boundaries exception (scoped, zero-dependency shared-utils element, avoids a shared<->platform cycle). User confirmed both the shared/utils location and the cycle-avoidance scoping via AskUserQuestion before this was written."
+  ],
+  "test_file_hashes": {
+    "src/shared/utils/bytesToHex.test.ts": {
+      "sha": "978db65903fa",
+      "step": 1,
+      "recorded": "2026-08-14T08:57:21Z",
+      "log_index": 15
+    }
+  },
+  "evidence_hashes": {
+    "evidence/step1-red.txt": {
+      "sha": "3502801c187e",
+      "recorded": "2026-08-14T09:22:02Z",
+      "note": "bytesToHex red: module not found before extraction"
+    },
+    "evidence/step1-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:22:02Z",
+      "note": "tsc -b clean after boundaries policy update"
+    },
+    "evidence/step1-green.txt": {
+      "sha": "e7c758d6acd8",
+      "recorded": "2026-08-14T09:22:03Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    }
+  }
 }
