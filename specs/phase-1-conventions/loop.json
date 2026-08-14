@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T08:57:06Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T09:26:12Z",
+  "updated": "2026-08-14T09:27:10Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 5,
-      "steps_done": 3
+      "steps_done": 4
     },
     "G3": {
       "status": "pending",
@@ -91,8 +91,8 @@
       "tests": [
         "src/platform/observability/reportWebVitals.test.ts::reportWebVitals"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor step guarded by pre-existing tests (reportWebVitals.test.ts) which must stay green throughout; introducing WebVitalMetricName const-object enum is a pure type-shape change with no behavior change",
+      "status": "done"
     },
     {
       "id": 5,
@@ -141,7 +141,12 @@
     "2026-08-14T09:26:12Z evidence recorded: evidence/step3-typecheck.txt (e3b0c44298fc) - tsc -b clean after NavigationState enum introduction",
     "2026-08-14T09:26:12Z evidence recorded: evidence/step3-green.txt (ead2161c2758) - full vitest suite green: 65 files, 271 tests",
     "2026-08-14T09:26:12Z step 3 -> green",
-    "2026-08-14T09:26:12Z step 3 -> done"
+    "2026-08-14T09:26:12Z step 3 -> done",
+    "2026-08-14T09:26:25Z step 4 -> na",
+    "2026-08-14T09:27:10Z evidence recorded: evidence/step4-typecheck.txt (e3b0c44298fc) - tsc -b clean after WebVitalMetricName enum introduction",
+    "2026-08-14T09:27:10Z evidence recorded: evidence/step4-green.txt (223ff4eac7d8) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:27:10Z step 4 -> green",
+    "2026-08-14T09:27:10Z step 4 -> done"
   ],
   "test_file_hashes": {
     "src/shared/utils/bytesToHex.test.ts": {
@@ -167,6 +172,12 @@
       "step": 3,
       "recorded": "2026-08-14T09:25:02Z",
       "log_index": 27
+    },
+    "src/platform/observability/reportWebVitals.test.ts": {
+      "sha": "5d9ad1cdb450",
+      "step": 4,
+      "recorded": "2026-08-14T09:26:25Z",
+      "log_index": 32
     }
   },
   "evidence_hashes": {
@@ -203,6 +214,16 @@
     "evidence/step3-green.txt": {
       "sha": "ead2161c2758",
       "recorded": "2026-08-14T09:26:12Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step4-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:27:10Z",
+      "note": "tsc -b clean after WebVitalMetricName enum introduction"
+    },
+    "evidence/step4-green.txt": {
+      "sha": "223ff4eac7d8",
+      "recorded": "2026-08-14T09:27:10Z",
       "note": "full vitest suite green: 65 files, 271 tests"
     }
   }
