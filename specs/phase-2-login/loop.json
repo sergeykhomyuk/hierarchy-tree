@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T21:01:11Z",
+  "updated": "2026-08-14T21:03:59Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 11
+      "steps_done": 12
     },
     "G3": {
       "status": "pending",
@@ -431,8 +431,8 @@
         "src/features/auth/data/fetchSignedInUser.test.ts::fetchSignedInUser > resolves to null for every transport failure arm and warns once",
         "src/features/auth/data/createSignedInUserStore.test.ts::createSignedInUserStore > requests a given user once and reuses the promise"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T21:03:59Z evidence/steps/step12-red.txt: import resolution failures before the modules existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -865,7 +865,12 @@
     "2026-08-14T21:01:11Z evidence recorded: evidence/steps/step11-red.txt (00a1bd1490fa) - Step 11 red: resolveDestination module missing",
     "2026-08-14T21:01:11Z step 11 -> red",
     "2026-08-14T21:01:11Z step 11 -> green",
-    "2026-08-14T21:01:11Z step 11 -> done"
+    "2026-08-14T21:01:11Z step 11 -> done",
+    "2026-08-14T21:03:59Z evidence recorded: evidence/steps/step12-red.txt (8a54e7ad0cc1) - Step 12 red: fetchSignedInUser/createSignedInUserStore modules missing",
+    "2026-08-14T21:03:59Z step 12 -> red",
+    "2026-08-14T21:03:59Z step 12 -> green",
+    "2026-08-14T21:03:59Z step 12 -> done",
+    "2026-08-14T21:03:59Z step 12: signedInUserSchema uses firstName/lastName, the one field name confirmed by docs/task.md's own element-access example (users[1].firstName) - the live database's exact shape is otherwise unconfirmed per docs/reference.md and gets verified for real by step 31's live-smoke suite"
   ],
   "milestones": [
     {
@@ -973,6 +978,11 @@
       "sha": "00a1bd1490fa",
       "recorded": "2026-08-14T21:01:11Z",
       "note": "Step 11 red: resolveDestination module missing"
+    },
+    "evidence/steps/step12-red.txt": {
+      "sha": "8a54e7ad0cc1",
+      "recorded": "2026-08-14T21:03:59Z",
+      "note": "Step 12 red: fetchSignedInUser/createSignedInUserStore modules missing"
     }
   },
   "test_file_hashes": {
@@ -1077,6 +1087,24 @@
       "step": 11,
       "recorded": "2026-08-14T21:01:11Z",
       "log_index": 195
+    },
+    "src/features/auth/data/signedInUserSchema.test.ts": {
+      "sha": "e345f9962df7",
+      "step": 12,
+      "recorded": "2026-08-14T21:03:59Z",
+      "log_index": 199
+    },
+    "src/features/auth/data/fetchSignedInUser.test.ts": {
+      "sha": "5d9da1ea7286",
+      "step": 12,
+      "recorded": "2026-08-14T21:03:59Z",
+      "log_index": 199
+    },
+    "src/features/auth/data/createSignedInUserStore.test.ts": {
+      "sha": "91a916521798",
+      "step": 12,
+      "recorded": "2026-08-14T21:03:59Z",
+      "log_index": 199
     }
   }
 }
