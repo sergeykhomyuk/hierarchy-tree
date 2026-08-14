@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:43:52Z",
+  "updated": "2026-08-14T20:46:10Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 3
+      "steps_done": 4
     },
     "G3": {
       "status": "pending",
@@ -330,10 +330,11 @@
       "desc": "Step 4 - The branded identifier types and the user-id charset",
       "tests": [
         "src/features/auth/domain/userIdentifier.test.ts::userIdentifier > accepts a finite integer and a conservative string alike",
-        "src/features/auth/domain/userIdentifier.test.ts::userIdentifier > rejects a traversal, a slash, a query character and a fragment character"
+        "src/features/auth/domain/userIdentifier.test.ts::userIdentifier > rejects a traversal, a slash, a query character and a fragment character",
+        "src/features/auth/domain/userIdentifier.test.ts::userIdentifier > rejects a non-finite or fractional number"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T20:46:10Z evidence/steps/step4-red.txt: import resolution failure before the module existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -826,7 +827,13 @@
     "2026-08-14T20:43:51Z evidence recorded: evidence/steps/step3-red.txt (20f8667100c5) - Step 3 red: deriveSecret + substitutionTableEntry modules missing",
     "2026-08-14T20:43:52Z step 3 -> red",
     "2026-08-14T20:43:52Z step 3 -> green",
-    "2026-08-14T20:43:52Z step 3 -> done"
+    "2026-08-14T20:43:52Z step 3 -> done",
+    "2026-08-14T20:45:36Z step 4 amended: desc: 'Step 4 - The branded identifier types and the user-id charset' -> 'Step 4 - The branded identifier types and the user-id charset'; tests: ['src/features/auth/domain/userIdentifier.test.ts::userIdentifier > accepts a finite integer and a conservative string alike', 'src/features/auth/domain/userIdentifier.test.ts::userIdentifier > rejects a traversal, a slash, a query character and a fragment character'] -> ['src/features/auth/domain/userIdentifier.test.ts::userIdentifier > accepts a finite integer and a conservative string alike', 'src/features/auth/domain/userIdentifier.test.ts::userIdentifier > rejects a traversal, a slash, a query character and a fragment character', 'src/features/auth/domain/userIdentifier.test.ts::userIdentifier > rejects a non-finite or fractional number']",
+    "2026-08-14T20:45:36Z plan amend: step 4 gains a third test - userIdentifier is the single validation domain shares with sessionRecordSchema ('reuses the same pattern', TECH.md section 3) so a hand-tampered session record's numeric userId (e.g. 1e999 parsing to Infinity) is a real reachable input, not dead code, and the 100% domain threshold needs it covered",
+    "2026-08-14T20:46:09Z evidence recorded: evidence/steps/step4-red.txt (e94668ba3148) - Step 4 red: userIdentifier module missing",
+    "2026-08-14T20:46:10Z step 4 -> red",
+    "2026-08-14T20:46:10Z step 4 -> green",
+    "2026-08-14T20:46:10Z step 4 -> done"
   ],
   "milestones": [
     {
@@ -894,6 +901,11 @@
       "sha": "20f8667100c5",
       "recorded": "2026-08-14T20:43:51Z",
       "note": "Step 3 red: deriveSecret + substitutionTableEntry modules missing"
+    },
+    "evidence/steps/step4-red.txt": {
+      "sha": "e94668ba3148",
+      "recorded": "2026-08-14T20:46:09Z",
+      "note": "Step 4 red: userIdentifier module missing"
     }
   },
   "test_file_hashes": {
@@ -926,6 +938,12 @@
       "step": 3,
       "recorded": "2026-08-14T20:43:52Z",
       "log_index": 157
+    },
+    "src/features/auth/domain/userIdentifier.test.ts": {
+      "sha": "29a1ffc1207d",
+      "step": 4,
+      "recorded": "2026-08-14T20:46:10Z",
+      "log_index": 163
     }
   }
 }

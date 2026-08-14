@@ -1,0 +1,32 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/domain/userIdentifier.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/domain/userIdentifier.test.ts [ src/features/auth/domain/userIdentifier.test.ts ]
+Error: Failed to resolve import "./userIdentifier" from "src/features/auth/domain/userIdentifier.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/domain/userIdentifier.test.ts:2:31
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { userIdentifier } from "./userIdentifier";
+     |                                  ^
+  3  |  describe("userIdentifier", () => {
+  4  |  	it("accepts a finite integer and a conservative string alike", () => {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  21:45:46
+   Duration  529ms (transform 25ms, setup 93ms, import 0ms, tests 0ms, environment 345ms)
+
