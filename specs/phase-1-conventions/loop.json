@@ -3,11 +3,11 @@
   "title": "Align code with react-coding/typescript-coding conventions",
   "type": "refactor",
   "size": "S",
-  "status": "active",
-  "phase": "retro",
-  "phase_entered": "2026-08-14T14:03:02Z",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-14T14:03:13Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T14:03:02Z",
+  "updated": "2026-08-14T14:03:13Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -236,7 +236,9 @@
     "2026-08-14T14:02:35Z set proof = PROOF.md",
     "2026-08-14T14:02:46Z set retro = What did the user correct? Nothing during this session's added scope (file decomposition) - the user's only decision point was accepting Codex-1 (pre-existing sink-import bypass) as out of scope rather than expanding the loop. What did reviewers catch that an earlier phase should have? Both reviewers independently caught the stale eslint diagnostic message (Claude-1/Codex-2) from moving the sinks override between files - a mechanical file-move detail that's easy to miss without a fresh-context pass; worth remembering that any eslint.config.js files-array move should prompt a grep for the matching error-message text referencing the old filename. Codex additionally surfaced a real, pre-existing lint-enforcement gap (relative imports bypassing a no-restricted-imports group glob) that Claude's review did not catch - a genuine case for keeping both reviewers rather than treating them as redundant. Where did this playbook not answer? Resuming a paused S loop to add clearly-scoped follow-on work (the file-decomposition ask) mid-implement, after steps were already done, worked fine with the existing step-add/na/green/done machinery, but the skill docs don't explicitly say whether new plan steps for added scope should go through a frame/plan phase revisit or can just be appended in implement - handled it by logging an explicit frame-style rationale entry first, which read as the right level of ceremony for a same-character mechanical addition. Nothing durable enough to propose a skill diff for.",
     "2026-08-14T14:02:57Z G5 -> passed (PROOF.md written and registered (specs/phase-1-conventions/PROOF.md), all 7 acceptance criteria mapped to passing tests + evidence, both G4 reviews referenced with outcomes, loop check clean, evidence registry parity ok (20 registered).)",
-    "2026-08-14T14:03:02Z phase -> retro (reason: G5 passed, PROOF.md complete)"
+    "2026-08-14T14:03:02Z phase -> retro (reason: G5 passed, PROOF.md complete)",
+    "2026-08-14T14:03:13Z loop complete: 7 steps (bytesToHex dedup, 4 const-object enum conversions, memo() on 6 components, createObservability.ts + createHttpClient.ts decomposition), dual-reviewed, PROOF.md written. Ready for PR.",
+    "2026-08-14T14:03:13Z phase -> done"
   ],
   "test_file_hashes": {
     "src/shared/utils/bytesToHex.test.ts": {
