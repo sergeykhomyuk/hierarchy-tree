@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ErrorState } from '@shared/ui';
 
@@ -8,7 +9,10 @@ type ErrorSurfaceProps = {
 
 // Recovery arrives as a prop rather than a router hook: RootErrorBoundary
 // renders above RouterProvider, where useNavigate() throws.
-export function ErrorSurface({ correlationId, onRecover }: ErrorSurfaceProps) {
+export const ErrorSurface = memo(function ErrorSurface({
+  correlationId,
+  onRecover,
+}: ErrorSurfaceProps) {
   const { t } = useTranslation();
 
   return (
@@ -19,4 +23,4 @@ export function ErrorSurface({ correlationId, onRecover }: ErrorSurfaceProps) {
       action={{ label: t('errorSurface.retry'), onActivate: onRecover }}
     />
   );
-}
+});

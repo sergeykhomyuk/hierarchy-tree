@@ -139,7 +139,7 @@ const FEATURE_DEEP_IMPORT_PATTERNS = [
 const SINKS_IMPORT_PATTERN = {
   group: ['@platform/observability/sinks/*', '**/observability/sinks/*'],
   message:
-    'Sinks are constructed only by createObservability.ts (platform/observability).',
+    'Sinks are constructed only by createSink.ts (platform/observability).',
 };
 
 export default defineConfig([
@@ -287,6 +287,13 @@ export default defineConfig([
           pattern: 'src/features/*/**',
           capture: ['featureName'],
         },
+        // Matched before the general `shared` pattern below: a distinct,
+        // zero-dependency element so `platform` can depend on it (see the
+        // platform policy) without opening a shared<->platform import cycle
+        // - shared/testing still imports platform types for its fakes, so
+        // the rest of `shared` stays off-limits to `platform` (ARCHITECTURE.md
+        // decision log).
+        { type: 'shared-utils', pattern: 'src/shared/utils/**' },
         { type: 'shared', pattern: 'src/shared/**' },
         { type: 'platform', pattern: 'src/platform/**' },
       ],
@@ -308,6 +315,7 @@ export default defineConfig([
                       anyOf: [
                         'app',
                         'feature',
+                        'shared-utils',
                         'shared',
                         'platform',
                         'testing-harness',
@@ -326,6 +334,7 @@ export default defineConfig([
                       anyOf: [
                         'app',
                         'feature',
+                        'shared-utils',
                         'shared',
                         'platform',
                         'testing-harness',
@@ -339,7 +348,11 @@ export default defineConfig([
               from: { element: { type: 'feature' } },
               allow: [
                 {
-                  to: { element: { types: { anyOf: ['shared', 'platform'] } } },
+                  to: {
+                    element: {
+                      types: { anyOf: ['shared-utils', 'shared', 'platform'] },
+                    },
+                  },
                 },
                 {
                   to: {
@@ -356,12 +369,28 @@ export default defineConfig([
             {
               from: { element: { type: 'shared' } },
               allow: {
-                to: { element: { types: { anyOf: ['shared', 'platform'] } } },
+                to: {
+                  element: {
+                    types: { anyOf: ['shared-utils', 'shared', 'platform'] },
+                  },
+                },
               },
             },
             {
+              // shared/utils itself: zero-dependency by construction (see
+              // typescript-coding's low-coupling rule) - restricted to
+              // importing only its own sibling files, never platform, so it
+              // can never become the platform-facing half of a cycle.
+              from: { element: { type: 'shared-utils' } },
+              allow: { to: { element: { type: 'shared-utils' } } },
+            },
+            {
               from: { element: { type: 'platform' } },
-              allow: { to: { element: { type: 'platform' } } },
+              allow: {
+                to: {
+                  element: { types: { anyOf: ['platform', 'shared-utils'] } },
+                },
+              },
             },
           ],
         },
@@ -390,6 +419,7 @@ export default defineConfig([
           pattern: 'src/features/*/**',
           capture: ['featureName'],
         },
+        { type: 'shared-utils', pattern: 'src/shared/utils/**' },
         { type: 'shared', pattern: 'src/shared/**' },
         { type: 'platform', pattern: 'src/platform/**' },
       ],
@@ -411,6 +441,7 @@ export default defineConfig([
                       anyOf: [
                         'app',
                         'feature',
+                        'shared-utils',
                         'shared',
                         'platform',
                         'testing-harness',
@@ -429,6 +460,7 @@ export default defineConfig([
                       anyOf: [
                         'app',
                         'feature',
+                        'shared-utils',
                         'shared',
                         'platform',
                         'testing-harness',
@@ -445,7 +477,12 @@ export default defineConfig([
                   to: {
                     element: {
                       types: {
-                        anyOf: ['shared', 'platform', 'testing-harness'],
+                        anyOf: [
+                          'shared-utils',
+                          'shared',
+                          'platform',
+                          'testing-harness',
+                        ],
                       },
                     },
                   },
@@ -467,10 +504,21 @@ export default defineConfig([
               allow: {
                 to: {
                   element: {
-                    types: { anyOf: ['shared', 'platform', 'testing-harness'] },
+                    types: {
+                      anyOf: [
+                        'shared-utils',
+                        'shared',
+                        'platform',
+                        'testing-harness',
+                      ],
+                    },
                   },
                 },
               },
+            },
+            {
+              from: { element: { type: 'shared-utils' } },
+              allow: { to: { element: { type: 'shared-utils' } } },
             },
             {
               // Platform's own tests additionally reach `shared` for the
@@ -479,10 +527,16 @@ export default defineConfig([
               // shared/testing, not platform - a platform module still
               // cannot import shared in production code, which is why this
               // addition sits only in the test-file override, not the base
-              // rule above).
+              // rule above). shared-utils is already allowed in production
+              // (see the base rule), listed again here since this block
+              // replaces rather than extends it for test files.
               from: { element: { type: 'platform' } },
               allow: {
-                to: { element: { types: { anyOf: ['platform', 'shared'] } } },
+                to: {
+                  element: {
+                    types: { anyOf: ['platform', 'shared-utils', 'shared'] },
+                  },
+                },
               },
             },
           ],
@@ -540,7 +594,7 @@ export default defineConfig([
   {
     // The one file allowed to construct sinks (invariant 45) - it imports
     // them directly by design, so the ban is off for this file alone.
-    files: ['src/platform/observability/createObservability.ts'],
+    files: ['src/platform/observability/createSink.ts'],
     rules: { 'no-restricted-imports': 'off' },
   },
   {

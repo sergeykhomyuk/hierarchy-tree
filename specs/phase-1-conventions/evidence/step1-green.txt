@@ -1,0 +1,40 @@
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-Sc08a9/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "session"
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/physical-properties-n1kxlf/Banned.tmp.tsx: physical property/utility "ml-*" found - use the logical equivalent
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/raw-color-jFe3EH/Banned.tmp.tsx: raw color value found - use a theme.css token instead
+assert-no-lorem-ipsum: filler text found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/lorem-ipsum-BOA3qy/Banned.tmp.tsx: lorem ipsum filler text found
+assert-no-secrets: pass --source-only or --bundle-only
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-keyword-PqRRjE/banned.tmp.ts: matches secret keyword pattern /apiKey/i
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-entropy-K2SyNL/banned.tmp.ts: high-entropy literal found (9f8a7b6c5d4e...)
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-suppression-NkY87u/banned.tmp.ts: eslint-disable suppresses "no-restricted-" - suppression is not permitted for this rule
+assert-no-secrets --bundle-only: dist/ is missing - run npm run build first
+assert-no-secrets --source-only: secrets found:
+  - .github/workflows/ci.yml: matches secret keyword pattern /apiKey/i
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  65 passed (65)
+      Tests  271 passed (271)
+   Start at  10:21:47
+   Duration  8.75s (transform 1.60s, setup 4.83s, import 2.99s, tests 12.91s, environment 17.07s)
+

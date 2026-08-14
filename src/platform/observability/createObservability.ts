@@ -1,29 +1,19 @@
 import type { Configuration } from '@platform/configuration';
 import type { Randomness } from '@platform/runtime';
 import { createCorrelationId } from './createCorrelationId';
+import { createSink, type BufferHandle } from './createSink';
+import { LOG_LEVEL_SEVERITY } from './logLevelSeverity';
+import { logRecord } from './logRecord';
 import type { ObservabilityFacade } from './observabilityFacade';
 import { redact } from './redact';
-import { createConsoleSink } from './sinks/createConsoleSink';
-import { createNoOpSink } from './sinks/createNoOpSink';
-import { createRingBufferSink } from './sinks/createRingBufferSink';
 import type { TelemetryRecord } from './telemetryRecord';
 
 const FALLBACK_CORRELATION_ID = '0'.repeat(32);
-
-const LOG_LEVEL_SEVERITY = {
-  debug: 0,
-  info: 1,
-  warn: 2,
-  error: 3,
-  silent: 4,
-} as const;
 
 export type ObservabilityDependencies = {
   configuration: Pick<Configuration, 'observabilitySink' | 'logLevel'>;
   randomness: Randomness;
 };
-
-export type BufferHandle = { read: () => readonly TelemetryRecord[] } | null;
 
 export type Observability = {
   facade: ObservabilityFacade;
@@ -82,31 +72,4 @@ export function createObservability(
   };
 
   return { facade, bufferHandle };
-}
-
-function logRecord(
-  level: 'debug' | 'info' | 'warn' | 'error',
-  event: string,
-  attributes: Readonly<Record<string, unknown>> | undefined,
-): TelemetryRecord {
-  return {
-    kind: 'log',
-    level,
-    event,
-    ...(attributes !== undefined ? { attributes } : {}),
-  };
-}
-
-function createSink(sinkKind: Configuration['observabilitySink']): {
-  sink: (record: TelemetryRecord) => void;
-  bufferHandle: BufferHandle;
-} {
-  if (sinkKind === 'buffer') {
-    const ringBuffer = createRingBufferSink();
-    return { sink: ringBuffer.write, bufferHandle: { read: ringBuffer.read } };
-  }
-  if (sinkKind === 'console') {
-    return { sink: createConsoleSink(), bufferHandle: null };
-  }
-  return { sink: createNoOpSink(), bufferHandle: null };
 }

@@ -1,0 +1,430 @@
+{
+  "task": "phase-1-conventions",
+  "title": "Align code with react-coding/typescript-coding conventions",
+  "type": "refactor",
+  "size": "S",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-14T14:03:13Z",
+  "created": "2026-08-14",
+  "updated": "2026-08-14T14:03:13Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "S",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": "PROOF.md",
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "skipped",
+      "attempts": 0
+    },
+    "G2": {
+      "status": "passed",
+      "attempts": 1,
+      "steps_total": 7,
+      "steps_done": 7,
+      "note": "all 7 refactor steps done: bytesToHex extraction, LogLevel/ObservabilitySink/NavigationState/WebVitalMetricName const-object enums, memo() on 6 app-layer components, createObservability.ts + createHttpClient.ts file decomposition. Full vitest suite green (283/283) after every step; tsc -b and eslint clean throughout."
+    },
+    "G3": {
+      "status": "passed",
+      "attempts": 1,
+      "note": "npm run verify green end-to-end (typecheck/lint/format/coverage/build/verify:build/size), evidence/verify-full.txt. Pure structural refactor - no new user-facing surface, no e2e delta; unit/component suite (283 tests, 68 files) and coverage (96.28%25 statements, 96.33%25 branches) are the relevant verification for a behavior-preserving file decomposition. Step 5's guarded-test hash drift was from the separately reviewed i18n-test-locale loop's merge, not this loop's work - logged as approved-change and rebased."
+    },
+    "G4": {
+      "status": "passed",
+      "attempts": 1,
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "eslint.config.js SINKS_IMPORT_PATTERN message still names createObservability.ts as the file allowed to construct sinks; step 6 moved that override to createSink.ts, so the diagnostic text is stale",
+          "blocking": false,
+          "disposition": "fixed: eslint.config.js SINKS_IMPORT_PATTERN message now reads 'Sinks are constructed only by createSink.ts (platform/observability).' - verified lint still passes"
+        },
+        "Codex-1": {
+          "desc": "SINKS_IMPORT_PATTERN's eslint no-restricted-imports group glob does not catch a relative import (e.g. './sinks/createConsoleSink') from a sibling file already inside src/platform/observability/ - verified live with a probe file, exits 0. Pre-existing: the glob itself is unchanged by this diff (only its message string moved with the override); the bypass predates this refactor loop.",
+          "blocking": true,
+          "disposition": "accepted: pre-existing gap, verified unchanged by this diff (SINKS_IMPORT_PATTERN's group glob is byte-identical before/after - only its message string moved). User decided out of scope for this S-size behavior-preservation refactor loop; not fixed here."
+        },
+        "Codex-2": {
+          "desc": "eslint.config.js SINKS_IMPORT_PATTERN message named createObservability.ts instead of createSink.ts after step 6 moved the override - same gap Claude-1 already caught and fixed",
+          "blocking": false,
+          "disposition": "fixed: same fix as Claude-1 (identical finding from the second reviewer), already applied"
+        }
+      },
+      "note": "Dual review complete: Claude fresh-context (evidence/reviews/g4-claude-review.md, 1 non-blocking finding) + Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking). Claude-1/Codex-2 (stale eslint message) fixed. Codex-1 (relative-import bypass of the sink-construction ban) verified as a pre-existing gap unchanged by this diff's SINKS_IMPORT_PATTERN glob; user accepted it as out of scope for this S refactor loop."
+    },
+    "G5": {
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md written and registered (specs/phase-1-conventions/PROOF.md), all 7 acceptance criteria mapped to passing tests + evidence, both G4 reviews referenced with outcomes, loop check clean, evidence registry parity ok (20 registered)."
+    }
+  },
+  "retro": {
+    "outcome": "What did the user correct? Nothing during this session's added scope (file decomposition) - the user's only decision point was accepting Codex-1 (pre-existing sink-import bypass) as out of scope rather than expanding the loop. What did reviewers catch that an earlier phase should have? Both reviewers independently caught the stale eslint diagnostic message (Claude-1/Codex-2) from moving the sinks override between files - a mechanical file-move detail that's easy to miss without a fresh-context pass; worth remembering that any eslint.config.js files-array move should prompt a grep for the matching error-message text referencing the old filename. Codex additionally surfaced a real, pre-existing lint-enforcement gap (relative imports bypassing a no-restricted-imports group glob) that Claude's review did not catch - a genuine case for keeping both reviewers rather than treating them as redundant. Where did this playbook not answer? Resuming a paused S loop to add clearly-scoped follow-on work (the file-decomposition ask) mid-implement, after steps were already done, worked fine with the existing step-add/na/green/done machinery, but the skill docs don't explicitly say whether new plan steps for added scope should go through a frame/plan phase revisit or can just be appended in implement - handled it by logging an explicit frame-style rationale entry first, which read as the right level of ceremony for a same-character mechanical addition. Nothing durable enough to propose a skill diff for.",
+    "date": "2026-08-14T14:02:46Z"
+  },
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "Extract bytesToHex to shared/utils",
+      "tests": [
+        "src/shared/utils/bytesToHex.test.ts::bytesToHex > converts bytes to zero-padded lowercase hex",
+        "src/shared/utils/bytesToHex.test.ts::bytesToHex > returns an empty string for an empty byte array"
+      ],
+      "red_observed": "2026-08-14T08:57:21Z evidence/step1-red.txt: bytesToHex module does not exist yet, import unresolved",
+      "status": "done"
+    },
+    {
+      "id": 2,
+      "desc": "Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration",
+      "tests": [
+        "src/platform/configuration/createConfiguration.test.ts::createConfiguration",
+        "src/platform/observability/createObservability.test.ts::createObservability"
+      ],
+      "red_observed": "n/a: case (c): refactor step guarded by pre-existing tests (createConfiguration.test.ts, createObservability.test.ts) which must stay green throughout; introducing LogLevel/ObservabilitySink const-object enums is a pure type-shape change with no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 3,
+      "desc": "Introduce NavigationState const-object enum in app/routing",
+      "tests": [
+        "src/app/routing/createInteractionTracker.test.ts::createInteractionTracker"
+      ],
+      "red_observed": "n/a: case (c): refactor step guarded by pre-existing tests (createInteractionTracker.test.ts) which must stay green throughout; introducing NavigationState const-object enum is a pure type-shape change with no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 4,
+      "desc": "Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts",
+      "tests": [
+        "src/platform/observability/reportWebVitals.test.ts::reportWebVitals"
+      ],
+      "red_observed": "n/a: case (c): refactor step guarded by pre-existing tests (reportWebVitals.test.ts) which must stay green throughout; introducing WebVitalMetricName const-object enum is a pure type-shape change with no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 5,
+      "desc": "Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo",
+      "tests": [
+        "src/app/ApplicationRoot.test.tsx::ApplicationRoot",
+        "src/app/kit-route/KitRoute.test.tsx::KitRoute",
+        "src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout",
+        "src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary",
+        "src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface",
+        "src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute"
+      ],
+      "red_observed": "n/a: case (c): refactor step guarded by pre-existing tests (ApplicationRoot.test.tsx, KitRoute.test.tsx, ApplicationLayout.test.tsx, RouteErrorBoundary.test.tsx, ErrorSurface.test.tsx, NotFoundRoute.test.tsx) which must stay green throughout; wrapping each component in memo() is a pure render-optimization change with no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 6,
+      "desc": "Decompose createObservability.ts into single-purpose sibling files (logLevelSeverity.ts, logRecord.ts, createSink.ts); move eslint sink-import exception to createSink.ts",
+      "tests": [
+        "src/platform/observability/createObservability.test.ts::createObservability",
+        "src/platform/observability/sinks/sinkImportGraph.test.ts::sink import graph"
+      ],
+      "red_observed": "n/a: case (c): pure file-split refactor guarded by pre-existing createObservability.test.ts + sinkImportGraph.test.ts which must stay green throughout; no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 7,
+      "desc": "Decompose createHttpClient.ts into single-purpose sibling files (buildUrl.ts, statusDescription.ts, performAttempt.ts+AttemptOutcome)",
+      "tests": [
+        "src/platform/http/createHttpClient.test.ts::createHttpClient"
+      ],
+      "red_observed": "n/a: case (c): pure file-split refactor guarded by pre-existing createHttpClient.test.ts which must stay green throughout; no behavior change",
+      "status": "done"
+    }
+  ],
+  "log": [
+    "2026-08-14T08:47:49Z init: type=refactor size=S flags=[]",
+    "2026-08-14T08:47:55Z triage: refactor/S. Mechanical convention-alignment sub-task of phase-1: (1) convert literal-union types to const-object enum pattern per typescript-coding skill, (2) wrap components in memo() per react-coding skill, (3) dedupe bytesToHex into shared/utils. Zero ambiguity, cross-layer but low-risk/low-LOC mechanical changes, behavior fully preserved. No open loops overlap (phase-1-setup is done).",
+    "2026-08-14T08:53:36Z phase -> frame",
+    "2026-08-14T08:54:08Z frame: behavior-preservation contract. Preserved surface: (1) Configuration.logLevel/observabilitySink accepted values + validation/defaults unchanged; (2) LOG_LEVEL_SEVERITY threshold filtering + createSink() selection unchanged; (3) NavigationState comparisons/transitions in createInteractionTracker unchanged; (4) app.web_vital analytics event shape for LCP/INP/CLS unchanged; (5) bytesToHex output format (lowercase zero-padded hex) unchanged for createCorrelationId + createTraceparent; (6) memo-wrapped components' rendered output/props contract unchanged (memo is a pure render optimization). Coverage audit: logLevel/observabilitySink covered by createConfiguration.test.ts + createObservability.test.ts; NavigationState covered by createInteractionTracker.test.ts; WebVitalMetricName covered by reportWebVitals.test.ts; all 6 components to be memoized already have render/behavior test files. Gap: bytesToHex is only tested indirectly via createCorrelationId.test.ts/createTraceparent.test.ts - will add a direct characterization/extraction unit test (src/shared/utils/bytesToHex.test.ts) as its own step, red-first against the not-yet-existing shared module. RootErrorBoundary.tsx is a class-based error boundary - intentionally excluded from memo (memo targets function components; error boundaries must be classes).",
+    "2026-08-14T08:55:26Z phase -> plan",
+    "2026-08-14T08:55:45Z step 1 added: Extract bytesToHex to shared/utils",
+    "2026-08-14T08:55:45Z step 2 added: Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration",
+    "2026-08-14T08:55:45Z step 3 added: Introduce NavigationState const-object enum in app/routing",
+    "2026-08-14T08:55:45Z step 4 added: Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts",
+    "2026-08-14T08:55:45Z step 5 added: Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo",
+    "2026-08-14T08:56:55Z step 2 amended: desc: 'Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration' -> 'Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration'; tests: ['src/platform/configuration/createConfiguration.test.ts', 'src/platform/observability/createObservability.test.ts'] -> ['src/platform/configuration/createConfiguration.test.ts::createConfiguration', 'src/platform/observability/createObservability.test.ts::createObservability']",
+    "2026-08-14T08:56:55Z step 3 amended: desc: 'Introduce NavigationState const-object enum in app/routing' -> 'Introduce NavigationState const-object enum in app/routing'; tests: ['src/app/routing/createInteractionTracker.test.ts'] -> ['src/app/routing/createInteractionTracker.test.ts::createInteractionTracker']",
+    "2026-08-14T08:56:55Z step 4 amended: desc: 'Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts' -> 'Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts'; tests: ['src/platform/observability/reportWebVitals.test.ts'] -> ['src/platform/observability/reportWebVitals.test.ts::reportWebVitals']",
+    "2026-08-14T08:56:55Z step 5 amended: desc: 'Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo' -> 'Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo'; tests: ['src/app/ApplicationRoot.test.tsx', 'src/app/kit-route/KitRoute.test.tsx', 'src/app/layout/ApplicationLayout.test.tsx', 'src/app/error-boundary/RouteErrorBoundary.test.tsx', 'src/app/error-boundary/ErrorSurface.test.tsx', 'src/app/routing/routes/NotFoundRoute.test.tsx'] -> ['src/app/ApplicationRoot.test.tsx::ApplicationRoot', 'src/app/kit-route/KitRoute.test.tsx::KitRoute', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary', 'src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute']",
+    "2026-08-14T08:57:06Z phase -> implement",
+    "2026-08-14T08:57:21Z step 1 -> red",
+    "2026-08-14T09:22:02Z evidence recorded: evidence/step1-red.txt (3502801c187e) - bytesToHex red: module not found before extraction",
+    "2026-08-14T09:22:02Z evidence recorded: evidence/step1-typecheck.txt (e3b0c44298fc) - tsc -b clean after boundaries policy update",
+    "2026-08-14T09:22:03Z evidence recorded: evidence/step1-green.txt (e7c758d6acd8) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:22:03Z step 1 -> green",
+    "2026-08-14T09:22:03Z step 1 -> done",
+    "2026-08-14T09:22:46Z architecture: recorded decision-log entry + diagram update in ARCHITECTURE.md for the new platform -> shared/utils boundaries exception (scoped, zero-dependency shared-utils element, avoids a shared<->platform cycle). User confirmed both the shared/utils location and the cycle-avoidance scoping via AskUserQuestion before this was written.",
+    "2026-08-14T09:23:04Z step 2 -> na",
+    "2026-08-14T09:24:43Z evidence recorded: evidence/step2-typecheck.txt (e3b0c44298fc) - tsc -b clean after LogLevel/ObservabilitySink enum introduction",
+    "2026-08-14T09:24:43Z evidence recorded: evidence/step2-green.txt (0e6df5180829) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:24:43Z step 2 -> green",
+    "2026-08-14T09:24:43Z step 2 -> done",
+    "2026-08-14T09:25:02Z step 3 -> na",
+    "2026-08-14T09:26:12Z evidence recorded: evidence/step3-typecheck.txt (e3b0c44298fc) - tsc -b clean after NavigationState enum introduction",
+    "2026-08-14T09:26:12Z evidence recorded: evidence/step3-green.txt (ead2161c2758) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:26:12Z step 3 -> green",
+    "2026-08-14T09:26:12Z step 3 -> done",
+    "2026-08-14T09:26:25Z step 4 -> na",
+    "2026-08-14T09:27:10Z evidence recorded: evidence/step4-typecheck.txt (e3b0c44298fc) - tsc -b clean after WebVitalMetricName enum introduction",
+    "2026-08-14T09:27:10Z evidence recorded: evidence/step4-green.txt (223ff4eac7d8) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:27:10Z step 4 -> green",
+    "2026-08-14T09:27:10Z step 4 -> done",
+    "2026-08-14T09:27:23Z step 5 -> na",
+    "2026-08-14T09:28:34Z evidence recorded: evidence/step5-typecheck.txt (e3b0c44298fc) - tsc -b clean after wrapping 6 components in memo",
+    "2026-08-14T09:28:34Z evidence recorded: evidence/step5-green.txt (3537931af19a) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:28:34Z step 5 -> green",
+    "2026-08-14T09:28:34Z step 5 -> done",
+    "2026-08-14T09:59:07Z paused: Switching to a separate feature loop for the i18n test-locale/detection work (behavior-changing, doesn't fit the refactor contract). Resume here for any further pure convention-alignment tweaks.",
+    "2026-08-14T13:41:40Z resumed: resuming for file decomposition: split entity-heavy files (createObservability etc.) into folders per typescript-coding module-splitting guidance",
+    "2026-08-14T13:43:42Z frame (added scope): decompose entity-heavy files into single-purpose sibling files per typescript-coding module-splitting guidance. Target 1: createObservability.ts (8 top-level entities: FALLBACK_CORRELATION_ID const, LOG_LEVEL_SEVERITY const, 3 types, createObservability/logRecord/createSink functions spanning 3 distinct concerns) - split logRecord() and createSink() out to sibling files, matching the existing one-function-per-file convention already used by sinks/*.ts and http/retryDelayMilliseconds.ts+shouldRetry.ts. Target 2: createHttpClient.ts (buildUrl/statusDescription/performAttempt helpers + AttemptOutcome type bundled with the main factory) - same treatment. Both files' only non-test importer is their own index.ts barrel (verified via grep), so no consumer import paths change. eslint.config.js's sink-import exception (files: ['src/platform/observability/createObservability.ts'], the 'one file allowed to construct sinks' override) must move to the new createSink.ts. Behavior-preservation contract: pure file-split, zero logic change, guarded by the existing createObservability.test.ts and createHttpClient.test.ts (both import only the public factory + its types, never internals) plus full lint/typecheck/test suite staying green throughout - case (c), no new red test needed.",
+    "2026-08-14T13:43:48Z step 6 added: Decompose createObservability.ts into single-purpose sibling files (logLevelSeverity.ts, logRecord.ts, createSink.ts); move eslint sink-import exception to createSink.ts",
+    "2026-08-14T13:43:48Z step 7 added: Decompose createHttpClient.ts into single-purpose sibling files (buildUrl.ts, statusDescription.ts, performAttempt.ts+AttemptOutcome)",
+    "2026-08-14T13:43:53Z step 6 -> na",
+    "2026-08-14T13:45:46Z evidence recorded: evidence/step6-typecheck.txt (fded5744f291) - tsc -b clean after createObservability.ts decomposition",
+    "2026-08-14T13:45:46Z evidence recorded: evidence/step6-lint.txt (910a4a61d1f7) - eslint clean after moving sink-import exception to createSink.ts",
+    "2026-08-14T13:45:46Z evidence recorded: evidence/step6-green.txt (0cab8159f6e7) - full vitest suite green: 68 files, 283 tests",
+    "2026-08-14T13:45:47Z step 6 -> green",
+    "2026-08-14T13:45:47Z step 6 -> done",
+    "2026-08-14T13:45:51Z step 7 -> na",
+    "2026-08-14T13:47:31Z evidence recorded: evidence/step7-typecheck.txt (fded5744f291) - tsc -b clean after createHttpClient.ts decomposition",
+    "2026-08-14T13:47:31Z evidence recorded: evidence/step7-lint.txt (910a4a61d1f7) - eslint clean after createHttpClient.ts decomposition",
+    "2026-08-14T13:47:32Z evidence recorded: evidence/step7-green.txt (923f6d4a21e6) - full vitest suite green: 68 files, 283 tests",
+    "2026-08-14T13:47:32Z step 7 -> green",
+    "2026-08-14T13:47:32Z step 7 -> done",
+    "2026-08-14T13:47:58Z G2 -> passed (all 7 refactor steps done: bytesToHex extraction, LogLevel/ObservabilitySink/NavigationState/WebVitalMetricName const-object enums, memo() on 6 app-layer components, createObservability.ts + createHttpClient.ts file decomposition. Full vitest suite green (283/283) after every step; tsc -b and eslint clean throughout.)",
+    "2026-08-14T13:48:03Z phase -> verify (reason: all plan steps done and green; moving to verification per s-path)",
+    "2026-08-14T13:48:56Z evidence recorded: evidence/verify-full.txt (229f273baf8a) - full npm run verify chain green: typecheck, lint, format:check, test:coverage (96.28%25 stmts), build, verify:build (15/15), size (112.92kB/150kB entry budget)",
+    "2026-08-14T13:49:23Z approved-change: src/app/ApplicationRoot.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:23Z approved-change: src/app/layout/ApplicationLayout.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:23Z approved-change: src/app/error-boundary/RouteErrorBoundary.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:23Z approved-change: src/app/error-boundary/ErrorSurface.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:23Z approved-change: src/app/routing/routes/NotFoundRoute.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
+    "2026-08-14T13:49:29Z step 5 hash rebased (src/app/ApplicationRoot.test.tsx, src/app/layout/ApplicationLayout.test.tsx, src/app/error-boundary/RouteErrorBoundary.test.tsx, src/app/error-boundary/ErrorSurface.test.tsx, src/app/routing/routes/NotFoundRoute.test.tsx): approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)",
+    "2026-08-14T13:49:38Z G3 -> passed (npm run verify green end-to-end (typecheck/lint/format/coverage/build/verify:build/size), evidence/verify-full.txt. Pure structural refactor - no new user-facing surface, no e2e delta; unit/component suite (283 tests, 68 files) and coverage (96.28%25 statements, 96.33%25 branches) are the relevant verification for a behavior-preserving file decomposition. Step 5's guarded-test hash drift was from the separately reviewed i18n-test-locale loop's merge, not this loop's work - logged as approved-change and rebased.)",
+    "2026-08-14T13:49:42Z phase -> review (reason: verification complete, moving to dual review)",
+    "2026-08-14T13:53:49Z evidence recorded: evidence/reviews/g4-claude-review.md (3463855a1dd8) - G4 Claude fresh-context review: 1 finding, 0 blocking",
+    "2026-08-14T13:53:49Z G4 finding Claude-1 recorded: eslint.config.js SINKS_IMPORT_PATTERN message still names createObservability.ts as the file allowed to construct sinks; step 6 moved that override to createSink.ts, so the diagnostic text is stale",
+    "2026-08-14T13:59:27Z evidence recorded: evidence/reviews/g4-codex-review.md (b61eac7eac8b) - G4 Codex second opinion: 2 findings, 1 blocking (pre-existing sink-import lint bypass)",
+    "2026-08-14T13:59:27Z G4 finding Codex-1 recorded (blocking): SINKS_IMPORT_PATTERN's eslint no-restricted-imports group glob does not catch a relative import (e.g. './sinks/createConsoleSink') from a sibling file already inside src/platform/observability/ - verified live with a probe file, exits 0. Pre-existing: the glob itself is unchanged by this diff (only its message string moved with the override); the bypass predates this refactor loop.",
+    "2026-08-14T13:59:27Z G4 finding Codex-2 recorded: eslint.config.js SINKS_IMPORT_PATTERN message named createObservability.ts instead of createSink.ts after step 6 moved the override - same gap Claude-1 already caught and fixed",
+    "2026-08-14T13:59:33Z G4 finding Claude-1 dispositioned: fixed: eslint.config.js SINKS_IMPORT_PATTERN message now reads 'Sinks are constructed only by createSink.ts (platform/observability).' - verified lint still passes",
+    "2026-08-14T13:59:34Z G4 finding Codex-2 dispositioned: fixed: same fix as Claude-1 (identical finding from the second reviewer), already applied",
+    "2026-08-14T14:01:00Z G4 finding Codex-1 dispositioned: accepted: pre-existing gap, verified unchanged by this diff (SINKS_IMPORT_PATTERN's group glob is byte-identical before/after - only its message string moved). User decided out of scope for this S-size behavior-preservation refactor loop; not fixed here.",
+    "2026-08-14T14:01:08Z G4 -> passed (Dual review complete: Claude fresh-context (evidence/reviews/g4-claude-review.md, 1 non-blocking finding) + Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking). Claude-1/Codex-2 (stale eslint message) fixed. Codex-1 (relative-import bypass of the sink-construction ban) verified as a pre-existing gap unchanged by this diff's SINKS_IMPORT_PATTERN glob; user accepted it as out of scope for this S refactor loop.)",
+    "2026-08-14T14:01:46Z phase -> prove (reason: G4 passed, dual review complete with dispositions recorded)",
+    "2026-08-14T14:02:35Z set proof = PROOF.md",
+    "2026-08-14T14:02:46Z set retro = What did the user correct? Nothing during this session's added scope (file decomposition) - the user's only decision point was accepting Codex-1 (pre-existing sink-import bypass) as out of scope rather than expanding the loop. What did reviewers catch that an earlier phase should have? Both reviewers independently caught the stale eslint diagnostic message (Claude-1/Codex-2) from moving the sinks override between files - a mechanical file-move detail that's easy to miss without a fresh-context pass; worth remembering that any eslint.config.js files-array move should prompt a grep for the matching error-message text referencing the old filename. Codex additionally surfaced a real, pre-existing lint-enforcement gap (relative imports bypassing a no-restricted-imports group glob) that Claude's review did not catch - a genuine case for keeping both reviewers rather than treating them as redundant. Where did this playbook not answer? Resuming a paused S loop to add clearly-scoped follow-on work (the file-decomposition ask) mid-implement, after steps were already done, worked fine with the existing step-add/na/green/done machinery, but the skill docs don't explicitly say whether new plan steps for added scope should go through a frame/plan phase revisit or can just be appended in implement - handled it by logging an explicit frame-style rationale entry first, which read as the right level of ceremony for a same-character mechanical addition. Nothing durable enough to propose a skill diff for.",
+    "2026-08-14T14:02:57Z G5 -> passed (PROOF.md written and registered (specs/phase-1-conventions/PROOF.md), all 7 acceptance criteria mapped to passing tests + evidence, both G4 reviews referenced with outcomes, loop check clean, evidence registry parity ok (20 registered).)",
+    "2026-08-14T14:03:02Z phase -> retro (reason: G5 passed, PROOF.md complete)",
+    "2026-08-14T14:03:13Z loop complete: 7 steps (bytesToHex dedup, 4 const-object enum conversions, memo() on 6 components, createObservability.ts + createHttpClient.ts decomposition), dual-reviewed, PROOF.md written. Ready for PR.",
+    "2026-08-14T14:03:13Z phase -> done"
+  ],
+  "test_file_hashes": {
+    "src/shared/utils/bytesToHex.test.ts": {
+      "sha": "978db65903fa",
+      "step": 1,
+      "recorded": "2026-08-14T08:57:21Z",
+      "log_index": 15
+    },
+    "src/platform/configuration/createConfiguration.test.ts": {
+      "sha": "441799ec6f79",
+      "step": 2,
+      "recorded": "2026-08-14T09:23:04Z",
+      "log_index": 22
+    },
+    "src/platform/observability/createObservability.test.ts": {
+      "sha": "c618fe36c87d",
+      "step": 6,
+      "recorded": "2026-08-14T13:43:53Z",
+      "log_index": 47
+    },
+    "src/app/routing/createInteractionTracker.test.ts": {
+      "sha": "1ab66dca5c3d",
+      "step": 3,
+      "recorded": "2026-08-14T09:25:02Z",
+      "log_index": 27
+    },
+    "src/platform/observability/reportWebVitals.test.ts": {
+      "sha": "5d9ad1cdb450",
+      "step": 4,
+      "recorded": "2026-08-14T09:26:25Z",
+      "log_index": 32
+    },
+    "src/app/ApplicationRoot.test.tsx": {
+      "sha": "5431dc2a3063",
+      "step": 5,
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
+    },
+    "src/app/kit-route/KitRoute.test.tsx": {
+      "sha": "4472da6da398",
+      "step": 5,
+      "recorded": "2026-08-14T09:27:23Z",
+      "log_index": 37
+    },
+    "src/app/layout/ApplicationLayout.test.tsx": {
+      "sha": "ec33f62ae680",
+      "step": 5,
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
+    },
+    "src/app/error-boundary/RouteErrorBoundary.test.tsx": {
+      "sha": "21297f7130dc",
+      "step": 5,
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
+    },
+    "src/app/error-boundary/ErrorSurface.test.tsx": {
+      "sha": "777304d2032a",
+      "step": 5,
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
+    },
+    "src/app/routing/routes/NotFoundRoute.test.tsx": {
+      "sha": "8a5a771cf260",
+      "step": 5,
+      "recorded": "2026-08-14T13:49:29Z",
+      "log_index": 67,
+      "rebased": "approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)"
+    },
+    "src/platform/observability/sinks/sinkImportGraph.test.ts": {
+      "sha": "fc703290babc",
+      "step": 6,
+      "recorded": "2026-08-14T13:43:53Z",
+      "log_index": 47
+    },
+    "src/platform/http/createHttpClient.test.ts": {
+      "sha": "1af39d7cbc4a",
+      "step": 7,
+      "recorded": "2026-08-14T13:45:51Z",
+      "log_index": 53
+    }
+  },
+  "evidence_hashes": {
+    "evidence/step1-red.txt": {
+      "sha": "3502801c187e",
+      "recorded": "2026-08-14T09:22:02Z",
+      "note": "bytesToHex red: module not found before extraction"
+    },
+    "evidence/step1-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:22:02Z",
+      "note": "tsc -b clean after boundaries policy update"
+    },
+    "evidence/step1-green.txt": {
+      "sha": "e7c758d6acd8",
+      "recorded": "2026-08-14T09:22:03Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step2-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:24:43Z",
+      "note": "tsc -b clean after LogLevel/ObservabilitySink enum introduction"
+    },
+    "evidence/step2-green.txt": {
+      "sha": "0e6df5180829",
+      "recorded": "2026-08-14T09:24:43Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step3-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:26:12Z",
+      "note": "tsc -b clean after NavigationState enum introduction"
+    },
+    "evidence/step3-green.txt": {
+      "sha": "ead2161c2758",
+      "recorded": "2026-08-14T09:26:12Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step4-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:27:10Z",
+      "note": "tsc -b clean after WebVitalMetricName enum introduction"
+    },
+    "evidence/step4-green.txt": {
+      "sha": "223ff4eac7d8",
+      "recorded": "2026-08-14T09:27:10Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step5-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:28:34Z",
+      "note": "tsc -b clean after wrapping 6 components in memo"
+    },
+    "evidence/step5-green.txt": {
+      "sha": "3537931af19a",
+      "recorded": "2026-08-14T09:28:34Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step6-typecheck.txt": {
+      "sha": "fded5744f291",
+      "recorded": "2026-08-14T13:45:46Z",
+      "note": "tsc -b clean after createObservability.ts decomposition"
+    },
+    "evidence/step6-lint.txt": {
+      "sha": "910a4a61d1f7",
+      "recorded": "2026-08-14T13:45:46Z",
+      "note": "eslint clean after moving sink-import exception to createSink.ts"
+    },
+    "evidence/step6-green.txt": {
+      "sha": "0cab8159f6e7",
+      "recorded": "2026-08-14T13:45:46Z",
+      "note": "full vitest suite green: 68 files, 283 tests"
+    },
+    "evidence/step7-typecheck.txt": {
+      "sha": "fded5744f291",
+      "recorded": "2026-08-14T13:47:31Z",
+      "note": "tsc -b clean after createHttpClient.ts decomposition"
+    },
+    "evidence/step7-lint.txt": {
+      "sha": "910a4a61d1f7",
+      "recorded": "2026-08-14T13:47:31Z",
+      "note": "eslint clean after createHttpClient.ts decomposition"
+    },
+    "evidence/step7-green.txt": {
+      "sha": "923f6d4a21e6",
+      "recorded": "2026-08-14T13:47:32Z",
+      "note": "full vitest suite green: 68 files, 283 tests"
+    },
+    "evidence/verify-full.txt": {
+      "sha": "229f273baf8a",
+      "recorded": "2026-08-14T13:48:56Z",
+      "note": "full npm run verify chain green: typecheck, lint, format:check, test:coverage (96.28%25 stmts), build, verify:build (15/15), size (112.92kB/150kB entry budget)"
+    },
+    "evidence/reviews/g4-claude-review.md": {
+      "sha": "3463855a1dd8",
+      "recorded": "2026-08-14T13:53:49Z",
+      "note": "G4 Claude fresh-context review: 1 finding, 0 blocking"
+    },
+    "evidence/reviews/g4-codex-review.md": {
+      "sha": "b61eac7eac8b",
+      "recorded": "2026-08-14T13:59:27Z",
+      "note": "G4 Codex second opinion: 2 findings, 1 blocking (pre-existing sink-import lint bypass)"
+    }
+  }
+}

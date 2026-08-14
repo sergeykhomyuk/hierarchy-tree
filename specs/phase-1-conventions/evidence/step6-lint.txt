@@ -1,0 +1,4 @@
+
+> hierarchy-tree@0.0.0 lint
+> eslint . && node scripts/assert-no-physical-properties.mjs && node scripts/assert-domain-vocabulary.mjs && node scripts/assert-no-lorem-ipsum.mjs && node scripts/assert-no-secrets.mjs --source-only
+

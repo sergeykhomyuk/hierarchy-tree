@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { kitStates } from '../testing';
 
-export function KitRoute() {
+export const KitRoute = memo(function KitRoute() {
   return (
     <>
       {kitStates.map((entry) => (
@@ -14,4 +15,4 @@ export function KitRoute() {
       ))}
     </>
   );
-}
+});
