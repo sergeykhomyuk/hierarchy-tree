@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 
-export function NotFoundRoute() {
+export const NotFoundRoute = memo(function NotFoundRoute() {
   const { t } = useTranslation();
 
   return (
@@ -10,4 +11,4 @@ export function NotFoundRoute() {
       <Link to="/">{t('notFound.linkHome')}</Link>
     </>
   );
-}
+});

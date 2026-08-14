@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react';
+import { memo, useEffect, type ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { localeDirection } from '@platform/internationalization';
 import { RootErrorBoundary } from './error-boundary/RootErrorBoundary';
@@ -15,7 +15,10 @@ type ApplicationRootProps = {
 // (bootstrap.ts in production, a test-built element in tests), which is
 // what lets a test render an arbitrary "route" through this exact stack
 // without a real router.
-export function ApplicationRoot({ runtime, children }: ApplicationRootProps) {
+export const ApplicationRoot = memo(function ApplicationRoot({
+  runtime,
+  children,
+}: ApplicationRootProps) {
   const language = runtime.i18n.language;
 
   // The single place `lang`/`dir` are derived from the active locale
@@ -33,4 +36,4 @@ export function ApplicationRoot({ runtime, children }: ApplicationRootProps) {
       </I18nextProvider>
     </RuntimeContext.Provider>
   );
-}
+});

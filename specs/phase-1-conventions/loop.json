@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T08:57:06Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T09:27:10Z",
+  "updated": "2026-08-14T09:28:34Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 5,
-      "steps_done": 4
+      "steps_done": 5
     },
     "G3": {
       "status": "pending",
@@ -105,8 +105,8 @@
         "src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface",
         "src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor step guarded by pre-existing tests (ApplicationRoot.test.tsx, KitRoute.test.tsx, ApplicationLayout.test.tsx, RouteErrorBoundary.test.tsx, ErrorSurface.test.tsx, NotFoundRoute.test.tsx) which must stay green throughout; wrapping each component in memo() is a pure render-optimization change with no behavior change",
+      "status": "done"
     }
   ],
   "log": [
@@ -146,7 +146,12 @@
     "2026-08-14T09:27:10Z evidence recorded: evidence/step4-typecheck.txt (e3b0c44298fc) - tsc -b clean after WebVitalMetricName enum introduction",
     "2026-08-14T09:27:10Z evidence recorded: evidence/step4-green.txt (223ff4eac7d8) - full vitest suite green: 65 files, 271 tests",
     "2026-08-14T09:27:10Z step 4 -> green",
-    "2026-08-14T09:27:10Z step 4 -> done"
+    "2026-08-14T09:27:10Z step 4 -> done",
+    "2026-08-14T09:27:23Z step 5 -> na",
+    "2026-08-14T09:28:34Z evidence recorded: evidence/step5-typecheck.txt (e3b0c44298fc) - tsc -b clean after wrapping 6 components in memo",
+    "2026-08-14T09:28:34Z evidence recorded: evidence/step5-green.txt (3537931af19a) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:28:34Z step 5 -> green",
+    "2026-08-14T09:28:34Z step 5 -> done"
   ],
   "test_file_hashes": {
     "src/shared/utils/bytesToHex.test.ts": {
@@ -178,6 +183,42 @@
       "step": 4,
       "recorded": "2026-08-14T09:26:25Z",
       "log_index": 32
+    },
+    "src/app/ApplicationRoot.test.tsx": {
+      "sha": "6a2e3167d61a",
+      "step": 5,
+      "recorded": "2026-08-14T09:27:23Z",
+      "log_index": 37
+    },
+    "src/app/kit-route/KitRoute.test.tsx": {
+      "sha": "4472da6da398",
+      "step": 5,
+      "recorded": "2026-08-14T09:27:23Z",
+      "log_index": 37
+    },
+    "src/app/layout/ApplicationLayout.test.tsx": {
+      "sha": "44a65967aa12",
+      "step": 5,
+      "recorded": "2026-08-14T09:27:23Z",
+      "log_index": 37
+    },
+    "src/app/error-boundary/RouteErrorBoundary.test.tsx": {
+      "sha": "aa40269e27b3",
+      "step": 5,
+      "recorded": "2026-08-14T09:27:23Z",
+      "log_index": 37
+    },
+    "src/app/error-boundary/ErrorSurface.test.tsx": {
+      "sha": "a5f331a4ab95",
+      "step": 5,
+      "recorded": "2026-08-14T09:27:23Z",
+      "log_index": 37
+    },
+    "src/app/routing/routes/NotFoundRoute.test.tsx": {
+      "sha": "aa8b5dc8a643",
+      "step": 5,
+      "recorded": "2026-08-14T09:27:23Z",
+      "log_index": 37
     }
   },
   "evidence_hashes": {
@@ -224,6 +265,16 @@
     "evidence/step4-green.txt": {
       "sha": "223ff4eac7d8",
       "recorded": "2026-08-14T09:27:10Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step5-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:28:34Z",
+      "note": "tsc -b clean after wrapping 6 components in memo"
+    },
+    "evidence/step5-green.txt": {
+      "sha": "3537931af19a",
+      "recorded": "2026-08-14T09:28:34Z",
       "note": "full vitest suite green: 65 files, 271 tests"
     }
   }
