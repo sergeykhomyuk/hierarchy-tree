@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "M",
   "status": "active",
-  "phase": "verify",
-  "phase_entered": "2026-08-14T11:49:53Z",
+  "phase": "review",
+  "phase_entered": "2026-08-14T11:57:13Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:56:44Z",
+  "updated": "2026-08-14T13:10:52Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -86,9 +86,47 @@
       "note": "loop-verifier (fresh context): 20/20 SPEC.md invariants VERIFIED, 0 FAILED, 0 UNVERIFIED. npm run verify clean (280 tests, 96%+ coverage, all size budgets pass). Full e2e 19/19 (chromium 12/12 including both accessibility.spec.ts axe-clean cases proving lang=zxx in a real browser; development 7/7 unaffected). Independently confirmed no new/changed build chunk via a throwaway pre-feature worktree diff. Non-goals (deployed-smoke.spec.ts, ConfigurationErrorScreen.tsx, development project) confirmed untouched via git diff. Evidence: evidence/g3-verify.txt, evidence/g3-e2e.txt, evidence/traces/*."
     },
     "G4": {
-      "status": "pending",
-      "attempts": 0,
-      "security_pass": null
+      "status": "passed",
+      "attempts": 1,
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "REVIEWER ERROR (verified false): claimed createKeyEchoCatalogue.test.ts is untracked/uncommitted, based on this conversation's stale session-start gitStatus snapshot rather than the reviewer's own git status check. Independently verified: the file is committed at 85c4134, tracked, and correctly present in the reviewed diff (git show HEAD:... and git diff main...loop/feature/i18n-test-locale -- <path> both confirm it). No action needed.",
+          "blocking": false,
+          "disposition": "accepted: finding is false, verified via git show HEAD and git diff main...loop/feature/i18n-test-locale -- <path> - the file is committed at 85c4134 and correctly present in the diff. Reviewer used this conversation's stale session-start git snapshot instead of its own git status check. No code change."
+        },
+        "Claude-2": {
+          "desc": "createKeyEchoCatalogue.ts's recursive walker would mishandle an array, null, or non-string/non-object leaf value at runtime (Object.entries(null) throws, arrays silently become index-keyed objects, primitives collapse to {}) - currently unreachable since the Catalogue type and every real catalogue JSON reject such shapes at the call site, purely theoretical today.",
+          "blocking": false,
+          "disposition": "accepted: user confirmed - the type system (Catalogue's own parameter type) already rejects array/null/non-string leaves at compile time for any real i18next catalogue, present or future. Adding a runtime guard for a type-system-prevented scenario would be unrequested defensive code per this repo's own conventions."
+        },
+        "Codex-1": {
+          "desc": "createKeyEchoCatalogue's recursive walker would mishandle array/null/non-string-non-object catalogue leaves at runtime (same underlying issue as Claude-2, Codex rated it blocking, Claude rated it non-blocking).",
+          "blocking": false,
+          "disposition": "accepted: same disposition as Claude-2 (identical underlying issue) - user confirmed"
+        },
+        "Codex-2": {
+          "desc": "Test helper functions in createKeyEchoCatalogue.test.ts used 'as Catalogue'/'as Catalogue | undefined' narrowing casts (2 real violations of this repo's no-'as SomeType' convention). The 3 other occurrences Codex counted ('as unknown' in createKeyEchoCatalogue.test.ts:66 and both loadTranslations.test.ts files) are safe any->unknown widening, not narrowing casts, and don't violate the rule's intent - already fixed the 2 real ones using type guards.",
+          "blocking": true,
+          "disposition": "fixed: replaced the 2 real 'as Catalogue'/'as Catalogue | undefined' narrowing casts in createKeyEchoCatalogue.test.ts with an isRecord() type guard, matching the production module's own pattern. Re-verified: tsc clean, full suite green (281 tests)."
+        },
+        "Codex-3": {
+          "desc": "loadTranslations.ts's WeakMap dedup is keyed per-instance; if an instance's language ever changed post-construction (e.g. instance.changeLanguage()), a stale registration would be reused. Verified: nothing in this codebase calls changeLanguage anywhere - matches R11's non-goal (no in-app locale switching exists).",
+          "blocking": false,
+          "disposition": "accepted: user confirmed - verified nothing in this codebase calls changeLanguage anywhere, matches R11's explicit non-goal (no in-app locale switching exists)."
+        },
+        "Codex-4": {
+          "desc": "locale.test.ts didn't assert Locale has exactly two members - a silently-added third member would pass the existing test. Fixed: added a dedicated test.",
+          "blocking": false,
+          "disposition": "fixed: added a dedicated test asserting Locale has exactly two members. Re-verified: full suite green."
+        },
+        "Codex-5": {
+          "desc": "detectLocale.test.ts's malformed-candidate coverage didn't include a leading-dash case ('-zxx'), which already correctly falls back to English but had no test proving it. Fixed: added to the existing fallback test.",
+          "blocking": false,
+          "disposition": "fixed: added a leading-dash ('-zxx') case to detectLocale.test.ts's existing fallback-to-English test. Re-verified: full suite green."
+        }
+      },
+      "note": "Dual review complete: fresh Claude reviewer + Codex on the full diff, both with fix-confirmation passes. 7 findings total: Claude-1 rejected as false (stale-snapshot reviewer error, verified via git show); Claude-2/Codex-1 (same issue) accepted - unreachable through the type system; Codex-2 (blocking) fixed - isRecord() type guard replaces 2 real as-casts; Codex-3 accepted - no changeLanguage caller exists anywhere, matches R11 non-goal; Codex-4/Codex-5 fixed - 2 small test-completeness additions. Both reviewers independently confirmed the fix (Codex ran vitest+tsc itself in the confirmation pass). Full suite re-verified green after fix: 281 tests. Evidence: evidence/reviews/g4-full-diff.txt, g4-claude-review.md, g4-codex-review.md, g4-fix-diff.txt."
     },
     "G5": {
       "status": "pending",
@@ -274,7 +312,33 @@
     "2026-08-14T11:56:29Z step 4 hash rebased (src/app/composition/createRuntime.test.ts): createRuntime.test.ts approved-change logged above",
     "2026-08-14T11:56:36Z approved-change: src/features/hierarchy/loadTranslations.test.ts - user-directed session; content matches what step 5's red/green cycle implemented and verified, any hash drift is from routine prettier formatting passes during step 5/6 lint checks, not a test-weakening edit.",
     "2026-08-14T11:56:37Z step 5 hash rebased (src/features/auth/loadTranslations.test.ts, src/features/hierarchy/loadTranslations.test.ts): loadTranslations.test.ts (both features) approved-change logged above",
-    "2026-08-14T11:56:44Z G3 -> passed (loop-verifier (fresh context): 20/20 SPEC.md invariants VERIFIED, 0 FAILED, 0 UNVERIFIED. npm run verify clean (280 tests, 96%+ coverage, all size budgets pass). Full e2e 19/19 (chromium 12/12 including both accessibility.spec.ts axe-clean cases proving lang=zxx in a real browser; development 7/7 unaffected). Independently confirmed no new/changed build chunk via a throwaway pre-feature worktree diff. Non-goals (deployed-smoke.spec.ts, ConfigurationErrorScreen.tsx, development project) confirmed untouched via git diff. Evidence: evidence/g3-verify.txt, evidence/g3-e2e.txt, evidence/traces/*.)"
+    "2026-08-14T11:56:44Z G3 -> passed (loop-verifier (fresh context): 20/20 SPEC.md invariants VERIFIED, 0 FAILED, 0 UNVERIFIED. npm run verify clean (280 tests, 96%+ coverage, all size budgets pass). Full e2e 19/19 (chromium 12/12 including both accessibility.spec.ts axe-clean cases proving lang=zxx in a real browser; development 7/7 unaffected). Independently confirmed no new/changed build chunk via a throwaway pre-feature worktree diff. Non-goals (deployed-smoke.spec.ts, ConfigurationErrorScreen.tsx, development project) confirmed untouched via git diff. Evidence: evidence/g3-verify.txt, evidence/g3-e2e.txt, evidence/traces/*.)",
+    "2026-08-14T11:57:13Z phase -> review",
+    "2026-08-14T12:03:10Z G4 finding Claude-1 recorded: REVIEWER ERROR (verified false): claimed createKeyEchoCatalogue.test.ts is untracked/uncommitted, based on this conversation's stale session-start gitStatus snapshot rather than the reviewer's own git status check. Independently verified: the file is committed at 85c4134, tracked, and correctly present in the reviewed diff (git show HEAD:... and git diff main...loop/feature/i18n-test-locale -- <path> both confirm it). No action needed.",
+    "2026-08-14T12:03:10Z G4 finding Claude-2 recorded: createKeyEchoCatalogue.ts's recursive walker would mishandle an array, null, or non-string/non-object leaf value at runtime (Object.entries(null) throws, arrays silently become index-keyed objects, primitives collapse to {}) - currently unreachable since the Catalogue type and every real catalogue JSON reject such shapes at the call site, purely theoretical today.",
+    "2026-08-14T12:07:18Z G4 finding Codex-1 recorded: createKeyEchoCatalogue's recursive walker would mishandle array/null/non-string-non-object catalogue leaves at runtime (same underlying issue as Claude-2, Codex rated it blocking, Claude rated it non-blocking).",
+    "2026-08-14T12:07:18Z G4 finding Codex-2 recorded (blocking): Test helper functions in createKeyEchoCatalogue.test.ts used 'as Catalogue'/'as Catalogue | undefined' narrowing casts (2 real violations of this repo's no-'as SomeType' convention). The 3 other occurrences Codex counted ('as unknown' in createKeyEchoCatalogue.test.ts:66 and both loadTranslations.test.ts files) are safe any->unknown widening, not narrowing casts, and don't violate the rule's intent - already fixed the 2 real ones using type guards.",
+    "2026-08-14T12:07:18Z G4 finding Codex-3 recorded: loadTranslations.ts's WeakMap dedup is keyed per-instance; if an instance's language ever changed post-construction (e.g. instance.changeLanguage()), a stale registration would be reused. Verified: nothing in this codebase calls changeLanguage anywhere - matches R11's non-goal (no in-app locale switching exists).",
+    "2026-08-14T12:07:18Z G4 finding Codex-4 recorded: locale.test.ts didn't assert Locale has exactly two members - a silently-added third member would pass the existing test. Fixed: added a dedicated test.",
+    "2026-08-14T12:07:19Z G4 finding Codex-5 recorded: detectLocale.test.ts's malformed-candidate coverage didn't include a leading-dash case ('-zxx'), which already correctly falls back to English but had no test proving it. Fixed: added to the existing fallback test.",
+    "2026-08-14T13:06:16Z G4 finding Claude-2 dispositioned: accepted: user confirmed - the type system (Catalogue's own parameter type) already rejects array/null/non-string leaves at compile time for any real i18next catalogue, present or future. Adding a runtime guard for a type-system-prevented scenario would be unrequested defensive code per this repo's own conventions.",
+    "2026-08-14T13:06:17Z G4 finding Codex-1 dispositioned: accepted: same disposition as Claude-2 (identical underlying issue) - user confirmed",
+    "2026-08-14T13:06:17Z G4 finding Codex-2 dispositioned: fixed: replaced the 2 real 'as Catalogue'/'as Catalogue | undefined' narrowing casts in createKeyEchoCatalogue.test.ts with an isRecord() type guard, matching the production module's own pattern. Re-verified: tsc clean, full suite green (281 tests).",
+    "2026-08-14T13:06:17Z G4 finding Codex-3 dispositioned: accepted: user confirmed - verified nothing in this codebase calls changeLanguage anywhere, matches R11's explicit non-goal (no in-app locale switching exists).",
+    "2026-08-14T13:06:17Z G4 finding Codex-4 dispositioned: fixed: added a dedicated test asserting Locale has exactly two members. Re-verified: full suite green.",
+    "2026-08-14T13:06:17Z G4 finding Codex-5 dispositioned: fixed: added a leading-dash ('-zxx') case to detectLocale.test.ts's existing fallback-to-English test. Re-verified: full suite green.",
+    "2026-08-14T13:06:26Z G4 finding Claude-1 dispositioned: accepted: finding is false, verified via git show HEAD and git diff main...loop/feature/i18n-test-locale -- <path> - the file is committed at 85c4134 and correctly present in the diff. Reviewer used this conversation's stale session-start git snapshot instead of its own git status check. No code change.",
+    "2026-08-14T13:10:26Z evidence recorded: evidence/reviews/g4-full-diff.txt (8334054b5cce) - G4 full diff (3040 lines) reviewed by fresh Claude reviewer + Codex",
+    "2026-08-14T13:10:26Z evidence recorded: evidence/reviews/g4-claude-review.md (0ade45e52ee5) - G4 Claude fresh-context review: 2 findings (1 blocking, determined false), fix-confirmation CONFIRMED",
+    "2026-08-14T13:10:27Z evidence recorded: evidence/reviews/g4-codex-review.md (a898ea408b0f) - G4 Codex second opinion: 5 findings (2 blocking), fix-confirmation CONFIRMED (same thread, ran vitest+tsc itself)",
+    "2026-08-14T13:10:27Z evidence recorded: evidence/reviews/g4-fix-diff.txt (b6bc8268d194) - G4 fix delta diff (130 lines, correctly regenerated after committing the fix)",
+    "2026-08-14T13:10:44Z approved-change: src/platform/internationalization/locale.test.ts - user-directed session; G4 fix for Codex-4 (added exactly-two-members test), both reviewers confirmed correct.",
+    "2026-08-14T13:10:44Z approved-change: src/platform/internationalization/detectLocale.test.ts - user-directed session; G4 fix for Codex-5 (added leading-dash malformed-candidate case), both reviewers confirmed correct.",
+    "2026-08-14T13:10:44Z approved-change: src/platform/internationalization/createKeyEchoCatalogue.test.ts - user-directed session; G4 fix for Codex-2 (blocking) - replaced 2 real as-casts with isRecord() type guard, both reviewers independently confirmed the fix (Codex ran vitest+tsc itself).",
+    "2026-08-14T13:10:44Z step 1 hash rebased (src/platform/internationalization/locale.test.ts): locale.test.ts G4 approved-change logged above",
+    "2026-08-14T13:10:44Z step 2 hash rebased (src/platform/internationalization/detectLocale.test.ts): detectLocale.test.ts G4 approved-change logged above",
+    "2026-08-14T13:10:44Z step 3 hash rebased (src/platform/internationalization/createKeyEchoCatalogue.test.ts): createKeyEchoCatalogue.test.ts G4 approved-change logged above",
+    "2026-08-14T13:10:52Z G4 -> passed (Dual review complete: fresh Claude reviewer + Codex on the full diff, both with fix-confirmation passes. 7 findings total: Claude-1 rejected as false (stale-snapshot reviewer error, verified via git show); Claude-2/Codex-1 (same issue) accepted - unreachable through the type system; Codex-2 (blocking) fixed - isRecord() type guard replaces 2 real as-casts; Codex-3 accepted - no changeLanguage caller exists anywhere, matches R11 non-goal; Codex-4/Codex-5 fixed - 2 small test-completeness additions. Both reviewers independently confirmed the fix (Codex ran vitest+tsc itself in the confirmation pass). Full suite re-verified green after fix: 281 tests. Evidence: evidence/reviews/g4-full-diff.txt, g4-claude-review.md, g4-codex-review.md, g4-fix-diff.txt.)"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
@@ -456,27 +520,49 @@
       "sha": "ea0f5a8a4a5a",
       "recorded": "2026-08-14T11:55:52Z",
       "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/reviews/g4-full-diff.txt": {
+      "sha": "8334054b5cce",
+      "recorded": "2026-08-14T13:10:26Z",
+      "note": "G4 full diff (3040 lines) reviewed by fresh Claude reviewer + Codex"
+    },
+    "evidence/reviews/g4-claude-review.md": {
+      "sha": "0ade45e52ee5",
+      "recorded": "2026-08-14T13:10:26Z",
+      "note": "G4 Claude fresh-context review: 2 findings (1 blocking, determined false), fix-confirmation CONFIRMED"
+    },
+    "evidence/reviews/g4-codex-review.md": {
+      "sha": "a898ea408b0f",
+      "recorded": "2026-08-14T13:10:27Z",
+      "note": "G4 Codex second opinion: 5 findings (2 blocking), fix-confirmation CONFIRMED (same thread, ran vitest+tsc itself)"
+    },
+    "evidence/reviews/g4-fix-diff.txt": {
+      "sha": "b6bc8268d194",
+      "recorded": "2026-08-14T13:10:27Z",
+      "note": "G4 fix delta diff (130 lines, correctly regenerated after committing the fix)"
     }
   },
   "test_file_hashes": {
     "src/platform/internationalization/locale.test.ts": {
-      "sha": "00186342c035",
+      "sha": "6bed34d90a07",
       "step": 1,
-      "recorded": "2026-08-14T11:27:57Z",
-      "log_index": 37
+      "recorded": "2026-08-14T13:10:44Z",
+      "log_index": 126,
+      "rebased": "locale.test.ts G4 approved-change logged above"
     },
     "src/platform/internationalization/detectLocale.test.ts": {
-      "sha": "574cb8e68023",
+      "sha": "a6b0e80579f2",
       "step": 2,
-      "recorded": "2026-08-14T11:28:40Z",
-      "log_index": 42
+      "recorded": "2026-08-14T13:10:44Z",
+      "log_index": 127,
+      "rebased": "detectLocale.test.ts G4 approved-change logged above"
     },
     "src/platform/internationalization/createKeyEchoCatalogue.test.ts": {
-      "sha": "587c4a7255bd",
+      "sha": "7481cda4e91b",
       "step": 3,
-      "recorded": "2026-08-14T11:56:29Z",
-      "log_index": 99,
-      "rebased": "createKeyEchoCatalogue.test.ts approved-change logged above"
+      "recorded": "2026-08-14T13:10:44Z",
+      "log_index": 128,
+      "rebased": "createKeyEchoCatalogue.test.ts G4 approved-change logged above"
     },
     "src/app/composition/createRuntime.test.ts": {
       "sha": "185c9d659916",
