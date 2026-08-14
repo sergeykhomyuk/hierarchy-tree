@@ -172,4 +172,83 @@ describe('LoginPage', () => {
 
     expect(transportCalls).toBe(1);
   });
+
+  it('shows the summary alert and marks both fields invalid on a null lookup', async () => {
+    const user = userEvent.setup();
+    await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+
+    const email = screen.getByLabelText('login.emailLabel');
+    const password = screen.getByLabelText('login.passwordLabel');
+
+    await user.type(email, 'person@example.com');
+    await user.type(password, 'wrong-password');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent('login.noMatchMessage');
+    expect(email).toHaveAttribute('aria-invalid', 'true');
+    expect(password).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('renders no field-level message under either field', async () => {
+    const user = userEvent.setup();
+    await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+
+    const email = screen.getByLabelText('login.emailLabel');
+    const password = screen.getByLabelText('login.passwordLabel');
+
+    await user.type(email, 'person@example.com');
+    await user.type(password, 'wrong-password');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+
+    await screen.findByRole('alert');
+    // Exactly one alert on the page - the card-level summary - never a
+    // second, per-field one.
+    expect(screen.getAllByRole('alert')).toHaveLength(1);
+  });
+
+  it('preserves both typed values, password included, after a failed attempt', async () => {
+    const user = userEvent.setup();
+    await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+
+    const email = screen.getByLabelText('login.emailLabel');
+    const password = screen.getByLabelText('login.passwordLabel');
+
+    await user.type(email, 'person@example.com');
+    await user.type(password, 'wrong-password');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+
+    await screen.findByRole('alert');
+    expect(email).toHaveValue('person@example.com');
+    expect(password).toHaveValue('wrong-password');
+  });
+
+  it('moves focus nowhere when the alert appears', async () => {
+    const user = userEvent.setup();
+    await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+
+    const email = screen.getByLabelText('login.emailLabel');
+    const password = screen.getByLabelText('login.passwordLabel');
+    const button = screen.getByRole('button', { name: 'login.submit' });
+
+    await user.type(email, 'person@example.com');
+    await user.type(password, 'wrong-password');
+    button.focus();
+    await user.click(button);
+
+    await screen.findByRole('alert');
+    // Nothing about the no-match transition unmounts the control the
+    // visitor already had focused - unlike the retry path (step 21),
+    // which must hand focus off explicitly because its own control is
+    // removed from the DOM.
+    expect(button).toHaveFocus();
+  });
 });

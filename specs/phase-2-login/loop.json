@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T22:49:19Z",
+  "updated": "2026-08-14T22:52:47Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 19
+      "steps_done": 20
     },
     "G3": {
       "status": "pending",
@@ -545,8 +545,8 @@
         "src/features/auth/LoginPage.test.tsx::LoginPage > preserves both typed values, password included, after a failed attempt",
         "src/features/auth/LoginPage.test.tsx::LoginPage > moves focus nowhere when the alert appears"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T22:52:47Z evidence/steps/step20-red.txt",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -930,7 +930,12 @@
     "2026-08-14T22:49:19Z evidence recorded: evidence/steps/step19-red.txt (1f14eb8b9198) - Step 19 red: LoginPage module missing",
     "2026-08-14T22:49:19Z step 19 -> red",
     "2026-08-14T22:49:19Z step 19 -> green",
-    "2026-08-14T22:49:19Z step 19 -> done"
+    "2026-08-14T22:49:19Z step 19 -> done",
+    "2026-08-14T22:52:47Z evidence recorded: evidence/steps/step20-red.txt (d32707289e38) - Step 20 red: 4 no-match tests fail before LoginAlert/field-invalid wiring existed",
+    "2026-08-14T22:52:47Z step 20 -> red",
+    "2026-08-14T22:52:47Z step 20 -> green",
+    "2026-08-14T22:52:47Z step 20 -> done",
+    "2026-08-14T22:52:47Z step 20: found and fixed a real accessibility bug during red/green - conditionally including/excluding the FieldContext.Provider wrapper around Input (rather than always rendering it with a varying value) makes React see a different element type at that tree position on the noMatch transition, unmounting and remounting the <input> - which would silently drop focus from a real user in a browser exactly like the retry-focus problem TECH.md describes for step 21. Fixed by always rendering the Provider and only varying its value."
   ],
   "milestones": [
     {
@@ -1088,6 +1093,11 @@
       "sha": "1f14eb8b9198",
       "recorded": "2026-08-14T22:49:19Z",
       "note": "Step 19 red: LoginPage module missing"
+    },
+    "evidence/steps/step20-red.txt": {
+      "sha": "d32707289e38",
+      "recorded": "2026-08-14T22:52:47Z",
+      "note": "Step 20 red: 4 no-match tests fail before LoginAlert/field-invalid wiring existed"
     }
   },
   "test_file_hashes": {
@@ -1260,10 +1270,10 @@
       "log_index": 231
     },
     "src/features/auth/LoginPage.test.tsx": {
-      "sha": "b2bcc0c50e7a",
-      "step": 19,
-      "recorded": "2026-08-14T22:49:19Z",
-      "log_index": 240
+      "sha": "7a3fd93e430b",
+      "step": 20,
+      "recorded": "2026-08-14T22:52:47Z",
+      "log_index": 244
     }
   }
 }
