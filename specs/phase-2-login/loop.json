@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:22:58Z",
+  "updated": "2026-08-14T20:43:52Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 2
+      "steps_done": 3
     },
     "G3": {
       "status": "pending",
@@ -317,10 +317,12 @@
         "src/features/auth/domain/deriveSecret.test.ts::deriveSecret > drives the tail positions from the other input alone when the normalised array is short",
         "src/features/auth/domain/deriveSecret.test.ts::deriveSecret > trims the email and therefore differs from the brief's encode on boundary whitespace",
         "src/features/auth/domain/deriveSecret.test.ts::deriveSecret > uses the password exactly as typed, including a single space",
-        "src/features/auth/domain/deriveSecret.test.ts::deriveSecret > rejects an empty email or password instead of looping"
+        "src/features/auth/domain/deriveSecret.test.ts::deriveSecret > rejects an empty email or password instead of looping",
+        "src/features/auth/domain/substitutionTableEntry.test.ts::substitutionTableEntry > returns the entry at a valid index",
+        "src/features/auth/domain/substitutionTableEntry.test.ts::substitutionTableEntry > throws a RangeError for an index outside the table"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T20:43:52Z evidence/steps/step3-red.txt: import resolution failures before the modules existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -818,7 +820,13 @@
     "2026-08-14T20:22:58Z evidence recorded: evidence/steps/step2-red.txt (895d8e521eeb) - Step 2 red: normalizeToCodeUnits module missing",
     "2026-08-14T20:22:58Z step 2 -> red",
     "2026-08-14T20:22:58Z step 2 -> green",
-    "2026-08-14T20:22:58Z step 2 -> done"
+    "2026-08-14T20:22:58Z step 2 -> done",
+    "2026-08-14T20:27:58Z step 3 amended: desc: 'Step 3 - `deriveSecret`' -> 'Step 3 - `deriveSecret`'; tests: ['src/features/auth/domain/deriveSecret.test.ts::deriveSecret > returns 64 characters drawn only from 0-9 and A-F', \"src/features/auth/domain/deriveSecret.test.ts::deriveSecret > matches the brief's own encode, position by position, for a hand-worked input\", \"src/features/auth/domain/deriveSecret.test.ts::deriveSecret > preserves the brief's high-surrogate-only defect for a non-BMP character\", 'src/features/auth/domain/deriveSecret.test.ts::deriveSecret > drives the tail positions from the other input alone when the normalised array is short', \"src/features/auth/domain/deriveSecret.test.ts::deriveSecret > trims the email and therefore differs from the brief's encode on boundary whitespace\", 'src/features/auth/domain/deriveSecret.test.ts::deriveSecret > uses the password exactly as typed, including a single space', 'src/features/auth/domain/deriveSecret.test.ts::deriveSecret > rejects an empty email or password instead of looping'] -> ['src/features/auth/domain/deriveSecret.test.ts::deriveSecret > returns 64 characters drawn only from 0-9 and A-F', \"src/features/auth/domain/deriveSecret.test.ts::deriveSecret > matches the brief's own encode, position by position, for a hand-worked input\", \"src/features/auth/domain/deriveSecret.test.ts::deriveSecret > preserves the brief's high-surrogate-only defect for a non-BMP character\", 'src/features/auth/domain/deriveSecret.test.ts::deriveSecret > drives the tail positions from the other input alone when the normalised array is short', \"src/features/auth/domain/deriveSecret.test.ts::deriveSecret > trims the email and therefore differs from the brief's encode on boundary whitespace\", 'src/features/auth/domain/deriveSecret.test.ts::deriveSecret > uses the password exactly as typed, including a single space', 'src/features/auth/domain/deriveSecret.test.ts::deriveSecret > rejects an empty email or password instead of looping', 'src/features/auth/domain/substitutionTableEntry.test.ts::substitutionTableEntry > returns the entry at a valid index', 'src/features/auth/domain/substitutionTableEntry.test.ts::substitutionTableEntry > throws a RangeError for an index outside the table']",
+    "2026-08-14T20:27:58Z plan amend: step 3 gains substitutionTableEntry.ts and two direct tests - noUncheckedIndexedAccess plus the repo's blanket no-non-null-assertion lint rule mean a raw SUBSTITUTION_TABLE[index] access types as number|undefined; a silent '?? 0' fallback would leave an uncoverable branch in the 100%-branch domain/ threshold AND would silently corrupt the derived secret if the index math were ever wrong, so the lookup is a small throwing helper instead, tested directly the same way normalizeToCodeUnits' own unreachable-from-the-form guard was in step 2",
+    "2026-08-14T20:43:51Z evidence recorded: evidence/steps/step3-red.txt (20f8667100c5) - Step 3 red: deriveSecret + substitutionTableEntry modules missing",
+    "2026-08-14T20:43:52Z step 3 -> red",
+    "2026-08-14T20:43:52Z step 3 -> green",
+    "2026-08-14T20:43:52Z step 3 -> done"
   ],
   "milestones": [
     {
@@ -881,6 +889,11 @@
       "sha": "895d8e521eeb",
       "recorded": "2026-08-14T20:22:58Z",
       "note": "Step 2 red: normalizeToCodeUnits module missing"
+    },
+    "evidence/steps/step3-red.txt": {
+      "sha": "20f8667100c5",
+      "recorded": "2026-08-14T20:43:51Z",
+      "note": "Step 3 red: deriveSecret + substitutionTableEntry modules missing"
     }
   },
   "test_file_hashes": {
@@ -901,6 +914,18 @@
       "step": 2,
       "recorded": "2026-08-14T20:22:58Z",
       "log_index": 151
+    },
+    "src/features/auth/domain/deriveSecret.test.ts": {
+      "sha": "80b263402f9f",
+      "step": 3,
+      "recorded": "2026-08-14T20:43:52Z",
+      "log_index": 157
+    },
+    "src/features/auth/domain/substitutionTableEntry.test.ts": {
+      "sha": "15d35d38d5cb",
+      "step": 3,
+      "recorded": "2026-08-14T20:43:52Z",
+      "log_index": 157
     }
   }
 }
