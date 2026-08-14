@@ -139,7 +139,7 @@ const FEATURE_DEEP_IMPORT_PATTERNS = [
 const SINKS_IMPORT_PATTERN = {
   group: ['@platform/observability/sinks/*', '**/observability/sinks/*'],
   message:
-    'Sinks are constructed only by createObservability.ts (platform/observability).',
+    'Sinks are constructed only by createSink.ts (platform/observability).',
 };
 
 export default defineConfig([

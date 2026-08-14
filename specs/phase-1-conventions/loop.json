@@ -7,7 +7,7 @@
   "phase": "review",
   "phase_entered": "2026-08-14T13:49:42Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T13:49:42Z",
+  "updated": "2026-08-14T14:01:08Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -47,9 +47,27 @@
       "note": "npm run verify green end-to-end (typecheck/lint/format/coverage/build/verify:build/size), evidence/verify-full.txt. Pure structural refactor - no new user-facing surface, no e2e delta; unit/component suite (283 tests, 68 files) and coverage (96.28%25 statements, 96.33%25 branches) are the relevant verification for a behavior-preserving file decomposition. Step 5's guarded-test hash drift was from the separately reviewed i18n-test-locale loop's merge, not this loop's work - logged as approved-change and rebased."
     },
     "G4": {
-      "status": "pending",
-      "attempts": 0,
-      "security_pass": null
+      "status": "passed",
+      "attempts": 1,
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "eslint.config.js SINKS_IMPORT_PATTERN message still names createObservability.ts as the file allowed to construct sinks; step 6 moved that override to createSink.ts, so the diagnostic text is stale",
+          "blocking": false,
+          "disposition": "fixed: eslint.config.js SINKS_IMPORT_PATTERN message now reads 'Sinks are constructed only by createSink.ts (platform/observability).' - verified lint still passes"
+        },
+        "Codex-1": {
+          "desc": "SINKS_IMPORT_PATTERN's eslint no-restricted-imports group glob does not catch a relative import (e.g. './sinks/createConsoleSink') from a sibling file already inside src/platform/observability/ - verified live with a probe file, exits 0. Pre-existing: the glob itself is unchanged by this diff (only its message string moved with the override); the bypass predates this refactor loop.",
+          "blocking": true,
+          "disposition": "accepted: pre-existing gap, verified unchanged by this diff (SINKS_IMPORT_PATTERN's group glob is byte-identical before/after - only its message string moved). User decided out of scope for this S-size behavior-preservation refactor loop; not fixed here."
+        },
+        "Codex-2": {
+          "desc": "eslint.config.js SINKS_IMPORT_PATTERN message named createObservability.ts instead of createSink.ts after step 6 moved the override - same gap Claude-1 already caught and fixed",
+          "blocking": false,
+          "disposition": "fixed: same fix as Claude-1 (identical finding from the second reviewer), already applied"
+        }
+      },
+      "note": "Dual review complete: Claude fresh-context (evidence/reviews/g4-claude-review.md, 1 non-blocking finding) + Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking). Claude-1/Codex-2 (stale eslint message) fixed. Codex-1 (relative-import bypass of the sink-construction ban) verified as a pre-existing gap unchanged by this diff's SINKS_IMPORT_PATTERN glob; user accepted it as out of scope for this S refactor loop."
     },
     "G5": {
       "status": "pending",
@@ -200,7 +218,16 @@
     "2026-08-14T13:49:23Z approved-change: src/app/routing/routes/NotFoundRoute.test.tsx - content changed by the separately reviewed and merged i18n-test-locale loop (buildTestRuntime defaults to Locale.Test, commit edee50f, PR #4), picked up when this branch was rebased onto main; not a change made in this loop, and G4 review already covered it in that loop's own dual review",
     "2026-08-14T13:49:29Z step 5 hash rebased (src/app/ApplicationRoot.test.tsx, src/app/layout/ApplicationLayout.test.tsx, src/app/error-boundary/RouteErrorBoundary.test.tsx, src/app/error-boundary/ErrorSurface.test.tsx, src/app/routing/routes/NotFoundRoute.test.tsx): approved-change logged for src/app/ApplicationRoot.test.tsx (i18n-test-locale loop, PR #4)",
     "2026-08-14T13:49:38Z G3 -> passed (npm run verify green end-to-end (typecheck/lint/format/coverage/build/verify:build/size), evidence/verify-full.txt. Pure structural refactor - no new user-facing surface, no e2e delta; unit/component suite (283 tests, 68 files) and coverage (96.28%25 statements, 96.33%25 branches) are the relevant verification for a behavior-preserving file decomposition. Step 5's guarded-test hash drift was from the separately reviewed i18n-test-locale loop's merge, not this loop's work - logged as approved-change and rebased.)",
-    "2026-08-14T13:49:42Z phase -> review (reason: verification complete, moving to dual review)"
+    "2026-08-14T13:49:42Z phase -> review (reason: verification complete, moving to dual review)",
+    "2026-08-14T13:53:49Z evidence recorded: evidence/reviews/g4-claude-review.md (3463855a1dd8) - G4 Claude fresh-context review: 1 finding, 0 blocking",
+    "2026-08-14T13:53:49Z G4 finding Claude-1 recorded: eslint.config.js SINKS_IMPORT_PATTERN message still names createObservability.ts as the file allowed to construct sinks; step 6 moved that override to createSink.ts, so the diagnostic text is stale",
+    "2026-08-14T13:59:27Z evidence recorded: evidence/reviews/g4-codex-review.md (b61eac7eac8b) - G4 Codex second opinion: 2 findings, 1 blocking (pre-existing sink-import lint bypass)",
+    "2026-08-14T13:59:27Z G4 finding Codex-1 recorded (blocking): SINKS_IMPORT_PATTERN's eslint no-restricted-imports group glob does not catch a relative import (e.g. './sinks/createConsoleSink') from a sibling file already inside src/platform/observability/ - verified live with a probe file, exits 0. Pre-existing: the glob itself is unchanged by this diff (only its message string moved with the override); the bypass predates this refactor loop.",
+    "2026-08-14T13:59:27Z G4 finding Codex-2 recorded: eslint.config.js SINKS_IMPORT_PATTERN message named createObservability.ts instead of createSink.ts after step 6 moved the override - same gap Claude-1 already caught and fixed",
+    "2026-08-14T13:59:33Z G4 finding Claude-1 dispositioned: fixed: eslint.config.js SINKS_IMPORT_PATTERN message now reads 'Sinks are constructed only by createSink.ts (platform/observability).' - verified lint still passes",
+    "2026-08-14T13:59:34Z G4 finding Codex-2 dispositioned: fixed: same fix as Claude-1 (identical finding from the second reviewer), already applied",
+    "2026-08-14T14:01:00Z G4 finding Codex-1 dispositioned: accepted: pre-existing gap, verified unchanged by this diff (SINKS_IMPORT_PATTERN's group glob is byte-identical before/after - only its message string moved). User decided out of scope for this S-size behavior-preservation refactor loop; not fixed here.",
+    "2026-08-14T14:01:08Z G4 -> passed (Dual review complete: Claude fresh-context (evidence/reviews/g4-claude-review.md, 1 non-blocking finding) + Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking). Claude-1/Codex-2 (stale eslint message) fixed. Codex-1 (relative-import bypass of the sink-construction ban) verified as a pre-existing gap unchanged by this diff's SINKS_IMPORT_PATTERN glob; user accepted it as out of scope for this S refactor loop.)"
   ],
   "test_file_hashes": {
     "src/shared/utils/bytesToHex.test.ts": {
@@ -377,6 +404,16 @@
       "sha": "229f273baf8a",
       "recorded": "2026-08-14T13:48:56Z",
       "note": "full npm run verify chain green: typecheck, lint, format:check, test:coverage (96.28%25 stmts), build, verify:build (15/15), size (112.92kB/150kB entry budget)"
+    },
+    "evidence/reviews/g4-claude-review.md": {
+      "sha": "3463855a1dd8",
+      "recorded": "2026-08-14T13:53:49Z",
+      "note": "G4 Claude fresh-context review: 1 finding, 0 blocking"
+    },
+    "evidence/reviews/g4-codex-review.md": {
+      "sha": "b61eac7eac8b",
+      "recorded": "2026-08-14T13:59:27Z",
+      "note": "G4 Codex second opinion: 2 findings, 1 blocking (pre-existing sink-import lint bypass)"
     }
   }
 }
