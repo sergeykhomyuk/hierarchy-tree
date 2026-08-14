@@ -77,13 +77,10 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=${{ steps.deployment.outputs.projectName }} --branch=main
-      - name: Assert the deployment reached production
+      - name: Record the deployment URL
         run: |
-          echo "Deployed to: ${{ steps.deploy.outputs.deployment-url }}" >> "$GITHUB_STEP_SUMMARY"
-          if [ "${{ steps.deploy.outputs.deployment-url }}" != "${{ steps.deployment.outputs.productionHostname }}" ]; then
-            echo "deployment-url (${{ steps.deploy.outputs.deployment-url }}) does not equal the recorded productionHostname (${{ steps.deployment.outputs.productionHostname }}) - the Pages project's production branch is likely not set to main"
-            exit 1
-          fi
+          echo "Deployed (this build's permanent URL): ${{ steps.deploy.outputs.deployment-url }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Production hostname (verified separately by e2e:deployed): ${{ steps.deployment.outputs.productionHostname }}" >> "$GITHUB_STEP_SUMMARY"
 
   live-smoke:
     if: github.event_name == 'workflow_dispatch'
