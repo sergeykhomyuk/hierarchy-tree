@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:56:52Z",
+  "updated": "2026-08-14T20:59:54Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 9
+      "steps_done": 10
     },
     "G3": {
       "status": "pending",
@@ -407,8 +407,8 @@
         "src/features/auth/session/clearSession.test.ts::clearSession > reports no session after a failed removal rather than the cleared record",
         "src/features/auth/session/sessionRecord.test.ts::the session record > holds a user id and a schema version and nothing else"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T20:59:54Z evidence/steps/step10-red.txt",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -857,7 +857,11 @@
     "2026-08-14T20:56:52Z step 9 -> red",
     "2026-08-14T20:56:52Z step 9 -> green",
     "2026-08-14T20:56:52Z step 9 -> done",
-    "2026-08-14T20:56:52Z step 9: sessionStorage bare-identifier ban (eslint.config.js no-restricted-globals) still fires on createTabStorage.ts, as expected - deferred to step 14's one-file override alongside the /secrets vocab narrowing. Tests, tsc clean; both createTabStorage.test.ts cases run under vitest's node project (src/platform/**/*.test.ts has no jsdom) by stubbing sessionStorage directly on globalThis rather than window."
+    "2026-08-14T20:56:52Z step 9: sessionStorage bare-identifier ban (eslint.config.js no-restricted-globals) still fires on createTabStorage.ts, as expected - deferred to step 14's one-file override alongside the /secrets vocab narrowing. Tests, tsc clean; both createTabStorage.test.ts cases run under vitest's node project (src/platform/**/*.test.ts has no jsdom) by stubbing sessionStorage directly on globalThis rather than window.",
+    "2026-08-14T20:59:54Z evidence recorded: evidence/steps/step10-red.txt (28ae3eb450cb) - Step 10 red: readSession/writeSession/clearSession missing (3 test files fail); sessionRecord.test.ts already passed since sessionRecord.ts (a type + constant, no behavior) was scaffolded earlier in the same edit pass as sessionRecordSchema/sessionStorageKey/sessionShadow",
+    "2026-08-14T20:59:54Z step 10 -> red",
+    "2026-08-14T20:59:54Z step 10 -> green",
+    "2026-08-14T20:59:54Z step 10 -> done"
   ],
   "milestones": [
     {
@@ -955,6 +959,11 @@
       "sha": "a05a1d7bfbd0",
       "recorded": "2026-08-14T20:56:51Z",
       "note": "Step 9 red: createTabStorage module missing"
+    },
+    "evidence/steps/step10-red.txt": {
+      "sha": "28ae3eb450cb",
+      "recorded": "2026-08-14T20:59:54Z",
+      "note": "Step 10 red: readSession/writeSession/clearSession missing (3 test files fail); sessionRecord.test.ts already passed since sessionRecord.ts (a type + constant, no behavior) was scaffolded earlier in the same edit pass as sessionRecordSchema/sessionStorageKey/sessionShadow"
     }
   },
   "test_file_hashes": {
@@ -1029,6 +1038,30 @@
       "step": 9,
       "recorded": "2026-08-14T20:56:52Z",
       "log_index": 186
+    },
+    "src/features/auth/session/readSession.test.ts": {
+      "sha": "f3638655cd34",
+      "step": 10,
+      "recorded": "2026-08-14T20:59:54Z",
+      "log_index": 191
+    },
+    "src/features/auth/session/writeSession.test.ts": {
+      "sha": "653715dea8c9",
+      "step": 10,
+      "recorded": "2026-08-14T20:59:54Z",
+      "log_index": 191
+    },
+    "src/features/auth/session/clearSession.test.ts": {
+      "sha": "4656f9af661c",
+      "step": 10,
+      "recorded": "2026-08-14T20:59:54Z",
+      "log_index": 191
+    },
+    "src/features/auth/session/sessionRecord.test.ts": {
+      "sha": "4cedec48754b",
+      "step": 10,
+      "recorded": "2026-08-14T20:59:54Z",
+      "log_index": 191
     }
   }
 }
