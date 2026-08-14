@@ -1,0 +1,420 @@
+{
+  "task": "phase-2-login",
+  "title": "Phase 2 - Login page: credential derivation, secret lookup, session, route guard, four states",
+  "type": "feature",
+  "size": "L",
+  "status": "active",
+  "phase": "validate",
+  "phase_entered": "2026-08-14T15:42:56Z",
+  "created": "2026-08-14",
+  "updated": "2026-08-14T20:10:22Z",
+  "security_review": true,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "L",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": null,
+    "evidence": "evidence/",
+    "product": "PRODUCT.md",
+    "tech": "TECH.md"
+  },
+  "gates": {
+    "G1": {
+      "status": "passed",
+      "attempts": 1,
+      "findings": {
+        "Claude-1": {
+          "desc": "PRODUCT invariant 7 states the OPPOSITE of what the brief's make32 does for non-BMP input: Array.from iterates code POINTS, so charCodeAt(0) keeps only each high surrogate and the returned array is SHORTER than 32, after which the loop reads undefined and undefined^x==x. TECH section 2's normalizeToCodeUnits returns 32 values always. The invariant-7 test would encode a false expectation as 'the brief's bytes' and go green on a derivation that does not match the original; the live proof cannot catch it because real credentials are ASCII.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-2": {
+          "desc": "PRODUCT invariant 84 promises the `from` value carries path, search AND hash, but React Router strips the hash before a loader sees the URL - createClientSideRequest builds request.url via stripHashFromPath (router.js:2604-2605, 2762-2767), so new URL(request.url).hash is always ''. TECH section 5.3's mechanism cannot satisfy the invariant, and the guard test only asserts /login?from=%2F, a path with no fragment.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-3": {
+          "desc": "TECH applies replace() unconditionally in requireSession, which destroys the referring history entry on an in-app link click and negates invariant 87. React Router defers history until redirects resolve and X-Remix-Replace forces REPLACE (router.js:981-999, 1024), so /login?from=... overwrites the entry the visitor came from. e2e/not-found.spec.ts:18-24 already performs exactly this PUSH. TECH's own e2e uses page.goto, a document load, where replace IS right - so the test passes while the in-app path is broken.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-4": {
+          "desc": "PRODUCT invariants 14 and 97 contradict each other and their two checks are irreconcilable. 14 says the users path is never requested during authentication, 'not a single user record', and the network log holds 'nothing else'; 97 fetches GET /users/<id>.json on landing. M2's check asserts exactly one API request with no path containing 'users'; M4's asserts one request to /users/<id>.json. M4 must turn M2's check red, and no milestone says it is rewritten.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-5": {
+          "desc": "Guarding / breaks six existing e2e specs (placeholder-routes, telemetry-buffer, accessibility, right-to-left, not-found, deployed-smoke), so M3's 'npm run e2e green' cannot hold. Worse, TECH's check for invariant 143 claims the placeholder is proven byte-unchanged BY those same tests passing untouched - and placeholder-routes.spec.ts is one of them. Invariant 137's 'not-found behaviour unchanged' is also false once its home link bounces a signed-out visitor.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-6": {
+          "desc": "M2's claimed verification cannot go green with only M1 delivered: M2 performs a real sign-in that writes the session, but the KeyValueStorage instance comes from createRuntime, whose tabStorage field TECH schedules in M3, and writeSession is deliberately off the barrel so app cannot reach it either. Corollary: M2's sign-in writes a sessionStorage entry that telemetry-buffer.spec.ts:44-50 asserts is absent.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-7": {
+          "desc": "Activating retry unmounts the alert containing the focused retry control, so focus falls to document.body - which invariant 110 forbids by name ('not on retry'). Invariant 44 has the same hole. TECH specifies no focus handoff; its own proposed check (activeElement !== body) would catch it, so the check is right and the design is missing.",
+          "blocking": true,
+          "disposition": "resolved: focus handoff to the busy Login control added to invariant 60, carved out in 110. The confirmation rated it PARTIAL because invariant 44 still said 'moves focus nowhere' without the exception; 44 now carries it explicitly, verified as item 7 in evidence/reviews/g1-residue-verification.md"
+        },
+        "Claude-8": {
+          "desc": "PRODUCT invariants 44 and 55 assume the user submitted from the Login control ('focus stays on the Login control where the user left it'), contradicting invariant 107, which makes Enter inside either field a submission path. An implementer reading 44 literally moves focus to the control on submit, which 55's 'without moving focus' forbids.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-9": {
+          "desc": "TECH section 3's /secrets narrowing does not exist in the shape it claims: FILE_ALLOWLIST maps a path to banned WORDS and is read only by checkExportedVocabulary, while the /secrets check is an unconditional literal-substring test in checkWholeScopeVocabulary (assert-domain-vocabulary.mjs:159-161) that never consults it. The narrowing needs a new mechanism, and M1's demonstrable-negative evidence depends on it.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-10": {
+          "desc": "The redirect import ban lives in TWO eslint blocks, and TECH narrows only the first. The second (eslint.config.js:572-593, files: src/features/*/**) carries the identical ban and wins for feature files in flat config - which is exactly where src/features/auth/guard/** lives. Narrowing only 556-569 leaves the guards failing lint.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-11": {
+          "desc": "Invariant 41's spinner and pressed-violet busy control have no mechanism: Button.tsx:41-52 renders only children (no spinner) and VARIANT_CLASS.primary paints primary, not primary-pressed, when not hovered; the kit exports no Spinner. This is a THIRD kit change invariant 141 requires be raised rather than slipped in, and TECH's map for 141 names only two.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-12": {
+          "desc": "Invariants 76 and 125's 'or any substring of them' is literally unsatisfiable - one character of a password is a substring of it, and a 32-hex correlation id contains substrings of a 64-hex secret. TECH's checks quietly test whole-value containment instead, and the genuine intent (catching a truncated secret prefix in a log line) is covered by nothing. Neither invariant is in the review-dependent list.",
+          "blocking": false,
+          "disposition": "resolved: duplicate of Codex-13, fixed once - invariants 76 and 125 restated as whole-value plus a twelve-character-window check, with the shorter-fragment residue disclosed as review-dependent. Confirmed in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-13": {
+          "desc": "Invariant 86's 'never painted, not even for a frame' is not decided by its proposed check - a domcontentloaded snapshot plus a later zero-count both sample discrete moments and a one-frame paint between them is invisible to both. The real guarantee is the structural argument in TECH 5.3, which is a review claim; 86 appears in neither review-dependent list, so that list is not complete as the section claims.",
+          "blocking": false,
+          "disposition": "resolved: duplicate of Codex-19, fixed once - the no-flash check became a page.addInitScript MutationObserver installed before navigation, and invariant 86 moved to the partially-review-dependent list. Confirmed in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-14": {
+          "desc": "The header is a data surface with only skeleton/data/neutral, deviating from ARCHITECTURE.md's 'four states everywhere data is involved' without a decision-log entry. Invariant 29 argues the login page's exemption explicitly (it loads no data); the header DOES load data, so that reasoning does not carry, and this third deviation is neither recorded nor argued.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-15": {
+          "desc": "TECH specifies Skeleton for the failed-name avatar, but Skeleton.tsx:39 hard-codes animate-pulse and line 38 sets aria-hidden - so the terminal failure state renders a permanently pulsing circle that says 'still loading' forever and is absent from the accessibility tree. Invariant 99 asks for a placeholder shape, not a loading indicator.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-16": {
+          "desc": "Component tests of the success path have no router: renderRoute.tsx:73-81 renders ApplicationRoot with no RouterProvider or MemoryRouter, and TECH's only stated change adds a fake tabStorage and store. But the success path calls navigate(), and TECH specifies invariants 65, 66 and 130 as COMPONENT tests that reach it - useNavigate throws outside a router.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-17": {
+          "desc": "M3 and M4 overlap despite the plan claiming strict sequence: M3 delivers the authenticated layout route 'and its lazy loader', but TECH 5.2 says authenticatedLoader ships with AuthenticatedLayout (M4) and section 6 says it calls store.read (M4's createSignedInUserStore), while section 5.1 says createRuntime gains tabStorage AND signedInUserStore in one change and M3's list names only tabStorage.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-18": {
+          "desc": "No catalogue key exists for the correlation-id label the service-problem alert renders. Invariant 58 requires the id on screen and invariant 116 requires every user-visible string to come from a catalogue, but TECH's enumerated auth.json keys have no label for it - and vitest.setup.ts's empty-missingKeyReports assertion turns the omission into a test failure rather than a design conversation.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Claude-19": {
+          "desc": "Invariant 22's proposed check ('an empty spy sink') is contradicted by the http client's own cancellation path: createHttpClient.ts:104-118 emits a debug log and a timing record with outcome 'cancelled' before returning, both of which reach the sink. The sink holds exactly those two, which is CORRECT under invariants 22 and 124 - the check, not the behaviour, is wrong.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md"
+        },
+        "Codex-1": {
+          "desc": "[converges with Claude-1] The specified non-BMP derivation differs from the brief's JavaScript. docs/task.md:40-44 vs PRODUCT.md:29-35, TECH.md:364-376. Codex recomputed for an astral character: 16 original units and secret C8...C869...69, versus the specs' 32 alternating units and C869...C869 - plausible secrets silently differ.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-2": {
+          "desc": "TECH incorrectly claims the lookup inherits retry-on-timeout. createHttpClient.ts:103-133 returns 'timeout' immediately on a deadline abort, BEFORE shouldRetry is reached. Changing that modifies the http client despite invariant 141; leaving it contradicts the retry contract PRODUCT invariant 20 states.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-3": {
+          "desc": "Returning the header promise directly from a loader BLOCKS navigation instead of enabling Suspense: router.js:2441-2446 awaits the loader's result, so a bare store.read() promise settles before rendering and the name skeleton and non-blocking page of invariants 99-100 never appear. The promise must be wrapped inside a synchronously returned object.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-4": {
+          "desc": "[converges with the TECH risk] The proposed in-action ref does not suppress queued useActionState submissions: react-dom-client.development.js:8362-8367, 8434-8446 queues the second action and starts it only after the first succeeds - by which time the first action's finally has cleared the ref, so the queued action derives and requests again.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-5": {
+          "desc": "The in-memory session shadow does not override stale VALID storage. readSession consults storage first and uses the shadow only when storage returns nothing, so a failed write over an older valid record authenticates the OLD user, and a failed removal can redirect a just-signed-out user back inside.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-6": {
+          "desc": "Controlled credential state contradicts the credential-lifetime invariants: useState necessarily copies the password outside the field and keeps it after submission, while invariants 12 and 131 say it exists only as the field's value and is never copied into anything longer-lived. The proposed result-union test cannot observe that copy.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-7": {
+          "desc": "Invariant 49 ('the URL stays /login when a submission succeeds') contradicts invariants 66-70, which navigate away on success. TECH silently implements the latter.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-8": {
+          "desc": "The service-problem alert's placement conflicts with the required tab order: an alert rendered between the heading and the email field puts its retry button BEFORE both fields, while invariant 105 requires email, password, Login, then alert controls. No DOM structure is specified that satisfies both.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-9": {
+          "desc": "[converges with Claude-7] Retrying removes the focused retry button with no focus handoff, returning focus to body, contrary to invariant 110.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-10": {
+          "desc": "ARCHITECTURE.md still contains BOTH conflicts PRODUCT claims were amended: line 61 still requires a field-level error and lines 133-136 still say secrets never enter URLs, and its decision log ends without the promised phase-2 entries. Implementation currently has two incompatible binding contracts.",
+          "blocking": true,
+          "disposition": "resolved: specs/ARCHITECTURE.md amended by the driving session - the runtime flow now reads 'null -> summary alert', the security posture separates the password from the derived secret, and nine phase-2 decision-log entries landed. Verified as item 2 in evidence/reviews/g1-residue-verification.md"
+        },
+        "Codex-11": {
+          "desc": "[converges with Claude-9] The proposed /secrets FILE_ALLOWLIST cannot affect the literal ban: FILE_ALLOWLIST is consulted only for exported vocabulary while the check at assert-domain-vocabulary.mjs:159-161 is unconditional.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-12": {
+          "desc": "PATH TRAVERSAL: arbitrary string user ids are interpolated into a URL path without encoding. The accepted id '../secrets' resolves /users/../secrets.json to /secrets.json; '/', '?', '#' and backslashes similarly alter the resource - so a malformed secret response or a tampered session record can make the app fetch an unintended path.",
+          "blocking": true,
+          "disposition": "resolved: user ids percent-encoded into the path AND restricted to A-Za-z0-9_- at the parse boundary, per the user's decision. Rated PARTIAL when PRODUCT's settled answer and TECH's file layout still described the permissive union; both now match invariant 18a, verified as item 1 in evidence/reviews/g1-residue-verification.md"
+        },
+        "Codex-13": {
+          "desc": "[converges with Claude-12] The literal 'no substring' privacy invariants are impossible and the tests weaken them silently: a one-character password overlaps ordinary JSON such as the schema version, while the tests check only complete credential strings and would pass if a prefix leaked.",
+          "blocking": true,
+          "disposition": "resolved: the impossible 'any substring' claim in invariants 76 and 125 replaced by whole-value plus a twelve-character-window check. Confirmed by the raiser's own Codex thread"
+        },
+        "Codex-14": {
+          "desc": "Email trimming is an UNRECORDED change to the original derivation: the brief passes email directly to make32. Trimming inside deriveSecret changes the bytes for any stored address with boundary whitespace, and the live account proof is unlikely to discriminate it.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-15": {
+          "desc": "[converges with the TECH risk] withSessionGuard directly violates invariant 146: TECH explicitly builds an abstraction whose only caller is phase 3, which 146 explicitly forbids.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-16": {
+          "desc": "The bfcache mitigation cannot establish invariant 103's no-render guarantee: pageshow revalidation happens AFTER a cached document is restored, so stale authenticated DOM may be visible before the redirect, and TECH admits the behaviour is untested.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-17": {
+          "desc": "Back/Forward behaviour across login states is neither specified nor browser-tested: the tests cover component unmount and reload, but not Back during a held request or Forward restoring the ready/no-match/service-problem states, where bfcache can preserve field values or a frozen request without running React cleanup.",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-18": {
+          "desc": "Nothing proves the production header can EVER resolve a real name: every successful header check uses mocked records and the live suite proves only the credential-to-secret lookup, so the implementation could pass every gate and still always show the neutral fallback against the real schema (docs/reference.md:13 records the users field names as unconfirmed).",
+          "blocking": true,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-19": {
+          "desc": "[converges with Claude-13] The proposed no-flash assertion cannot observe a transient paint; a preinstalled mutation observer or a trace is needed.",
+          "blocking": true,
+          "disposition": "resolved: the no-flash assertion replaced by a MutationObserver installed through page.addInitScript before navigation. Confirmed by the raiser's own Codex thread"
+        },
+        "Codex-20": {
+          "desc": "Two-tab behaviour is incorrectly classified as review-only: independent tabs, opener-created duplicated tabs and one-tab logout are all observable in Playwright, so the review-dependent list is not honest or complete.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-21": {
+          "desc": "Invariant 43's proposed test proves one REQUEST but not one DERIVATION: counting transport calls passes even if the derivation runs twice and a downstream guard suppresses the second request.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-22": {
+          "desc": "The invariant 113 test map omits the stated end-to-end keyboard login flow: the mapped check starts at the authenticated page body and exercises logout, without typing credentials, submitting with Enter, or verifying the outcome without a pointer.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-23": {
+          "desc": "TECH's invariant-87 citation is wrong: PRODUCT invariant 87 is about the guard redirect replacing history and says nothing about UI-kit state inventory coverage.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-24": {
+          "desc": "TECH misquotes the Button source comment (TECH.md:114-118 vs Button.tsx:27-39): the actual comment says busy handling skips the caller and native submit; it does not name phase 2 or login as the first caller.",
+          "blocking": false,
+          "disposition": "resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md"
+        },
+        "Codex-25": {
+          "desc": "VERIFICATION.md:83-86 still states the obsolete 100 kB entry budget, which ARCHITECTURE.md:173-174 and .size-limit.json:2-7 revised to 150 kB. TECH plans against 150 kB correctly, but a reviewer following the binding verification profile gets a contradictory limit.",
+          "blocking": false,
+          "disposition": "resolved: VERIFICATION.md's obsolete 100 kB entry budget corrected to 150 kB by the driving session, naming .size-limit.json as the authority. The edit-pass agent initially recorded this as REJECTED because it read the file after that fix had already landed; the finding was valid when raised"
+        }
+      },
+      "note": "44 findings: 44 resolved, 0 rejected; reviews: evidence/reviews/g1-grill-claude.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-grill-claude-confirmation.md, evidence/reviews/g1-codex-confirmation.md, evidence/reviews/g1-residue-verification.md. Two independent reviewers (adversarial grill + Codex fresh thread) raised 19 and 25 findings, 7 and 19 blocking; they converged on six defects including the one that mattered most - the derivation was specified backwards, because the brief's Array.from iterates code points and the spec assumed 32 UTF-16 code units, which would have shipped a silently wrong secret no ASCII test could catch. Raiser confirmation returned 18/19 and 23/25 CONFIRMED; the 3 partials plus 9 edit-pass regressions were fixed and 10/11 verified in a narrow pass. Two wording fixes made after that pass are recorded in the residue-verification file's own follow-up section and are not reviewer-verified. specs/ARCHITECTURE.md amended: the runtime flow's field-level error, the secrets-never-enter-URLs claim, and 9 new decision-log entries. User signed off 2026-08-14.",
+      "user_signoff": "2026-08-14T20:10:22Z"
+    },
+    "G2": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G3": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G4": {
+      "status": "pending",
+      "attempts": 0,
+      "security_pass": null
+    },
+    "G5": {
+      "status": "pending",
+      "attempts": 0
+    }
+  },
+  "retro": null,
+  "plan_steps": [],
+  "log": [
+    "2026-08-14T14:23:30Z init: type=feature size=L flags=[security ]",
+    "2026-08-14T14:23:37Z triage: feature/L/security_review confirmed by user. L because the change spans app (router guard, session provider), a new features/auth slice end to end, and platform touchpoints, with >1k LOC expected including tests; security flag because the change handles credentials, a derived secret, and session storage. design=false: mockup screens 1a-1d already exist in specs/hierarchy-tree-mockups.html and docs/mockups/login-page.png, so there is no visual ambiguity to resolve. Concurrency: 'loop list' shows no active/blocked/paused loops (phase-1-setup, phase-1-conventions, i18n-test-locale all done), so no sequencing link needed.",
+    "2026-08-14T14:23:46Z phase -> frame",
+    "2026-08-14T14:39:04Z frame: user answered 4 product questions. (1) Error state renders mockup 1d's summary alert only - both fields marked aria-invalid + danger border, NO field-level 'Incorrect password' line, because the derivation collapses email and password into one secret and a null lookup cannot attribute the failure to either field; the deviation from mockup 1d gets an ARCHITECTURE.md decision-log entry. (2) Email is trimmed of leading/trailing whitespace only, then derived exactly as typed - no lowercasing, which would break any stored address carrying an uppercase letter. (3) A transport failure (network, timeout, 5xx) renders its own alert with a retry affordance and the correlation id, distinct from the no-match alert, and is logged as an error - a fifth visual state beyond the mockups' four. (4) Live proof of the derivation runs locally through a checked-in live-smoke test once the user adds Bash allow rules; this session's classifier blocks outbound network calls from Bash.",
+    "2026-08-14T14:41:06Z frame round 2: (5) The Login button is DISABLED until both fields are non-empty (user overrode the always-enabled recommendation), so mockup 1a's muted button is literal; the spec must then cover how a keyboard user learns why it is inert. (6) A request for /login while a session exists redirects to the 'from' target or '/' from the loader, before the form renders. (7) SCOPE WIDENED by the user: sign-out ships in this loop, not phase 3 - the application header carrying the signed-in user's name plus a logout link, and the guarantee that the back button cannot return to an authenticated view after signing out. ROADMAP.md phase 2/3 outcomes and its progress log need editing to match, and the header needs a way to resolve the session's user id to a display name, which the phase-1 architecture (session holds id + schema version only) does not yet answer - routed to the user during Specify.",
+    "2026-08-14T14:42:14Z phase -> specify",
+    "2026-08-14T15:15:01Z set product = PRODUCT.md",
+    "2026-08-14T15:15:02Z specify: PRODUCT.md drafted by a fresh spec-writer subagent (146 numbered invariants across 15 groups), then reviewed and amended in the driving session. All 7 of its open questions are now closed: (1)+(2) the header resolves the signed-in user's name by fetching that ONE user record after authentication succeeds, keeping only the name fields and discarding the record's password at the parse boundary, held in memory for the page's lifetime and never persisted - user's choice over widening the session record or fetching the whole users collection; skeleton while resolving, neutral catalogue-drawn presentation if it fails. (3)+(4) both ARCHITECTURE.md contradictions (the 'field-level error' in the runtime flow, the 'secrets never enter URLs' claim) get a decision-log entry in this loop. (5) ROADMAP.md gets the fifth state and the sign-out scope move. (6) a user id is accepted as either a non-empty string or a finite integer, which removes the need to know which the backend serves. (7) the live proof reads a real account's credentials out of the public payload at run time, so nothing credential-shaped is committed. Separately, the user OVERRODE the spec writer on the Login control: it is a plain disabled attribute, not focusable-but-inert, and invariant 36 now records the accessibility cost as a weighed trade-off rather than leaving it implicit.",
+    "2026-08-14T15:42:56Z set tech = TECH.md",
+    "2026-08-14T15:42:56Z phase -> validate",
+    "2026-08-14T15:42:56Z specify: TECH.md written by a fresh spec-writer that read the code first - 1417 lines, path:line grounded, 4 sequential milestones (M1 pieces below React, M2 the login card, M3 the guard and router, M4 the header and sign-out), worktree fan-out rejected because all four milestones edit the same four files where a bad merge fails silently. It raises 11 concerns, four of which engage invariant 141 (consume phase-1 surfaces as they are): redact.ts cannot scrub the secret out of the recorded resource path without a new path-segment rule; shared/ui/Input lacks readOnly and placeholder; three phase-1 guards (the sessionStorage ban, the redirect import ban, the /secrets literal ban) must be narrowed rather than removed; and e2e/telemetry-buffer.spec.ts's pattern assertion becomes wrong rather than merely insufficient once the path reads /secrets/[redacted].json. Also flagged: React Router runs matched loaders in parallel so invariant 85 needs a withSessionGuard seam with no phase-2 caller (against invariant 146), invariant 103's bfcache clause is not reproducible in Playwright, and useActionState queues a second dispatch so invariant 43 needs an explicit in-flight guard.",
+    "2026-08-14T16:32:59Z G1 finding Claude-1 recorded (blocking): PRODUCT invariant 7 states the OPPOSITE of what the brief's make32 does for non-BMP input: Array.from iterates code POINTS, so charCodeAt(0) keeps only each high surrogate and the returned array is SHORTER than 32, after which the loop reads undefined and undefined^x==x. TECH section 2's normalizeToCodeUnits returns 32 values always. The invariant-7 test would encode a false expectation as 'the brief's bytes' and go green on a derivation that does not match the original; the live proof cannot catch it because real credentials are ASCII.",
+    "2026-08-14T16:32:59Z G1 finding Claude-2 recorded (blocking): PRODUCT invariant 84 promises the `from` value carries path, search AND hash, but React Router strips the hash before a loader sees the URL - createClientSideRequest builds request.url via stripHashFromPath (router.js:2604-2605, 2762-2767), so new URL(request.url).hash is always ''. TECH section 5.3's mechanism cannot satisfy the invariant, and the guard test only asserts /login?from=%2F, a path with no fragment.",
+    "2026-08-14T16:32:59Z G1 finding Claude-3 recorded (blocking): TECH applies replace() unconditionally in requireSession, which destroys the referring history entry on an in-app link click and negates invariant 87. React Router defers history until redirects resolve and X-Remix-Replace forces REPLACE (router.js:981-999, 1024), so /login?from=... overwrites the entry the visitor came from. e2e/not-found.spec.ts:18-24 already performs exactly this PUSH. TECH's own e2e uses page.goto, a document load, where replace IS right - so the test passes while the in-app path is broken.",
+    "2026-08-14T16:32:59Z G1 finding Claude-4 recorded (blocking): PRODUCT invariants 14 and 97 contradict each other and their two checks are irreconcilable. 14 says the users path is never requested during authentication, 'not a single user record', and the network log holds 'nothing else'; 97 fetches GET /users/<id>.json on landing. M2's check asserts exactly one API request with no path containing 'users'; M4's asserts one request to /users/<id>.json. M4 must turn M2's check red, and no milestone says it is rewritten.",
+    "2026-08-14T16:32:59Z G1 finding Claude-5 recorded (blocking): Guarding / breaks six existing e2e specs (placeholder-routes, telemetry-buffer, accessibility, right-to-left, not-found, deployed-smoke), so M3's 'npm run e2e green' cannot hold. Worse, TECH's check for invariant 143 claims the placeholder is proven byte-unchanged BY those same tests passing untouched - and placeholder-routes.spec.ts is one of them. Invariant 137's 'not-found behaviour unchanged' is also false once its home link bounces a signed-out visitor.",
+    "2026-08-14T16:32:59Z G1 finding Claude-6 recorded (blocking): M2's claimed verification cannot go green with only M1 delivered: M2 performs a real sign-in that writes the session, but the KeyValueStorage instance comes from createRuntime, whose tabStorage field TECH schedules in M3, and writeSession is deliberately off the barrel so app cannot reach it either. Corollary: M2's sign-in writes a sessionStorage entry that telemetry-buffer.spec.ts:44-50 asserts is absent.",
+    "2026-08-14T16:33:00Z G1 finding Claude-7 recorded (blocking): Activating retry unmounts the alert containing the focused retry control, so focus falls to document.body - which invariant 110 forbids by name ('not on retry'). Invariant 44 has the same hole. TECH specifies no focus handoff; its own proposed check (activeElement !== body) would catch it, so the check is right and the design is missing.",
+    "2026-08-14T16:33:00Z G1 finding Claude-8 recorded: PRODUCT invariants 44 and 55 assume the user submitted from the Login control ('focus stays on the Login control where the user left it'), contradicting invariant 107, which makes Enter inside either field a submission path. An implementer reading 44 literally moves focus to the control on submit, which 55's 'without moving focus' forbids.",
+    "2026-08-14T16:33:00Z G1 finding Claude-9 recorded: TECH section 3's /secrets narrowing does not exist in the shape it claims: FILE_ALLOWLIST maps a path to banned WORDS and is read only by checkExportedVocabulary, while the /secrets check is an unconditional literal-substring test in checkWholeScopeVocabulary (assert-domain-vocabulary.mjs:159-161) that never consults it. The narrowing needs a new mechanism, and M1's demonstrable-negative evidence depends on it.",
+    "2026-08-14T16:33:00Z G1 finding Claude-10 recorded: The redirect import ban lives in TWO eslint blocks, and TECH narrows only the first. The second (eslint.config.js:572-593, files: src/features/*/**) carries the identical ban and wins for feature files in flat config - which is exactly where src/features/auth/guard/** lives. Narrowing only 556-569 leaves the guards failing lint.",
+    "2026-08-14T16:33:00Z G1 finding Claude-11 recorded: Invariant 41's spinner and pressed-violet busy control have no mechanism: Button.tsx:41-52 renders only children (no spinner) and VARIANT_CLASS.primary paints primary, not primary-pressed, when not hovered; the kit exports no Spinner. This is a THIRD kit change invariant 141 requires be raised rather than slipped in, and TECH's map for 141 names only two.",
+    "2026-08-14T16:33:00Z G1 finding Claude-12 recorded: Invariants 76 and 125's 'or any substring of them' is literally unsatisfiable - one character of a password is a substring of it, and a 32-hex correlation id contains substrings of a 64-hex secret. TECH's checks quietly test whole-value containment instead, and the genuine intent (catching a truncated secret prefix in a log line) is covered by nothing. Neither invariant is in the review-dependent list.",
+    "2026-08-14T16:33:00Z G1 finding Claude-13 recorded: Invariant 86's 'never painted, not even for a frame' is not decided by its proposed check - a domcontentloaded snapshot plus a later zero-count both sample discrete moments and a one-frame paint between them is invisible to both. The real guarantee is the structural argument in TECH 5.3, which is a review claim; 86 appears in neither review-dependent list, so that list is not complete as the section claims.",
+    "2026-08-14T16:33:00Z G1 finding Claude-14 recorded: The header is a data surface with only skeleton/data/neutral, deviating from ARCHITECTURE.md's 'four states everywhere data is involved' without a decision-log entry. Invariant 29 argues the login page's exemption explicitly (it loads no data); the header DOES load data, so that reasoning does not carry, and this third deviation is neither recorded nor argued.",
+    "2026-08-14T16:33:00Z G1 finding Claude-15 recorded: TECH specifies Skeleton for the failed-name avatar, but Skeleton.tsx:39 hard-codes animate-pulse and line 38 sets aria-hidden - so the terminal failure state renders a permanently pulsing circle that says 'still loading' forever and is absent from the accessibility tree. Invariant 99 asks for a placeholder shape, not a loading indicator.",
+    "2026-08-14T16:33:00Z G1 finding Claude-16 recorded: Component tests of the success path have no router: renderRoute.tsx:73-81 renders ApplicationRoot with no RouterProvider or MemoryRouter, and TECH's only stated change adds a fake tabStorage and store. But the success path calls navigate(), and TECH specifies invariants 65, 66 and 130 as COMPONENT tests that reach it - useNavigate throws outside a router.",
+    "2026-08-14T16:33:00Z G1 finding Claude-17 recorded: M3 and M4 overlap despite the plan claiming strict sequence: M3 delivers the authenticated layout route 'and its lazy loader', but TECH 5.2 says authenticatedLoader ships with AuthenticatedLayout (M4) and section 6 says it calls store.read (M4's createSignedInUserStore), while section 5.1 says createRuntime gains tabStorage AND signedInUserStore in one change and M3's list names only tabStorage.",
+    "2026-08-14T16:33:00Z G1 finding Claude-18 recorded: No catalogue key exists for the correlation-id label the service-problem alert renders. Invariant 58 requires the id on screen and invariant 116 requires every user-visible string to come from a catalogue, but TECH's enumerated auth.json keys have no label for it - and vitest.setup.ts's empty-missingKeyReports assertion turns the omission into a test failure rather than a design conversation.",
+    "2026-08-14T16:33:01Z G1 finding Claude-19 recorded: Invariant 22's proposed check ('an empty spy sink') is contradicted by the http client's own cancellation path: createHttpClient.ts:104-118 emits a debug log and a timing record with outcome 'cancelled' before returning, both of which reach the sink. The sink holds exactly those two, which is CORRECT under invariants 22 and 124 - the check, not the behaviour, is wrong.",
+    "2026-08-14T16:33:01Z G1 finding Codex-1 recorded (blocking): [converges with Claude-1] The specified non-BMP derivation differs from the brief's JavaScript. docs/task.md:40-44 vs PRODUCT.md:29-35, TECH.md:364-376. Codex recomputed for an astral character: 16 original units and secret C8...C869...69, versus the specs' 32 alternating units and C869...C869 - plausible secrets silently differ.",
+    "2026-08-14T16:33:01Z G1 finding Codex-2 recorded (blocking): TECH incorrectly claims the lookup inherits retry-on-timeout. createHttpClient.ts:103-133 returns 'timeout' immediately on a deadline abort, BEFORE shouldRetry is reached. Changing that modifies the http client despite invariant 141; leaving it contradicts the retry contract PRODUCT invariant 20 states.",
+    "2026-08-14T16:33:01Z G1 finding Codex-3 recorded (blocking): Returning the header promise directly from a loader BLOCKS navigation instead of enabling Suspense: router.js:2441-2446 awaits the loader's result, so a bare store.read() promise settles before rendering and the name skeleton and non-blocking page of invariants 99-100 never appear. The promise must be wrapped inside a synchronously returned object.",
+    "2026-08-14T16:33:01Z G1 finding Codex-4 recorded (blocking): [converges with the TECH risk] The proposed in-action ref does not suppress queued useActionState submissions: react-dom-client.development.js:8362-8367, 8434-8446 queues the second action and starts it only after the first succeeds - by which time the first action's finally has cleared the ref, so the queued action derives and requests again.",
+    "2026-08-14T16:33:01Z G1 finding Codex-5 recorded (blocking): The in-memory session shadow does not override stale VALID storage. readSession consults storage first and uses the shadow only when storage returns nothing, so a failed write over an older valid record authenticates the OLD user, and a failed removal can redirect a just-signed-out user back inside.",
+    "2026-08-14T16:33:01Z G1 finding Codex-6 recorded (blocking): Controlled credential state contradicts the credential-lifetime invariants: useState necessarily copies the password outside the field and keeps it after submission, while invariants 12 and 131 say it exists only as the field's value and is never copied into anything longer-lived. The proposed result-union test cannot observe that copy.",
+    "2026-08-14T16:33:01Z G1 finding Codex-7 recorded (blocking): Invariant 49 ('the URL stays /login when a submission succeeds') contradicts invariants 66-70, which navigate away on success. TECH silently implements the latter.",
+    "2026-08-14T16:33:01Z G1 finding Codex-8 recorded (blocking): The service-problem alert's placement conflicts with the required tab order: an alert rendered between the heading and the email field puts its retry button BEFORE both fields, while invariant 105 requires email, password, Login, then alert controls. No DOM structure is specified that satisfies both.",
+    "2026-08-14T16:33:01Z G1 finding Codex-9 recorded (blocking): [converges with Claude-7] Retrying removes the focused retry button with no focus handoff, returning focus to body, contrary to invariant 110.",
+    "2026-08-14T16:33:01Z G1 finding Codex-10 recorded (blocking): ARCHITECTURE.md still contains BOTH conflicts PRODUCT claims were amended: line 61 still requires a field-level error and lines 133-136 still say secrets never enter URLs, and its decision log ends without the promised phase-2 entries. Implementation currently has two incompatible binding contracts.",
+    "2026-08-14T16:33:02Z G1 finding Codex-11 recorded (blocking): [converges with Claude-9] The proposed /secrets FILE_ALLOWLIST cannot affect the literal ban: FILE_ALLOWLIST is consulted only for exported vocabulary while the check at assert-domain-vocabulary.mjs:159-161 is unconditional.",
+    "2026-08-14T16:33:02Z G1 finding Codex-12 recorded (blocking): PATH TRAVERSAL: arbitrary string user ids are interpolated into a URL path without encoding. The accepted id '../secrets' resolves /users/../secrets.json to /secrets.json; '/', '?', '#' and backslashes similarly alter the resource - so a malformed secret response or a tampered session record can make the app fetch an unintended path.",
+    "2026-08-14T16:33:02Z G1 finding Codex-13 recorded (blocking): [converges with Claude-12] The literal 'no substring' privacy invariants are impossible and the tests weaken them silently: a one-character password overlaps ordinary JSON such as the schema version, while the tests check only complete credential strings and would pass if a prefix leaked.",
+    "2026-08-14T16:33:02Z G1 finding Codex-14 recorded (blocking): Email trimming is an UNRECORDED change to the original derivation: the brief passes email directly to make32. Trimming inside deriveSecret changes the bytes for any stored address with boundary whitespace, and the live account proof is unlikely to discriminate it.",
+    "2026-08-14T16:33:02Z G1 finding Codex-15 recorded (blocking): [converges with the TECH risk] withSessionGuard directly violates invariant 146: TECH explicitly builds an abstraction whose only caller is phase 3, which 146 explicitly forbids.",
+    "2026-08-14T16:33:02Z G1 finding Codex-16 recorded (blocking): The bfcache mitigation cannot establish invariant 103's no-render guarantee: pageshow revalidation happens AFTER a cached document is restored, so stale authenticated DOM may be visible before the redirect, and TECH admits the behaviour is untested.",
+    "2026-08-14T16:33:02Z G1 finding Codex-17 recorded (blocking): Back/Forward behaviour across login states is neither specified nor browser-tested: the tests cover component unmount and reload, but not Back during a held request or Forward restoring the ready/no-match/service-problem states, where bfcache can preserve field values or a frozen request without running React cleanup.",
+    "2026-08-14T16:33:02Z G1 finding Codex-18 recorded (blocking): Nothing proves the production header can EVER resolve a real name: every successful header check uses mocked records and the live suite proves only the credential-to-secret lookup, so the implementation could pass every gate and still always show the neutral fallback against the real schema (docs/reference.md:13 records the users field names as unconfirmed).",
+    "2026-08-14T16:33:02Z G1 finding Codex-19 recorded (blocking): [converges with Claude-13] The proposed no-flash assertion cannot observe a transient paint; a preinstalled mutation observer or a trace is needed.",
+    "2026-08-14T16:33:02Z G1 finding Codex-20 recorded: Two-tab behaviour is incorrectly classified as review-only: independent tabs, opener-created duplicated tabs and one-tab logout are all observable in Playwright, so the review-dependent list is not honest or complete.",
+    "2026-08-14T16:33:02Z G1 finding Codex-21 recorded: Invariant 43's proposed test proves one REQUEST but not one DERIVATION: counting transport calls passes even if the derivation runs twice and a downstream guard suppresses the second request.",
+    "2026-08-14T16:33:02Z G1 finding Codex-22 recorded: The invariant 113 test map omits the stated end-to-end keyboard login flow: the mapped check starts at the authenticated page body and exercises logout, without typing credentials, submitting with Enter, or verifying the outcome without a pointer.",
+    "2026-08-14T16:33:03Z G1 finding Codex-23 recorded: TECH's invariant-87 citation is wrong: PRODUCT invariant 87 is about the guard redirect replacing history and says nothing about UI-kit state inventory coverage.",
+    "2026-08-14T16:33:03Z G1 finding Codex-24 recorded: TECH misquotes the Button source comment (TECH.md:114-118 vs Button.tsx:27-39): the actual comment says busy handling skips the caller and native submit; it does not name phase 2 or login as the first caller.",
+    "2026-08-14T16:33:03Z G1 finding Codex-25 recorded: VERIFICATION.md:83-86 still states the obsolete 100 kB entry budget, which ARCHITECTURE.md:173-174 and .size-limit.json:2-7 revised to 150 kB. TECH plans against 150 kB correctly, but a reviewer following the binding verification profile gets a contradictory limit.",
+    "2026-08-14T16:33:12Z evidence recorded: evidence/reviews/g1-grill-claude.md (0aa1f4a5307e) - G1 adversarial grill, fresh-context loop-spec-validator, 19 findings (7 blocking)",
+    "2026-08-14T16:33:12Z evidence recorded: evidence/reviews/g1-codex-review.md (1f97fdc52c22) - G1 Codex second opinion, fresh thread, 25 findings (19 blocking), recovered verbatim from the codex session transcript after the forwarding subagent died on a spend limit",
+    "2026-08-14T16:33:12Z G1: both reviews in. Grill = 19 findings (7 blocking); Codex = 25 findings (19 blocking). The Claude-side forwarder for Codex was killed by an account spend limit, but the Codex run itself completed - its final message was recovered verbatim from ~/.codex/sessions/2026/08/14/rollout-2026-08-14T16-44-34-*.jsonl and saved to evidence/reviews/g1-codex-review.md, so this is a genuine two-reviewer G1, not a single-reviewer fallback. The reviewers converge independently on six defects (the non-BMP derivation divergence, the /secrets allow-list that cannot work, the no-flash assertion that cannot observe a transient paint, the unsatisfiable 'any substring' invariants, the retry focus handoff, and the useActionState queue). Codex additionally found a path traversal - an arbitrary string user id interpolated into /users/<id>.json unencoded, where '../secrets' resolves to /secrets.json.",
+    "2026-08-14T16:37:55Z G1 user decisions on the four questions the findings forced: (1) the derivation is ported BYTE-EXACT including the brief's code-point iteration, its short array for astral input and the resulting undefined-XOR tail - fidelity to whatever secrets the real database was built with outranks defensible Unicode handling - while the email trim stays as a knowing pre-processing deviation outside the algorithm. (2) A user id is percent-encoded into the path AND restricted to a conservative charset at the parse boundary, so Codex-12's '../secrets' traversal is closed at both ends rather than one. (3) Invariants 12 and 131 are relaxed to the honest boundary - the password lives in the field and in the page's component state while mounted, and reaches no storage, URL, log, telemetry or DOM text - rather than keeping a literal claim that controlled inputs make false. (4) Both approved: the Button gains busy-spinner support as a third additive kit change under invariant 141, and withSessionGuard is built now against invariant 146, because React Router's parallel loaders make phase 3's fetch start before the redirect lands.",
+    "2026-08-14T19:44:54Z G1 finding Claude-1 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:54Z G1 finding Claude-2 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:54Z G1 finding Claude-3 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:54Z G1 finding Claude-4 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:54Z G1 finding Claude-5 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:54Z G1 finding Claude-6 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-7 dispositioned: resolved: focus handoff to the busy Login control added to invariant 60, carved out in 110. The confirmation rated it PARTIAL because invariant 44 still said 'moves focus nowhere' without the exception; 44 now carries it explicitly, verified as item 7 in evidence/reviews/g1-residue-verification.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-8 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-9 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-10 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-11 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-12 dispositioned: resolved: duplicate of Codex-13, fixed once - invariants 76 and 125 restated as whole-value plus a twelve-character-window check, with the shorter-fragment residue disclosed as review-dependent. Confirmed in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-13 dispositioned: resolved: duplicate of Codex-19, fixed once - the no-flash check became a page.addInitScript MutationObserver installed before navigation, and invariant 86 moved to the partially-review-dependent list. Confirmed in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-14 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-15 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-16 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-17 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-18 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:55Z G1 finding Claude-19 dispositioned: resolved: spec changed; confirmed CONFIRMED by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-grill-claude-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-1 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-2 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-3 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-4 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-5 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-6 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-7 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-8 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-9 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-10 dispositioned: resolved: specs/ARCHITECTURE.md amended by the driving session - the runtime flow now reads 'null -> summary alert', the security posture separates the password from the derived secret, and nine phase-2 decision-log entries landed. Verified as item 2 in evidence/reviews/g1-residue-verification.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-11 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-12 dispositioned: resolved: user ids percent-encoded into the path AND restricted to A-Za-z0-9_- at the parse boundary, per the user's decision. Rated PARTIAL when PRODUCT's settled answer and TECH's file layout still described the permissive union; both now match invariant 18a, verified as item 1 in evidence/reviews/g1-residue-verification.md",
+    "2026-08-14T19:44:56Z G1 finding Codex-13 dispositioned: resolved: the impossible 'any substring' claim in invariants 76 and 125 replaced by whole-value plus a twelve-character-window check. Confirmed by the raiser's own Codex thread",
+    "2026-08-14T19:44:56Z G1 finding Codex-14 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-15 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-16 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-17 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-18 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-19 dispositioned: resolved: the no-flash assertion replaced by a MutationObserver installed through page.addInitScript before navigation. Confirmed by the raiser's own Codex thread",
+    "2026-08-14T19:44:57Z G1 finding Codex-20 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-21 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-22 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-23 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-24 dispositioned: resolved: spec changed; confirmed CONFIRMED by the raiser's own Codex thread in evidence/reviews/g1-codex-confirmation.md",
+    "2026-08-14T19:44:57Z G1 finding Codex-25 dispositioned: resolved: VERIFICATION.md's obsolete 100 kB entry budget corrected to 150 kB by the driving session, naming .size-limit.json as the authority. The edit-pass agent initially recorded this as REJECTED because it read the file after that fix had already landed; the finding was valid when raised",
+    "2026-08-14T19:45:05Z evidence recorded: evidence/reviews/g1-grill-claude-confirmation.md (9f8099aebab8) - G1 fix confirmation, fresh re-briefed validator: 18/19 CONFIRMED, 1 PARTIAL, plus 5 edit-pass damage items (2 blocking)",
+    "2026-08-14T19:45:05Z evidence recorded: evidence/reviews/g1-codex-confirmation.md (686af6c38c3b) - G1 fix confirmation, raiser's own Codex thread: 23/25 CONFIRMED, 2 PARTIAL, plus 4 regressions",
+    "2026-08-14T19:45:05Z evidence recorded: evidence/reviews/g1-residue-verification.md (96023b1b6edc) - G1 narrow verification of the 11 residue fixes: 10/11 VERIFIED, 1 still open plus 1 new contradiction, both then fixed by the driving session and recorded in the file's own follow-up section",
+    "2026-08-14T20:10:22Z G1 -> passed (44 findings: 44 resolved, 0 rejected; reviews: evidence/reviews/g1-grill-claude.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-grill-claude-confirmation.md, evidence/reviews/g1-codex-confirmation.md, evidence/reviews/g1-residue-verification.md. Two independent reviewers (adversarial grill + Codex fresh thread) raised 19 and 25 findings, 7 and 19 blocking; they converged on six defects including the one that mattered most - the derivation was specified backwards, because the brief's Array.from iterates code points and the spec assumed 32 UTF-16 code units, which would have shipped a silently wrong secret no ASCII test could catch. Raiser confirmation returned 18/19 and 23/25 CONFIRMED; the 3 partials plus 9 edit-pass regressions were fixed and 10/11 verified in a narrow pass. Two wording fixes made after that pass are recorded in the residue-verification file's own follow-up section and are not reviewer-verified. specs/ARCHITECTURE.md amended: the runtime flow's field-level error, the secrets-never-enter-URLs claim, and 9 new decision-log entries. User signed off 2026-08-14.)"
+  ],
+  "milestones": [],
+  "evidence_hashes": {
+    "evidence/reviews/g1-grill-claude.md": {
+      "sha": "0aa1f4a5307e",
+      "recorded": "2026-08-14T16:33:12Z",
+      "note": "G1 adversarial grill, fresh-context loop-spec-validator, 19 findings (7 blocking)"
+    },
+    "evidence/reviews/g1-codex-review.md": {
+      "sha": "1f97fdc52c22",
+      "recorded": "2026-08-14T16:33:12Z",
+      "note": "G1 Codex second opinion, fresh thread, 25 findings (19 blocking), recovered verbatim from the codex session transcript after the forwarding subagent died on a spend limit"
+    },
+    "evidence/reviews/g1-grill-claude-confirmation.md": {
+      "sha": "9f8099aebab8",
+      "recorded": "2026-08-14T19:45:05Z",
+      "note": "G1 fix confirmation, fresh re-briefed validator: 18/19 CONFIRMED, 1 PARTIAL, plus 5 edit-pass damage items (2 blocking)"
+    },
+    "evidence/reviews/g1-codex-confirmation.md": {
+      "sha": "686af6c38c3b",
+      "recorded": "2026-08-14T19:45:05Z",
+      "note": "G1 fix confirmation, raiser's own Codex thread: 23/25 CONFIRMED, 2 PARTIAL, plus 4 regressions"
+    },
+    "evidence/reviews/g1-residue-verification.md": {
+      "sha": "96023b1b6edc",
+      "recorded": "2026-08-14T19:45:05Z",
+      "note": "G1 narrow verification of the 11 residue fixes: 10/11 VERIFIED, 1 still open plus 1 new contradiction, both then fixed by the driving session and recorded in the file's own follow-up section"
+    }
+  }
+}

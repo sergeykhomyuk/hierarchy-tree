@@ -82,5 +82,9 @@ as `m<N>-suite.txt` and `m<N>-e2e.txt`; step-level red/green evidence lands unde
 
 - Type-aware ESLint's runtime cost is measured once, in milestone 2, and recorded here so a
   later regression is visible rather than assumed.
-- The entry+vendor size-limit budget (100 kB gzipped) is measured for the first time in
-  milestone 1, before later milestones add code on top of it.
+- The entry+vendor size-limit budget was measured for the first time in phase 1's milestone 1,
+  before later milestones added code on top of it. It is **150 kB gzipped**, not the 100 kB this
+  file carried until 2026-08-14: wiring the real router measured the entry at 112.77 kB and the
+  original estimate was revised with the user, per ARCHITECTURE.md's decision log. `.size-limit.json`
+  is the authority; this line exists so a reviewer reading only the verification profile is not
+  handed a contradictory number.
