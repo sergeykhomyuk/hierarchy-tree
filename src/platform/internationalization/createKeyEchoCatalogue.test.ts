@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { createKeyEchoCatalogue } from './createKeyEchoCatalogue';
 
-type Catalogue = Record<string, unknown>;
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
 
 function collectLeafPaths(
   value: unknown,
@@ -10,8 +12,8 @@ function collectLeafPaths(
   if (typeof value === 'string') {
     return [path.join('.')];
   }
-  if (value !== null && typeof value === 'object') {
-    return Object.entries(value as Catalogue).flatMap(([key, nested]) =>
+  if (isRecord(value)) {
+    return Object.entries(value).flatMap(([key, nested]) =>
       collectLeafPaths(nested, [...path, key]),
     );
   }
@@ -22,7 +24,7 @@ function leafValueAt(catalogue: unknown, dotPath: string): unknown {
   return dotPath
     .split('.')
     .reduce<unknown>(
-      (node, key) => (node as Catalogue | undefined)?.[key],
+      (node, key) => (isRecord(node) ? node[key] : undefined),
       catalogue,
     );
 }

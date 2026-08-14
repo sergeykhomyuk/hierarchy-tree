@@ -12,6 +12,7 @@ describe('detectLocale', () => {
     expect(detectLocale([])).toBe(Locale.English);
     expect(detectLocale(['fr-FR', 'de-DE'])).toBe(Locale.English);
     expect(detectLocale([''])).toBe(Locale.English);
+    expect(detectLocale(['-zxx'])).toBe(Locale.English);
   });
 
   it('respects preference order over match order', () => {

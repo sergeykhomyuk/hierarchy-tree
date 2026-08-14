@@ -6,4 +6,8 @@ describe('Locale', () => {
     expect(Locale.English).toBe('en');
     expect(Locale.Test).toBe('zxx');
   });
+
+  it('exposes exactly two members', () => {
+    expect(Object.keys(Locale).sort()).toEqual(['English', 'Test']);
+  });
 });
