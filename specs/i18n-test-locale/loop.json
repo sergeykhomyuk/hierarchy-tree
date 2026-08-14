@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "M",
   "status": "active",
-  "phase": "validate",
-  "phase_entered": "2026-08-14T10:53:04Z",
+  "phase": "plan",
+  "phase_entered": "2026-08-14T11:25:27Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:24:25Z",
+  "updated": "2026-08-14T11:26:40Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -75,7 +75,9 @@
     },
     "G2": {
       "status": "pending",
-      "attempts": 0
+      "attempts": 0,
+      "steps_total": 7,
+      "steps_done": 0
     },
     "G3": {
       "status": "pending",
@@ -92,7 +94,80 @@
     }
   },
   "retro": null,
-  "plan_steps": [],
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "Locale const-object enum",
+      "tests": [
+        "src/platform/internationalization/locale.test.ts::Locale > exposes English and Test members with the correct string values"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "desc": "detectLocale helper",
+      "tests": [
+        "src/platform/internationalization/detectLocale.test.ts::detectLocale > matches a region-qualified candidate to its base subtag",
+        "src/platform/internationalization/detectLocale.test.ts::detectLocale > falls back to English when no candidate matches",
+        "src/platform/internationalization/detectLocale.test.ts::detectLocale > respects preference order over match order"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "desc": "createKeyEchoCatalogue generator",
+      "tests": [
+        "src/platform/internationalization/createKeyEchoCatalogue.test.ts::createKeyEchoCatalogue > replaces every leaf with its own dot-path key",
+        "src/platform/internationalization/createKeyEchoCatalogue.test.ts::createKeyEchoCatalogue > never mutates the source catalogue"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "desc": "Wire detectLocale into createRuntime.ts",
+      "tests": [
+        "src/app/composition/createRuntime.test.ts::createRuntime > resolves the runtime language from navigator.languages"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "desc": "Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test",
+      "tests": [
+        "src/features/auth/loadTranslations.test.ts::auth loadTranslations > registers the key-echoed catalogue under Locale.Test",
+        "src/features/hierarchy/loadTranslations.test.ts::hierarchy loadTranslations > registers the key-echoed catalogue under Locale.Test"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 6,
+      "desc": "buildTestRuntime defaults to Locale.Test; update dependent unit test assertions",
+      "tests": [
+        "src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface > renders the catalogue copy and the correlation id, and calls no router hook",
+        "src/app/error-boundary/RootErrorBoundary.test.tsx::RootErrorBoundary > the root boundary renders the error surface above any router without throwing",
+        "src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary > renders the error surface when a route throws while rendering",
+        "src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout > renders a skip link pointing at the main landmark",
+        "src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute > an unmatched path renders the not-found route with a link home",
+        "src/app/ApplicationRoot.test.tsx::ApplicationRoot > sets document.documentElement.lang and dir from the active i18next language"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 7,
+      "desc": "Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment",
+      "tests": [
+        "e2e/right-to-left.spec.ts"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    }
+  ],
   "log": [
     "2026-08-14T10:40:43Z init: type=feature size=M flags=[]",
     "2026-08-14T10:40:57Z triage: feature/M. Adds a key-echoing 'test' i18next locale (real populated catalogue generated from the English catalogue's key shape at init time - vitest.setup.ts asserts missingKeyReports empty after every test, ruling out leaning on the missing-key fallback), a Locale const-object enum (platform/internationalization), and a detectLocale helper that reads the browser's language and falls back to English when unsupported - wired into createRuntime.ts for real (replacing the hardcoded RUNTIME_LANGUAGE constant), so e2e reaches the test locale via Playwright's per-project locale option through the same mechanism a real visitor's browser preference would use. Both feature loadTranslations.ts files hardcode addResourceBundle('en', ...) - a latent bug for any non-en default, fixed as part of this work. Existing unit/e2e tests asserting hardcoded English strings switch to asserting the key-echo instead; deployed-smoke.spec.ts stays on real English (exercises the actual production deployment) and right-to-left.spec.ts's invariant-65 comment gets revisited. Touches ARCHITECTURE.md's English-only decision log and PRODUCT.md invariant 65 (test locale ships in the same build that deploys to production, though it is not reachable from the UI) - flagged and confirmed with the user via AskUserQuestion before scoping, same pattern as the earlier bytesToHex boundary exception. Scoped as a separate feature loop (not folded into the paused phase-1-conventions refactor loop) since it changes behavior rather than preserving it - confirmed with the user. No overlapping open loops (phase-1-conventions touches app/bootstrap.ts, platform/configuration, platform/observability, app/routing/error-boundary components - disjoint from the i18n/locale files this touches).",
@@ -119,7 +194,17 @@
     "2026-08-14T11:19:54Z G1 finding Codex-3 dispositioned: resolved: invariant 16 reworded to state both files gain a new test case while the existing case is unchanged, matching the testing plan; confirmed by Codex round-2 pass",
     "2026-08-14T11:19:54Z G1 finding Codex-4 dispositioned: resolved: invariant 20 no longer claims a specific chunk assignment, requires inspecting real build output and treats any unbudgeted chunk as a G3 finding; confirmed by Codex round-2 pass",
     "2026-08-14T11:20:14Z evidence recorded: evidence/reviews/g1-claude-validator-recheck.md (806866b83c5a) - fresh loop-spec-validator fix-confirmation pass: all 5 tracked findings resolved (at the time, against 'pseudo' - superseded by round-2 Codex axe-core execution finding)",
-    "2026-08-14T11:24:25Z G1 -> passed (7 findings across 2 review rounds (Claude-1,2,3 + Codex-1,2,3,4): 7 resolved, 0 rejected. reviews: evidence/reviews/g1-claude-validator.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-claude-validator-recheck.md, evidence/reviews/g1-codex-review-round2.md. Key correction across rounds: locale tag 'test' -> 'pseudo' -> 'zxx' (final value verified via both Intl.getCanonicalLocales/DateTimeFormat and a real executed axe-core 4.13.0 html-lang-valid run, not syntax inspection alone). User signed off via AskUserQuestion.)"
+    "2026-08-14T11:24:25Z G1 -> passed (7 findings across 2 review rounds (Claude-1,2,3 + Codex-1,2,3,4): 7 resolved, 0 rejected. reviews: evidence/reviews/g1-claude-validator.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-claude-validator-recheck.md, evidence/reviews/g1-codex-review-round2.md. Key correction across rounds: locale tag 'test' -> 'pseudo' -> 'zxx' (final value verified via both Intl.getCanonicalLocales/DateTimeFormat and a real executed axe-core 4.13.0 html-lang-valid run, not syntax inspection alone). User signed off via AskUserQuestion.)",
+    "2026-08-14T11:25:27Z phase -> plan",
+    "2026-08-14T11:25:59Z step 1 added: Locale const-object enum",
+    "2026-08-14T11:25:59Z step 2 added: detectLocale helper",
+    "2026-08-14T11:25:59Z step 3 added: createKeyEchoCatalogue generator",
+    "2026-08-14T11:25:59Z step 4 added: Wire detectLocale into createRuntime.ts",
+    "2026-08-14T11:25:59Z step 5 added: Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test",
+    "2026-08-14T11:25:59Z step 6 added: buildTestRuntime defaults to Locale.Test; update dependent unit test assertions",
+    "2026-08-14T11:25:59Z step 7 added: Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment",
+    "2026-08-14T11:26:30Z step 6 amended: desc: 'buildTestRuntime defaults to Locale.Test; update dependent unit test assertions' -> 'buildTestRuntime defaults to Locale.Test; update dependent unit test assertions'; tests: ['src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface > renders the localized error copy', 'src/app/error-boundary/RootErrorBoundary.test.tsx::RootErrorBoundary > renders the error surface on a caught error', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary > renders the error surface on a route error', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout > renders the skip link', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute > renders the not-found copy', 'src/app/ApplicationRoot.test.tsx::ApplicationRoot > sets the document language and direction'] -> ['src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface > renders the catalogue copy and the correlation id, and calls no router hook', 'src/app/error-boundary/RootErrorBoundary.test.tsx::RootErrorBoundary > the root boundary renders the error surface above any router without throwing', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary > renders the error surface when a route throws while rendering', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout > renders a skip link pointing at the main landmark', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute > an unmatched path renders the not-found route with a link home', 'src/app/ApplicationRoot.test.tsx::ApplicationRoot > sets document.documentElement.lang and dir from the active i18next language']",
+    "2026-08-14T11:26:40Z step 5 amended: desc: 'Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test' -> 'Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test'; tests: ['src/features/auth/loadTranslations.test.ts::loadTranslations > registers the key-echoed catalogue under Locale.Test', 'src/features/hierarchy/loadTranslations.test.ts::loadTranslations > registers the key-echoed catalogue under Locale.Test'] -> ['src/features/auth/loadTranslations.test.ts::auth loadTranslations > registers the key-echoed catalogue under Locale.Test', 'src/features/hierarchy/loadTranslations.test.ts::hierarchy loadTranslations > registers the key-echoed catalogue under Locale.Test']"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
