@@ -10,7 +10,10 @@ import {
   createHttpClient,
   type HttpClient,
 } from '@platform/http';
-import { createInternationalization } from '@platform/internationalization';
+import {
+  createInternationalization,
+  detectLocale,
+} from '@platform/internationalization';
 import { createSystemClock, createSystemRandomness } from '@platform/runtime';
 import { createInteractionTracker, type InteractionTracker } from '../routing';
 import commonCatalogue from '../locales/en/common.json';
@@ -22,8 +25,6 @@ export type Runtime = Readonly<{
   i18n: i18n;
   interactionTracker: InteractionTracker;
 }>;
-
-const RUNTIME_LANGUAGE = 'en';
 
 export async function createRuntime(
   configuration: Configuration,
@@ -55,7 +56,7 @@ export async function createRuntime(
 
   const i18n = await createInternationalization({
     resources: { common: commonCatalogue },
-    language: RUNTIME_LANGUAGE,
+    language: detectLocale(navigator.languages),
     observability,
   });
 

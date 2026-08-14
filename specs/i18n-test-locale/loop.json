@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T11:27:37Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:35:23Z",
+  "updated": "2026-08-14T11:36:54Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -77,7 +77,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 7,
-      "steps_done": 3
+      "steps_done": 4
     },
     "G3": {
       "status": "pending",
@@ -131,8 +131,8 @@
       "tests": [
         "src/app/composition/createRuntime.test.ts::createRuntime > resolves the runtime language from navigator.languages"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-14T11:36:08Z evidence/step4-red.txt: createRuntime still hardcoded to 'en', expected 'zxx'",
+      "status": "done"
     },
     {
       "id": 5,
@@ -221,7 +221,13 @@
     "2026-08-14T11:35:22Z evidence recorded: evidence/step3-red.txt (97f38c5ca50c) - createKeyEchoCatalogue red: module did not exist",
     "2026-08-14T11:35:23Z evidence recorded: evidence/step3-green.txt (95c585816cfa) - createKeyEchoCatalogue green: 2/2 tests passing (fixture-based, corrected from real-catalogue imports per boundary constraint)",
     "2026-08-14T11:35:23Z step 3 -> green",
-    "2026-08-14T11:35:23Z step 3 -> done"
+    "2026-08-14T11:35:23Z step 3 -> done",
+    "2026-08-14T11:36:08Z step 4 -> red",
+    "2026-08-14T11:36:54Z evidence recorded: evidence/step4-red.txt (ffff901b44c5) - createRuntime wiring red: expected 'zxx', got hardcoded 'en'",
+    "2026-08-14T11:36:54Z evidence recorded: evidence/step4-green.txt (294cf9eb691e) - createRuntime wiring green: 5/5 tests",
+    "2026-08-14T11:36:54Z evidence recorded: evidence/step4-full-suite.txt (04a3d7dde52e) - full suite green: 67 files, 277 tests - confirms invariant 15 (bootstrap.test.tsx unmodified, still passes with jsdom default navigator.languages)",
+    "2026-08-14T11:36:54Z step 4 -> green",
+    "2026-08-14T11:36:54Z step 4 -> done"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
@@ -273,6 +279,21 @@
       "sha": "95c585816cfa",
       "recorded": "2026-08-14T11:35:23Z",
       "note": "createKeyEchoCatalogue green: 2/2 tests passing (fixture-based, corrected from real-catalogue imports per boundary constraint)"
+    },
+    "evidence/step4-red.txt": {
+      "sha": "ffff901b44c5",
+      "recorded": "2026-08-14T11:36:54Z",
+      "note": "createRuntime wiring red: expected 'zxx', got hardcoded 'en'"
+    },
+    "evidence/step4-green.txt": {
+      "sha": "294cf9eb691e",
+      "recorded": "2026-08-14T11:36:54Z",
+      "note": "createRuntime wiring green: 5/5 tests"
+    },
+    "evidence/step4-full-suite.txt": {
+      "sha": "04a3d7dde52e",
+      "recorded": "2026-08-14T11:36:54Z",
+      "note": "full suite green: 67 files, 277 tests - confirms invariant 15 (bootstrap.test.tsx unmodified, still passes with jsdom default navigator.languages)"
     }
   },
   "test_file_hashes": {
@@ -293,6 +314,12 @@
       "step": 3,
       "recorded": "2026-08-14T11:32:58Z",
       "log_index": 47
+    },
+    "src/app/composition/createRuntime.test.ts": {
+      "sha": "72d945346356",
+      "step": 4,
+      "recorded": "2026-08-14T11:36:08Z",
+      "log_index": 53
     }
   }
 }
