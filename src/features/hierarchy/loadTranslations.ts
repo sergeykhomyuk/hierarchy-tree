@@ -1,4 +1,5 @@
 import type { i18n } from 'i18next';
+import { createKeyEchoCatalogue, Locale } from '@platform/internationalization';
 
 // Keyed by instance rather than a single module-level promise: two
 // navigations to / on the SAME instance register the hierarchy namespace
@@ -19,5 +20,9 @@ export function loadTranslations(instance: i18n): Promise<void> {
 
 async function registerCatalogue(instance: i18n): Promise<void> {
   const catalogue = await import('./locales/en/hierarchy.json');
-  instance.addResourceBundle('en', 'hierarchy', catalogue.default);
+  const resource =
+    instance.language === Locale.Test
+      ? createKeyEchoCatalogue(catalogue.default)
+      : catalogue.default;
+  instance.addResourceBundle(instance.language, 'hierarchy', resource);
 }

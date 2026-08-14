@@ -1,5 +1,6 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Configuration } from '@platform/configuration';
+import { Locale } from '@platform/internationalization';
 import { createRuntime } from './createRuntime';
 
 const TEST_CONFIGURATION: Configuration = Object.freeze({
@@ -14,6 +15,7 @@ const TEST_CONFIGURATION: Configuration = Object.freeze({
 
 afterEach(() => {
   globalThis.__hierarchyTreeTelemetry = undefined;
+  vi.unstubAllGlobals();
 });
 
 describe('createRuntime', () => {
@@ -41,6 +43,24 @@ describe('createRuntime', () => {
     });
 
     expect(globalThis.__hierarchyTreeTelemetry).toBeUndefined();
+  });
+
+  it('resolves the runtime language from navigator.languages', async () => {
+    vi.stubGlobal('navigator', { ...navigator, languages: ['fr-FR', 'zxx'] });
+
+    const runtime = await createRuntime(TEST_CONFIGURATION);
+
+    expect(runtime.i18n.language).toBe(Locale.Test);
+  });
+
+  it('registers the key-echoed common catalogue when the resolved language is Locale.Test', async () => {
+    vi.stubGlobal('navigator', { ...navigator, languages: [Locale.Test] });
+
+    const runtime = await createRuntime(TEST_CONFIGURATION);
+
+    expect(runtime.i18n.t('notFound.title', { ns: 'common' })).toBe(
+      'notFound.title',
+    );
   });
 
   it('an http request made with no active interaction resolves rather than throwing for want of a correlation id', async () => {

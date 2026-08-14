@@ -29,7 +29,7 @@ describe('ApplicationLayout', () => {
   it('renders a skip link pointing at the main landmark', async () => {
     await renderLayout();
 
-    const skipLink = screen.getByRole('link', { name: 'Skip to main content' });
+    const skipLink = screen.getByRole('link', { name: 'layout.skipLink' });
     const main = screen.getByRole('main');
 
     expect(skipLink).toHaveAttribute('href', `#${main.id}`);

@@ -1,0 +1,25 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |platform| src/platform/internationalization/createKeyEchoCatalogue.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |platform| src/platform/internationalization/createKeyEchoCatalogue.test.ts [ src/platform/internationalization/createKeyEchoCatalogue.test.ts ]
+Error: Cannot find module './createKeyEchoCatalogue' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/internationalization/createKeyEchoCatalogue.test.ts
+ ❯ src/platform/internationalization/createKeyEchoCatalogue.test.ts:5:1
+      3| import authCatalogue from '../../features/auth/locales/en/auth.json';
+      4| import hierarchyCatalogue from '../../features/hierarchy/locales/en/hi…
+      5| import { createKeyEchoCatalogue } from './createKeyEchoCatalogue';
+       | ^
+      6|
+      7| type Catalogue = Record<string, unknown>;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  12:32:53
+   Duration  99ms (transform 22ms, setup 34ms, import 0ms, tests 0ms, environment 0ms)
+

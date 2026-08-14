@@ -10,10 +10,8 @@ describe('ErrorSurface', () => {
       <ErrorSurface correlationId="abc123" onRecover={vi.fn()} />,
     );
 
-    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-    expect(
-      screen.getByText('An unexpected error occurred.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('errorSurface.title')).toBeInTheDocument();
+    expect(screen.getByText('errorSurface.message')).toBeInTheDocument();
     expect(screen.getByText('abc123')).toBeInTheDocument();
   });
 
@@ -23,7 +21,9 @@ describe('ErrorSurface', () => {
       <ErrorSurface correlationId="abc123" onRecover={onRecover} />,
     );
 
-    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'errorSurface.retry' }),
+    );
 
     expect(onRecover).toHaveBeenCalledOnce();
   });

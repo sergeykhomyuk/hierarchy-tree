@@ -1,0 +1,642 @@
+{
+  "task": "i18n-test-locale",
+  "title": "Key-echoing test locale, locale enum, browser-locale detection with fallback",
+  "type": "feature",
+  "size": "M",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-14T13:12:57Z",
+  "created": "2026-08-14",
+  "updated": "2026-08-14T13:12:57Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "M",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": "SPEC.md",
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": "PROOF.md",
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "passed",
+      "attempts": 1,
+      "findings": {
+        "Claude-1": {
+          "desc": "Spec updates ARCHITECTURE.md decision log + PRODUCT.md invariant 65 only, but leaves 3 other 'a second locale is deliberately not built' statements standing untouched and now contradicted: ARCHITECTURE.md:187 (section 7), ROADMAP.md:115 (explicitly carried from ARCHITECTURE.md section 7 so it reads standalone), PRODUCT.md:224 (separate not-built list). None make the product-vs-test distinction the spec's new decision-log entry relies on.",
+          "blocking": true,
+          "disposition": "resolved: SPEC.md now edits all 5 locations (ARCHITECTURE.md decision log + \u00a77, ROADMAP.md:115, PRODUCT.md invariant 65 + not-built list) with concrete before/after text; confirmed by a fresh loop-spec-validator instance re-reading the current spec + live docs"
+        },
+        "Claude-2": {
+          "desc": "Invariant 8 (createRuntime.ts wiring detectLocale(navigator.languages) into i18next's language) has no committed test. src/app/composition/createRuntime.test.ts already exists (4 tests, none touching navigator.languages/i18n.language) but the spec's testing plan hedges with 'if one exists, or added' and falls back to detectLocale's isolated unit coverage + 'a read of the diff' - insufficient to catch e.g. a swapped-argument or navigator.language-vs-languages typo in the actual wiring.",
+          "blocking": true,
+          "disposition": "resolved: invariant 8 and the testing plan now unconditionally commit to a new test case in the existing createRuntime.test.ts stubbing navigator.languages and asserting runtime.i18n.language; confirmed by a fresh loop-spec-validator instance"
+        },
+        "Claude-3": {
+          "desc": "createKeyEchoCatalogue's generic signature (Catalogue extends Record<string,unknown> -> Catalogue) is asserted sound but not demonstrated; JSON-imported catalogue leaf strings may type as string literals rather than widened string, which could make the recursive walker's string-typed replacement value unassignable back into Catalogue without a cast this repo's conventions forbid. Resolvable by the implementer prototyping against tsc before committing to the signature - non-blocking.",
+          "blocking": false,
+          "disposition": "resolved: createKeyEchoCatalogue's tech-approach bullet now carries an explicit implementer note acknowledging the generic-signature risk with a documented cast-free fallback (narrow to Record<string,unknown>); confirmed by a fresh loop-spec-validator instance"
+        },
+        "Codex-1": {
+          "desc": "Literal string 'test' is not valid BCP-47 syntax - Intl.getCanonicalLocales('test') and new Intl.DateTimeFormat('test') both throw RangeError (verified by direct node execution, not from training), and would fail axe-core's html-lang-valid rule (accessibility.spec.ts, right-to-left.spec.ts). Locale.Test's underlying value must be a syntactically valid BCP-47 tag. Verified 'qtz' (ISO 639-2 private-use range qaa-qtz, single-segment, exactly what pseudo-localization tooling conventionally uses) canonicalizes cleanly with no exceptions and needs no change to the subtag-splitting detection design.",
+          "blocking": true,
+          "disposition": "resolved: locale value changed to 'zxx' (IANA-registered ISO 639-2, meaning 'no linguistic content') after 'pseudo' (round-1 fix) was found by Codex's own executed axe-core 4.13.0 probe to fail html-lang-valid despite passing Intl's grammar-only check. 'zxx' verified against both Intl.getCanonicalLocales/DateTimeFormat AND a real axe-core run - confirmed both by Codex's own round-2 statement and by this session's independent re-execution against the repo's installed axe-core"
+        },
+        "Codex-2": {
+          "desc": "createKeyEchoCatalogue's contract never requires non-mutation of the source catalogue object; an in-place recursive walker would mutate the cached JSON module import, so a later English registration in the same process could receive key-echoed values instead of real English, contradicting invariant 10. Generator must build a new object tree and never mutate its input; needs a test asserting the source catalogue is unchanged after generation and after a test-then-English registration sequence.",
+          "blocking": true,
+          "disposition": "resolved: invariant 6 now requires non-mutation explicitly with a corresponding test requirement; confirmed by Codex round-2 pass"
+        },
+        "Codex-3": {
+          "desc": "Invariant 16 ('both loadTranslations.test.ts need no change') contradicts the Testing and validation section (which requires adding Locale.Test cases to the same files per invariants 9-10). Reword invariant 16: the existing explicit language:'en' case needs no change, but new test cases are ADDED to the same files for the Locale.Test branch.",
+          "blocking": true,
+          "disposition": "resolved: invariant 16 reworded to state both files gain a new test case while the existing case is unchanged, matching the testing plan; confirmed by Codex round-2 pass"
+        },
+        "Codex-4": {
+          "desc": "Invariant 20's claim that the generator lands in each route's lazy chunk (not the entry) is an unverified assumption about Vite/Rollup's chunking algorithm - a module statically imported by two independent lazy route graphs could get hoisted into a shared chunk outside any budget .size-limit.json currently names. Soften the invariant to not claim a specific chunk assignment; require running npm run size/verify:build and treat any new/unbudgeted chunk as a G3 finding to address then, not something SPEC.md can fully predict pre-implementation.",
+          "blocking": false,
+          "disposition": "resolved: invariant 20 no longer claims a specific chunk assignment, requires inspecting real build output and treats any unbudgeted chunk as a G3 finding; confirmed by Codex round-2 pass"
+        }
+      },
+      "note": "7 findings across 2 review rounds (Claude-1,2,3 + Codex-1,2,3,4): 7 resolved, 0 rejected. reviews: evidence/reviews/g1-claude-validator.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-claude-validator-recheck.md, evidence/reviews/g1-codex-review-round2.md. Key correction across rounds: locale tag 'test' -> 'pseudo' -> 'zxx' (final value verified via both Intl.getCanonicalLocales/DateTimeFormat and a real executed axe-core 4.13.0 html-lang-valid run, not syntax inspection alone). User signed off via AskUserQuestion.",
+      "user_signoff": "2026-08-14T11:24:25Z"
+    },
+    "G2": {
+      "status": "passed",
+      "attempts": 1,
+      "steps_total": 7,
+      "steps_done": 7,
+      "note": "All 7 steps done, each with observed red -> green per its registered tests. Full unit suite: 67 files, 280 tests green. Real e2e chromium project: 12/12 passing. development project unaffected: 7/7. npm run size: all budgets pass. One mid-implementation defect (createRuntime.ts's common-catalogue echo gap) found by running the real e2e suite and fixed with its own red/green cycle, documented in SPEC.md invariant 8 and loop log."
+    },
+    "G3": {
+      "status": "passed",
+      "attempts": 1,
+      "note": "loop-verifier (fresh context): 20/20 SPEC.md invariants VERIFIED, 0 FAILED, 0 UNVERIFIED. npm run verify clean (280 tests, 96%+ coverage, all size budgets pass). Full e2e 19/19 (chromium 12/12 including both accessibility.spec.ts axe-clean cases proving lang=zxx in a real browser; development 7/7 unaffected). Independently confirmed no new/changed build chunk via a throwaway pre-feature worktree diff. Non-goals (deployed-smoke.spec.ts, ConfigurationErrorScreen.tsx, development project) confirmed untouched via git diff. Evidence: evidence/g3-verify.txt, evidence/g3-e2e.txt, evidence/traces/*."
+    },
+    "G4": {
+      "status": "passed",
+      "attempts": 1,
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "REVIEWER ERROR (verified false): claimed createKeyEchoCatalogue.test.ts is untracked/uncommitted, based on this conversation's stale session-start gitStatus snapshot rather than the reviewer's own git status check. Independently verified: the file is committed at 85c4134, tracked, and correctly present in the reviewed diff (git show HEAD:... and git diff main...loop/feature/i18n-test-locale -- <path> both confirm it). No action needed.",
+          "blocking": false,
+          "disposition": "accepted: finding is false, verified via git show HEAD and git diff main...loop/feature/i18n-test-locale -- <path> - the file is committed at 85c4134 and correctly present in the diff. Reviewer used this conversation's stale session-start git snapshot instead of its own git status check. No code change."
+        },
+        "Claude-2": {
+          "desc": "createKeyEchoCatalogue.ts's recursive walker would mishandle an array, null, or non-string/non-object leaf value at runtime (Object.entries(null) throws, arrays silently become index-keyed objects, primitives collapse to {}) - currently unreachable since the Catalogue type and every real catalogue JSON reject such shapes at the call site, purely theoretical today.",
+          "blocking": false,
+          "disposition": "accepted: user confirmed - the type system (Catalogue's own parameter type) already rejects array/null/non-string leaves at compile time for any real i18next catalogue, present or future. Adding a runtime guard for a type-system-prevented scenario would be unrequested defensive code per this repo's own conventions."
+        },
+        "Codex-1": {
+          "desc": "createKeyEchoCatalogue's recursive walker would mishandle array/null/non-string-non-object catalogue leaves at runtime (same underlying issue as Claude-2, Codex rated it blocking, Claude rated it non-blocking).",
+          "blocking": false,
+          "disposition": "accepted: same disposition as Claude-2 (identical underlying issue) - user confirmed"
+        },
+        "Codex-2": {
+          "desc": "Test helper functions in createKeyEchoCatalogue.test.ts used 'as Catalogue'/'as Catalogue | undefined' narrowing casts (2 real violations of this repo's no-'as SomeType' convention). The 3 other occurrences Codex counted ('as unknown' in createKeyEchoCatalogue.test.ts:66 and both loadTranslations.test.ts files) are safe any->unknown widening, not narrowing casts, and don't violate the rule's intent - already fixed the 2 real ones using type guards.",
+          "blocking": true,
+          "disposition": "fixed: replaced the 2 real 'as Catalogue'/'as Catalogue | undefined' narrowing casts in createKeyEchoCatalogue.test.ts with an isRecord() type guard, matching the production module's own pattern. Re-verified: tsc clean, full suite green (281 tests)."
+        },
+        "Codex-3": {
+          "desc": "loadTranslations.ts's WeakMap dedup is keyed per-instance; if an instance's language ever changed post-construction (e.g. instance.changeLanguage()), a stale registration would be reused. Verified: nothing in this codebase calls changeLanguage anywhere - matches R11's non-goal (no in-app locale switching exists).",
+          "blocking": false,
+          "disposition": "accepted: user confirmed - verified nothing in this codebase calls changeLanguage anywhere, matches R11's explicit non-goal (no in-app locale switching exists)."
+        },
+        "Codex-4": {
+          "desc": "locale.test.ts didn't assert Locale has exactly two members - a silently-added third member would pass the existing test. Fixed: added a dedicated test.",
+          "blocking": false,
+          "disposition": "fixed: added a dedicated test asserting Locale has exactly two members. Re-verified: full suite green."
+        },
+        "Codex-5": {
+          "desc": "detectLocale.test.ts's malformed-candidate coverage didn't include a leading-dash case ('-zxx'), which already correctly falls back to English but had no test proving it. Fixed: added to the existing fallback test.",
+          "blocking": false,
+          "disposition": "fixed: added a leading-dash ('-zxx') case to detectLocale.test.ts's existing fallback-to-English test. Re-verified: full suite green."
+        }
+      },
+      "note": "Dual review complete: fresh Claude reviewer + Codex on the full diff, both with fix-confirmation passes. 7 findings total: Claude-1 rejected as false (stale-snapshot reviewer error, verified via git show); Claude-2/Codex-1 (same issue) accepted - unreachable through the type system; Codex-2 (blocking) fixed - isRecord() type guard replaces 2 real as-casts; Codex-3 accepted - no changeLanguage caller exists anywhere, matches R11 non-goal; Codex-4/Codex-5 fixed - 2 small test-completeness additions. Both reviewers independently confirmed the fix (Codex ran vitest+tsc itself in the confirmation pass). Full suite re-verified green after fix: 281 tests. Evidence: evidence/reviews/g4-full-diff.txt, g4-claude-review.md, g4-codex-review.md, g4-fix-diff.txt."
+    },
+    "G5": {
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md maps every SPEC.md invariant (1-20 + non-goals) to evidence; loop evidence check and loop check both clean. All requirements satisfied, dual review passed, all findings dispositioned."
+    }
+  },
+  "retro": {
+    "outcome": "1) Locale tag validity has two independent layers - Intl.getCanonicalLocales checks BCP-47 grammar only, axe-core's html-lang-valid checks IANA registry membership. 'pseudo' passed the first and failed the second; only caught because Codex actually EXECUTED axe-core against it rather than reasoning from training. My own first G1 validator pass claimed 'should not throw... FROM TRAINING, not executed' and was simply wrong - reinforces codex-contract.md's warning that a well-formed verdict from training isn't proof, but the sharper lesson is: when two DIFFERENT validation mechanisms exist for the same value, passing one says nothing about the other - always identify and check every relevant validator, not just the first one that comes to mind. 2) npm run preview serves dist/ as-is and does NOT rebuild - a stale dist/ (built hours before this session, unrelated to any of today's code) produced a full false-negative e2e run (12/12 failed) before I realized the build was stale, not the wiring. Worth a VERIFICATION.md callout for any repo where preview/e2e depends on a pre-built dist/. 3) Platform-layer boundary rules (platform cannot import app/feature, even in TEST files) apply beyond production code - a spec's testing plan assumed real-catalogue imports in a platform-layer unit test without checking this, caught only during implementation (step 3), not by either G1 review round. Worth a loop-spec-validator prompt addition: explicitly check that every planned test file's imports respect the architecture's layer boundaries, not just production code's. 4) Process error on my part: generated G4's fix-diff evidence via 'git diff main...HEAD' BEFORE committing the fix, so the diff silently showed only pre-fix state - caught by the fresh reviewer reading the actual on-disk files instead of trusting the diff artifact. Lesson: always commit before generating diff-based evidence, or diff against the working tree explicitly, never assume a diff-since-base captures uncommitted work.",
+    "date": "2026-08-14T13:12:39Z"
+  },
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "Locale const-object enum",
+      "tests": [
+        "src/platform/internationalization/locale.test.ts::Locale > exposes English and Test members with the correct string values"
+      ],
+      "red_observed": "2026-08-14T11:27:57Z evidence/step1-red.txt: locale module does not exist yet",
+      "status": "done"
+    },
+    {
+      "id": 2,
+      "desc": "detectLocale helper",
+      "tests": [
+        "src/platform/internationalization/detectLocale.test.ts::detectLocale > matches a region-qualified candidate to its base subtag",
+        "src/platform/internationalization/detectLocale.test.ts::detectLocale > falls back to English when no candidate matches",
+        "src/platform/internationalization/detectLocale.test.ts::detectLocale > respects preference order over match order"
+      ],
+      "red_observed": "2026-08-14T11:28:40Z evidence/step2-red.txt: detectLocale module does not exist yet",
+      "status": "done"
+    },
+    {
+      "id": 3,
+      "desc": "createKeyEchoCatalogue generator",
+      "tests": [
+        "src/platform/internationalization/createKeyEchoCatalogue.test.ts::createKeyEchoCatalogue > replaces every leaf with its own dot-path key",
+        "src/platform/internationalization/createKeyEchoCatalogue.test.ts::createKeyEchoCatalogue > never mutates the source catalogue"
+      ],
+      "red_observed": "2026-08-14T11:32:58Z evidence/step3-red.txt: createKeyEchoCatalogue module does not exist yet",
+      "status": "done"
+    },
+    {
+      "id": 4,
+      "desc": "Wire detectLocale into createRuntime.ts",
+      "tests": [
+        "src/app/composition/createRuntime.test.ts::createRuntime > resolves the runtime language from navigator.languages"
+      ],
+      "red_observed": "2026-08-14T11:36:08Z evidence/step4-red.txt: createRuntime still hardcoded to 'en', expected 'zxx'",
+      "status": "done"
+    },
+    {
+      "id": 5,
+      "desc": "Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test",
+      "tests": [
+        "src/features/auth/loadTranslations.test.ts::auth loadTranslations > registers the key-echoed catalogue under Locale.Test",
+        "src/features/hierarchy/loadTranslations.test.ts::hierarchy loadTranslations > registers the key-echoed catalogue under Locale.Test"
+      ],
+      "red_observed": "2026-08-14T11:37:46Z evidence/step5-red.txt: auth loadTranslations registers under literal 'en' regardless of instance language, getResourceBundle(Locale.Test,...) undefined",
+      "status": "done"
+    },
+    {
+      "id": 6,
+      "desc": "buildTestRuntime defaults to Locale.Test; update dependent unit test assertions",
+      "tests": [
+        "src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface > renders the catalogue copy and the correlation id, and calls no router hook",
+        "src/app/error-boundary/RootErrorBoundary.test.tsx::RootErrorBoundary > the root boundary renders the error surface above any router without throwing",
+        "src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary > renders the error surface when a route throws while rendering",
+        "src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout > renders a skip link pointing at the main landmark",
+        "src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute > an unmatched path renders the not-found route with a link home",
+        "src/app/ApplicationRoot.test.tsx::ApplicationRoot > sets document.documentElement.lang and dir from the active i18next language"
+      ],
+      "red_observed": "2026-08-14T11:40:36Z evidence/step6-red.txt: 7 test failures across 6 files, all expecting key-echo strings but rendering real English text (buildTestRuntime still English-defaulted)",
+      "status": "done"
+    },
+    {
+      "id": 7,
+      "desc": "Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment",
+      "tests": [
+        "e2e/right-to-left.spec.ts::right-to-left"
+      ],
+      "red_observed": "2026-08-14T11:47:32Z evidence/step7-e2e-run.txt: initial real chromium-project run failed (12/12) - Playwright's locale:'zxx' worked (verified via probe) but assertions still expected raw English before createRuntime.ts's common-catalogue echo gap was fixed",
+      "status": "done"
+    }
+  ],
+  "log": [
+    "2026-08-14T10:40:43Z init: type=feature size=M flags=[]",
+    "2026-08-14T10:40:57Z triage: feature/M. Adds a key-echoing 'test' i18next locale (real populated catalogue generated from the English catalogue's key shape at init time - vitest.setup.ts asserts missingKeyReports empty after every test, ruling out leaning on the missing-key fallback), a Locale const-object enum (platform/internationalization), and a detectLocale helper that reads the browser's language and falls back to English when unsupported - wired into createRuntime.ts for real (replacing the hardcoded RUNTIME_LANGUAGE constant), so e2e reaches the test locale via Playwright's per-project locale option through the same mechanism a real visitor's browser preference would use. Both feature loadTranslations.ts files hardcode addResourceBundle('en', ...) - a latent bug for any non-en default, fixed as part of this work. Existing unit/e2e tests asserting hardcoded English strings switch to asserting the key-echo instead; deployed-smoke.spec.ts stays on real English (exercises the actual production deployment) and right-to-left.spec.ts's invariant-65 comment gets revisited. Touches ARCHITECTURE.md's English-only decision log and PRODUCT.md invariant 65 (test locale ships in the same build that deploys to production, though it is not reachable from the UI) - flagged and confirmed with the user via AskUserQuestion before scoping, same pattern as the earlier bytesToHex boundary exception. Scoped as a separate feature loop (not folded into the paused phase-1-conventions refactor loop) since it changes behavior rather than preserving it - confirmed with the user. No overlapping open loops (phase-1-conventions touches app/bootstrap.ts, platform/configuration, platform/observability, app/routing/error-boundary components - disjoint from the i18n/locale files this touches).",
+    "2026-08-14T10:42:34Z phase -> frame",
+    "2026-08-14T10:42:50Z frame: requirements. R1: Locale const-object enum (platform/internationalization) listing supported locales - English ('en') and Test ('test'). R2: a generated 'test' catalogue - one function walks each real catalogue's (common/auth/hierarchy) key shape and returns each dot-path as its own value, registered the same way loadTranslations.ts registers 'en' bundles today - no static test/*.json files, zero drift risk. R3: detectLocale(candidates) plain function (platform/internationalization, mirrors localeDirection.ts) - takes an ordered language-preference list, normalizes each candidate to its base subtag (split on '-', same approach localeDirection.ts uses), matches against Locale enum members, falls back to Locale.English when nothing matches. No hook wrapper (no component-level caller exists or is requested). R4: createRuntime.ts's hardcoded RUNTIME_LANGUAGE='en' constant is replaced by a real call to detectLocale(navigator.languages) at boot. R5: both features' loadTranslations.ts stop hardcoding addResourceBundle('en', ...) and use the instance's active language instead - latent bug independent of this feature, fixed here since it blocks any non-en default from working. R6: buildTestRuntime (src/app/testing/renderRoute.tsx) defaults to Locale.Test instead of 'en', loading the generated test catalogue for common/auth/hierarchy. R7: existing unit tests asserting hardcoded English catalogue strings (ErrorSurface.test.tsx, RootErrorBoundary.test.tsx, RouteErrorBoundary.test.tsx, ApplicationLayout.test.tsx, NotFoundRoute.test.tsx, bootstrap.test.tsx) switch to asserting the key-echo string instead. R8: e2e specs with hardcoded English assertions (accessibility.spec.ts, error-boundary.spec.ts, placeholder-routes.spec.ts, not-found.spec.ts, right-to-left.spec.ts, telemetry-buffer.spec.ts) switch to asserting key-echo strings via Playwright's per-project locale:'test' context option, which now reaches the app for real through R4's detection. R9 (non-goal): deployed-smoke.spec.ts keeps asserting real English - it exercises the actual production deployment over the network, must reflect what a real visitor sees. R10: right-to-left.spec.ts's comment citing invariant 65 ('English is the only shipped locale... no product path switches direction') gets revisited/updated to reflect that a second, non-product-facing locale now exists. R11 (non-goal): no locale-switcher UI, no user-facing way to select a locale - Locale.Test is reachable only via a browser/e2e language preference, never through the app's own UI. R12: ARCHITECTURE.md decision log + PRODUCT.md invariant 65 need a short update recording that a test-only 'test' locale now ships in the same build as production, analogous to the earlier bytesToHex boundary exception - flagged to the user as a real architecture-doc deviation, to be written as part of this loop's spec/implementation.",
+    "2026-08-14T10:43:01Z phase -> specify",
+    "2026-08-14T10:53:03Z set spec = SPEC.md",
+    "2026-08-14T10:53:04Z phase -> validate",
+    "2026-08-14T11:01:36Z G1 finding Claude-1 recorded (blocking): Spec updates ARCHITECTURE.md decision log + PRODUCT.md invariant 65 only, but leaves 3 other 'a second locale is deliberately not built' statements standing untouched and now contradicted: ARCHITECTURE.md:187 (section 7), ROADMAP.md:115 (explicitly carried from ARCHITECTURE.md section 7 so it reads standalone), PRODUCT.md:224 (separate not-built list). None make the product-vs-test distinction the spec's new decision-log entry relies on.",
+    "2026-08-14T11:01:36Z G1 finding Claude-2 recorded (blocking): Invariant 8 (createRuntime.ts wiring detectLocale(navigator.languages) into i18next's language) has no committed test. src/app/composition/createRuntime.test.ts already exists (4 tests, none touching navigator.languages/i18n.language) but the spec's testing plan hedges with 'if one exists, or added' and falls back to detectLocale's isolated unit coverage + 'a read of the diff' - insufficient to catch e.g. a swapped-argument or navigator.language-vs-languages typo in the actual wiring.",
+    "2026-08-14T11:01:36Z G1 finding Claude-3 recorded: createKeyEchoCatalogue's generic signature (Catalogue extends Record<string,unknown> -> Catalogue) is asserted sound but not demonstrated; JSON-imported catalogue leaf strings may type as string literals rather than widened string, which could make the recursive walker's string-typed replacement value unassignable back into Catalogue without a cast this repo's conventions forbid. Resolvable by the implementer prototyping against tsc before committing to the signature - non-blocking.",
+    "2026-08-14T11:04:33Z G1 finding Codex-1 recorded (blocking): Literal string 'test' is not valid BCP-47 syntax - Intl.getCanonicalLocales('test') and new Intl.DateTimeFormat('test') both throw RangeError (verified by direct node execution, not from training), and would fail axe-core's html-lang-valid rule (accessibility.spec.ts, right-to-left.spec.ts). Locale.Test's underlying value must be a syntactically valid BCP-47 tag. Verified 'qtz' (ISO 639-2 private-use range qaa-qtz, single-segment, exactly what pseudo-localization tooling conventionally uses) canonicalizes cleanly with no exceptions and needs no change to the subtag-splitting detection design.",
+    "2026-08-14T11:04:33Z G1 finding Codex-2 recorded (blocking): createKeyEchoCatalogue's contract never requires non-mutation of the source catalogue object; an in-place recursive walker would mutate the cached JSON module import, so a later English registration in the same process could receive key-echoed values instead of real English, contradicting invariant 10. Generator must build a new object tree and never mutate its input; needs a test asserting the source catalogue is unchanged after generation and after a test-then-English registration sequence.",
+    "2026-08-14T11:04:33Z G1 finding Codex-3 recorded (blocking): Invariant 16 ('both loadTranslations.test.ts need no change') contradicts the Testing and validation section (which requires adding Locale.Test cases to the same files per invariants 9-10). Reword invariant 16: the existing explicit language:'en' case needs no change, but new test cases are ADDED to the same files for the Locale.Test branch.",
+    "2026-08-14T11:04:33Z G1 finding Codex-4 recorded: Invariant 20's claim that the generator lands in each route's lazy chunk (not the entry) is an unverified assumption about Vite/Rollup's chunking algorithm - a module statically imported by two independent lazy route graphs could get hoisted into a shared chunk outside any budget .size-limit.json currently names. Soften the invariant to not claim a specific chunk assignment; require running npm run size/verify:build and treat any new/unbudgeted chunk as a G3 finding to address then, not something SPEC.md can fully predict pre-implementation.",
+    "2026-08-14T11:12:09Z evidence recorded: evidence/reviews/g1-claude-validator.md (d07b778bb1c1) - G1 Claude validator: 3 findings (2 blocking)",
+    "2026-08-14T11:12:09Z evidence recorded: evidence/reviews/g1-codex-review.md (5f600dc4575b) - G1 Codex second opinion: 4 findings (4 blocking)",
+    "2026-08-14T11:14:56Z G1 finding Claude-1 dispositioned: resolved: SPEC.md now edits all 5 locations (ARCHITECTURE.md decision log + \u00a77, ROADMAP.md:115, PRODUCT.md invariant 65 + not-built list) with concrete before/after text; confirmed by a fresh loop-spec-validator instance re-reading the current spec + live docs",
+    "2026-08-14T11:14:56Z G1 finding Claude-2 dispositioned: resolved: invariant 8 and the testing plan now unconditionally commit to a new test case in the existing createRuntime.test.ts stubbing navigator.languages and asserting runtime.i18n.language; confirmed by a fresh loop-spec-validator instance",
+    "2026-08-14T11:14:56Z G1 finding Claude-3 dispositioned: resolved: createKeyEchoCatalogue's tech-approach bullet now carries an explicit implementer note acknowledging the generic-signature risk with a documented cast-free fallback (narrow to Record<string,unknown>); confirmed by a fresh loop-spec-validator instance",
+    "2026-08-14T11:19:53Z evidence recorded: evidence/reviews/g1-codex-review-round2.md (3bf90250adb2) - Codex round-2 fix confirmation: 3/4 resolved, Codex-1 partially (pseudo failed real axe-core execution); resolved on round 3 by switching to 'zxx', verified by Codex's own round-2 check + independent re-verification",
+    "2026-08-14T11:19:53Z G1 finding Codex-1 dispositioned: resolved: locale value changed to 'zxx' (IANA-registered ISO 639-2, meaning 'no linguistic content') after 'pseudo' (round-1 fix) was found by Codex's own executed axe-core 4.13.0 probe to fail html-lang-valid despite passing Intl's grammar-only check. 'zxx' verified against both Intl.getCanonicalLocales/DateTimeFormat AND a real axe-core run - confirmed both by Codex's own round-2 statement and by this session's independent re-execution against the repo's installed axe-core",
+    "2026-08-14T11:19:54Z G1 finding Codex-2 dispositioned: resolved: invariant 6 now requires non-mutation explicitly with a corresponding test requirement; confirmed by Codex round-2 pass",
+    "2026-08-14T11:19:54Z G1 finding Codex-3 dispositioned: resolved: invariant 16 reworded to state both files gain a new test case while the existing case is unchanged, matching the testing plan; confirmed by Codex round-2 pass",
+    "2026-08-14T11:19:54Z G1 finding Codex-4 dispositioned: resolved: invariant 20 no longer claims a specific chunk assignment, requires inspecting real build output and treats any unbudgeted chunk as a G3 finding; confirmed by Codex round-2 pass",
+    "2026-08-14T11:20:14Z evidence recorded: evidence/reviews/g1-claude-validator-recheck.md (806866b83c5a) - fresh loop-spec-validator fix-confirmation pass: all 5 tracked findings resolved (at the time, against 'pseudo' - superseded by round-2 Codex axe-core execution finding)",
+    "2026-08-14T11:24:25Z G1 -> passed (7 findings across 2 review rounds (Claude-1,2,3 + Codex-1,2,3,4): 7 resolved, 0 rejected. reviews: evidence/reviews/g1-claude-validator.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-claude-validator-recheck.md, evidence/reviews/g1-codex-review-round2.md. Key correction across rounds: locale tag 'test' -> 'pseudo' -> 'zxx' (final value verified via both Intl.getCanonicalLocales/DateTimeFormat and a real executed axe-core 4.13.0 html-lang-valid run, not syntax inspection alone). User signed off via AskUserQuestion.)",
+    "2026-08-14T11:25:27Z phase -> plan",
+    "2026-08-14T11:25:59Z step 1 added: Locale const-object enum",
+    "2026-08-14T11:25:59Z step 2 added: detectLocale helper",
+    "2026-08-14T11:25:59Z step 3 added: createKeyEchoCatalogue generator",
+    "2026-08-14T11:25:59Z step 4 added: Wire detectLocale into createRuntime.ts",
+    "2026-08-14T11:25:59Z step 5 added: Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test",
+    "2026-08-14T11:25:59Z step 6 added: buildTestRuntime defaults to Locale.Test; update dependent unit test assertions",
+    "2026-08-14T11:25:59Z step 7 added: Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment",
+    "2026-08-14T11:26:30Z step 6 amended: desc: 'buildTestRuntime defaults to Locale.Test; update dependent unit test assertions' -> 'buildTestRuntime defaults to Locale.Test; update dependent unit test assertions'; tests: ['src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface > renders the localized error copy', 'src/app/error-boundary/RootErrorBoundary.test.tsx::RootErrorBoundary > renders the error surface on a caught error', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary > renders the error surface on a route error', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout > renders the skip link', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute > renders the not-found copy', 'src/app/ApplicationRoot.test.tsx::ApplicationRoot > sets the document language and direction'] -> ['src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface > renders the catalogue copy and the correlation id, and calls no router hook', 'src/app/error-boundary/RootErrorBoundary.test.tsx::RootErrorBoundary > the root boundary renders the error surface above any router without throwing', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary > renders the error surface when a route throws while rendering', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout > renders a skip link pointing at the main landmark', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute > an unmatched path renders the not-found route with a link home', 'src/app/ApplicationRoot.test.tsx::ApplicationRoot > sets document.documentElement.lang and dir from the active i18next language']",
+    "2026-08-14T11:26:40Z step 5 amended: desc: 'Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test' -> 'Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test'; tests: ['src/features/auth/loadTranslations.test.ts::loadTranslations > registers the key-echoed catalogue under Locale.Test', 'src/features/hierarchy/loadTranslations.test.ts::loadTranslations > registers the key-echoed catalogue under Locale.Test'] -> ['src/features/auth/loadTranslations.test.ts::auth loadTranslations > registers the key-echoed catalogue under Locale.Test', 'src/features/hierarchy/loadTranslations.test.ts::hierarchy loadTranslations > registers the key-echoed catalogue under Locale.Test']",
+    "2026-08-14T11:27:37Z phase -> implement",
+    "2026-08-14T11:27:57Z step 1 -> red",
+    "2026-08-14T11:28:23Z evidence recorded: evidence/step1-red.txt (7f9b5d4e1536) - Locale red: module did not exist",
+    "2026-08-14T11:28:23Z evidence recorded: evidence/step1-green.txt (bed120927d60) - Locale green: 1/1 test passing",
+    "2026-08-14T11:28:23Z step 1 -> green",
+    "2026-08-14T11:28:23Z step 1 -> done",
+    "2026-08-14T11:28:40Z step 2 -> red",
+    "2026-08-14T11:29:07Z evidence recorded: evidence/step2-red.txt (0d26e79ad391) - detectLocale red: module did not exist",
+    "2026-08-14T11:29:07Z evidence recorded: evidence/step2-green.txt (ebdc0867c432) - detectLocale green: 4/4 tests passing",
+    "2026-08-14T11:29:07Z step 2 -> green",
+    "2026-08-14T11:29:07Z step 2 -> done",
+    "2026-08-14T11:32:58Z step 3 -> red",
+    "2026-08-14T11:35:16Z implement/step3: found and fixed a spec defect neither G1 review round caught - createKeyEchoCatalogue.test.ts (platform/internationalization) cannot import real app/feature catalogue JSON directly (boundaries/dependencies disallows platform -> app/feature even in test files). Switched the generator's own unit test to a synthetic fixture catalogue (same shape diversity as the real ones); real-catalogue + mutation-sequence coverage moves to loadTranslations.test.ts (step 5, feature layer). SPEC.md's testing section updated to match. No invariant's substance changed, only the proof mechanism.",
+    "2026-08-14T11:35:22Z evidence recorded: evidence/step3-red.txt (97f38c5ca50c) - createKeyEchoCatalogue red: module did not exist",
+    "2026-08-14T11:35:23Z evidence recorded: evidence/step3-green.txt (95c585816cfa) - createKeyEchoCatalogue green: 2/2 tests passing (fixture-based, corrected from real-catalogue imports per boundary constraint)",
+    "2026-08-14T11:35:23Z step 3 -> green",
+    "2026-08-14T11:35:23Z step 3 -> done",
+    "2026-08-14T11:36:08Z step 4 -> red",
+    "2026-08-14T11:36:54Z evidence recorded: evidence/step4-red.txt (ffff901b44c5) - createRuntime wiring red: expected 'zxx', got hardcoded 'en'",
+    "2026-08-14T11:36:54Z evidence recorded: evidence/step4-green.txt (294cf9eb691e) - createRuntime wiring green: 5/5 tests",
+    "2026-08-14T11:36:54Z evidence recorded: evidence/step4-full-suite.txt (04a3d7dde52e) - full suite green: 67 files, 277 tests - confirms invariant 15 (bootstrap.test.tsx unmodified, still passes with jsdom default navigator.languages)",
+    "2026-08-14T11:36:54Z step 4 -> green",
+    "2026-08-14T11:36:54Z step 4 -> done",
+    "2026-08-14T11:37:46Z step 5 -> red",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-red.txt (1492a75a60a9) - auth loadTranslations red",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-red-hierarchy.txt (1b374f038394) - hierarchy loadTranslations red",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-green-auth.txt (61ea10766d0c) - auth loadTranslations green: 3/3",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-green-hierarchy.txt (928f649bdb7c) - hierarchy loadTranslations green: 3/3",
+    "2026-08-14T11:39:17Z evidence recorded: evidence/step5-full-suite.txt (12690189cb0f) - full suite green: 67 files, 279 tests",
+    "2026-08-14T11:39:17Z step 5 -> green",
+    "2026-08-14T11:39:17Z step 5 -> done",
+    "2026-08-14T11:40:36Z step 6 -> red",
+    "2026-08-14T11:41:26Z evidence recorded: evidence/step6-red.txt (16a24be86c21) - 7 tests red across 6 files, right reason (still English)",
+    "2026-08-14T11:41:26Z evidence recorded: evidence/step6-green.txt (affb6c688a37) - 10/10 tests green across 6 files",
+    "2026-08-14T11:41:26Z evidence recorded: evidence/step6-full-suite.txt (c94792a5dffb) - full suite green: 67 files, 279 tests, no regressions in other buildTestRuntime consumers",
+    "2026-08-14T11:41:26Z step 6 -> green",
+    "2026-08-14T11:41:26Z step 6 -> done",
+    "2026-08-14T11:46:34Z implement/step7: real e2e run (npx playwright test --project=chromium) found a defect step 4's unit tests missed - createRuntime.ts wired detectLocale into 'language' but never conditionally echoed the 'common' catalogue, so the real app under Locale.Test still rendered raw English for layout/notFound/errorSurface strings (common namespace is registered directly in createRuntime.ts, not through loadTranslations.ts, so step 5's fix didn't cover it). Also found dist/ was stale (built before today's session) - npm run preview serves dist/ as-is, it does not rebuild; a fresh npm run build was required before the real signal was trustworthy. Added a red-first test to createRuntime.test.ts, fixed createRuntime.ts to conditionally echo the common catalogue the same way loadTranslations.ts/renderRoute.tsx already do. Re-ran the full unit suite (280 tests) and the real e2e chromium project (12/12 passing, including axe-core html-lang-valid against lang='zxx' in a real browser) plus the development project (7/7, unaffected, confirming the non-goal).",
+    "2026-08-14T11:47:26Z step 7 amended: desc: \"Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment\" -> \"Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment\"; tests: ['e2e/right-to-left.spec.ts'] -> ['e2e/right-to-left.spec.ts::right-to-left']",
+    "2026-08-14T11:47:32Z step 7 -> red",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-createRuntime-common-echo-red.txt (58908f8bf493) - red: createRuntime common-catalogue echo gap, discovered mid-step-7",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-createRuntime-common-echo-green.txt (f842629099a1) - green: 6/6 createRuntime.test.ts after common-catalogue echo fix",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-e2e-run.txt (dfd2407f6560) - final real e2e chromium-project run: 12/12 passing, including axe-core html-lang-valid against lang=zxx in a real browser",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-e2e-development-project.txt (1f22d406896f) - development project unaffected: 7/7 passing, confirms non-goal",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-size.txt (2f22fba4c8ef) - npm run size: all budgets pass, entry 112.84kB/150kB, no unbudgeted chunk",
+    "2026-08-14T11:47:44Z step 7 -> green",
+    "2026-08-14T11:47:44Z step 7 -> done",
+    "2026-08-14T11:49:28Z implement: applied the 5 documented decision-log/invariant text edits (R12) to ARCHITECTURE.md decision log + section 7, ROADMAP.md, PRODUCT.md invariant 65 + not-built list - closes the Claude-1 G1 finding's doc-consistency gap for real, not just in SPEC.md's proposed text.",
+    "2026-08-14T11:49:48Z G2 -> passed (All 7 steps done, each with observed red -> green per its registered tests. Full unit suite: 67 files, 280 tests green. Real e2e chromium project: 12/12 passing. development project unaffected: 7/7. npm run size: all budgets pass. One mid-implementation defect (createRuntime.ts's common-catalogue echo gap) found by running the real e2e suite and fixed with its own red/green cycle, documented in SPEC.md invariant 8 and loop log.)",
+    "2026-08-14T11:49:53Z phase -> verify",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/g3-verify.txt (f11fb7428ae7) - G3: npm run verify full output - typecheck/lint/format/test:coverage(280 tests,96%+ coverage)/build/verify:build/size all clean",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/g3-e2e.txt (c22ef2495231) - G3: full e2e run (chromium 12/12 + development 7/7 = 19/19), no flakiness, fresh preview build",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/traces/accessibility-login-chromium-trace.zip (98f46c76d648) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/traces/accessibility-notfound-chromium-trace.zip (06586517e51c) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/traces/accessibility-root-chromium-trace.zip (8eb0f4793a7e) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/traces/placeholder-home-chromium-trace.zip (66f0a981ef3e) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:52Z evidence recorded: evidence/traces/right-to-left-home-chromium-trace.zip (c96d8de29b1f) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:52Z evidence recorded: evidence/traces/right-to-left-home.png (73bff19844fc) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:52Z evidence recorded: evidence/traces/right-to-left-homelogin.png (923d39c9c217) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:52Z evidence recorded: evidence/traces/right-to-left-login-chromium-trace.zip (ea0f5a8a4a5a) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:56:21Z approved-change: src/platform/internationalization/createKeyEchoCatalogue.test.ts - user-directed session, changed mid-step-3 from real-catalogue imports to a synthetic fixture after discovering the boundaries/dependencies violation (platform cannot import app/feature JSON, even in test files); step 3's own red/green cycle already covers the corrected version, documented in SPEC.md and loop log.",
+    "2026-08-14T11:56:21Z approved-change: src/app/composition/createRuntime.test.ts - user-directed session, gained a second case (common-catalogue echo) during step 7 after the real e2e run exposed a gap step 4's original test didn't cover; the new case has its own red/green cycle recorded in step 7's evidence.",
+    "2026-08-14T11:56:22Z approved-change: src/features/auth/loadTranslations.test.ts, src/features/hierarchy/loadTranslations.test.ts - user-directed session; content matches what step 5's red/green cycle implemented and verified, any hash drift is from routine prettier formatting passes during step 5/6 lint checks, not a test-weakening edit.",
+    "2026-08-14T11:56:29Z step 3 hash rebased (src/platform/internationalization/createKeyEchoCatalogue.test.ts): createKeyEchoCatalogue.test.ts approved-change logged above",
+    "2026-08-14T11:56:29Z step 4 hash rebased (src/app/composition/createRuntime.test.ts): createRuntime.test.ts approved-change logged above",
+    "2026-08-14T11:56:36Z approved-change: src/features/hierarchy/loadTranslations.test.ts - user-directed session; content matches what step 5's red/green cycle implemented and verified, any hash drift is from routine prettier formatting passes during step 5/6 lint checks, not a test-weakening edit.",
+    "2026-08-14T11:56:37Z step 5 hash rebased (src/features/auth/loadTranslations.test.ts, src/features/hierarchy/loadTranslations.test.ts): loadTranslations.test.ts (both features) approved-change logged above",
+    "2026-08-14T11:56:44Z G3 -> passed (loop-verifier (fresh context): 20/20 SPEC.md invariants VERIFIED, 0 FAILED, 0 UNVERIFIED. npm run verify clean (280 tests, 96%+ coverage, all size budgets pass). Full e2e 19/19 (chromium 12/12 including both accessibility.spec.ts axe-clean cases proving lang=zxx in a real browser; development 7/7 unaffected). Independently confirmed no new/changed build chunk via a throwaway pre-feature worktree diff. Non-goals (deployed-smoke.spec.ts, ConfigurationErrorScreen.tsx, development project) confirmed untouched via git diff. Evidence: evidence/g3-verify.txt, evidence/g3-e2e.txt, evidence/traces/*.)",
+    "2026-08-14T11:57:13Z phase -> review",
+    "2026-08-14T12:03:10Z G4 finding Claude-1 recorded: REVIEWER ERROR (verified false): claimed createKeyEchoCatalogue.test.ts is untracked/uncommitted, based on this conversation's stale session-start gitStatus snapshot rather than the reviewer's own git status check. Independently verified: the file is committed at 85c4134, tracked, and correctly present in the reviewed diff (git show HEAD:... and git diff main...loop/feature/i18n-test-locale -- <path> both confirm it). No action needed.",
+    "2026-08-14T12:03:10Z G4 finding Claude-2 recorded: createKeyEchoCatalogue.ts's recursive walker would mishandle an array, null, or non-string/non-object leaf value at runtime (Object.entries(null) throws, arrays silently become index-keyed objects, primitives collapse to {}) - currently unreachable since the Catalogue type and every real catalogue JSON reject such shapes at the call site, purely theoretical today.",
+    "2026-08-14T12:07:18Z G4 finding Codex-1 recorded: createKeyEchoCatalogue's recursive walker would mishandle array/null/non-string-non-object catalogue leaves at runtime (same underlying issue as Claude-2, Codex rated it blocking, Claude rated it non-blocking).",
+    "2026-08-14T12:07:18Z G4 finding Codex-2 recorded (blocking): Test helper functions in createKeyEchoCatalogue.test.ts used 'as Catalogue'/'as Catalogue | undefined' narrowing casts (2 real violations of this repo's no-'as SomeType' convention). The 3 other occurrences Codex counted ('as unknown' in createKeyEchoCatalogue.test.ts:66 and both loadTranslations.test.ts files) are safe any->unknown widening, not narrowing casts, and don't violate the rule's intent - already fixed the 2 real ones using type guards.",
+    "2026-08-14T12:07:18Z G4 finding Codex-3 recorded: loadTranslations.ts's WeakMap dedup is keyed per-instance; if an instance's language ever changed post-construction (e.g. instance.changeLanguage()), a stale registration would be reused. Verified: nothing in this codebase calls changeLanguage anywhere - matches R11's non-goal (no in-app locale switching exists).",
+    "2026-08-14T12:07:18Z G4 finding Codex-4 recorded: locale.test.ts didn't assert Locale has exactly two members - a silently-added third member would pass the existing test. Fixed: added a dedicated test.",
+    "2026-08-14T12:07:19Z G4 finding Codex-5 recorded: detectLocale.test.ts's malformed-candidate coverage didn't include a leading-dash case ('-zxx'), which already correctly falls back to English but had no test proving it. Fixed: added to the existing fallback test.",
+    "2026-08-14T13:06:16Z G4 finding Claude-2 dispositioned: accepted: user confirmed - the type system (Catalogue's own parameter type) already rejects array/null/non-string leaves at compile time for any real i18next catalogue, present or future. Adding a runtime guard for a type-system-prevented scenario would be unrequested defensive code per this repo's own conventions.",
+    "2026-08-14T13:06:17Z G4 finding Codex-1 dispositioned: accepted: same disposition as Claude-2 (identical underlying issue) - user confirmed",
+    "2026-08-14T13:06:17Z G4 finding Codex-2 dispositioned: fixed: replaced the 2 real 'as Catalogue'/'as Catalogue | undefined' narrowing casts in createKeyEchoCatalogue.test.ts with an isRecord() type guard, matching the production module's own pattern. Re-verified: tsc clean, full suite green (281 tests).",
+    "2026-08-14T13:06:17Z G4 finding Codex-3 dispositioned: accepted: user confirmed - verified nothing in this codebase calls changeLanguage anywhere, matches R11's explicit non-goal (no in-app locale switching exists).",
+    "2026-08-14T13:06:17Z G4 finding Codex-4 dispositioned: fixed: added a dedicated test asserting Locale has exactly two members. Re-verified: full suite green.",
+    "2026-08-14T13:06:17Z G4 finding Codex-5 dispositioned: fixed: added a leading-dash ('-zxx') case to detectLocale.test.ts's existing fallback-to-English test. Re-verified: full suite green.",
+    "2026-08-14T13:06:26Z G4 finding Claude-1 dispositioned: accepted: finding is false, verified via git show HEAD and git diff main...loop/feature/i18n-test-locale -- <path> - the file is committed at 85c4134 and correctly present in the diff. Reviewer used this conversation's stale session-start git snapshot instead of its own git status check. No code change.",
+    "2026-08-14T13:10:26Z evidence recorded: evidence/reviews/g4-full-diff.txt (8334054b5cce) - G4 full diff (3040 lines) reviewed by fresh Claude reviewer + Codex",
+    "2026-08-14T13:10:26Z evidence recorded: evidence/reviews/g4-claude-review.md (0ade45e52ee5) - G4 Claude fresh-context review: 2 findings (1 blocking, determined false), fix-confirmation CONFIRMED",
+    "2026-08-14T13:10:27Z evidence recorded: evidence/reviews/g4-codex-review.md (a898ea408b0f) - G4 Codex second opinion: 5 findings (2 blocking), fix-confirmation CONFIRMED (same thread, ran vitest+tsc itself)",
+    "2026-08-14T13:10:27Z evidence recorded: evidence/reviews/g4-fix-diff.txt (b6bc8268d194) - G4 fix delta diff (130 lines, correctly regenerated after committing the fix)",
+    "2026-08-14T13:10:44Z approved-change: src/platform/internationalization/locale.test.ts - user-directed session; G4 fix for Codex-4 (added exactly-two-members test), both reviewers confirmed correct.",
+    "2026-08-14T13:10:44Z approved-change: src/platform/internationalization/detectLocale.test.ts - user-directed session; G4 fix for Codex-5 (added leading-dash malformed-candidate case), both reviewers confirmed correct.",
+    "2026-08-14T13:10:44Z approved-change: src/platform/internationalization/createKeyEchoCatalogue.test.ts - user-directed session; G4 fix for Codex-2 (blocking) - replaced 2 real as-casts with isRecord() type guard, both reviewers independently confirmed the fix (Codex ran vitest+tsc itself).",
+    "2026-08-14T13:10:44Z step 1 hash rebased (src/platform/internationalization/locale.test.ts): locale.test.ts G4 approved-change logged above",
+    "2026-08-14T13:10:44Z step 2 hash rebased (src/platform/internationalization/detectLocale.test.ts): detectLocale.test.ts G4 approved-change logged above",
+    "2026-08-14T13:10:44Z step 3 hash rebased (src/platform/internationalization/createKeyEchoCatalogue.test.ts): createKeyEchoCatalogue.test.ts G4 approved-change logged above",
+    "2026-08-14T13:10:52Z G4 -> passed (Dual review complete: fresh Claude reviewer + Codex on the full diff, both with fix-confirmation passes. 7 findings total: Claude-1 rejected as false (stale-snapshot reviewer error, verified via git show); Claude-2/Codex-1 (same issue) accepted - unreachable through the type system; Codex-2 (blocking) fixed - isRecord() type guard replaces 2 real as-casts; Codex-3 accepted - no changeLanguage caller exists anywhere, matches R11 non-goal; Codex-4/Codex-5 fixed - 2 small test-completeness additions. Both reviewers independently confirmed the fix (Codex ran vitest+tsc itself in the confirmation pass). Full suite re-verified green after fix: 281 tests. Evidence: evidence/reviews/g4-full-diff.txt, g4-claude-review.md, g4-codex-review.md, g4-fix-diff.txt.)",
+    "2026-08-14T13:11:11Z phase -> prove",
+    "2026-08-14T13:11:52Z set proof = PROOF.md",
+    "2026-08-14T13:12:00Z G5 -> passed (PROOF.md maps every SPEC.md invariant (1-20 + non-goals) to evidence; loop evidence check and loop check both clean. All requirements satisfied, dual review passed, all findings dispositioned.)",
+    "2026-08-14T13:12:39Z set retro = 1) Locale tag validity has two independent layers - Intl.getCanonicalLocales checks BCP-47 grammar only, axe-core's html-lang-valid checks IANA registry membership. 'pseudo' passed the first and failed the second; only caught because Codex actually EXECUTED axe-core against it rather than reasoning from training. My own first G1 validator pass claimed 'should not throw... FROM TRAINING, not executed' and was simply wrong - reinforces codex-contract.md's warning that a well-formed verdict from training isn't proof, but the sharper lesson is: when two DIFFERENT validation mechanisms exist for the same value, passing one says nothing about the other - always identify and check every relevant validator, not just the first one that comes to mind. 2) npm run preview serves dist/ as-is and does NOT rebuild - a stale dist/ (built hours before this session, unrelated to any of today's code) produced a full false-negative e2e run (12/12 failed) before I realized the build was stale, not the wiring. Worth a VERIFICATION.md callout for any repo where preview/e2e depends on a pre-built dist/. 3) Platform-layer boundary rules (platform cannot import app/feature, even in TEST files) apply beyond production code - a spec's testing plan assumed real-catalogue imports in a platform-layer unit test without checking this, caught only during implementation (step 3), not by either G1 review round. Worth a loop-spec-validator prompt addition: explicitly check that every planned test file's imports respect the architecture's layer boundaries, not just production code's. 4) Process error on my part: generated G4's fix-diff evidence via 'git diff main...HEAD' BEFORE committing the fix, so the diff silently showed only pre-fix state - caught by the fresh reviewer reading the actual on-disk files instead of trusting the diff artifact. Lesson: always commit before generating diff-based evidence, or diff against the working tree explicitly, never assume a diff-since-base captures uncommitted work.",
+    "2026-08-14T13:12:43Z phase -> retro",
+    "2026-08-14T13:12:57Z loop complete: feature/M, 7 implementation steps + 5 doc edits, G1 (2 review rounds, 7 findings resolved), G2, G3 (20/20 invariants verified), G4 (dual review, 7 findings dispositioned, fix confirmed by both reviewers), G5 all passed. Ready for PR.",
+    "2026-08-14T13:12:57Z phase -> done"
+  ],
+  "evidence_hashes": {
+    "evidence/reviews/g1-claude-validator.md": {
+      "sha": "d07b778bb1c1",
+      "recorded": "2026-08-14T11:12:09Z",
+      "note": "G1 Claude validator: 3 findings (2 blocking)"
+    },
+    "evidence/reviews/g1-codex-review.md": {
+      "sha": "5f600dc4575b",
+      "recorded": "2026-08-14T11:12:09Z",
+      "note": "G1 Codex second opinion: 4 findings (4 blocking)"
+    },
+    "evidence/reviews/g1-codex-review-round2.md": {
+      "sha": "3bf90250adb2",
+      "recorded": "2026-08-14T11:19:53Z",
+      "note": "Codex round-2 fix confirmation: 3/4 resolved, Codex-1 partially (pseudo failed real axe-core execution); resolved on round 3 by switching to 'zxx', verified by Codex's own round-2 check + independent re-verification"
+    },
+    "evidence/reviews/g1-claude-validator-recheck.md": {
+      "sha": "806866b83c5a",
+      "recorded": "2026-08-14T11:20:14Z",
+      "note": "fresh loop-spec-validator fix-confirmation pass: all 5 tracked findings resolved (at the time, against 'pseudo' - superseded by round-2 Codex axe-core execution finding)"
+    },
+    "evidence/step1-red.txt": {
+      "sha": "7f9b5d4e1536",
+      "recorded": "2026-08-14T11:28:23Z",
+      "note": "Locale red: module did not exist"
+    },
+    "evidence/step1-green.txt": {
+      "sha": "bed120927d60",
+      "recorded": "2026-08-14T11:28:23Z",
+      "note": "Locale green: 1/1 test passing"
+    },
+    "evidence/step2-red.txt": {
+      "sha": "0d26e79ad391",
+      "recorded": "2026-08-14T11:29:06Z",
+      "note": "detectLocale red: module did not exist"
+    },
+    "evidence/step2-green.txt": {
+      "sha": "ebdc0867c432",
+      "recorded": "2026-08-14T11:29:07Z",
+      "note": "detectLocale green: 4/4 tests passing"
+    },
+    "evidence/step3-red.txt": {
+      "sha": "97f38c5ca50c",
+      "recorded": "2026-08-14T11:35:22Z",
+      "note": "createKeyEchoCatalogue red: module did not exist"
+    },
+    "evidence/step3-green.txt": {
+      "sha": "95c585816cfa",
+      "recorded": "2026-08-14T11:35:23Z",
+      "note": "createKeyEchoCatalogue green: 2/2 tests passing (fixture-based, corrected from real-catalogue imports per boundary constraint)"
+    },
+    "evidence/step4-red.txt": {
+      "sha": "ffff901b44c5",
+      "recorded": "2026-08-14T11:36:54Z",
+      "note": "createRuntime wiring red: expected 'zxx', got hardcoded 'en'"
+    },
+    "evidence/step4-green.txt": {
+      "sha": "294cf9eb691e",
+      "recorded": "2026-08-14T11:36:54Z",
+      "note": "createRuntime wiring green: 5/5 tests"
+    },
+    "evidence/step4-full-suite.txt": {
+      "sha": "04a3d7dde52e",
+      "recorded": "2026-08-14T11:36:54Z",
+      "note": "full suite green: 67 files, 277 tests - confirms invariant 15 (bootstrap.test.tsx unmodified, still passes with jsdom default navigator.languages)"
+    },
+    "evidence/step5-red.txt": {
+      "sha": "1492a75a60a9",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "auth loadTranslations red"
+    },
+    "evidence/step5-red-hierarchy.txt": {
+      "sha": "1b374f038394",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "hierarchy loadTranslations red"
+    },
+    "evidence/step5-green-auth.txt": {
+      "sha": "61ea10766d0c",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "auth loadTranslations green: 3/3"
+    },
+    "evidence/step5-green-hierarchy.txt": {
+      "sha": "928f649bdb7c",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "hierarchy loadTranslations green: 3/3"
+    },
+    "evidence/step5-full-suite.txt": {
+      "sha": "12690189cb0f",
+      "recorded": "2026-08-14T11:39:17Z",
+      "note": "full suite green: 67 files, 279 tests"
+    },
+    "evidence/step6-red.txt": {
+      "sha": "16a24be86c21",
+      "recorded": "2026-08-14T11:41:26Z",
+      "note": "7 tests red across 6 files, right reason (still English)"
+    },
+    "evidence/step6-green.txt": {
+      "sha": "affb6c688a37",
+      "recorded": "2026-08-14T11:41:26Z",
+      "note": "10/10 tests green across 6 files"
+    },
+    "evidence/step6-full-suite.txt": {
+      "sha": "c94792a5dffb",
+      "recorded": "2026-08-14T11:41:26Z",
+      "note": "full suite green: 67 files, 279 tests, no regressions in other buildTestRuntime consumers"
+    },
+    "evidence/step7-createRuntime-common-echo-red.txt": {
+      "sha": "58908f8bf493",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "red: createRuntime common-catalogue echo gap, discovered mid-step-7"
+    },
+    "evidence/step7-createRuntime-common-echo-green.txt": {
+      "sha": "f842629099a1",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "green: 6/6 createRuntime.test.ts after common-catalogue echo fix"
+    },
+    "evidence/step7-e2e-run.txt": {
+      "sha": "dfd2407f6560",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "final real e2e chromium-project run: 12/12 passing, including axe-core html-lang-valid against lang=zxx in a real browser"
+    },
+    "evidence/step7-e2e-development-project.txt": {
+      "sha": "1f22d406896f",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "development project unaffected: 7/7 passing, confirms non-goal"
+    },
+    "evidence/step7-size.txt": {
+      "sha": "2f22fba4c8ef",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "npm run size: all budgets pass, entry 112.84kB/150kB, no unbudgeted chunk"
+    },
+    "evidence/g3-verify.txt": {
+      "sha": "f11fb7428ae7",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3: npm run verify full output - typecheck/lint/format/test:coverage(280 tests,96%+ coverage)/build/verify:build/size all clean"
+    },
+    "evidence/g3-e2e.txt": {
+      "sha": "c22ef2495231",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3: full e2e run (chromium 12/12 + development 7/7 = 19/19), no flakiness, fresh preview build"
+    },
+    "evidence/traces/accessibility-login-chromium-trace.zip": {
+      "sha": "98f46c76d648",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/accessibility-notfound-chromium-trace.zip": {
+      "sha": "06586517e51c",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/accessibility-root-chromium-trace.zip": {
+      "sha": "8eb0f4793a7e",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/placeholder-home-chromium-trace.zip": {
+      "sha": "66f0a981ef3e",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/right-to-left-home-chromium-trace.zip": {
+      "sha": "c96d8de29b1f",
+      "recorded": "2026-08-14T11:55:52Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/right-to-left-home.png": {
+      "sha": "73bff19844fc",
+      "recorded": "2026-08-14T11:55:52Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/right-to-left-homelogin.png": {
+      "sha": "923d39c9c217",
+      "recorded": "2026-08-14T11:55:52Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/right-to-left-login-chromium-trace.zip": {
+      "sha": "ea0f5a8a4a5a",
+      "recorded": "2026-08-14T11:55:52Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/reviews/g4-full-diff.txt": {
+      "sha": "8334054b5cce",
+      "recorded": "2026-08-14T13:10:26Z",
+      "note": "G4 full diff (3040 lines) reviewed by fresh Claude reviewer + Codex"
+    },
+    "evidence/reviews/g4-claude-review.md": {
+      "sha": "0ade45e52ee5",
+      "recorded": "2026-08-14T13:10:26Z",
+      "note": "G4 Claude fresh-context review: 2 findings (1 blocking, determined false), fix-confirmation CONFIRMED"
+    },
+    "evidence/reviews/g4-codex-review.md": {
+      "sha": "a898ea408b0f",
+      "recorded": "2026-08-14T13:10:27Z",
+      "note": "G4 Codex second opinion: 5 findings (2 blocking), fix-confirmation CONFIRMED (same thread, ran vitest+tsc itself)"
+    },
+    "evidence/reviews/g4-fix-diff.txt": {
+      "sha": "b6bc8268d194",
+      "recorded": "2026-08-14T13:10:27Z",
+      "note": "G4 fix delta diff (130 lines, correctly regenerated after committing the fix)"
+    }
+  },
+  "test_file_hashes": {
+    "src/platform/internationalization/locale.test.ts": {
+      "sha": "6bed34d90a07",
+      "step": 1,
+      "recorded": "2026-08-14T13:10:44Z",
+      "log_index": 126,
+      "rebased": "locale.test.ts G4 approved-change logged above"
+    },
+    "src/platform/internationalization/detectLocale.test.ts": {
+      "sha": "a6b0e80579f2",
+      "step": 2,
+      "recorded": "2026-08-14T13:10:44Z",
+      "log_index": 127,
+      "rebased": "detectLocale.test.ts G4 approved-change logged above"
+    },
+    "src/platform/internationalization/createKeyEchoCatalogue.test.ts": {
+      "sha": "7481cda4e91b",
+      "step": 3,
+      "recorded": "2026-08-14T13:10:44Z",
+      "log_index": 128,
+      "rebased": "createKeyEchoCatalogue.test.ts G4 approved-change logged above"
+    },
+    "src/app/composition/createRuntime.test.ts": {
+      "sha": "185c9d659916",
+      "step": 4,
+      "recorded": "2026-08-14T11:56:29Z",
+      "log_index": 100,
+      "rebased": "createRuntime.test.ts approved-change logged above"
+    },
+    "src/features/auth/loadTranslations.test.ts": {
+      "sha": "d329e25b7d6e",
+      "step": 5,
+      "recorded": "2026-08-14T11:56:37Z",
+      "log_index": 102,
+      "rebased": "loadTranslations.test.ts (both features) approved-change logged above"
+    },
+    "src/features/hierarchy/loadTranslations.test.ts": {
+      "sha": "7c7cb067dc1d",
+      "step": 5,
+      "recorded": "2026-08-14T11:56:37Z",
+      "log_index": 102,
+      "rebased": "loadTranslations.test.ts (both features) approved-change logged above"
+    },
+    "src/app/error-boundary/ErrorSurface.test.tsx": {
+      "sha": "777304d2032a",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/error-boundary/RootErrorBoundary.test.tsx": {
+      "sha": "ec6358278f14",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/error-boundary/RouteErrorBoundary.test.tsx": {
+      "sha": "21297f7130dc",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/layout/ApplicationLayout.test.tsx": {
+      "sha": "ec33f62ae680",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/routing/routes/NotFoundRoute.test.tsx": {
+      "sha": "8a5a771cf260",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "src/app/ApplicationRoot.test.tsx": {
+      "sha": "5431dc2a3063",
+      "step": 6,
+      "recorded": "2026-08-14T11:40:36Z",
+      "log_index": 67
+    },
+    "e2e/right-to-left.spec.ts": {
+      "sha": "7802ede2c867",
+      "step": 7,
+      "recorded": "2026-08-14T11:47:32Z",
+      "log_index": 75
+    }
+  }
+}

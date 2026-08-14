@@ -1,0 +1,40 @@
+> size-limit
+
+- Running JS in headless Chrome
+✔ Running JS in headless Chrome
+  
+  app entry (initial payload)
+  Size limit:   150 kB
+  Size:         112.84 kB gzipped
+  Loading time: 2.3 s     on slow 3G
+  
+  stylesheet
+  Size limit:   15 kB
+  Size:         3.81 kB gzipped
+  Loading time: 75 ms   on slow 3G
+  
+  route: home
+  Size limit:   30 kB
+  Size:         452 B gzipped
+  Loading time: 10 ms on slow 3G
+  
+  route: login
+  Size limit:   30 kB
+  Size:         448 B gzipped
+  Loading time: 10 ms on slow 3G
+  
+  route: not-found
+  Size limit:   30 kB
+  Size:         200 B gzipped
+  Loading time: 10 ms on slow 3G
+  
+  catalogue: auth
+  Size limit:   5 kB
+  Size:         156 B gzipped
+  Loading time: 10 ms on slow 3G
+  
+  catalogue: hierarchy
+  Size limit:   5 kB
+  Size:         157 B gzipped
+  Loading time: 10 ms on slow 3G
+  

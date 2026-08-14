@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { screen } from '@testing-library/react';
 import { useTranslation } from 'react-i18next';
+import { Locale } from '@platform/internationalization';
 import { renderRoute } from './testing/renderRoute';
 import { useRuntime } from './composition/useRuntime';
 
@@ -26,7 +27,7 @@ describe('ApplicationRoot', () => {
   it('sets document.documentElement.lang and dir from the active i18next language', async () => {
     await renderRoute(<ProbeRoute />);
 
-    expect(document.documentElement.lang).toBe('en');
+    expect(document.documentElement.lang).toBe(Locale.Test);
     expect(document.documentElement.dir).toBe('ltr');
   });
 });

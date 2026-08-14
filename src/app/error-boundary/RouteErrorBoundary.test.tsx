@@ -16,14 +16,14 @@ describe('RouteErrorBoundary', () => {
 
     await renderRoute(<RouterProvider router={router} />);
 
-    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    expect(screen.getByText('errorSurface.title')).toBeInTheDocument();
     // Keyboard recovery (invariant 93) and that the retry actually
     // re-runs the route rather than reloading are e2e-only checks
     // (TECH.md 5.4) - jsdom has no real navigation to observe, and
     // React's own error-retry behavior makes a unit-level render count
     // an unreliable way to prove it.
     expect(
-      screen.getByRole('button', { name: 'Try again' }),
+      screen.getByRole('button', { name: 'errorSurface.retry' }),
     ).toBeInTheDocument();
   });
 });

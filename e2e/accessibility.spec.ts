@@ -3,9 +3,9 @@ import { createAxeBuilder } from './support/axeBuilder';
 import { installRouteMocks } from './support/routeMocks';
 
 const ROUTES = [
-  { path: '/', heading: "The hierarchy view isn't built yet" },
-  { path: '/login', heading: "Sign in isn't built yet" },
-  { path: '/does-not-exist', heading: 'Page not found' },
+  { path: '/', heading: 'home.title' },
+  { path: '/login', heading: 'login.title' },
+  { path: '/does-not-exist', heading: 'notFound.title' },
 ];
 
 test.describe('accessibility', () => {

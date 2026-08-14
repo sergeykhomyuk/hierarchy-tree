@@ -13,15 +13,17 @@ test.describe('placeholder routes', () => {
     await page.goto('/');
 
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      "The hierarchy view isn't built yet",
+      'home.title',
     );
-    await expect(page).toHaveTitle('Hierarchy');
+    await expect(page).toHaveTitle('home.documentTitle');
     await expect(page.getByRole('main')).toBeVisible();
     await expect(
-      page.getByRole('link', { name: 'Skip to main content' }),
+      page.getByRole('link', { name: 'layout.skipLink' }),
     ).toBeAttached();
 
-    expect(await page.evaluate(() => document.documentElement.lang)).toBe('en');
+    expect(await page.evaluate(() => document.documentElement.lang)).toBe(
+      'zxx',
+    );
     expect(await page.evaluate(() => document.documentElement.dir)).toBe('ltr');
 
     expect(records).toEqual([]);
@@ -37,9 +39,9 @@ test.describe('placeholder routes', () => {
     await page.goto('/login');
 
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      "Sign in isn't built yet",
+      'login.title',
     );
-    await expect(page).toHaveTitle('Sign in');
+    await expect(page).toHaveTitle('login.documentTitle');
 
     expect(records).toEqual([]);
   });
@@ -61,7 +63,7 @@ test.describe('placeholder routes', () => {
     await page.keyboard.press('Tab');
 
     await expect(
-      page.getByRole('link', { name: 'Skip to main content' }),
+      page.getByRole('link', { name: 'layout.skipLink' }),
     ).toBeFocused();
   });
 });

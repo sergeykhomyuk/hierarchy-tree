@@ -1,0 +1,30 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/composition/createRuntime.test.ts (5 tests | 1 failed) 6ms
+     × resolves the runtime language from navigator.languages 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/composition/createRuntime.test.ts > createRuntime > resolves the runtime language from navigator.languages
+AssertionError: expected 'en' to be 'zxx' // Object.is equality
+
+Expected: "zxx"
+Received: "en"
+
+ ❯ src/app/composition/createRuntime.test.ts:53:35
+     51|     const runtime = await createRuntime(TEST_CONFIGURATION);
+     52|
+     53|     expect(runtime.i18n.language).toBe(Locale.Test);
+       |                                   ^
+     54|   });
+     55|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  12:36:02
+   Duration  652ms (transform 65ms, setup 103ms, import 71ms, tests 6ms, environment 407ms)
+

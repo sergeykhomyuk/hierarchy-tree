@@ -1,0 +1,17 @@
+
+Running 12 tests using 5 workers
+
+  ✓   3 [chromium] › e2e/placeholder-routes.spec.ts:6:3 › placeholder routes › the home route renders the hierarchy placeholder (362ms)
+  ✓   1 [chromium] › e2e/not-found.spec.ts:5:1 › an unknown path renders the not-found route with a working link home (444ms)
+  ✓   2 [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry (500ms)
+  ✓   6 [chromium] › e2e/placeholder-routes.spec.ts:32:3 › placeholder routes › the login route renders the generic auth placeholder (148ms)
+  ✓   5 [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › / has zero axe violations (576ms)
+  ✓   7 [chromium] › e2e/telemetry-buffer.spec.ts:5:1 › the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage (138ms)
+  ✓   4 [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › / mirrors correctly under a forced right-to-left direction (607ms)
+  ✓   8 [chromium] › e2e/placeholder-routes.spec.ts:49:3 › placeholder routes › the skip link is the first thing a keyboard user reaches (110ms)
+  ✓  10 [chromium] › e2e/telemetry-buffer.spec.ts:29:1 › local and session storage are empty after visiting both routes (142ms)
+  ✓   9 [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › /login has zero axe violations (265ms)
+  ✓  11 [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › /login mirrors correctly under a forced right-to-left direction (282ms)
+  ✓  12 [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › /does-not-exist has zero axe violations (227ms)
+
+  12 passed (2.4s)

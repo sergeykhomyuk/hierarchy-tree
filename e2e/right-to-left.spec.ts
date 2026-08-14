@@ -4,12 +4,18 @@ import { recordConsole } from './support/consoleRecorder';
 import { forceDirection } from './support/forceDirection';
 import { installRouteMocks } from './support/routeMocks';
 
-// English is the only shipped locale in this phase (invariant 65), so
-// there is no product path that switches direction - forceDirection.ts
-// overrides the browser-rendered `dir` directly to prove invariant 68's
-// claim (logical properties mirror correctly with no other code change)
-// independently of locale-driven derivation, which invariant 66 covers
-// separately at the unit level and in placeholder-routes/accessibility.
+// English is the only shipped PRODUCT locale (invariant 65) - a
+// non-product-facing `test` locale (Locale.Test, tag 'zxx') exists for
+// unit/e2e assertions only (see ARCHITECTURE.md's decision log), reachable
+// solely through this Playwright project's `locale: 'zxx'` context option,
+// never through any in-app control. There is still no PRODUCT path that
+// switches direction - forceDirection.ts overrides the browser-rendered
+// `dir` directly to prove invariant 68's claim (logical properties mirror
+// correctly with no other code change) independently of locale-driven
+// derivation, which invariant 66 covers separately at the unit level and
+// in placeholder-routes/accessibility. This spec's headings assert the
+// key-echoed catalogue strings the `zxx` locale produces, same as every
+// other spec under this project - unrelated to the RTL mechanism itself.
 //
 // TECH.md's plan for this invariant also names a "mirrored inline-start
 // indicator" assertion (an element whose computed padding-inline-start
@@ -26,8 +32,8 @@ import { installRouteMocks } from './support/routeMocks';
 // (invariant 68's structural precondition - every logical property
 // resolves relative to it), across every route this phase ships.
 const ROUTES = [
-  { path: '/', heading: "The hierarchy view isn't built yet" },
-  { path: '/login', heading: "Sign in isn't built yet" },
+  { path: '/', heading: 'home.title' },
+  { path: '/login', heading: 'login.title' },
 ];
 
 test.describe('right-to-left', () => {

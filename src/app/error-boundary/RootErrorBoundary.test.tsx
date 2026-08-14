@@ -11,7 +11,7 @@ describe('RootErrorBoundary', () => {
   it('the root boundary renders the error surface above any router without throwing', async () => {
     await expect(renderRoute(<Bomb />)).resolves.toBeDefined();
 
-    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    expect(screen.getByText('errorSurface.title')).toBeInTheDocument();
   });
 
   it('the boundary reports the error exactly once and displays the correlation id', async () => {

@@ -27,7 +27,11 @@ const developmentServer = {
 // than one project list filtered per invocation.
 const chromiumProject = {
   name: 'chromium',
-  use: { ...devices['Desktop Chrome'], baseURL: 'http://127.0.0.1:4173/' },
+  use: {
+    ...devices['Desktop Chrome'],
+    baseURL: 'http://127.0.0.1:4173/',
+    locale: 'zxx',
+  },
   testDir: './e2e',
   testIgnore: [
     '**/development-console.spec.ts',

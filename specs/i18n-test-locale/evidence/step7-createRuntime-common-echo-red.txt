@@ -1,0 +1,30 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/composition/createRuntime.test.ts (6 tests | 1 failed) 7ms
+     × registers the key-echoed common catalogue when the resolved language is Locale.Test 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/composition/createRuntime.test.ts > createRuntime > registers the key-echoed common catalogue when the resolved language is Locale.Test
+AssertionError: expected 'Page not found' to be 'notFound.title' // Object.is equality
+
+Expected: "notFound.title"
+Received: "Page not found"
+
+ ❯ src/app/composition/createRuntime.test.ts:61:64
+     59|     const runtime = await createRuntime(TEST_CONFIGURATION);
+     60|
+     61|     expect(runtime.i18n.t('notFound.title', { ns: 'common' })).toBe(
+       |                                                                ^
+     62|       'notFound.title',
+     63|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  12:45:16
+   Duration  606ms (transform 63ms, setup 90ms, import 68ms, tests 7ms, environment 373ms)
+

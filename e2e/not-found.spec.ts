@@ -12,15 +12,15 @@ test('an unknown path renders the not-found route with a working link home', asy
   await page.goto('/this-path-does-not-exist');
 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'Page not found',
+    'notFound.title',
   );
 
-  const homeLink = page.getByRole('link', { name: 'Back to home' });
+  const homeLink = page.getByRole('link', { name: 'notFound.linkHome' });
   await expect(homeLink).toBeVisible();
   await homeLink.click();
 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    "The hierarchy view isn't built yet",
+    'home.title',
   );
   expect(records).toEqual([]);
 });
