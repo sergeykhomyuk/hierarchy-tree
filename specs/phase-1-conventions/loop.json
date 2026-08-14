@@ -1,0 +1,128 @@
+{
+  "task": "phase-1-conventions",
+  "title": "Align code with react-coding/typescript-coding conventions",
+  "type": "refactor",
+  "size": "S",
+  "status": "active",
+  "phase": "plan",
+  "phase_entered": "2026-08-14T08:55:26Z",
+  "created": "2026-08-14",
+  "updated": "2026-08-14T08:56:55Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "S",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": null,
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "skipped",
+      "attempts": 0
+    },
+    "G2": {
+      "status": "pending",
+      "attempts": 0,
+      "steps_total": 5,
+      "steps_done": 0
+    },
+    "G3": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G4": {
+      "status": "pending",
+      "attempts": 0,
+      "security_pass": null
+    },
+    "G5": {
+      "status": "pending",
+      "attempts": 0
+    }
+  },
+  "retro": null,
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "Extract bytesToHex to shared/utils",
+      "tests": [
+        "src/shared/utils/bytesToHex.test.ts::bytesToHex > converts bytes to zero-padded lowercase hex",
+        "src/shared/utils/bytesToHex.test.ts::bytesToHex > returns an empty string for an empty byte array"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "desc": "Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration",
+      "tests": [
+        "src/platform/configuration/createConfiguration.test.ts::createConfiguration",
+        "src/platform/observability/createObservability.test.ts::createObservability"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "desc": "Introduce NavigationState const-object enum in app/routing",
+      "tests": [
+        "src/app/routing/createInteractionTracker.test.ts::createInteractionTracker"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "desc": "Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts",
+      "tests": [
+        "src/platform/observability/reportWebVitals.test.ts::reportWebVitals"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "desc": "Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo",
+      "tests": [
+        "src/app/ApplicationRoot.test.tsx::ApplicationRoot",
+        "src/app/kit-route/KitRoute.test.tsx::KitRoute",
+        "src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout",
+        "src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary",
+        "src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface",
+        "src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    }
+  ],
+  "log": [
+    "2026-08-14T08:47:49Z init: type=refactor size=S flags=[]",
+    "2026-08-14T08:47:55Z triage: refactor/S. Mechanical convention-alignment sub-task of phase-1: (1) convert literal-union types to const-object enum pattern per typescript-coding skill, (2) wrap components in memo() per react-coding skill, (3) dedupe bytesToHex into shared/utils. Zero ambiguity, cross-layer but low-risk/low-LOC mechanical changes, behavior fully preserved. No open loops overlap (phase-1-setup is done).",
+    "2026-08-14T08:53:36Z phase -> frame",
+    "2026-08-14T08:54:08Z frame: behavior-preservation contract. Preserved surface: (1) Configuration.logLevel/observabilitySink accepted values + validation/defaults unchanged; (2) LOG_LEVEL_SEVERITY threshold filtering + createSink() selection unchanged; (3) NavigationState comparisons/transitions in createInteractionTracker unchanged; (4) app.web_vital analytics event shape for LCP/INP/CLS unchanged; (5) bytesToHex output format (lowercase zero-padded hex) unchanged for createCorrelationId + createTraceparent; (6) memo-wrapped components' rendered output/props contract unchanged (memo is a pure render optimization). Coverage audit: logLevel/observabilitySink covered by createConfiguration.test.ts + createObservability.test.ts; NavigationState covered by createInteractionTracker.test.ts; WebVitalMetricName covered by reportWebVitals.test.ts; all 6 components to be memoized already have render/behavior test files. Gap: bytesToHex is only tested indirectly via createCorrelationId.test.ts/createTraceparent.test.ts - will add a direct characterization/extraction unit test (src/shared/utils/bytesToHex.test.ts) as its own step, red-first against the not-yet-existing shared module. RootErrorBoundary.tsx is a class-based error boundary - intentionally excluded from memo (memo targets function components; error boundaries must be classes).",
+    "2026-08-14T08:55:26Z phase -> plan",
+    "2026-08-14T08:55:45Z step 1 added: Extract bytesToHex to shared/utils",
+    "2026-08-14T08:55:45Z step 2 added: Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration",
+    "2026-08-14T08:55:45Z step 3 added: Introduce NavigationState const-object enum in app/routing",
+    "2026-08-14T08:55:45Z step 4 added: Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts",
+    "2026-08-14T08:55:45Z step 5 added: Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo",
+    "2026-08-14T08:56:55Z step 2 amended: desc: 'Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration' -> 'Introduce LogLevel/ObservabilitySink const-object enums in platform/configuration'; tests: ['src/platform/configuration/createConfiguration.test.ts', 'src/platform/observability/createObservability.test.ts'] -> ['src/platform/configuration/createConfiguration.test.ts::createConfiguration', 'src/platform/observability/createObservability.test.ts::createObservability']",
+    "2026-08-14T08:56:55Z step 3 amended: desc: 'Introduce NavigationState const-object enum in app/routing' -> 'Introduce NavigationState const-object enum in app/routing'; tests: ['src/app/routing/createInteractionTracker.test.ts'] -> ['src/app/routing/createInteractionTracker.test.ts::createInteractionTracker']",
+    "2026-08-14T08:56:55Z step 4 amended: desc: 'Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts' -> 'Introduce WebVitalMetricName const-object enum, dedupe analyticsEvents.ts + reportWebVitals.ts'; tests: ['src/platform/observability/reportWebVitals.test.ts'] -> ['src/platform/observability/reportWebVitals.test.ts::reportWebVitals']",
+    "2026-08-14T08:56:55Z step 5 amended: desc: 'Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo' -> 'Wrap ApplicationRoot, KitRoute, ApplicationLayout, RouteErrorBoundary, ErrorSurface, NotFoundRoute in memo'; tests: ['src/app/ApplicationRoot.test.tsx', 'src/app/kit-route/KitRoute.test.tsx', 'src/app/layout/ApplicationLayout.test.tsx', 'src/app/error-boundary/RouteErrorBoundary.test.tsx', 'src/app/error-boundary/ErrorSurface.test.tsx', 'src/app/routing/routes/NotFoundRoute.test.tsx'] -> ['src/app/ApplicationRoot.test.tsx::ApplicationRoot', 'src/app/kit-route/KitRoute.test.tsx::KitRoute', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary', 'src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute']"
+  ]
+}
