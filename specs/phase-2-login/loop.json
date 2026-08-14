@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:59:54Z",
+  "updated": "2026-08-14T21:01:11Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 10
+      "steps_done": 11
     },
     "G3": {
       "status": "pending",
@@ -419,8 +419,8 @@
         "src/features/auth/guard/resolveDestination.test.ts::resolveDestination > falls back to the hierarchy route for a protocol-relative, scheme-carrying or backslash-escaped value",
         "src/features/auth/guard/resolveDestination.test.ts::resolveDestination > keeps an unserved same-origin path rather than rewriting it"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T21:01:11Z evidence/steps/step11-red.txt: import resolution failure before the module existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -861,7 +861,11 @@
     "2026-08-14T20:59:54Z evidence recorded: evidence/steps/step10-red.txt (28ae3eb450cb) - Step 10 red: readSession/writeSession/clearSession missing (3 test files fail); sessionRecord.test.ts already passed since sessionRecord.ts (a type + constant, no behavior) was scaffolded earlier in the same edit pass as sessionRecordSchema/sessionStorageKey/sessionShadow",
     "2026-08-14T20:59:54Z step 10 -> red",
     "2026-08-14T20:59:54Z step 10 -> green",
-    "2026-08-14T20:59:54Z step 10 -> done"
+    "2026-08-14T20:59:54Z step 10 -> done",
+    "2026-08-14T21:01:11Z evidence recorded: evidence/steps/step11-red.txt (00a1bd1490fa) - Step 11 red: resolveDestination module missing",
+    "2026-08-14T21:01:11Z step 11 -> red",
+    "2026-08-14T21:01:11Z step 11 -> green",
+    "2026-08-14T21:01:11Z step 11 -> done"
   ],
   "milestones": [
     {
@@ -964,6 +968,11 @@
       "sha": "28ae3eb450cb",
       "recorded": "2026-08-14T20:59:54Z",
       "note": "Step 10 red: readSession/writeSession/clearSession missing (3 test files fail); sessionRecord.test.ts already passed since sessionRecord.ts (a type + constant, no behavior) was scaffolded earlier in the same edit pass as sessionRecordSchema/sessionStorageKey/sessionShadow"
+    },
+    "evidence/steps/step11-red.txt": {
+      "sha": "00a1bd1490fa",
+      "recorded": "2026-08-14T21:01:11Z",
+      "note": "Step 11 red: resolveDestination module missing"
     }
   },
   "test_file_hashes": {
@@ -1062,6 +1071,12 @@
       "step": 10,
       "recorded": "2026-08-14T20:59:54Z",
       "log_index": 191
+    },
+    "src/features/auth/guard/resolveDestination.test.ts": {
+      "sha": "74832ca4a11c",
+      "step": 11,
+      "recorded": "2026-08-14T21:01:11Z",
+      "log_index": 195
     }
   }
 }
