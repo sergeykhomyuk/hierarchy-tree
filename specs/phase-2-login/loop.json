@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:20:11Z",
+  "updated": "2026-08-14T20:22:58Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 1
+      "steps_done": 2
     },
     "G3": {
       "status": "pending",
@@ -300,10 +300,11 @@
       "tests": [
         "src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > cycles a short input to exactly 32 code units",
         "src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > keeps only the first 32 code units of a long input",
-        "src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > returns fewer than 32 entries when an astral character survives truncation"
+        "src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > returns fewer than 32 entries when an astral character survives truncation",
+        "src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > throws a RangeError for an empty string instead of looping forever"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T20:22:58Z evidence/steps/step2-red.txt: import resolution failure before the module existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -811,7 +812,13 @@
     "2026-08-14T20:19:28Z evidence recorded: evidence/steps/step1-red.txt (3170174c708b) - Step 1 red: table/checksum tests against stub implementation",
     "2026-08-14T20:19:28Z step 1 -> red",
     "2026-08-14T20:19:28Z step 1 -> green",
-    "2026-08-14T20:20:11Z step 1 -> done"
+    "2026-08-14T20:20:11Z step 1 -> done",
+    "2026-08-14T20:21:11Z step 2 amended: desc: 'Step 2 - `normalizeToCodeUnits`, transcribed byte-exact' -> 'Step 2 - `normalizeToCodeUnits`, transcribed byte-exact'; tests: ['src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > cycles a short input to exactly 32 code units', 'src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > keeps only the first 32 code units of a long input', 'src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > returns fewer than 32 entries when an astral character survives truncation'] -> ['src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > cycles a short input to exactly 32 code units', 'src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > keeps only the first 32 code units of a long input', 'src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > returns fewer than 32 entries when an astral character survives truncation', 'src/features/auth/domain/normalizeToCodeUnits.test.ts::normalizeToCodeUnits > throws a RangeError for an empty string instead of looping forever']",
+    "2026-08-14T20:21:11Z plan amend: step 2 gains a fourth test (empty-string RangeError) - TECH.md section 2 specifies normalizeToCodeUnits throws independently of deriveSecret's own guard ('proven only by a direct unit test'), which the original registered list omitted and the 100% domain coverage threshold would otherwise leave the throw branch untested",
+    "2026-08-14T20:22:58Z evidence recorded: evidence/steps/step2-red.txt (895d8e521eeb) - Step 2 red: normalizeToCodeUnits module missing",
+    "2026-08-14T20:22:58Z step 2 -> red",
+    "2026-08-14T20:22:58Z step 2 -> green",
+    "2026-08-14T20:22:58Z step 2 -> done"
   ],
   "milestones": [
     {
@@ -869,6 +876,11 @@
       "sha": "3170174c708b",
       "recorded": "2026-08-14T20:19:28Z",
       "note": "Step 1 red: table/checksum tests against stub implementation"
+    },
+    "evidence/steps/step2-red.txt": {
+      "sha": "895d8e521eeb",
+      "recorded": "2026-08-14T20:22:58Z",
+      "note": "Step 2 red: normalizeToCodeUnits module missing"
     }
   },
   "test_file_hashes": {
@@ -883,6 +895,12 @@
       "step": 1,
       "recorded": "2026-08-14T20:19:28Z",
       "log_index": 145
+    },
+    "src/features/auth/domain/normalizeToCodeUnits.test.ts": {
+      "sha": "bc02374f3d74",
+      "step": 2,
+      "recorded": "2026-08-14T20:22:58Z",
+      "log_index": 151
     }
   }
 }
