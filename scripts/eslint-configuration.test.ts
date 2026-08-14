@@ -97,6 +97,38 @@ describe('eslint configuration', () => {
     }
   });
 
+  it('permits sessionStorage only in createTabStorage', async () => {
+    const config = await readEslintConfig();
+    const globalsRules = collectRules(config, 'no-restricted-globals');
+
+    const tabStorageRule = globalsRules.find((rule) =>
+      (rule.files ?? []).includes('src/platform/runtime/createTabStorage.ts'),
+    );
+    expect(
+      tabStorageRule,
+      'createTabStorage.ts must have its own no-restricted-globals override',
+    ).toBeDefined();
+
+    const tabStorageNames = (
+      Array.isArray(tabStorageRule?.value) ? tabStorageRule.value.slice(1) : []
+    ).map((entry) =>
+      typeof entry === 'string' ? entry : (entry as { name?: string }).name,
+    );
+    expect(tabStorageNames).not.toContain('sessionStorage');
+
+    // Every other no-restricted-globals entry (the blanket
+    // src/**/*.{ts,tsx} block) still bans it.
+    const otherRulesBanningSessionStorage = globalsRules.filter((rule) => {
+      if (rule === tabStorageRule) return false;
+      const names = (Array.isArray(rule.value) ? rule.value.slice(1) : []).map(
+        (entry) =>
+          typeof entry === 'string' ? entry : (entry as { name?: string }).name,
+      );
+      return names.includes('sessionStorage');
+    });
+    expect(otherRulesBanningSessionStorage.length).toBeGreaterThan(0);
+  });
+
   it('the network ban covers every enumerated identifier in bare and member forms', async () => {
     const config = await readEslintConfig();
     const bareNetworkGlobals = [

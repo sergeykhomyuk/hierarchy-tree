@@ -108,6 +108,42 @@ describe('assert-domain-vocabulary', () => {
     );
     expect(result.output).toContain('sessionManager');
   });
+
+  it('allows the /secrets literal only in the one file that builds the path', () => {
+    // A default (no explicit target) run exercises BOTH scope checks with
+    // their own real globs, unlike an explicit-target run - which bypasses
+    // EXPORTED_SCOPE_GLOBS's filtering and would wrongly also run the
+    // exported-word check against a features/auth file it was never
+    // meant to cover. This is the real npm-run-lint invocation shape.
+    const result = runScript('scripts/assert-domain-vocabulary.mjs');
+
+    expect(
+      result.status,
+      'the allow-listed secretResourcePath.ts must not fail the repo-wide scan',
+    ).toBe(0);
+    expect(result.output).not.toContain('secretResourcePath.ts');
+  });
+
+  it('still rejects a /secrets literal in any other file', () => {
+    const probeDir = mkdtempSync(join(tmpdir(), 'domain-vocabulary-secrets-'));
+    const otherFile = join(probeDir, 'other.tmp.ts');
+    writeFileSync(
+      otherFile,
+      "export const path = '/secrets/should-not-be-here.json';\n",
+    );
+
+    const result = runScript('scripts/assert-domain-vocabulary.mjs', [
+      otherFile,
+    ]);
+
+    rmSync(probeDir, { recursive: true, force: true });
+
+    expect(
+      result.status,
+      'a /secrets literal outside the allow-listed file must be flagged',
+    ).not.toBe(0);
+    expect(result.output).toContain('/secrets');
+  });
 });
 
 describe('assert-no-physical-properties', () => {

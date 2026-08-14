@@ -682,6 +682,21 @@ export default defineConfig([
     },
   },
   {
+    // The one module allowed to touch sessionStorage (invariant 75) - a
+    // narrower ban than phase 1's TECH.md predicted removing the entries
+    // outright. fetch/timers stay banned here; only the storage global is
+    // filtered, the same shape as the createFetchTransport override above.
+    files: ['src/platform/runtime/createTabStorage.ts'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        ...NETWORK_GLOBALS,
+        ...CLOCK_GLOBALS,
+        ...STORAGE_GLOBALS.filter((entry) => entry.name !== 'sessionStorage'),
+      ],
+    },
+  },
+  {
     files: ['src/platform/runtime/createSystemClock.ts'],
     rules: {
       'no-restricted-syntax': [

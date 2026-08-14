@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T21:05:53Z",
+  "updated": "2026-08-14T21:29:56Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 13
+      "steps_done": 14
     },
     "G3": {
       "status": "pending",
@@ -453,8 +453,8 @@
         "scripts/guard-scripts.test.ts::assert-domain-vocabulary > still rejects a /secrets literal in any other file",
         "scripts/eslint-configuration.test.ts::the boundaries policy > permits sessionStorage only in createTabStorage"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T21:29:56Z evidence/steps/step14-red.txt: allows-the-/secrets-literal + permits-sessionStorage tests fail before the narrowings existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -874,7 +874,11 @@
     "2026-08-14T21:05:53Z evidence recorded: evidence/steps/step13-red.txt (fb2b6821bb9e) - Step 13 red: exposes-tab-storage-and-the-signed-in-user-store test fails against pre-change createRuntime/renderRoute/auth-barrel",
     "2026-08-14T21:05:53Z step 13 -> red",
     "2026-08-14T21:05:53Z step 13 -> green",
-    "2026-08-14T21:05:53Z step 13 -> done"
+    "2026-08-14T21:05:53Z step 13 -> done",
+    "2026-08-14T21:29:55Z evidence recorded: evidence/steps/step14-red.txt (759b7270aced) - Step 14 red: /secrets allowlist test + sessionStorage-narrowing test fail against unmodified guard scripts",
+    "2026-08-14T21:29:56Z step 14 -> red",
+    "2026-08-14T21:29:56Z step 14 -> green",
+    "2026-08-14T21:29:56Z step 14 -> done"
   ],
   "milestones": [
     {
@@ -992,6 +996,11 @@
       "sha": "fb2b6821bb9e",
       "recorded": "2026-08-14T21:05:53Z",
       "note": "Step 13 red: exposes-tab-storage-and-the-signed-in-user-store test fails against pre-change createRuntime/renderRoute/auth-barrel"
+    },
+    "evidence/steps/step14-red.txt": {
+      "sha": "759b7270aced",
+      "recorded": "2026-08-14T21:29:55Z",
+      "note": "Step 14 red: /secrets allowlist test + sessionStorage-narrowing test fail against unmodified guard scripts"
     }
   },
   "test_file_hashes": {
@@ -1120,6 +1129,18 @@
       "step": 13,
       "recorded": "2026-08-14T21:05:53Z",
       "log_index": 204
+    },
+    "scripts/guard-scripts.test.ts": {
+      "sha": "07b718874c9a",
+      "step": 14,
+      "recorded": "2026-08-14T21:29:56Z",
+      "log_index": 208
+    },
+    "scripts/eslint-configuration.test.ts": {
+      "sha": "dc14449056f8",
+      "step": 14,
+      "recorded": "2026-08-14T21:29:56Z",
+      "log_index": 208
     }
   }
 }

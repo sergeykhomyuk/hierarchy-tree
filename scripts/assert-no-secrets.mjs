@@ -44,6 +44,10 @@ const ENTROPY_SCAN_EXCLUDES = new Set([
   'package-lock.json',
   '.github/workflows/ci.yml',
   'eslint.config.js',
+  // Its own WHOLE_SCOPE_FILE_ALLOWLIST key names a src/features/auth path
+  // past the 40-character threshold by construction, the same reason
+  // eslint.config.js is excluded above.
+  'scripts/assert-domain-vocabulary.mjs',
 ]);
 const ENTROPY_SCAN_EXCLUDE_PATTERN = /(^|\/)loop\.json$/;
 

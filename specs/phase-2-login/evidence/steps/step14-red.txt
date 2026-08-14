@@ -1,0 +1,75 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-k4jxhE/banned.tmp.ts: identifier "buildForest" carries banned reference-system name "buildForest"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-alias-EprTm7/src/shared/banned-alias.tmp.ts: exported identifier "sessionToken" carries the banned domain word "session"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-Bx1GHw/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "manager"
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-Bx1GHw/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "session"
+assert-domain-vocabulary: banned vocabulary found:
+  - src/features/auth/data/secretResourcePath.ts: exported identifier "secretResourcePath" carries the banned domain word "secret"
+  - src/features/auth/data/secretResourcePath.ts: string literal contains "/secrets"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-secrets-HfwHds/other.tmp.ts: string literal contains "/secrets"
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/physical-properties-OyK8aL/Banned.tmp.tsx: physical property/utility "ml-*" found - use the logical equivalent
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/raw-color-lK4EYD/Banned.tmp.tsx: raw color value found - use a theme.css token instead
+assert-no-lorem-ipsum: filler text found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/lorem-ipsum-jcYrQ9/Banned.tmp.tsx: lorem ipsum filler text found
+assert-no-secrets: pass --source-only or --bundle-only
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-keyword-jJRnin/banned.tmp.ts: matches secret keyword pattern /apiKey/i
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-entropy-gl2tGQ/banned.tmp.ts: high-entropy literal found (9f8a7b6c5d4e...)
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-suppression-CsDMsH/banned.tmp.ts: eslint-disable suppresses "no-restricted-" - suppression is not permitted for this rule
+assert-no-secrets --bundle-only: dist/ is missing - run npm run build first
+assert-no-secrets --source-only: secrets found:
+  - .github/workflows/ci.yml: matches secret keyword pattern /apiKey/i
+ ❯ |tooling| scripts/guard-scripts.test.ts (14 tests | 1 failed) 518ms
+     × allows the /secrets literal only in the one file that builds the path 25ms
+ ❯ |tooling| scripts/eslint-configuration.test.ts (10 tests | 1 failed) 6170ms
+     × permits sessionStorage only in createTabStorage 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/eslint-configuration.test.ts > eslint configuration > permits sessionStorage only in createTabStorage
+AssertionError: createTabStorage.ts must have its own no-restricted-globals override: expected undefined to be defined
+ ❯ scripts/eslint-configuration.test.ts:110:7
+    108|       tabStorageRule,
+    109|       'createTabStorage.ts must have its own no-restricted-globals ove…
+    110|     ).toBeDefined();
+       |       ^
+    111|
+    112|     const tabStorageNames = (
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |tooling| scripts/guard-scripts.test.ts > assert-domain-vocabulary > allows the /secrets literal only in the one file that builds the path
+AssertionError: the allow-listed file must not be flagged for its own /secrets literal: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ scripts/guard-scripts.test.ts:120:7
+    118|       result.status,
+    119|       'the allow-listed file must not be flagged for its own /secrets …
+    120|     ).toBe(0);
+       |       ^
+    121|   });
+    122|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 22 passed (24)
+   Start at  22:08:34
+   Duration  6.28s (transform 64ms, setup 78ms, import 14ms, tests 6.69s, environment 0ms)
+

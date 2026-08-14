@@ -47,6 +47,17 @@ const FILE_ALLOWLIST = {
   'src/platform/observability/redact.ts': new Set(['secret']),
 };
 
+// A distinct map from FILE_ALLOWLIST: that one is consulted only by
+// checkExportedVocabulary, below, for individual banned WORDS in exported
+// identifiers. The /secrets literal check is an unconditional whole-scope
+// substring test in a different function and never consulted it, so
+// narrowing it needs its own path-keyed allow-list rather than an entry
+// there. secretResourcePath.ts is the only file under src that may build
+// this literal path (section 3).
+const WHOLE_SCOPE_FILE_ALLOWLIST = {
+  'src/features/auth/data/secretResourcePath.ts': new Set(['/secrets']),
+};
+
 function segmentIdentifier(identifier) {
   return identifier
     .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
@@ -156,7 +167,8 @@ function checkWholeScopeVocabulary() {
       }
     }
 
-    if (source.includes('/secrets')) {
+    const wholeScopeAllowlist = WHOLE_SCOPE_FILE_ALLOWLIST[filePath] ?? new Set();
+    if (source.includes('/secrets') && !wholeScopeAllowlist.has('/secrets')) {
       violations.push(`${filePath}: string literal contains "/secrets"`);
     }
 
