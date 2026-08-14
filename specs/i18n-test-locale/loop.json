@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "M",
   "status": "active",
-  "phase": "prove",
-  "phase_entered": "2026-08-14T13:11:11Z",
+  "phase": "retro",
+  "phase_entered": "2026-08-14T13:12:43Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T13:12:00Z",
+  "updated": "2026-08-14T13:12:57Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -134,7 +134,10 @@
       "note": "PROOF.md maps every SPEC.md invariant (1-20 + non-goals) to evidence; loop evidence check and loop check both clean. All requirements satisfied, dual review passed, all findings dispositioned."
     }
   },
-  "retro": null,
+  "retro": {
+    "outcome": "1) Locale tag validity has two independent layers - Intl.getCanonicalLocales checks BCP-47 grammar only, axe-core's html-lang-valid checks IANA registry membership. 'pseudo' passed the first and failed the second; only caught because Codex actually EXECUTED axe-core against it rather than reasoning from training. My own first G1 validator pass claimed 'should not throw... FROM TRAINING, not executed' and was simply wrong - reinforces codex-contract.md's warning that a well-formed verdict from training isn't proof, but the sharper lesson is: when two DIFFERENT validation mechanisms exist for the same value, passing one says nothing about the other - always identify and check every relevant validator, not just the first one that comes to mind. 2) npm run preview serves dist/ as-is and does NOT rebuild - a stale dist/ (built hours before this session, unrelated to any of today's code) produced a full false-negative e2e run (12/12 failed) before I realized the build was stale, not the wiring. Worth a VERIFICATION.md callout for any repo where preview/e2e depends on a pre-built dist/. 3) Platform-layer boundary rules (platform cannot import app/feature, even in TEST files) apply beyond production code - a spec's testing plan assumed real-catalogue imports in a platform-layer unit test without checking this, caught only during implementation (step 3), not by either G1 review round. Worth a loop-spec-validator prompt addition: explicitly check that every planned test file's imports respect the architecture's layer boundaries, not just production code's. 4) Process error on my part: generated G4's fix-diff evidence via 'git diff main...HEAD' BEFORE committing the fix, so the diff silently showed only pre-fix state - caught by the fresh reviewer reading the actual on-disk files instead of trusting the diff artifact. Lesson: always commit before generating diff-based evidence, or diff against the working tree explicitly, never assume a diff-since-base captures uncommitted work.",
+    "date": "2026-08-14T13:12:39Z"
+  },
   "plan_steps": [
     {
       "id": 1,
@@ -342,7 +345,10 @@
     "2026-08-14T13:10:52Z G4 -> passed (Dual review complete: fresh Claude reviewer + Codex on the full diff, both with fix-confirmation passes. 7 findings total: Claude-1 rejected as false (stale-snapshot reviewer error, verified via git show); Claude-2/Codex-1 (same issue) accepted - unreachable through the type system; Codex-2 (blocking) fixed - isRecord() type guard replaces 2 real as-casts; Codex-3 accepted - no changeLanguage caller exists anywhere, matches R11 non-goal; Codex-4/Codex-5 fixed - 2 small test-completeness additions. Both reviewers independently confirmed the fix (Codex ran vitest+tsc itself in the confirmation pass). Full suite re-verified green after fix: 281 tests. Evidence: evidence/reviews/g4-full-diff.txt, g4-claude-review.md, g4-codex-review.md, g4-fix-diff.txt.)",
     "2026-08-14T13:11:11Z phase -> prove",
     "2026-08-14T13:11:52Z set proof = PROOF.md",
-    "2026-08-14T13:12:00Z G5 -> passed (PROOF.md maps every SPEC.md invariant (1-20 + non-goals) to evidence; loop evidence check and loop check both clean. All requirements satisfied, dual review passed, all findings dispositioned.)"
+    "2026-08-14T13:12:00Z G5 -> passed (PROOF.md maps every SPEC.md invariant (1-20 + non-goals) to evidence; loop evidence check and loop check both clean. All requirements satisfied, dual review passed, all findings dispositioned.)",
+    "2026-08-14T13:12:39Z set retro = 1) Locale tag validity has two independent layers - Intl.getCanonicalLocales checks BCP-47 grammar only, axe-core's html-lang-valid checks IANA registry membership. 'pseudo' passed the first and failed the second; only caught because Codex actually EXECUTED axe-core against it rather than reasoning from training. My own first G1 validator pass claimed 'should not throw... FROM TRAINING, not executed' and was simply wrong - reinforces codex-contract.md's warning that a well-formed verdict from training isn't proof, but the sharper lesson is: when two DIFFERENT validation mechanisms exist for the same value, passing one says nothing about the other - always identify and check every relevant validator, not just the first one that comes to mind. 2) npm run preview serves dist/ as-is and does NOT rebuild - a stale dist/ (built hours before this session, unrelated to any of today's code) produced a full false-negative e2e run (12/12 failed) before I realized the build was stale, not the wiring. Worth a VERIFICATION.md callout for any repo where preview/e2e depends on a pre-built dist/. 3) Platform-layer boundary rules (platform cannot import app/feature, even in TEST files) apply beyond production code - a spec's testing plan assumed real-catalogue imports in a platform-layer unit test without checking this, caught only during implementation (step 3), not by either G1 review round. Worth a loop-spec-validator prompt addition: explicitly check that every planned test file's imports respect the architecture's layer boundaries, not just production code's. 4) Process error on my part: generated G4's fix-diff evidence via 'git diff main...HEAD' BEFORE committing the fix, so the diff silently showed only pre-fix state - caught by the fresh reviewer reading the actual on-disk files instead of trusting the diff artifact. Lesson: always commit before generating diff-based evidence, or diff against the working tree explicitly, never assume a diff-since-base captures uncommitted work.",
+    "2026-08-14T13:12:43Z phase -> retro",
+    "2026-08-14T13:12:57Z loop complete: feature/M, 7 implementation steps + 5 doc edits, G1 (2 review rounds, 7 findings resolved), G2, G3 (20/20 invariants verified), G4 (dual review, 7 findings dispositioned, fix confirmed by both reviewers), G5 all passed. Ready for PR."
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
