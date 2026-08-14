@@ -12,7 +12,9 @@ import {
 } from '@platform/http';
 import {
   createInternationalization,
+  createKeyEchoCatalogue,
   detectLocale,
+  Locale,
 } from '@platform/internationalization';
 import { createSystemClock, createSystemRandomness } from '@platform/runtime';
 import { createInteractionTracker, type InteractionTracker } from '../routing';
@@ -54,9 +56,15 @@ export async function createRuntime(
       createCorrelationId(randomness),
   });
 
+  const language = detectLocale(navigator.languages);
   const i18n = await createInternationalization({
-    resources: { common: commonCatalogue },
-    language: detectLocale(navigator.languages),
+    resources: {
+      common:
+        language === Locale.Test
+          ? createKeyEchoCatalogue(commonCatalogue)
+          : commonCatalogue,
+    },
+    language,
     observability,
   });
 

@@ -53,6 +53,16 @@ describe('createRuntime', () => {
     expect(runtime.i18n.language).toBe(Locale.Test);
   });
 
+  it('registers the key-echoed common catalogue when the resolved language is Locale.Test', async () => {
+    vi.stubGlobal('navigator', { ...navigator, languages: [Locale.Test] });
+
+    const runtime = await createRuntime(TEST_CONFIGURATION);
+
+    expect(runtime.i18n.t('notFound.title', { ns: 'common' })).toBe(
+      'notFound.title',
+    );
+  });
+
   it('an http request made with no active interaction resolves rather than throwing for want of a correlation id', async () => {
     const runtime = await createRuntime(TEST_CONFIGURATION);
 

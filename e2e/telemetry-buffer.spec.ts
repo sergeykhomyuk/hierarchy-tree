@@ -10,7 +10,7 @@ test('the buffer sink records exactly one route_viewed for the initial load and 
 
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    "The hierarchy view isn't built yet",
+    'home.title',
   );
 
   const records = await page.evaluate(
@@ -34,11 +34,11 @@ test('local and session storage are empty after visiting both routes', async ({
 
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    "The hierarchy view isn't built yet",
+    'home.title',
   );
   await page.goto('/login');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    "Sign in isn't built yet",
+    'login.title',
   );
 
   const storageLengths = await page.evaluate(() => ({

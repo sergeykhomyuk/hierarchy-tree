@@ -1,0 +1,12 @@
+
+Running 7 tests using 2 workers
+
+  ✓  1 [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › / produces no console error or warning (273ms)
+  ✓  2 [development] › e2e/kit-route.spec.ts:12:3 › kit route › renders every documented state with no horizontal overflow (355ms)
+  ✓  3 [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › /login produces no console error or warning (221ms)
+  ✓  4 [development] › e2e/kit-route.spec.ts:29:3 › kit route › has zero axe violations in real light (466ms)
+  ✓  5 [development] › e2e/kit-route.spec.ts:46:3 › kit route › has zero axe violations in real dark (431ms)
+  ✓  6 [development] › e2e/kit-route.spec.ts:59:3 › kit route › a skeleton box equals the box of the content it stands in for (208ms)
+  ✓  7 [development] › e2e/kit-route.spec.ts:85:3 › kit route › mirrors correctly under a forced right-to-left direction (438ms)
+
+  7 passed (3.0s)

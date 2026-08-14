@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T11:27:37Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:41:26Z",
+  "updated": "2026-08-14T11:47:44Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -77,7 +77,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 7,
-      "steps_done": 6
+      "steps_done": 7
     },
     "G3": {
       "status": "pending",
@@ -162,10 +162,10 @@
       "id": 7,
       "desc": "Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment",
       "tests": [
-        "e2e/right-to-left.spec.ts"
+        "e2e/right-to-left.spec.ts::right-to-left"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-14T11:47:32Z evidence/step7-e2e-run.txt: initial real chromium-project run failed (12/12) - Playwright's locale:'zxx' worked (verified via probe) but assertions still expected raw English before createRuntime.ts's common-catalogue echo gap was fixed",
+      "status": "done"
     }
   ],
   "log": [
@@ -241,7 +241,17 @@
     "2026-08-14T11:41:26Z evidence recorded: evidence/step6-green.txt (affb6c688a37) - 10/10 tests green across 6 files",
     "2026-08-14T11:41:26Z evidence recorded: evidence/step6-full-suite.txt (c94792a5dffb) - full suite green: 67 files, 279 tests, no regressions in other buildTestRuntime consumers",
     "2026-08-14T11:41:26Z step 6 -> green",
-    "2026-08-14T11:41:26Z step 6 -> done"
+    "2026-08-14T11:41:26Z step 6 -> done",
+    "2026-08-14T11:46:34Z implement/step7: real e2e run (npx playwright test --project=chromium) found a defect step 4's unit tests missed - createRuntime.ts wired detectLocale into 'language' but never conditionally echoed the 'common' catalogue, so the real app under Locale.Test still rendered raw English for layout/notFound/errorSurface strings (common namespace is registered directly in createRuntime.ts, not through loadTranslations.ts, so step 5's fix didn't cover it). Also found dist/ was stale (built before today's session) - npm run preview serves dist/ as-is, it does not rebuild; a fresh npm run build was required before the real signal was trustworthy. Added a red-first test to createRuntime.test.ts, fixed createRuntime.ts to conditionally echo the common catalogue the same way loadTranslations.ts/renderRoute.tsx already do. Re-ran the full unit suite (280 tests) and the real e2e chromium project (12/12 passing, including axe-core html-lang-valid against lang='zxx' in a real browser) plus the development project (7/7, unaffected, confirming the non-goal).",
+    "2026-08-14T11:47:26Z step 7 amended: desc: \"Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment\" -> \"Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment\"; tests: ['e2e/right-to-left.spec.ts'] -> ['e2e/right-to-left.spec.ts::right-to-left']",
+    "2026-08-14T11:47:32Z step 7 -> red",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-createRuntime-common-echo-red.txt (58908f8bf493) - red: createRuntime common-catalogue echo gap, discovered mid-step-7",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-createRuntime-common-echo-green.txt (f842629099a1) - green: 6/6 createRuntime.test.ts after common-catalogue echo fix",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-e2e-run.txt (dfd2407f6560) - final real e2e chromium-project run: 12/12 passing, including axe-core html-lang-valid against lang=zxx in a real browser",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-e2e-development-project.txt (1f22d406896f) - development project unaffected: 7/7 passing, confirms non-goal",
+    "2026-08-14T11:47:40Z evidence recorded: evidence/step7-size.txt (2f22fba4c8ef) - npm run size: all budgets pass, entry 112.84kB/150kB, no unbudgeted chunk",
+    "2026-08-14T11:47:44Z step 7 -> green",
+    "2026-08-14T11:47:44Z step 7 -> done"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
@@ -348,6 +358,31 @@
       "sha": "c94792a5dffb",
       "recorded": "2026-08-14T11:41:26Z",
       "note": "full suite green: 67 files, 279 tests, no regressions in other buildTestRuntime consumers"
+    },
+    "evidence/step7-createRuntime-common-echo-red.txt": {
+      "sha": "58908f8bf493",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "red: createRuntime common-catalogue echo gap, discovered mid-step-7"
+    },
+    "evidence/step7-createRuntime-common-echo-green.txt": {
+      "sha": "f842629099a1",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "green: 6/6 createRuntime.test.ts after common-catalogue echo fix"
+    },
+    "evidence/step7-e2e-run.txt": {
+      "sha": "dfd2407f6560",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "final real e2e chromium-project run: 12/12 passing, including axe-core html-lang-valid against lang=zxx in a real browser"
+    },
+    "evidence/step7-e2e-development-project.txt": {
+      "sha": "1f22d406896f",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "development project unaffected: 7/7 passing, confirms non-goal"
+    },
+    "evidence/step7-size.txt": {
+      "sha": "2f22fba4c8ef",
+      "recorded": "2026-08-14T11:47:40Z",
+      "note": "npm run size: all budgets pass, entry 112.84kB/150kB, no unbudgeted chunk"
     }
   },
   "test_file_hashes": {
@@ -422,6 +457,12 @@
       "step": 6,
       "recorded": "2026-08-14T11:40:36Z",
       "log_index": 67
+    },
+    "e2e/right-to-left.spec.ts": {
+      "sha": "7802ede2c867",
+      "step": 7,
+      "recorded": "2026-08-14T11:47:32Z",
+      "log_index": 75
     }
   }
 }
