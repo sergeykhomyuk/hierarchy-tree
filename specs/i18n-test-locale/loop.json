@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "M",
   "status": "active",
-  "phase": "plan",
-  "phase_entered": "2026-08-14T11:25:27Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-14T11:27:37Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:26:40Z",
+  "updated": "2026-08-14T11:29:07Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -77,7 +77,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 7,
-      "steps_done": 0
+      "steps_done": 2
     },
     "G3": {
       "status": "pending",
@@ -101,8 +101,8 @@
       "tests": [
         "src/platform/internationalization/locale.test.ts::Locale > exposes English and Test members with the correct string values"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-14T11:27:57Z evidence/step1-red.txt: locale module does not exist yet",
+      "status": "done"
     },
     {
       "id": 2,
@@ -112,8 +112,8 @@
         "src/platform/internationalization/detectLocale.test.ts::detectLocale > falls back to English when no candidate matches",
         "src/platform/internationalization/detectLocale.test.ts::detectLocale > respects preference order over match order"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-14T11:28:40Z evidence/step2-red.txt: detectLocale module does not exist yet",
+      "status": "done"
     },
     {
       "id": 3,
@@ -204,7 +204,18 @@
     "2026-08-14T11:25:59Z step 6 added: buildTestRuntime defaults to Locale.Test; update dependent unit test assertions",
     "2026-08-14T11:25:59Z step 7 added: Playwright locale:'zxx' on chromium project; update 6 e2e specs + right-to-left comment",
     "2026-08-14T11:26:30Z step 6 amended: desc: 'buildTestRuntime defaults to Locale.Test; update dependent unit test assertions' -> 'buildTestRuntime defaults to Locale.Test; update dependent unit test assertions'; tests: ['src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface > renders the localized error copy', 'src/app/error-boundary/RootErrorBoundary.test.tsx::RootErrorBoundary > renders the error surface on a caught error', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary > renders the error surface on a route error', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout > renders the skip link', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute > renders the not-found copy', 'src/app/ApplicationRoot.test.tsx::ApplicationRoot > sets the document language and direction'] -> ['src/app/error-boundary/ErrorSurface.test.tsx::ErrorSurface > renders the catalogue copy and the correlation id, and calls no router hook', 'src/app/error-boundary/RootErrorBoundary.test.tsx::RootErrorBoundary > the root boundary renders the error surface above any router without throwing', 'src/app/error-boundary/RouteErrorBoundary.test.tsx::RouteErrorBoundary > renders the error surface when a route throws while rendering', 'src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout > renders a skip link pointing at the main landmark', 'src/app/routing/routes/NotFoundRoute.test.tsx::NotFoundRoute > an unmatched path renders the not-found route with a link home', 'src/app/ApplicationRoot.test.tsx::ApplicationRoot > sets document.documentElement.lang and dir from the active i18next language']",
-    "2026-08-14T11:26:40Z step 5 amended: desc: 'Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test' -> 'Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test'; tests: ['src/features/auth/loadTranslations.test.ts::loadTranslations > registers the key-echoed catalogue under Locale.Test', 'src/features/hierarchy/loadTranslations.test.ts::loadTranslations > registers the key-echoed catalogue under Locale.Test'] -> ['src/features/auth/loadTranslations.test.ts::auth loadTranslations > registers the key-echoed catalogue under Locale.Test', 'src/features/hierarchy/loadTranslations.test.ts::hierarchy loadTranslations > registers the key-echoed catalogue under Locale.Test']"
+    "2026-08-14T11:26:40Z step 5 amended: desc: 'Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test' -> 'Fix loadTranslations.ts (both features): register under active language, echo under Locale.Test'; tests: ['src/features/auth/loadTranslations.test.ts::loadTranslations > registers the key-echoed catalogue under Locale.Test', 'src/features/hierarchy/loadTranslations.test.ts::loadTranslations > registers the key-echoed catalogue under Locale.Test'] -> ['src/features/auth/loadTranslations.test.ts::auth loadTranslations > registers the key-echoed catalogue under Locale.Test', 'src/features/hierarchy/loadTranslations.test.ts::hierarchy loadTranslations > registers the key-echoed catalogue under Locale.Test']",
+    "2026-08-14T11:27:37Z phase -> implement",
+    "2026-08-14T11:27:57Z step 1 -> red",
+    "2026-08-14T11:28:23Z evidence recorded: evidence/step1-red.txt (7f9b5d4e1536) - Locale red: module did not exist",
+    "2026-08-14T11:28:23Z evidence recorded: evidence/step1-green.txt (bed120927d60) - Locale green: 1/1 test passing",
+    "2026-08-14T11:28:23Z step 1 -> green",
+    "2026-08-14T11:28:23Z step 1 -> done",
+    "2026-08-14T11:28:40Z step 2 -> red",
+    "2026-08-14T11:29:07Z evidence recorded: evidence/step2-red.txt (0d26e79ad391) - detectLocale red: module did not exist",
+    "2026-08-14T11:29:07Z evidence recorded: evidence/step2-green.txt (ebdc0867c432) - detectLocale green: 4/4 tests passing",
+    "2026-08-14T11:29:07Z step 2 -> green",
+    "2026-08-14T11:29:07Z step 2 -> done"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
@@ -226,6 +237,40 @@
       "sha": "806866b83c5a",
       "recorded": "2026-08-14T11:20:14Z",
       "note": "fresh loop-spec-validator fix-confirmation pass: all 5 tracked findings resolved (at the time, against 'pseudo' - superseded by round-2 Codex axe-core execution finding)"
+    },
+    "evidence/step1-red.txt": {
+      "sha": "7f9b5d4e1536",
+      "recorded": "2026-08-14T11:28:23Z",
+      "note": "Locale red: module did not exist"
+    },
+    "evidence/step1-green.txt": {
+      "sha": "bed120927d60",
+      "recorded": "2026-08-14T11:28:23Z",
+      "note": "Locale green: 1/1 test passing"
+    },
+    "evidence/step2-red.txt": {
+      "sha": "0d26e79ad391",
+      "recorded": "2026-08-14T11:29:06Z",
+      "note": "detectLocale red: module did not exist"
+    },
+    "evidence/step2-green.txt": {
+      "sha": "ebdc0867c432",
+      "recorded": "2026-08-14T11:29:07Z",
+      "note": "detectLocale green: 4/4 tests passing"
+    }
+  },
+  "test_file_hashes": {
+    "src/platform/internationalization/locale.test.ts": {
+      "sha": "00186342c035",
+      "step": 1,
+      "recorded": "2026-08-14T11:27:57Z",
+      "log_index": 37
+    },
+    "src/platform/internationalization/detectLocale.test.ts": {
+      "sha": "574cb8e68023",
+      "step": 2,
+      "recorded": "2026-08-14T11:28:40Z",
+      "log_index": 42
     }
   }
 }
