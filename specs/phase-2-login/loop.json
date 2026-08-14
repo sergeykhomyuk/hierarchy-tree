@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "plan",
-  "phase_entered": "2026-08-14T20:10:48Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:13:25Z",
+  "updated": "2026-08-14T20:20:11Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 0
+      "steps_done": 1
     },
     "G3": {
       "status": "pending",
@@ -290,8 +290,8 @@
         "src/features/auth/domain/substitutionTable.test.ts::the substitution table > matches the literal extracted from the brief, entry for entry",
         "src/features/auth/domain/substitutionTableChecksum.test.ts::substitutionTableChecksum > matches the recorded FNV-1a constant for the brief's table"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T20:19:28Z evidence/steps/step1-red.txt: 3 tests fail against stub SUBSTITUTION_TABLE=[] and checksum=0",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -806,7 +806,12 @@
     "2026-08-14T20:13:25Z step 28 added (milestone 3): Step 28 - Migrate the seven e2e specs the guard breaks, and the guard e2e",
     "2026-08-14T20:13:25Z step 29 added (milestone 4): Step 29 - `SignedInName` and the avatar placeholder",
     "2026-08-14T20:13:25Z step 30 added (milestone 4): Step 30 - `SignedInHeader` and signing out",
-    "2026-08-14T20:13:25Z step 31 added (milestone 4): Step 31 - The header e2e and the live header proof"
+    "2026-08-14T20:13:25Z step 31 added (milestone 4): Step 31 - The header e2e and the live header proof",
+    "2026-08-14T20:16:52Z phase -> implement (reason: PLAN.md committed; user confirmed sequential milestone plan)",
+    "2026-08-14T20:19:28Z evidence recorded: evidence/steps/step1-red.txt (3170174c708b) - Step 1 red: table/checksum tests against stub implementation",
+    "2026-08-14T20:19:28Z step 1 -> red",
+    "2026-08-14T20:19:28Z step 1 -> green",
+    "2026-08-14T20:20:11Z step 1 -> done"
   ],
   "milestones": [
     {
@@ -859,6 +864,25 @@
       "sha": "96023b1b6edc",
       "recorded": "2026-08-14T19:45:05Z",
       "note": "G1 narrow verification of the 11 residue fixes: 10/11 VERIFIED, 1 still open plus 1 new contradiction, both then fixed by the driving session and recorded in the file's own follow-up section"
+    },
+    "evidence/steps/step1-red.txt": {
+      "sha": "3170174c708b",
+      "recorded": "2026-08-14T20:19:28Z",
+      "note": "Step 1 red: table/checksum tests against stub implementation"
+    }
+  },
+  "test_file_hashes": {
+    "src/features/auth/domain/substitutionTable.test.ts": {
+      "sha": "82f4dc2dbcb2",
+      "step": 1,
+      "recorded": "2026-08-14T20:19:28Z",
+      "log_index": 145
+    },
+    "src/features/auth/domain/substitutionTableChecksum.test.ts": {
+      "sha": "431e0ddce8b0",
+      "step": 1,
+      "recorded": "2026-08-14T20:19:28Z",
+      "log_index": 145
     }
   }
 }
