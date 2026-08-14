@@ -1,6 +1,5 @@
 import type { ObservabilityFacade } from '@platform/observability';
-
-export type NavigationState = 'idle' | 'loading' | 'submitting';
+import { NavigationState } from './navigationState';
 
 export type RouterState = {
   navigation: { state: NavigationState };
@@ -49,7 +48,7 @@ export function createInteractionTracker(
   function attach(router: Router): () => void {
     startInteraction();
     return router.subscribe((state) => {
-      const isNavigating = state.navigation.state !== 'idle';
+      const isNavigating = state.navigation.state !== NavigationState.Idle;
       if (isNavigating && !tracking) {
         startInteraction();
         return;

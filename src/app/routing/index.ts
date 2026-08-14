@@ -3,7 +3,7 @@ export type {
   InteractionTracker,
   Router,
   RouterState,
-  NavigationState,
 } from './createInteractionTracker';
+export { NavigationState } from './navigationState';
 export { createApplicationRouter } from './createApplicationRouter';
 export { routeDefinitions } from './routeDefinitions';

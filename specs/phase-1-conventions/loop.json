@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T08:57:06Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T09:24:43Z",
+  "updated": "2026-08-14T09:26:12Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 5,
-      "steps_done": 2
+      "steps_done": 3
     },
     "G3": {
       "status": "pending",
@@ -82,8 +82,8 @@
       "tests": [
         "src/app/routing/createInteractionTracker.test.ts::createInteractionTracker"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor step guarded by pre-existing tests (createInteractionTracker.test.ts) which must stay green throughout; introducing NavigationState const-object enum is a pure type-shape change with no behavior change",
+      "status": "done"
     },
     {
       "id": 4,
@@ -136,7 +136,12 @@
     "2026-08-14T09:24:43Z evidence recorded: evidence/step2-typecheck.txt (e3b0c44298fc) - tsc -b clean after LogLevel/ObservabilitySink enum introduction",
     "2026-08-14T09:24:43Z evidence recorded: evidence/step2-green.txt (0e6df5180829) - full vitest suite green: 65 files, 271 tests",
     "2026-08-14T09:24:43Z step 2 -> green",
-    "2026-08-14T09:24:43Z step 2 -> done"
+    "2026-08-14T09:24:43Z step 2 -> done",
+    "2026-08-14T09:25:02Z step 3 -> na",
+    "2026-08-14T09:26:12Z evidence recorded: evidence/step3-typecheck.txt (e3b0c44298fc) - tsc -b clean after NavigationState enum introduction",
+    "2026-08-14T09:26:12Z evidence recorded: evidence/step3-green.txt (ead2161c2758) - full vitest suite green: 65 files, 271 tests",
+    "2026-08-14T09:26:12Z step 3 -> green",
+    "2026-08-14T09:26:12Z step 3 -> done"
   ],
   "test_file_hashes": {
     "src/shared/utils/bytesToHex.test.ts": {
@@ -156,6 +161,12 @@
       "step": 2,
       "recorded": "2026-08-14T09:23:04Z",
       "log_index": 22
+    },
+    "src/app/routing/createInteractionTracker.test.ts": {
+      "sha": "1ab66dca5c3d",
+      "step": 3,
+      "recorded": "2026-08-14T09:25:02Z",
+      "log_index": 27
     }
   },
   "evidence_hashes": {
@@ -182,6 +193,16 @@
     "evidence/step2-green.txt": {
       "sha": "0e6df5180829",
       "recorded": "2026-08-14T09:24:43Z",
+      "note": "full vitest suite green: 65 files, 271 tests"
+    },
+    "evidence/step3-typecheck.txt": {
+      "sha": "e3b0c44298fc",
+      "recorded": "2026-08-14T09:26:12Z",
+      "note": "tsc -b clean after NavigationState enum introduction"
+    },
+    "evidence/step3-green.txt": {
+      "sha": "ead2161c2758",
+      "recorded": "2026-08-14T09:26:12Z",
       "note": "full vitest suite green: 65 files, 271 tests"
     }
   }
