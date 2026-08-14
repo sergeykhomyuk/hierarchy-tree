@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T22:40:00Z",
+  "updated": "2026-08-14T22:44:58Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 17
+      "steps_done": 18
     },
     "G3": {
       "status": "pending",
@@ -518,8 +518,8 @@
         "src/features/auth/useLoginSubmission.test.ts::useLoginSubmission > clears a previous alert as the next attempt starts",
         "src/features/auth/useLoginSubmission.test.ts::useLoginSubmission > aborts in flight without a state update when the page unmounts"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T22:44:58Z evidence/steps/step18-red.txt",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -921,7 +921,12 @@
     "2026-08-14T22:40:00Z evidence recorded: evidence/steps/step17-red.txt (3c6c9357af97) - Step 17 red: loginCardState module missing",
     "2026-08-14T22:40:00Z step 17 -> red",
     "2026-08-14T22:40:00Z step 17 -> green",
-    "2026-08-14T22:40:00Z step 17 -> done"
+    "2026-08-14T22:40:00Z step 17 -> done",
+    "2026-08-14T22:44:57Z evidence recorded: evidence/steps/step18-red.txt (1f564c381179) - Step 18 red: import resolution failure before useLoginSubmission existed",
+    "2026-08-14T22:44:58Z step 18 -> red",
+    "2026-08-14T22:44:58Z step 18 -> green",
+    "2026-08-14T22:44:58Z step 18 -> done",
+    "2026-08-14T22:44:58Z step 18: useLoginSubmission's success path calls navigate(destination, {replace:true}) with destination passed as the hook's own second parameter (not part of LoginPageDependencies' 5 fields) - LoginPage will receive the resolved destination separately from LoginRoute (step 22), since LoginPage itself has no router access to compute it. Design deferred precisely to step 22 but plumbed now so step 18's tests could exercise the full success path shape."
   ],
   "milestones": [
     {
@@ -1069,6 +1074,11 @@
       "sha": "3c6c9357af97",
       "recorded": "2026-08-14T22:40:00Z",
       "note": "Step 17 red: loginCardState module missing"
+    },
+    "evidence/steps/step18-red.txt": {
+      "sha": "1f564c381179",
+      "recorded": "2026-08-14T22:44:57Z",
+      "note": "Step 18 red: import resolution failure before useLoginSubmission existed"
     }
   },
   "test_file_hashes": {
