@@ -148,6 +148,40 @@ export const kitStates: readonly KitState[] = [
     ),
   },
   {
+    component: 'Input',
+    state: 'read-only',
+    render: () => (
+      <label htmlFor="kit-input-readonly">
+        Kit label
+        <Input
+          id="kit-input-readonly"
+          name="kit-input-readonly"
+          type="text"
+          value="Kit value"
+          onChange={noop}
+          readOnly
+        />
+      </label>
+    ),
+  },
+  {
+    component: 'Input',
+    state: 'with placeholder',
+    render: () => (
+      <label htmlFor="kit-input-placeholder">
+        Kit label
+        <Input
+          id="kit-input-placeholder"
+          name="kit-input-placeholder"
+          type="text"
+          value=""
+          onChange={noop}
+          placeholder="Kit placeholder"
+        />
+      </label>
+    ),
+  },
+  {
     component: 'Card',
     state: 'comfortable',
     render: () => <Card padding="comfortable">Kit card content</Card>,

@@ -9,6 +9,8 @@ type InputProps = {
   value: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   autoComplete?: string;
+  readOnly?: boolean;
+  placeholder?: string;
 };
 
 export const Input = memo(function Input({
@@ -18,6 +20,8 @@ export const Input = memo(function Input({
   value,
   onChange,
   autoComplete,
+  readOnly,
+  placeholder,
 }: InputProps) {
   const { describedBy, invalid, required } = useContext(FieldContext);
 
@@ -29,6 +33,8 @@ export const Input = memo(function Input({
       value={value}
       onChange={onChange}
       autoComplete={autoComplete}
+      readOnly={readOnly}
+      placeholder={placeholder}
       aria-describedby={describedBy}
       aria-invalid={invalid || undefined}
       required={required}
