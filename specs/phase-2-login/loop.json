@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:53:56Z",
+  "updated": "2026-08-14T20:56:52Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 8
+      "steps_done": 9
     },
     "G3": {
       "status": "pending",
@@ -392,8 +392,8 @@
         "src/platform/runtime/createTabStorage.test.ts::createTabStorage > reads, writes and clears through the tab-scoped store",
         "src/platform/runtime/createTabStorage.test.ts::createTabStorage > reports unavailable storage as absent rather than throwing"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T20:56:52Z evidence/steps/step9-red.txt: import resolution failure before the module existed",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -852,7 +852,12 @@
     "2026-08-14T20:53:56Z step 8 -> red",
     "2026-08-14T20:53:56Z step 8 -> green",
     "2026-08-14T20:53:56Z step 8 -> done",
-    "2026-08-14T20:53:56Z step 8: e2e/telemetry-buffer.spec.ts:26's not.toMatch(/password|secret|token/i) assertion will fail on a CORRECT implementation once real /secrets/[redacted].json paths reach the buffer, because '/secrets/' itself still matches /secret/i even after redaction - TECH.md flags this and PLAN.md defers the fix to wherever M2's e2e first exercises real login traffic (not registered as its own step; watch for it at the M2 e2e boundary or step 28's migration pass)"
+    "2026-08-14T20:53:56Z step 8: e2e/telemetry-buffer.spec.ts:26's not.toMatch(/password|secret|token/i) assertion will fail on a CORRECT implementation once real /secrets/[redacted].json paths reach the buffer, because '/secrets/' itself still matches /secret/i even after redaction - TECH.md flags this and PLAN.md defers the fix to wherever M2's e2e first exercises real login traffic (not registered as its own step; watch for it at the M2 e2e boundary or step 28's migration pass)",
+    "2026-08-14T20:56:51Z evidence recorded: evidence/steps/step9-red.txt (a05a1d7bfbd0) - Step 9 red: createTabStorage module missing",
+    "2026-08-14T20:56:52Z step 9 -> red",
+    "2026-08-14T20:56:52Z step 9 -> green",
+    "2026-08-14T20:56:52Z step 9 -> done",
+    "2026-08-14T20:56:52Z step 9: sessionStorage bare-identifier ban (eslint.config.js no-restricted-globals) still fires on createTabStorage.ts, as expected - deferred to step 14's one-file override alongside the /secrets vocab narrowing. Tests, tsc clean; both createTabStorage.test.ts cases run under vitest's node project (src/platform/**/*.test.ts has no jsdom) by stubbing sessionStorage directly on globalThis rather than window."
   ],
   "milestones": [
     {
@@ -945,6 +950,11 @@
       "sha": "4e8f090e6ff5",
       "recorded": "2026-08-14T20:53:56Z",
       "note": "Step 8 red: path-segment redaction test failing before the rule existed"
+    },
+    "evidence/steps/step9-red.txt": {
+      "sha": "a05a1d7bfbd0",
+      "recorded": "2026-08-14T20:56:51Z",
+      "note": "Step 9 red: createTabStorage module missing"
     }
   },
   "test_file_hashes": {
@@ -1013,6 +1023,12 @@
       "step": 8,
       "recorded": "2026-08-14T20:53:56Z",
       "log_index": 181
+    },
+    "src/platform/runtime/createTabStorage.test.ts": {
+      "sha": "74b0e73aa1c1",
+      "step": 9,
+      "recorded": "2026-08-14T20:56:52Z",
+      "log_index": 186
     }
   }
 }

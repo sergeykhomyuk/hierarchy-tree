@@ -40,11 +40,12 @@ function redactValue(value: unknown, seen: WeakSet<object>): unknown {
   return value;
 }
 
-// A resource path (e.g. '/secrets/<SECRET>.json') carries a secret as a
-// path SEGMENT, which redactUrlSearchParameters does not touch - it only
-// rewrites query parameters and only for a string that parses as an
-// absolute URL. This scrubs the segment immediately following one that
-// matches the redaction pattern, preserving any extension.
+// A resource path can carry a sensitive value as a path SEGMENT (e.g. a
+// derived secret ahead of its .json extension), which
+// redactUrlSearchParameters does not touch - it only rewrites query
+// parameters and only for a string that parses as an absolute URL. This
+// scrubs the segment immediately following one that matches the
+// redaction pattern, preserving any extension.
 function redactResourcePathSegment(value: string): string {
   if (!value.startsWith('/')) return value;
 
