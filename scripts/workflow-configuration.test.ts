@@ -247,17 +247,25 @@ describe('CI workflow', () => {
       );
     });
 
-    it('asserts the deployed URL equals the recorded production hostname', () => {
+    it('records the per-deployment URL and the production hostname in the step summary', () => {
+      // wrangler pages deploy always reports the deployment's own permanent
+      // URL (https://<hash>.<project>.pages.dev), never the production
+      // alias, regardless of whether Cloudflare flags the deployment
+      // production or preview - confirmed empirically via `wrangler pages
+      // deployment list`, which showed Environment: Production for a
+      // deployment whose deployment-url output was a hash-prefixed URL.
+      // Comparing the two for equality is therefore never satisfiable, so
+      // this step only records both for visibility; e2e:deployed
+      // (invariant 126a) is what actually verifies production was reached.
       const job = readWorkflow().jobs?.deploy;
       const steps = job?.steps ?? [];
-      const assertionStep = steps[steps.length - 1];
+      const recordStep = steps[steps.length - 1];
 
-      expect(assertionStep?.run).toContain(
-        'steps.deploy.outputs.deployment-url',
-      );
-      expect(assertionStep?.run).toContain(
+      expect(recordStep?.run).toContain('steps.deploy.outputs.deployment-url');
+      expect(recordStep?.run).toContain(
         'steps.deployment.outputs.productionHostname',
       );
+      expect(recordStep?.run).not.toContain('exit 1');
     });
 
     it('every non-actions/ uses: step is pinned by commit SHA, not a mutable tag', () => {
