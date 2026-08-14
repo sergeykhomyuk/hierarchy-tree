@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "M",
   "status": "active",
-  "phase": "review",
-  "phase_entered": "2026-08-14T11:57:13Z",
+  "phase": "prove",
+  "phase_entered": "2026-08-14T13:11:11Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T13:10:52Z",
+  "updated": "2026-08-14T13:12:00Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -26,7 +26,7 @@
     "spec": "SPEC.md",
     "plan": "PLAN.md",
     "design": null,
-    "proof": null,
+    "proof": "PROOF.md",
     "evidence": "evidence/"
   },
   "gates": {
@@ -129,8 +129,9 @@
       "note": "Dual review complete: fresh Claude reviewer + Codex on the full diff, both with fix-confirmation passes. 7 findings total: Claude-1 rejected as false (stale-snapshot reviewer error, verified via git show); Claude-2/Codex-1 (same issue) accepted - unreachable through the type system; Codex-2 (blocking) fixed - isRecord() type guard replaces 2 real as-casts; Codex-3 accepted - no changeLanguage caller exists anywhere, matches R11 non-goal; Codex-4/Codex-5 fixed - 2 small test-completeness additions. Both reviewers independently confirmed the fix (Codex ran vitest+tsc itself in the confirmation pass). Full suite re-verified green after fix: 281 tests. Evidence: evidence/reviews/g4-full-diff.txt, g4-claude-review.md, g4-codex-review.md, g4-fix-diff.txt."
     },
     "G5": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md maps every SPEC.md invariant (1-20 + non-goals) to evidence; loop evidence check and loop check both clean. All requirements satisfied, dual review passed, all findings dispositioned."
     }
   },
   "retro": null,
@@ -338,7 +339,10 @@
     "2026-08-14T13:10:44Z step 1 hash rebased (src/platform/internationalization/locale.test.ts): locale.test.ts G4 approved-change logged above",
     "2026-08-14T13:10:44Z step 2 hash rebased (src/platform/internationalization/detectLocale.test.ts): detectLocale.test.ts G4 approved-change logged above",
     "2026-08-14T13:10:44Z step 3 hash rebased (src/platform/internationalization/createKeyEchoCatalogue.test.ts): createKeyEchoCatalogue.test.ts G4 approved-change logged above",
-    "2026-08-14T13:10:52Z G4 -> passed (Dual review complete: fresh Claude reviewer + Codex on the full diff, both with fix-confirmation passes. 7 findings total: Claude-1 rejected as false (stale-snapshot reviewer error, verified via git show); Claude-2/Codex-1 (same issue) accepted - unreachable through the type system; Codex-2 (blocking) fixed - isRecord() type guard replaces 2 real as-casts; Codex-3 accepted - no changeLanguage caller exists anywhere, matches R11 non-goal; Codex-4/Codex-5 fixed - 2 small test-completeness additions. Both reviewers independently confirmed the fix (Codex ran vitest+tsc itself in the confirmation pass). Full suite re-verified green after fix: 281 tests. Evidence: evidence/reviews/g4-full-diff.txt, g4-claude-review.md, g4-codex-review.md, g4-fix-diff.txt.)"
+    "2026-08-14T13:10:52Z G4 -> passed (Dual review complete: fresh Claude reviewer + Codex on the full diff, both with fix-confirmation passes. 7 findings total: Claude-1 rejected as false (stale-snapshot reviewer error, verified via git show); Claude-2/Codex-1 (same issue) accepted - unreachable through the type system; Codex-2 (blocking) fixed - isRecord() type guard replaces 2 real as-casts; Codex-3 accepted - no changeLanguage caller exists anywhere, matches R11 non-goal; Codex-4/Codex-5 fixed - 2 small test-completeness additions. Both reviewers independently confirmed the fix (Codex ran vitest+tsc itself in the confirmation pass). Full suite re-verified green after fix: 281 tests. Evidence: evidence/reviews/g4-full-diff.txt, g4-claude-review.md, g4-codex-review.md, g4-fix-diff.txt.)",
+    "2026-08-14T13:11:11Z phase -> prove",
+    "2026-08-14T13:11:52Z set proof = PROOF.md",
+    "2026-08-14T13:12:00Z G5 -> passed (PROOF.md maps every SPEC.md invariant (1-20 + non-goals) to evidence; loop evidence check and loop check both clean. All requirements satisfied, dual review passed, all findings dispositioned.)"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
