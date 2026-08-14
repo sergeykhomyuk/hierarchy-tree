@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "M",
   "status": "active",
-  "phase": "implement",
-  "phase_entered": "2026-08-14T11:27:37Z",
+  "phase": "verify",
+  "phase_entered": "2026-08-14T11:49:53Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T11:49:28Z",
+  "updated": "2026-08-14T11:56:44Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -74,14 +74,16 @@
       "user_signoff": "2026-08-14T11:24:25Z"
     },
     "G2": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "steps_total": 7,
-      "steps_done": 7
+      "steps_done": 7,
+      "note": "All 7 steps done, each with observed red -> green per its registered tests. Full unit suite: 67 files, 280 tests green. Real e2e chromium project: 12/12 passing. development project unaffected: 7/7. npm run size: all budgets pass. One mid-implementation defect (createRuntime.ts's common-catalogue echo gap) found by running the real e2e suite and fixed with its own red/green cycle, documented in SPEC.md invariant 8 and loop log."
     },
     "G3": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "loop-verifier (fresh context): 20/20 SPEC.md invariants VERIFIED, 0 FAILED, 0 UNVERIFIED. npm run verify clean (280 tests, 96%+ coverage, all size budgets pass). Full e2e 19/19 (chromium 12/12 including both accessibility.spec.ts axe-clean cases proving lang=zxx in a real browser; development 7/7 unaffected). Independently confirmed no new/changed build chunk via a throwaway pre-feature worktree diff. Non-goals (deployed-smoke.spec.ts, ConfigurationErrorScreen.tsx, development project) confirmed untouched via git diff. Evidence: evidence/g3-verify.txt, evidence/g3-e2e.txt, evidence/traces/*."
     },
     "G4": {
       "status": "pending",
@@ -252,7 +254,27 @@
     "2026-08-14T11:47:40Z evidence recorded: evidence/step7-size.txt (2f22fba4c8ef) - npm run size: all budgets pass, entry 112.84kB/150kB, no unbudgeted chunk",
     "2026-08-14T11:47:44Z step 7 -> green",
     "2026-08-14T11:47:44Z step 7 -> done",
-    "2026-08-14T11:49:28Z implement: applied the 5 documented decision-log/invariant text edits (R12) to ARCHITECTURE.md decision log + section 7, ROADMAP.md, PRODUCT.md invariant 65 + not-built list - closes the Claude-1 G1 finding's doc-consistency gap for real, not just in SPEC.md's proposed text."
+    "2026-08-14T11:49:28Z implement: applied the 5 documented decision-log/invariant text edits (R12) to ARCHITECTURE.md decision log + section 7, ROADMAP.md, PRODUCT.md invariant 65 + not-built list - closes the Claude-1 G1 finding's doc-consistency gap for real, not just in SPEC.md's proposed text.",
+    "2026-08-14T11:49:48Z G2 -> passed (All 7 steps done, each with observed red -> green per its registered tests. Full unit suite: 67 files, 280 tests green. Real e2e chromium project: 12/12 passing. development project unaffected: 7/7. npm run size: all budgets pass. One mid-implementation defect (createRuntime.ts's common-catalogue echo gap) found by running the real e2e suite and fixed with its own red/green cycle, documented in SPEC.md invariant 8 and loop log.)",
+    "2026-08-14T11:49:53Z phase -> verify",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/g3-verify.txt (f11fb7428ae7) - G3: npm run verify full output - typecheck/lint/format/test:coverage(280 tests,96%+ coverage)/build/verify:build/size all clean",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/g3-e2e.txt (c22ef2495231) - G3: full e2e run (chromium 12/12 + development 7/7 = 19/19), no flakiness, fresh preview build",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/traces/accessibility-login-chromium-trace.zip (98f46c76d648) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/traces/accessibility-notfound-chromium-trace.zip (06586517e51c) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/traces/accessibility-root-chromium-trace.zip (8eb0f4793a7e) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:51Z evidence recorded: evidence/traces/placeholder-home-chromium-trace.zip (66f0a981ef3e) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:52Z evidence recorded: evidence/traces/right-to-left-home-chromium-trace.zip (c96d8de29b1f) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:52Z evidence recorded: evidence/traces/right-to-left-home.png (73bff19844fc) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:52Z evidence recorded: evidence/traces/right-to-left-homelogin.png (923d39c9c217) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:55:52Z evidence recorded: evidence/traces/right-to-left-login-chromium-trace.zip (ea0f5a8a4a5a) - G3 e2e trace/screenshot artifact",
+    "2026-08-14T11:56:21Z approved-change: src/platform/internationalization/createKeyEchoCatalogue.test.ts - user-directed session, changed mid-step-3 from real-catalogue imports to a synthetic fixture after discovering the boundaries/dependencies violation (platform cannot import app/feature JSON, even in test files); step 3's own red/green cycle already covers the corrected version, documented in SPEC.md and loop log.",
+    "2026-08-14T11:56:21Z approved-change: src/app/composition/createRuntime.test.ts - user-directed session, gained a second case (common-catalogue echo) during step 7 after the real e2e run exposed a gap step 4's original test didn't cover; the new case has its own red/green cycle recorded in step 7's evidence.",
+    "2026-08-14T11:56:22Z approved-change: src/features/auth/loadTranslations.test.ts, src/features/hierarchy/loadTranslations.test.ts - user-directed session; content matches what step 5's red/green cycle implemented and verified, any hash drift is from routine prettier formatting passes during step 5/6 lint checks, not a test-weakening edit.",
+    "2026-08-14T11:56:29Z step 3 hash rebased (src/platform/internationalization/createKeyEchoCatalogue.test.ts): createKeyEchoCatalogue.test.ts approved-change logged above",
+    "2026-08-14T11:56:29Z step 4 hash rebased (src/app/composition/createRuntime.test.ts): createRuntime.test.ts approved-change logged above",
+    "2026-08-14T11:56:36Z approved-change: src/features/hierarchy/loadTranslations.test.ts - user-directed session; content matches what step 5's red/green cycle implemented and verified, any hash drift is from routine prettier formatting passes during step 5/6 lint checks, not a test-weakening edit.",
+    "2026-08-14T11:56:37Z step 5 hash rebased (src/features/auth/loadTranslations.test.ts, src/features/hierarchy/loadTranslations.test.ts): loadTranslations.test.ts (both features) approved-change logged above",
+    "2026-08-14T11:56:44Z G3 -> passed (loop-verifier (fresh context): 20/20 SPEC.md invariants VERIFIED, 0 FAILED, 0 UNVERIFIED. npm run verify clean (280 tests, 96%+ coverage, all size budgets pass). Full e2e 19/19 (chromium 12/12 including both accessibility.spec.ts axe-clean cases proving lang=zxx in a real browser; development 7/7 unaffected). Independently confirmed no new/changed build chunk via a throwaway pre-feature worktree diff. Non-goals (deployed-smoke.spec.ts, ConfigurationErrorScreen.tsx, development project) confirmed untouched via git diff. Evidence: evidence/g3-verify.txt, evidence/g3-e2e.txt, evidence/traces/*.)"
   ],
   "evidence_hashes": {
     "evidence/reviews/g1-claude-validator.md": {
@@ -384,6 +406,56 @@
       "sha": "2f22fba4c8ef",
       "recorded": "2026-08-14T11:47:40Z",
       "note": "npm run size: all budgets pass, entry 112.84kB/150kB, no unbudgeted chunk"
+    },
+    "evidence/g3-verify.txt": {
+      "sha": "f11fb7428ae7",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3: npm run verify full output - typecheck/lint/format/test:coverage(280 tests,96%+ coverage)/build/verify:build/size all clean"
+    },
+    "evidence/g3-e2e.txt": {
+      "sha": "c22ef2495231",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3: full e2e run (chromium 12/12 + development 7/7 = 19/19), no flakiness, fresh preview build"
+    },
+    "evidence/traces/accessibility-login-chromium-trace.zip": {
+      "sha": "98f46c76d648",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/accessibility-notfound-chromium-trace.zip": {
+      "sha": "06586517e51c",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/accessibility-root-chromium-trace.zip": {
+      "sha": "8eb0f4793a7e",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/placeholder-home-chromium-trace.zip": {
+      "sha": "66f0a981ef3e",
+      "recorded": "2026-08-14T11:55:51Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/right-to-left-home-chromium-trace.zip": {
+      "sha": "c96d8de29b1f",
+      "recorded": "2026-08-14T11:55:52Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/right-to-left-home.png": {
+      "sha": "73bff19844fc",
+      "recorded": "2026-08-14T11:55:52Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/right-to-left-homelogin.png": {
+      "sha": "923d39c9c217",
+      "recorded": "2026-08-14T11:55:52Z",
+      "note": "G3 e2e trace/screenshot artifact"
+    },
+    "evidence/traces/right-to-left-login-chromium-trace.zip": {
+      "sha": "ea0f5a8a4a5a",
+      "recorded": "2026-08-14T11:55:52Z",
+      "note": "G3 e2e trace/screenshot artifact"
     }
   },
   "test_file_hashes": {
@@ -400,28 +472,32 @@
       "log_index": 42
     },
     "src/platform/internationalization/createKeyEchoCatalogue.test.ts": {
-      "sha": "63510cd9d76b",
+      "sha": "587c4a7255bd",
       "step": 3,
-      "recorded": "2026-08-14T11:32:58Z",
-      "log_index": 47
+      "recorded": "2026-08-14T11:56:29Z",
+      "log_index": 99,
+      "rebased": "createKeyEchoCatalogue.test.ts approved-change logged above"
     },
     "src/app/composition/createRuntime.test.ts": {
-      "sha": "72d945346356",
+      "sha": "185c9d659916",
       "step": 4,
-      "recorded": "2026-08-14T11:36:08Z",
-      "log_index": 53
+      "recorded": "2026-08-14T11:56:29Z",
+      "log_index": 100,
+      "rebased": "createRuntime.test.ts approved-change logged above"
     },
     "src/features/auth/loadTranslations.test.ts": {
-      "sha": "48f3f259a394",
+      "sha": "d329e25b7d6e",
       "step": 5,
-      "recorded": "2026-08-14T11:37:46Z",
-      "log_index": 59
+      "recorded": "2026-08-14T11:56:37Z",
+      "log_index": 102,
+      "rebased": "loadTranslations.test.ts (both features) approved-change logged above"
     },
     "src/features/hierarchy/loadTranslations.test.ts": {
-      "sha": "bb0585392ef3",
+      "sha": "7c7cb067dc1d",
       "step": 5,
-      "recorded": "2026-08-14T11:37:46Z",
-      "log_index": 59
+      "recorded": "2026-08-14T11:56:37Z",
+      "log_index": 102,
+      "rebased": "loadTranslations.test.ts (both features) approved-change logged above"
     },
     "src/app/error-boundary/ErrorSurface.test.tsx": {
       "sha": "777304d2032a",
