@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T20:52:26Z",
+  "updated": "2026-08-14T20:53:56Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 7
+      "steps_done": 8
     },
     "G3": {
       "status": "pending",
@@ -381,8 +381,8 @@
         "src/platform/observability/redact.test.ts::redact > replaces a secret-bearing path segment in a recorded resource path",
         "src/platform/observability/redact.test.ts::redact > leaves an ordinary resource path untouched"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-14T20:53:56Z evidence/steps/step8-red.txt: replaces-a-secret-bearing-path-segment test fails, untouched-path test already passes",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -847,7 +847,12 @@
     "2026-08-14T20:52:26Z evidence recorded: evidence/steps/step7-red.txt (3a74d2788734) - Step 7 red: lookupUserIdentifier module missing",
     "2026-08-14T20:52:26Z step 7 -> red",
     "2026-08-14T20:52:26Z step 7 -> green",
-    "2026-08-14T20:52:26Z step 7 -> done"
+    "2026-08-14T20:52:26Z step 7 -> done",
+    "2026-08-14T20:53:56Z evidence recorded: evidence/steps/step8-red.txt (4e8f090e6ff5) - Step 8 red: path-segment redaction test failing before the rule existed",
+    "2026-08-14T20:53:56Z step 8 -> red",
+    "2026-08-14T20:53:56Z step 8 -> green",
+    "2026-08-14T20:53:56Z step 8 -> done",
+    "2026-08-14T20:53:56Z step 8: e2e/telemetry-buffer.spec.ts:26's not.toMatch(/password|secret|token/i) assertion will fail on a CORRECT implementation once real /secrets/[redacted].json paths reach the buffer, because '/secrets/' itself still matches /secret/i even after redaction - TECH.md flags this and PLAN.md defers the fix to wherever M2's e2e first exercises real login traffic (not registered as its own step; watch for it at the M2 e2e boundary or step 28's migration pass)"
   ],
   "milestones": [
     {
@@ -935,6 +940,11 @@
       "sha": "3a74d2788734",
       "recorded": "2026-08-14T20:52:26Z",
       "note": "Step 7 red: lookupUserIdentifier module missing"
+    },
+    "evidence/steps/step8-red.txt": {
+      "sha": "4e8f090e6ff5",
+      "recorded": "2026-08-14T20:53:56Z",
+      "note": "Step 8 red: path-segment redaction test failing before the rule existed"
     }
   },
   "test_file_hashes": {
@@ -997,6 +1007,12 @@
       "step": 7,
       "recorded": "2026-08-14T20:52:26Z",
       "log_index": 177
+    },
+    "src/platform/observability/redact.test.ts": {
+      "sha": "e04b4894966f",
+      "step": 8,
+      "recorded": "2026-08-14T20:53:56Z",
+      "log_index": 181
     }
   }
 }

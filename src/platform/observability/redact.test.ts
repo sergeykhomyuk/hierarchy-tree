@@ -72,4 +72,12 @@ describe('redact', () => {
     expect(redacted.first).toEqual({ token: '[redacted]', label: 'shared' });
     expect(redacted.second).toEqual({ token: '[redacted]', label: 'shared' });
   });
+
+  it('replaces a secret-bearing path segment in a recorded resource path', () => {
+    expect(redact('/secrets/AB12CD34.json')).toBe('/secrets/[redacted].json');
+  });
+
+  it('leaves an ordinary resource path untouched', () => {
+    expect(redact('/things/42.json')).toBe('/things/42.json');
+  });
 });
