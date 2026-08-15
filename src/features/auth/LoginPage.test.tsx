@@ -72,6 +72,7 @@ function createTestDependencies(
     observability,
     tabStorage: createMapStorage(),
     beginInteraction: () => 'b'.repeat(32),
+    endInteraction: vi.fn(),
     navigate: vi.fn(),
   };
 }
@@ -276,6 +277,30 @@ describe('LoginPage', () => {
     expect(alert).toHaveTextContent('b'.repeat(32));
     expect(email).not.toHaveAttribute('aria-invalid');
     expect(password).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('disables the retry control once a field is emptied, mirroring the main Login control', async () => {
+    const user = userEvent.setup();
+    const transport: Transport = () =>
+      Promise.resolve(new Response(null, { status: 404 }));
+    await renderLoginPage(
+      <LoginPage
+        dependencies={createTestDependencies(transport)}
+        destination="/"
+      />,
+    );
+
+    const email = screen.getByLabelText('login.emailLabel');
+    const password = screen.getByLabelText('login.passwordLabel');
+
+    await user.type(email, 'person@example.com');
+    await user.type(password, 'hunter2');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+    await screen.findByRole('alert');
+
+    await user.clear(password);
+
+    expect(screen.getByRole('button', { name: 'login.retry' })).toBeDisabled();
   });
 
   it('re-derives from the current field values when retry is activated', async () => {

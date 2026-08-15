@@ -145,6 +145,32 @@ describe('createInteractionTracker', () => {
     expect(observability.analytics.track).not.toHaveBeenCalled();
   });
 
+  it('beginInteraction opens an interaction without emitting a route_viewed', () => {
+    const observability = createSpyObservability();
+    const tracker = createInteractionTracker(observability);
+
+    const id = tracker.beginInteraction();
+
+    expect(id).not.toBeNull();
+    expect(observability.analytics.track).not.toHaveBeenCalled();
+  });
+
+  it('endInteraction lets the next navigation mint a fresh id instead of reusing an interaction beginInteraction opened', () => {
+    const observability = createSpyObservability();
+    const tracker = createInteractionTracker(observability);
+    const { router, emit } = createFakeRouter();
+
+    tracker.attach(router);
+    emit(IDLE_SUCCESS);
+    const abandonedId = tracker.beginInteraction();
+    tracker.endInteraction();
+
+    emit(LOADING);
+    const nextId = tracker.currentCorrelationId();
+
+    expect(nextId).not.toBe(abandonedId);
+  });
+
   it('shouldReportPrimitive is true the first time a key is seen and false after', () => {
     const observability = createSpyObservability();
     const tracker = createInteractionTracker(observability);

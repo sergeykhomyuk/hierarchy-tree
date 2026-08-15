@@ -1,0 +1,195 @@
+
+> hierarchy-tree@0.0.0 verify
+> npm run typecheck && npm run lint && npm run format:check && npm run test:coverage && npm run build && npm run verify:build && npm run size
+
+
+> hierarchy-tree@0.0.0 typecheck
+> tsc -b
+
+
+> hierarchy-tree@0.0.0 lint
+> eslint . && node scripts/assert-no-physical-properties.mjs && node scripts/assert-domain-vocabulary.mjs && node scripts/assert-no-lorem-ipsum.mjs && node scripts/assert-no-secrets.mjs --source-only
+
+
+> hierarchy-tree@0.0.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> hierarchy-tree@0.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+      Coverage enabled with v8
+
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-astasz/banned.tmp.ts: identifier "buildForest" carries banned reference-system name "buildForest"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-alias-JcYrWk/src/shared/banned-alias.tmp.ts: exported identifier "sessionToken" carries the banned domain word "session"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-iCOs9T/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "manager"
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-iCOs9T/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "session"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-secrets-Y69LDR/other.tmp.ts: string literal contains "/secrets"
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/physical-properties-UbciZw/Banned.tmp.tsx: physical property/utility "ml-*" found - use the logical equivalent
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/raw-color-jbLHB7/Banned.tmp.tsx: raw color value found - use a theme.css token instead
+assert-no-lorem-ipsum: filler text found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/lorem-ipsum-gzubaf/Banned.tmp.tsx: lorem ipsum filler text found
+assert-no-secrets: pass --source-only or --bundle-only
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-keyword-QHAyhS/banned.tmp.ts: matches secret keyword pattern /apiKey/i
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-entropy-9lJ7d4/banned.tmp.ts: high-entropy literal found (9f8a7b6c5d4e...)
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-suppression-uv96oE/banned.tmp.ts: eslint-disable suppresses "no-restricted-" - suppression is not permitted for this rule
+assert-no-secrets --bundle-only: dist/ is missing - run npm run build first
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+assert-no-secrets --source-only: secrets found:
+  - .github/workflows/ci.yml: matches secret keyword pattern /apiKey/i
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  97 passed (97)
+      Tests  381 passed (381)
+   Start at  09:02:25
+   Duration  10.02s (transform 2.00s, setup 7.51s, import 4.87s, tests 16.08s, environment 23.36s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   95.79 |    95.15 |    95.2 |   95.71 |                   
+ app               |   94.73 |      100 |      80 |   94.73 |                   
+  bootstrap.ts     |      90 |      100 |      50 |      90 | 58                
+ ...error-boundary |   90.62 |      100 |   77.77 |   90.32 |                   
+  ...rBoundary.tsx |   77.77 |      100 |      75 |   77.77 | 40-41             
+  ...rBoundary.tsx |   85.71 |      100 |      50 |   85.71 | 23                
+ app/routing       |    85.1 |      100 |      80 |   84.44 |                   
+  ...efinitions.ts |   56.25 |      100 |      50 |   56.25 | 29-31,48-49,57-58 
+ ...routing/routes |   27.27 |      100 |   33.33 |   27.27 |                   
+  LoginRoute.tsx   |       0 |      100 |       0 |       0 | 10-26             
+ features/auth     |     100 |    94.73 |     100 |     100 |                   
+  ...Submission.ts |     100 |    83.33 |     100 |     100 | 53-54             
+ ...ures/auth/data |     100 |    92.85 |     100 |     100 |                   
+  ...gnedInUser.ts |     100 |       75 |     100 |     100 | 26                
+ ...res/auth/guard |   86.66 |    92.85 |     100 |   86.66 |                   
+  ...estination.ts |   86.66 |    92.85 |     100 |   86.66 | 23,26             
+ ...s/auth/session |   97.05 |    92.85 |     100 |   97.05 |                   
+  readSession.ts   |      95 |       90 |     100 |      95 | 29                
+ platform/http     |   96.73 |    95.83 |     100 |   97.59 |                   
+  ...HttpClient.ts |   93.33 |     92.3 |     100 |   95.45 | 172-173           
+ .../observability |     100 |    93.18 |     100 |     100 |                   
+  redact.ts        |     100 |    90.62 |     100 |     100 | 55-56,59          
+ platform/runtime  |    92.3 |     62.5 |     100 |    92.1 |                   
+  ...ystemClock.ts |     100 |       75 |     100 |     100 | 44                
+  ...Randomness.ts |     100 |       50 |     100 |     100 | 8                 
+  ...TabStorage.ts |   83.33 |       50 |     100 |   83.33 | 20,28,36          
+ shared/ui         |   98.11 |    94.23 |     100 |   98.03 |                   
+  Skeleton.tsx     |   88.88 |       50 |     100 |    87.5 | 26                
+  ...veInitials.ts |     100 |       75 |     100 |     100 | 5-6               
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 95.79% ( 660/689 )
+Branches     : 95.15% ( 314/330 )
+Functions    : 95.2% ( 159/167 )
+Lines        : 95.71% ( 626/654 )
+================================================================================
+
+> hierarchy-tree@0.0.0 build
+> tsc -b && vite build
+
+vite v8.2.1 building client environment for production...
+[2Ktransforming...✓ 294 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                   1.11 kB │ gzip:   0.51 kB
+dist/.vite/manifest.json                          3.01 kB │ gzip:   0.57 kB
+dist/assets/index-DCHeH-7q.css                   15.19 kB │ gzip:   4.00 kB
+dist/assets/hierarchy-CAF2Qe9v.js                 0.19 kB │ gzip:   0.15 kB
+dist/assets/createKeyEchoCatalogue-DNInBk99.js    0.20 kB │ gzip:   0.17 kB
+dist/assets/NotFoundRoute-CNXJC3Sd.js             0.34 kB │ gzip:   0.25 kB
+dist/assets/useRuntime-2JPwzFic.js                0.37 kB │ gzip:   0.27 kB
+dist/assets/useDocumentTitle-C6cnfoh5.js          0.40 kB │ gzip:   0.30 kB
+dist/assets/rolldown-runtime-CbXtAM7H.js          0.58 kB │ gzip:   0.36 kB
+dist/assets/auth-D8fRJTZr.js                      0.63 kB │ gzip:   0.38 kB
+dist/assets/HomeRoute-Bgzs0UGb.js                 0.75 kB │ gzip:   0.46 kB
+dist/assets/LoginRoute-BtDiGipi.js                9.61 kB │ gzip:   3.93 kB
+dist/assets/entry-D1roOEW9.js                    15.94 kB │ gzip:   6.30 kB
+dist/assets/vendor-DFc831lG.js                  396.67 kB │ gzip: 122.54 kB
+
+✓ built in 140ms
+
+> hierarchy-tree@0.0.0 verify:build
+> vitest run --config vitest.build-output.config.ts
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+
+ Test Files  8 passed (8)
+      Tests  15 passed (15)
+   Start at  09:02:36
+   Duration  120ms (transform 56ms, setup 0ms, import 110ms, tests 56ms, environment 0ms)
+
+
+> hierarchy-tree@0.0.0 size
+> size-limit
+
+- Running JS in headless Chrome
+✔ Running JS in headless Chrome
+  
+  app entry (initial payload)
+  Size limit:   150 kB
+  Size:         127.36 kB gzipped
+  Loading time: 2.5 s     on slow 3G
+  
+  stylesheet
+  Size limit:   15 kB
+  Size:         3.99 kB gzipped
+  Loading time: 78 ms   on slow 3G
+  
+  route: home
+  Size limit:   30 kB
+  Size:         464 B gzipped
+  Loading time: 10 ms on slow 3G
+  
+  route: login
+  Size limit:   30 kB
+  Size:         3.93 kB gzipped
+  Loading time: 77 ms   on slow 3G
+  
+  route: not-found
+  Size limit:   30 kB
+  Size:         253 B gzipped
+  Loading time: 10 ms on slow 3G
+  
+  catalogue: auth
+  Size limit:   5 kB
+  Size:         388 B gzipped
+  Loading time: 10 ms on slow 3G
+  
+  catalogue: hierarchy
+  Size limit:   5 kB
+  Size:         157 B gzipped
+  Loading time: 10 ms on slow 3G
+  

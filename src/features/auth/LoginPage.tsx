@@ -19,6 +19,7 @@ export type LoginPageDependencies = {
   observability: ObservabilityFacade;
   tabStorage: KeyValueStorage;
   beginInteraction: () => string;
+  endInteraction: () => void;
   navigate: (destination: string, options: { replace: boolean }) => void;
 };
 
@@ -98,6 +99,7 @@ export const LoginPage = memo(function LoginPage({
             correlationId={cardState.correlationId}
             correlationLabel={t('login.serviceProblemCorrelationLabel')}
             retryLabel={t('login.retry')}
+            retryDisabled={!isReady}
             onRetry={handleRetry}
           />
         )}

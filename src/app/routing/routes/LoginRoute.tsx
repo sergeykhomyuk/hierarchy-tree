@@ -30,6 +30,7 @@ export const LoginRoute = memo(function LoginRoute() {
         observability: runtime.observability,
         tabStorage: runtime.tabStorage,
         beginInteraction: runtime.interactionTracker.beginInteraction,
+        endInteraction: runtime.interactionTracker.endInteraction,
         navigate,
       }}
       destination={destination}

@@ -21,6 +21,13 @@ export type InteractionTracker = {
   // events and the correlation id rendered to the user are all literally
   // the same string).
   beginInteraction: () => string;
+  // Closes an interaction beginInteraction() opened when it did not lead
+  // to a navigation. Without this, `tracking` stays true forever, so the
+  // *next* unrelated navigation's loading transition finds `tracking`
+  // already set and skips minting its own id - reusing the abandoned
+  // attempt's stale one for a request or error that has nothing to do
+  // with it.
+  endInteraction: () => void;
   // Primitive-throw dedup for reportRootError.ts (invariant 92): a WeakSet
   // covers object errors, but WeakSet.add rejects primitives outright, so
   // they need this string-keyed sibling instead. Scoped to the current
@@ -67,6 +74,10 @@ export function createInteractionTracker(
     });
   }
 
+  function endInteraction(): void {
+    tracking = false;
+  }
+
   function shouldReportPrimitive(key: string): boolean {
     if (reportedPrimitives.has(key)) return false;
     reportedPrimitives.add(key);
@@ -77,6 +88,7 @@ export function createInteractionTracker(
     attach,
     currentCorrelationId: () => correlationId,
     beginInteraction: startInteraction,
+    endInteraction,
     shouldReportPrimitive,
   };
 }

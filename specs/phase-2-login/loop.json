@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T06:29:00Z",
+  "updated": "2026-08-15T08:02:54Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -292,6 +292,30 @@
           "blocking": false,
           "disposition": "accepted, deferred to M4: not consumed by any UI until the header lands; the retry-vs-stable-fallback tradeoff is concrete only once that consumer exists. User's decision - revisit at M4.",
           "round": "milestone-1"
+        },
+        "Claude-4": {
+          "desc": "auth.signed_out was added to the analytics catalogue in M2 but is not fired or consumed anywhere in this milestone - surface area shipped ahead of the milestone (M4 sign-out) that needs it, undocumented as a deliberate gap-fill.",
+          "blocking": false,
+          "disposition": "accepted: matches the M1-accepted resolveDestination barrel-export precedent; M4 wires auth.signed_out as planned.",
+          "round": "milestone-2"
+        },
+        "Claude-5": {
+          "desc": "beginInteraction() leaves the interaction tracker permanently 'tracking' after a login submission that does not navigate (noMatch/serviceProblem), so the next real navigation reuses the abandoned attempt's stale correlation id instead of minting a fresh one. Non-blocking in M2 (no loaders yet), will bite in M3/M4.",
+          "blocking": false,
+          "disposition": "fixed: useLoginSubmission now calls a new endInteraction() on every non-navigating outcome (cancelled, noMatch, serviceProblem), resetting the tracker's tracking flag so the next real navigation mints a fresh correlation id instead of reusing the abandoned attempt's.",
+          "round": "milestone-2"
+        },
+        "Claude-6": {
+          "desc": "The Retry control (LoginAlert.tsx) has no explicit disabled={!isReady}-style guard, relying entirely on native HTML5 required-attribute validation to stop deriveSecret from throwing a RangeError on an empty field. Untested and asymmetric with the main Login button's explicit guard.",
+          "blocking": false,
+          "disposition": "fixed: the Retry control now gets an explicit disabled guard mirroring the main Login button's disabled={!isReady}, plus a test exercising Retry with an emptied field.",
+          "round": "milestone-2"
+        },
+        "Claude-7": {
+          "desc": "LoginAlert.tsx's comment claims both fields get aria-describedby pointing at it in the service-problem state, but LoginPage.tsx only wires describedBy for the noMatch state. Comment/code mismatch, not a functional bug.",
+          "blocking": false,
+          "disposition": "fixed: LoginAlert.tsx's comment corrected to describe the actual describedBy wiring (no-match only).",
+          "round": "milestone-2"
         }
       }
     },
@@ -955,7 +979,19 @@
     "2026-08-15T06:28:45Z step 23 -> done",
     "2026-08-15T06:28:55Z evidence recorded: evidence/milestones/m2-suite.txt (03d774db4bc8) - M2 boundary: npm run verify green (typecheck, lint, format, coverage, build, build-output, size)",
     "2026-08-15T06:28:55Z evidence recorded: evidence/milestones/m2-e2e.txt (fd0fafe44cfb) - M2 boundary: npm run e2e green, 25/25, covering all five login card states, the guard-free login flow and the migrated placeholder assertions",
-    "2026-08-15T06:29:00Z milestone 2 boundary verified: npm run verify and npm run e2e both green (377 unit/component tests, 25/25 e2e); all five login card states covered by component tests (idle/ready/submitting/noMatch/serviceProblem) plus keyboard contract and axe; login.spec.ts's 6 e2e tests cover the real sign-in flow, no-match, service-problem+retry, request-count invariants, credential-material leakage and a five-state axe sweep; the placeholder migration (step 23) is green across all 6 affected specs. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt."
+    "2026-08-15T06:29:00Z milestone 2 boundary verified: npm run verify and npm run e2e both green (377 unit/component tests, 25/25 e2e); all five login card states covered by component tests (idle/ready/submitting/noMatch/serviceProblem) plus keyboard contract and axe; login.spec.ts's 6 e2e tests cover the real sign-in flow, no-match, service-problem+retry, request-count invariants, credential-material leakage and a five-state axe sweep; the placeholder migration (step 23) is green across all 6 affected specs. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt.",
+    "2026-08-15T07:19:21Z evidence recorded: evidence/reviews/m2-diff.txt (49afaa108035) - M2 boundary review diff: git diff 32e9d26..HEAD, 58 files",
+    "2026-08-15T07:19:21Z evidence recorded: evidence/reviews/m2-claude-review.md (9a8ab19e2d31) - M2 boundary fresh-context Claude review: 4 findings, 0 blocking",
+    "2026-08-15T07:19:28Z G4 finding Claude-4 recorded [round: milestone-2]: auth.signed_out was added to the analytics catalogue in M2 but is not fired or consumed anywhere in this milestone - surface area shipped ahead of the milestone (M4 sign-out) that needs it, undocumented as a deliberate gap-fill.",
+    "2026-08-15T07:19:40Z G4 finding Claude-5 recorded [round: milestone-2]: beginInteraction() leaves the interaction tracker permanently 'tracking' after a login submission that does not navigate (noMatch/serviceProblem), so the next real navigation reuses the abandoned attempt's stale correlation id instead of minting a fresh one. Non-blocking in M2 (no loaders yet), will bite in M3/M4.",
+    "2026-08-15T07:19:40Z G4 finding Claude-6 recorded [round: milestone-2]: The Retry control (LoginAlert.tsx) has no explicit disabled={!isReady}-style guard, relying entirely on native HTML5 required-attribute validation to stop deriveSecret from throwing a RangeError on an empty field. Untested and asymmetric with the main Login button's explicit guard.",
+    "2026-08-15T07:19:40Z G4 finding Claude-7 recorded [round: milestone-2]: LoginAlert.tsx's comment claims both fields get aria-describedby pointing at it in the service-problem state, but LoginPage.tsx only wires describedBy for the noMatch state. Comment/code mismatch, not a functional bug.",
+    "2026-08-15T07:58:52Z G4 finding Claude-5 dispositioned: fixed: useLoginSubmission now calls a new endInteraction() on every non-navigating outcome (cancelled, noMatch, serviceProblem), resetting the tracker's tracking flag so the next real navigation mints a fresh correlation id instead of reusing the abandoned attempt's.",
+    "2026-08-15T07:58:52Z G4 finding Claude-6 dispositioned: fixed: the Retry control now gets an explicit disabled guard mirroring the main Login button's disabled={!isReady}, plus a test exercising Retry with an emptied field.",
+    "2026-08-15T07:58:52Z G4 finding Claude-7 dispositioned: fixed: LoginAlert.tsx's comment corrected to describe the actual describedBy wiring (no-match only).",
+    "2026-08-15T07:58:52Z G4 finding Claude-4 dispositioned: accepted: matches the M1-accepted resolveDestination barrel-export precedent; M4 wires auth.signed_out as planned.",
+    "2026-08-15T08:02:54Z evidence recorded: evidence/m2-findings-verify.txt (8f22a24d0521) - npm run verify green after fixing Claude-5/6/7 (endInteraction wiring, retry readiness guard, LoginAlert comment fix)",
+    "2026-08-15T08:02:54Z evidence recorded: evidence/m2-findings-e2e.txt (f988531ce9ad) - npm run e2e green (25/25) after the M2 finding fixes"
   ],
   "milestones": [
     {
@@ -1163,6 +1199,26 @@
       "sha": "fd0fafe44cfb",
       "recorded": "2026-08-15T06:28:55Z",
       "note": "M2 boundary: npm run e2e green, 25/25, covering all five login card states, the guard-free login flow and the migrated placeholder assertions"
+    },
+    "evidence/reviews/m2-diff.txt": {
+      "sha": "49afaa108035",
+      "recorded": "2026-08-15T07:19:21Z",
+      "note": "M2 boundary review diff: git diff 32e9d26..HEAD, 58 files"
+    },
+    "evidence/reviews/m2-claude-review.md": {
+      "sha": "9a8ab19e2d31",
+      "recorded": "2026-08-15T07:19:21Z",
+      "note": "M2 boundary fresh-context Claude review: 4 findings, 0 blocking"
+    },
+    "evidence/m2-findings-verify.txt": {
+      "sha": "8f22a24d0521",
+      "recorded": "2026-08-15T08:02:54Z",
+      "note": "npm run verify green after fixing Claude-5/6/7 (endInteraction wiring, retry readiness guard, LoginAlert comment fix)"
+    },
+    "evidence/m2-findings-e2e.txt": {
+      "sha": "f988531ce9ad",
+      "recorded": "2026-08-15T08:02:54Z",
+      "note": "npm run e2e green (25/25) after the M2 finding fixes"
     }
   },
   "test_file_hashes": {

@@ -16,6 +16,7 @@ export type UseLoginSubmissionDependencies = {
   observability: ObservabilityFacade;
   tabStorage: KeyValueStorage;
   beginInteraction: () => string;
+  endInteraction: () => void;
   navigate: (destination: string, options: { replace: boolean }) => void;
 };
 
@@ -69,6 +70,7 @@ export function useLoginSubmission(
       controllerRef.current = null;
 
       if (outcome.kind === 'cancelled') {
+        dependencies.endInteraction();
         return previousResult;
       }
 
@@ -94,6 +96,7 @@ export function useLoginSubmission(
           correlationId,
           outcome: SignInOutcome.NoMatch,
         });
+        dependencies.endInteraction();
         return { outcome: 'noMatch' };
       }
 
@@ -104,6 +107,7 @@ export function useLoginSubmission(
         correlationId,
         outcome: SignInOutcome.ServiceProblem,
       });
+      dependencies.endInteraction();
       return { outcome: 'serviceProblem', correlationId };
     },
     UNTOUCHED,

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createFakeClock, createFakeRandomness } from '@shared/testing';
 import { createHttpClient } from '@platform/http';
 import type { Transport } from '@platform/http';
@@ -60,6 +60,7 @@ function createTestDependencies(
         interactionCount += 1;
         return `interaction-${interactionCount}`.padEnd(32, '0');
       }),
+    endInteraction: overrides.endInteraction ?? vi.fn(),
     navigate: overrides.navigate ?? vi.fn(),
   };
 }
@@ -133,6 +134,40 @@ describe('useLoginSubmission', () => {
     // loginCardState's isPending-first rule takes over regardless of the
     // stale result - the previous alert is not what a consumer reads.
     expect(screen.getByTestId('pending').textContent).toBe('true');
+  });
+
+  it('ends the interaction it began when the attempt settles without navigating', async () => {
+    const endInteraction = vi.fn();
+    const transport: Transport = () =>
+      Promise.resolve(new Response('null', { status: 200 }));
+    const dependencies = createTestDependencies(transport, {
+      endInteraction,
+    });
+
+    render(<TestForm dependencies={dependencies} />);
+    const form = screen.getByTestId('login-form');
+
+    fireEvent.submit(form);
+    await screen.findByText('noMatch', { selector: '[data-testid="outcome"]' });
+
+    expect(endInteraction).toHaveBeenCalledTimes(1);
+  });
+
+  it('leaves the interaction open on a signed-in outcome, letting the resulting navigation settle it', async () => {
+    const endInteraction = vi.fn();
+    const transport: Transport = () =>
+      Promise.resolve(new Response('"user-1"', { status: 200 }));
+    const dependencies = createTestDependencies(transport, {
+      endInteraction,
+    });
+
+    render(<TestForm dependencies={dependencies} />);
+    const form = screen.getByTestId('login-form');
+
+    fireEvent.submit(form);
+    await waitFor(() => expect(dependencies.navigate).toHaveBeenCalledTimes(1));
+
+    expect(endInteraction).not.toHaveBeenCalled();
   });
 
   it('aborts in flight without a state update when the page unmounts', async () => {
