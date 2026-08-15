@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-14T22:52:47Z",
+  "updated": "2026-08-15T05:59:27Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 20
+      "steps_done": 21
     },
     "G3": {
       "status": "pending",
@@ -557,8 +557,8 @@
         "src/features/auth/LoginPage.test.tsx::LoginPage > re-derives from the current field values when retry is activated",
         "src/features/auth/LoginPage.test.tsx::LoginPage > hands focus to the busy Login control when the retry control unmounts"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T05:59:26Z evidence/steps/step21-red.txt",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -935,7 +935,12 @@
     "2026-08-14T22:52:47Z step 20 -> red",
     "2026-08-14T22:52:47Z step 20 -> green",
     "2026-08-14T22:52:47Z step 20 -> done",
-    "2026-08-14T22:52:47Z step 20: found and fixed a real accessibility bug during red/green - conditionally including/excluding the FieldContext.Provider wrapper around Input (rather than always rendering it with a varying value) makes React see a different element type at that tree position on the noMatch transition, unmounting and remounting the <input> - which would silently drop focus from a real user in a browser exactly like the retry-focus problem TECH.md describes for step 21. Fixed by always rendering the Provider and only varying its value."
+    "2026-08-14T22:52:47Z step 20: found and fixed a real accessibility bug during red/green - conditionally including/excluding the FieldContext.Provider wrapper around Input (rather than always rendering it with a varying value) makes React see a different element type at that tree position on the noMatch transition, unmounting and remounting the <input> - which would silently drop focus from a real user in a browser exactly like the retry-focus problem TECH.md describes for step 21. Fixed by always rendering the Provider and only varying its value.",
+    "2026-08-15T05:56:58Z step 21 kit finding: Button.tsx needed ref-forwarding support (a 4th additive kit change beyond TECH.md's three) for the retry-to-Login-button focus handoff invariant 60/110 requires. Raised to the user per invariant 141's discipline and approved: React 19's native ref-as-prop pattern, no forwardRef wrapper.",
+    "2026-08-15T05:59:26Z evidence recorded: evidence/steps/step21-red.txt (bb5fe8e2ccb4) - Step 21 red: 3 service-problem/retry tests fail before the alert variant, retry control and focus handoff existed",
+    "2026-08-15T05:59:26Z step 21 -> red",
+    "2026-08-15T05:59:26Z step 21 -> green",
+    "2026-08-15T05:59:27Z step 21 -> done"
   ],
   "milestones": [
     {
@@ -1098,6 +1103,11 @@
       "sha": "d32707289e38",
       "recorded": "2026-08-14T22:52:47Z",
       "note": "Step 20 red: 4 no-match tests fail before LoginAlert/field-invalid wiring existed"
+    },
+    "evidence/steps/step21-red.txt": {
+      "sha": "bb5fe8e2ccb4",
+      "recorded": "2026-08-15T05:59:26Z",
+      "note": "Step 21 red: 3 service-problem/retry tests fail before the alert variant, retry control and focus handoff existed"
     }
   },
   "test_file_hashes": {
@@ -1270,10 +1280,10 @@
       "log_index": 231
     },
     "src/features/auth/LoginPage.test.tsx": {
-      "sha": "7a3fd93e430b",
-      "step": 20,
-      "recorded": "2026-08-14T22:52:47Z",
-      "log_index": 244
+      "sha": "ff7099c39233",
+      "step": 21,
+      "recorded": "2026-08-15T05:59:26Z",
+      "log_index": 250
     }
   }
 }

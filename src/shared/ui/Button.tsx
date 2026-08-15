@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import type { MouseEvent, ReactNode } from 'react';
+import type { MouseEvent, ReactNode, Ref } from 'react';
 
 type ButtonProps = {
   variant: 'primary' | 'secondary';
@@ -8,6 +8,7 @@ type ButtonProps = {
   busy?: boolean;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   children: ReactNode;
+  ref?: Ref<HTMLButtonElement>;
 };
 
 // hover:bg-primary-pressed only paints the pressed fill on a hovered
@@ -38,6 +39,7 @@ export const Button = memo(function Button({
   busy,
   onClick,
   children,
+  ref,
 }: ButtonProps) {
   const handleClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
@@ -55,6 +57,7 @@ export const Button = memo(function Button({
 
   return (
     <button
+      ref={ref}
       type={type}
       disabled={disabled}
       aria-busy={busy ? 'true' : undefined}

@@ -108,6 +108,23 @@ describe('Button', () => {
     expect(button.className).not.toContain('hover:bg-primary-pressed');
   });
 
+  it('forwards a ref to the underlying button element', () => {
+    let element: HTMLButtonElement | null = null;
+    render(
+      <Button
+        variant="primary"
+        onClick={vi.fn()}
+        ref={(node) => {
+          element = node;
+        }}
+      >
+        Save
+      </Button>,
+    );
+
+    expect(element).toBe(screen.getByRole('button', { name: 'Save' }));
+  });
+
   it('renders the secondary variant', () => {
     render(
       <Button variant="secondary" onClick={vi.fn()}>

@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { HttpClient } from '@platform/http';
@@ -45,6 +45,16 @@ export const LoginPage = memo(function LoginPage({
   const cardState = loginCardState(result, isPending, isReady);
   const submitting = cardState.kind === 'submitting';
   const noMatch = cardState.kind === 'noMatch';
+  const loginButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Retrying unmounts the alert holding the focused retry control - which
+  // would otherwise drop focus to document.body (invariant 110). Moving
+  // focus here, inside the same click handler that starts the retry's
+  // dispatch, relocates it to the still-mounted (busy) Login control
+  // before react ever removes the retry button from the DOM.
+  const handleRetry = useCallback(() => {
+    loginButtonRef.current?.focus();
+  }, []);
 
   const handleEmailChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value),
@@ -74,7 +84,22 @@ export const LoginPage = memo(function LoginPage({
         <h1>{t('login.heading')}</h1>
         <p>{t('login.subtext')}</p>
         {noMatch && (
-          <LoginAlert id={ALERT_ID} message={t('login.noMatchMessage')} />
+          <LoginAlert
+            id={ALERT_ID}
+            kind="noMatch"
+            message={t('login.noMatchMessage')}
+          />
+        )}
+        {cardState.kind === 'serviceProblem' && (
+          <LoginAlert
+            id={ALERT_ID}
+            kind="serviceProblem"
+            message={t('login.serviceProblemMessage')}
+            correlationId={cardState.correlationId}
+            correlationLabel={t('login.serviceProblemCorrelationLabel')}
+            retryLabel={t('login.retry')}
+            onRetry={handleRetry}
+          />
         )}
         <Field id="login-email" label={t('login.emailLabel')} required>
           <FieldContext.Provider value={fieldContextValue}>
@@ -104,6 +129,7 @@ export const LoginPage = memo(function LoginPage({
           </FieldContext.Provider>
         </Field>
         <Button
+          ref={loginButtonRef}
           variant="primary"
           type="submit"
           disabled={!isReady}

@@ -251,4 +251,96 @@ describe('LoginPage', () => {
     // removed from the DOM.
     expect(button).toHaveFocus();
   });
+
+  it('shows the service-problem alert with its correlation id and marks neither field invalid', async () => {
+    const user = userEvent.setup();
+    const transport: Transport = () =>
+      Promise.resolve(new Response(null, { status: 404 }));
+    await renderLoginPage(
+      <LoginPage
+        dependencies={createTestDependencies(transport)}
+        destination="/"
+      />,
+    );
+
+    const email = screen.getByLabelText('login.emailLabel');
+    const password = screen.getByLabelText('login.passwordLabel');
+
+    await user.type(email, 'person@example.com');
+    await user.type(password, 'hunter2');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent('login.serviceProblemMessage');
+    expect(alert).toHaveTextContent('b'.repeat(32));
+    expect(email).not.toHaveAttribute('aria-invalid');
+    expect(password).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('re-derives from the current field values when retry is activated', async () => {
+    const user = userEvent.setup();
+    const requestedPaths: string[] = [];
+    const transport: Transport = (request) => {
+      requestedPaths.push(new URL(request.url).pathname);
+      return Promise.resolve(new Response(null, { status: 404 }));
+    };
+    await renderLoginPage(
+      <LoginPage
+        dependencies={createTestDependencies(transport)}
+        destination="/"
+      />,
+    );
+
+    const email = screen.getByLabelText('login.emailLabel');
+    const password = screen.getByLabelText('login.passwordLabel');
+
+    await user.type(email, 'person@example.com');
+    await user.type(password, 'hunter2');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+    await screen.findByRole('alert');
+
+    await user.clear(password);
+    await user.type(password, 'a-different-password');
+    await user.click(screen.getByRole('button', { name: 'login.retry' }));
+    await screen.findByRole('alert');
+
+    expect(requestedPaths).toHaveLength(2);
+    expect(requestedPaths[0]).not.toBe(requestedPaths[1]);
+  });
+
+  it('hands focus to the busy Login control when the retry control unmounts', async () => {
+    let resolveTransport: ((response: Response) => void) | undefined;
+    let callCount = 0;
+    const transport: Transport = () => {
+      callCount += 1;
+      if (callCount === 1) {
+        return Promise.resolve(new Response(null, { status: 404 }));
+      }
+      return new Promise((resolve) => {
+        resolveTransport = resolve;
+      });
+    };
+    const user = userEvent.setup();
+    await renderLoginPage(
+      <LoginPage
+        dependencies={createTestDependencies(transport)}
+        destination="/"
+      />,
+    );
+
+    const email = screen.getByLabelText('login.emailLabel');
+    const password = screen.getByLabelText('login.passwordLabel');
+
+    await user.type(email, 'person@example.com');
+    await user.type(password, 'hunter2');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+    await screen.findByRole('alert');
+
+    await user.click(screen.getByRole('button', { name: 'login.retry' }));
+
+    const loginButton = screen.getByRole('button', { name: 'login.submitting' });
+    expect(loginButton).toHaveFocus();
+
+    resolveTransport?.(new Response(null, { status: 404 }));
+  });
 });
