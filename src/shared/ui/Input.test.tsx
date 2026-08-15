@@ -24,7 +24,7 @@ describe('Input', () => {
     expect(input).toBeVisible();
   });
 
-  it('renders a placeholder that is not the field\'s accessible name', () => {
+  it("renders a placeholder that is not the field's accessible name", () => {
     render(
       <Field id="email" label="Email">
         <Input

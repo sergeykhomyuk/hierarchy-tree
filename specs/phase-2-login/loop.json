@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T05:59:27Z",
+  "updated": "2026-08-15T06:29:00Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 31,
-      "steps_done": 21
+      "steps_done": 23
     },
     "G3": {
       "status": "pending",
@@ -572,8 +572,8 @@
         "e2e/login.spec.ts::the login card > leaves no credential material in the telemetry buffer or storage",
         "e2e/login.spec.ts::the login card > passes an accessibility scan in each of its five states"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T06:23:15Z evidence/step22-red.txt",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -583,8 +583,8 @@
         "e2e/placeholder-routes.spec.ts::the placeholder routes > the login route renders the sign-in card",
         "e2e/accessibility.spec.ts::accessibility > has no violations on /login"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T06:28:44Z evidence/step23-red.txt",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -940,7 +940,22 @@
     "2026-08-15T05:59:26Z evidence recorded: evidence/steps/step21-red.txt (bb5fe8e2ccb4) - Step 21 red: 3 service-problem/retry tests fail before the alert variant, retry control and focus handoff existed",
     "2026-08-15T05:59:26Z step 21 -> red",
     "2026-08-15T05:59:26Z step 21 -> green",
-    "2026-08-15T05:59:27Z step 21 -> done"
+    "2026-08-15T05:59:27Z step 21 -> done",
+    "2026-08-15T06:23:12Z evidence recorded: evidence/step22-red.txt (1bcf6069fd7e) - e2e/login.spec.ts red: all 6 tests fail against the placeholder LoginRoute",
+    "2026-08-15T06:23:12Z evidence recorded: evidence/step22-green.txt (cd6b567f5ef8) - e2e/login.spec.ts green: all 6 tests pass against the real LoginRoute wrapper",
+    "2026-08-15T06:23:12Z evidence recorded: evidence/step22-verify.txt (7b0916f47fa5) - npm run verify green after step 22 (typecheck, lint, format, coverage, build, build-output, size)",
+    "2026-08-15T06:23:15Z step 22 -> red",
+    "2026-08-15T06:23:15Z step 22 -> green",
+    "2026-08-15T06:23:15Z step 22 -> done",
+    "2026-08-15T06:28:42Z evidence recorded: evidence/step23-red.txt (c519762c5c2f) - the full e2e suite right after step 22: six specs failing on the now-stale login.title placeholder assertion",
+    "2026-08-15T06:28:42Z evidence recorded: evidence/step23-green.txt (fd0fafe44cfb) - full e2e suite green (25/25) after migrating every affected assertion to the real sign-in card",
+    "2026-08-15T06:28:42Z evidence recorded: evidence/step23-verify.txt (03d774db4bc8) - npm run verify green after step 23 (typecheck, lint, format, coverage, build, build-output, size)",
+    "2026-08-15T06:28:44Z step 23 -> red",
+    "2026-08-15T06:28:45Z step 23 -> green",
+    "2026-08-15T06:28:45Z step 23 -> done",
+    "2026-08-15T06:28:55Z evidence recorded: evidence/milestones/m2-suite.txt (03d774db4bc8) - M2 boundary: npm run verify green (typecheck, lint, format, coverage, build, build-output, size)",
+    "2026-08-15T06:28:55Z evidence recorded: evidence/milestones/m2-e2e.txt (fd0fafe44cfb) - M2 boundary: npm run e2e green, 25/25, covering all five login card states, the guard-free login flow and the migrated placeholder assertions",
+    "2026-08-15T06:29:00Z milestone 2 boundary verified: npm run verify and npm run e2e both green (377 unit/component tests, 25/25 e2e); all five login card states covered by component tests (idle/ready/submitting/noMatch/serviceProblem) plus keyboard contract and axe; login.spec.ts's 6 e2e tests cover the real sign-in flow, no-match, service-problem+retry, request-count invariants, credential-material leakage and a five-state axe sweep; the placeholder migration (step 23) is green across all 6 affected specs. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt."
   ],
   "milestones": [
     {
@@ -952,7 +967,7 @@
     {
       "id": 2,
       "title": "M2 - The login card and its five states",
-      "verified": null,
+      "verified": "2026-08-15T06:29:00Z npm run verify and npm run e2e both green (377 unit/component tests, 25/25 e2e); all five login card states covered by component tests (idle/ready/submitting/noMatch/serviceProblem) plus keyboard contract and axe; login.spec.ts's 6 e2e tests cover the real sign-in flow, no-match, service-problem+retry, request-count invariants, credential-material leakage and a five-state axe sweep; the placeholder migration (step 23) is green across all 6 affected specs. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt.",
       "reviewed": null
     },
     {
@@ -1108,6 +1123,46 @@
       "sha": "bb5fe8e2ccb4",
       "recorded": "2026-08-15T05:59:26Z",
       "note": "Step 21 red: 3 service-problem/retry tests fail before the alert variant, retry control and focus handoff existed"
+    },
+    "evidence/step22-red.txt": {
+      "sha": "1bcf6069fd7e",
+      "recorded": "2026-08-15T06:23:12Z",
+      "note": "e2e/login.spec.ts red: all 6 tests fail against the placeholder LoginRoute"
+    },
+    "evidence/step22-green.txt": {
+      "sha": "cd6b567f5ef8",
+      "recorded": "2026-08-15T06:23:12Z",
+      "note": "e2e/login.spec.ts green: all 6 tests pass against the real LoginRoute wrapper"
+    },
+    "evidence/step22-verify.txt": {
+      "sha": "7b0916f47fa5",
+      "recorded": "2026-08-15T06:23:12Z",
+      "note": "npm run verify green after step 22 (typecheck, lint, format, coverage, build, build-output, size)"
+    },
+    "evidence/step23-red.txt": {
+      "sha": "c519762c5c2f",
+      "recorded": "2026-08-15T06:28:42Z",
+      "note": "the full e2e suite right after step 22: six specs failing on the now-stale login.title placeholder assertion"
+    },
+    "evidence/step23-green.txt": {
+      "sha": "fd0fafe44cfb",
+      "recorded": "2026-08-15T06:28:42Z",
+      "note": "full e2e suite green (25/25) after migrating every affected assertion to the real sign-in card"
+    },
+    "evidence/step23-verify.txt": {
+      "sha": "03d774db4bc8",
+      "recorded": "2026-08-15T06:28:42Z",
+      "note": "npm run verify green after step 23 (typecheck, lint, format, coverage, build, build-output, size)"
+    },
+    "evidence/milestones/m2-suite.txt": {
+      "sha": "03d774db4bc8",
+      "recorded": "2026-08-15T06:28:55Z",
+      "note": "M2 boundary: npm run verify green (typecheck, lint, format, coverage, build, build-output, size)"
+    },
+    "evidence/milestones/m2-e2e.txt": {
+      "sha": "fd0fafe44cfb",
+      "recorded": "2026-08-15T06:28:55Z",
+      "note": "M2 boundary: npm run e2e green, 25/25, covering all five login card states, the guard-free login flow and the migrated placeholder assertions"
     }
   },
   "test_file_hashes": {
@@ -1284,6 +1339,24 @@
       "step": 21,
       "recorded": "2026-08-15T05:59:26Z",
       "log_index": 250
+    },
+    "e2e/login.spec.ts": {
+      "sha": "f72f8178063a",
+      "step": 22,
+      "recorded": "2026-08-15T06:23:15Z",
+      "log_index": 256
+    },
+    "e2e/placeholder-routes.spec.ts": {
+      "sha": "0551d43519d2",
+      "step": 23,
+      "recorded": "2026-08-15T06:28:44Z",
+      "log_index": 262
+    },
+    "e2e/accessibility.spec.ts": {
+      "sha": "46a6b30b34f7",
+      "step": 23,
+      "recorded": "2026-08-15T06:28:44Z",
+      "log_index": 262
     }
   }
 }

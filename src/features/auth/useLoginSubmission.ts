@@ -1,7 +1,10 @@
 import { useActionState, useCallback, useEffect, useRef } from 'react';
 import type { FormEvent } from 'react';
 import type { HttpClient } from '@platform/http';
-import { SignInOutcome, type ObservabilityFacade } from '@platform/observability';
+import {
+  SignInOutcome,
+  type ObservabilityFacade,
+} from '@platform/observability';
 import type { KeyValueStorage } from '@platform/runtime';
 import { deriveSecret } from './domain/deriveSecret';
 import { lookupUserIdentifier } from './data/lookupUserIdentifier';
@@ -94,10 +97,9 @@ export function useLoginSubmission(
         return { outcome: 'noMatch' };
       }
 
-      dependencies.observability.logger.error(
-        'auth.sign_in_service_problem',
-        { correlationId },
-      );
+      dependencies.observability.logger.error('auth.sign_in_service_problem', {
+        correlationId,
+      });
       dependencies.observability.analytics.track('auth.sign_in_settled', {
         correlationId,
         outcome: SignInOutcome.ServiceProblem,

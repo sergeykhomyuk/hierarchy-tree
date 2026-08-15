@@ -20,9 +20,10 @@ function createSpyObservability(): ObservabilityFacade {
   };
 }
 
-function createTestClient(
-  overrides: Partial<HttpClientDependencies> = {},
-): { client: ReturnType<typeof createHttpClient>; observability: ObservabilityFacade } {
+function createTestClient(overrides: Partial<HttpClientDependencies> = {}): {
+  client: ReturnType<typeof createHttpClient>;
+  observability: ObservabilityFacade;
+} {
   const observability = overrides.observability ?? createSpyObservability();
   const client = createHttpClient({
     transport:

@@ -7,8 +7,7 @@ import { readShadow } from './sessionShadow';
 import { SESSION_STORAGE_KEY } from './sessionStorageKey';
 
 export type SessionView =
-  | { status: 'signedIn'; userId: UserIdentifier }
-  | { status: 'signedOut' };
+  { status: 'signedIn'; userId: UserIdentifier } | { status: 'signedOut' };
 
 // The shadow decides first (invariants 79, 79a); storage is consulted
 // only when the shadow is unset, which is always true on a fresh page

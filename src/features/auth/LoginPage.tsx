@@ -137,7 +137,9 @@ export const LoginPage = memo(function LoginPage({
         >
           {submitting ? t('login.submitting') : t('login.submit')}
         </Button>
-        <p>{submitting ? t('login.footerNoteSubmitting') : t('login.footerNote')}</p>
+        <p>
+          {submitting ? t('login.footerNoteSubmitting') : t('login.footerNote')}
+        </p>
       </form>
     </Card>
   );

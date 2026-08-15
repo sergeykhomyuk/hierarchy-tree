@@ -1,0 +1,145 @@
+
+Running 6 tests using 1 worker
+
+  ✘  1 [chromium] › e2e/login.spec.ts:21:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page (30.0s)
+  ✘  2 [chromium] › e2e/login.spec.ts:44:3 › the login card › shows the no-match alert for a null lookup and stays on /login (30.0s)
+  ✘  3 [chromium] › e2e/login.spec.ts:60:3 › the login card › shows the service-problem alert and retries successfully (30.0s)
+  ✘  4 [chromium] › e2e/login.spec.ts:93:3 › the login card › issues exactly one request while authenticating, and none on the users path (30.0s)
+  ✘  5 [chromium] › e2e/login.spec.ts:124:3 › the login card › leaves no credential material in the telemetry buffer or storage (30.0s)
+  ✘  6 [chromium] › e2e/login.spec.ts:158:3 › the login card › passes an accessibility scan in each of its five states (5.1s)
+
+
+  1) [chromium] › e2e/login.spec.ts:21:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('login.emailLabel')
+
+
+      32 |
+      33 |     await page.goto('/login');
+    > 34 |     await page.getByLabel('login.emailLabel').fill(EMAIL);
+         |                                               ^
+      35 |     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
+      36 |     await page.getByRole('button', { name: 'login.submit' }).click();
+      37 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:34:47
+
+    Error Context: test-results/login-the-login-card-signs-27192-lands-on-the-hierarchy-page-chromium/error-context.md
+
+  2) [chromium] › e2e/login.spec.ts:44:3 › the login card › shows the no-match alert for a null lookup and stays on /login 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('login.emailLabel')
+
+
+      50 |
+      51 |     await page.goto('/login');
+    > 52 |     await page.getByLabel('login.emailLabel').fill(EMAIL);
+         |                                               ^
+      53 |     await page.getByLabel('login.passwordLabel').fill(WRONG_PASSWORD);
+      54 |     await page.getByRole('button', { name: 'login.submit' }).click();
+      55 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:52:47
+
+    Error Context: test-results/login-the-login-card-shows-ddf75-l-lookup-and-stays-on-login-chromium/error-context.md
+
+  3) [chromium] › e2e/login.spec.ts:60:3 › the login card › shows the service-problem alert and retries successfully 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('login.emailLabel')
+
+
+      75 |
+      76 |     await page.goto('/login');
+    > 77 |     await page.getByLabel('login.emailLabel').fill(EMAIL);
+         |                                               ^
+      78 |     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
+      79 |     await page.getByRole('button', { name: 'login.submit' }).click();
+      80 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:77:47
+
+    Error Context: test-results/login-the-login-card-shows-167ab-rt-and-retries-successfully-chromium/error-context.md
+
+  4) [chromium] › e2e/login.spec.ts:93:3 › the login card › issues exactly one request while authenticating, and none on the users path 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('login.emailLabel')
+
+
+      110 |
+      111 |     await page.goto('/login');
+    > 112 |     await page.getByLabel('login.emailLabel').fill(EMAIL);
+          |                                               ^
+      113 |     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
+      114 |     await page.getByRole('button', { name: 'login.submit' }).click();
+      115 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:112:47
+
+    Error Context: test-results/login-the-login-card-issue-09c1c--and-none-on-the-users-path-chromium/error-context.md
+
+  5) [chromium] › e2e/login.spec.ts:124:3 › the login card › leaves no credential material in the telemetry buffer or storage 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('login.emailLabel')
+
+
+      135 |
+      136 |     await page.goto('/login');
+    > 137 |     await page.getByLabel('login.emailLabel').fill(EMAIL);
+          |                                               ^
+      138 |     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
+      139 |     await page.getByRole('button', { name: 'login.submit' }).click();
+      140 |     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:137:47
+
+    Error Context: test-results/login-the-login-card-leave-e6a5c-telemetry-buffer-or-storage-chromium/error-context.md
+
+  6) [chromium] › e2e/login.spec.ts:158:3 › the login card › passes an accessibility scan in each of its five states 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('heading', { level: 1 })
+    Expected: "login.heading"
+    Received: "login.title"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('heading', { level: 1 })
+        14 × locator resolved to <h1>login.title</h1>
+           - unexpected value "login.title"
+
+
+      181 |     // idle
+      182 |     await page.goto('/login');
+    > 183 |     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+          |                                                           ^
+      184 |       'login.heading',
+      185 |     );
+      186 |     await assertAccessible(page);
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:183:59
+
+    Error Context: test-results/login-the-login-card-passe-5a5f0--in-each-of-its-five-states-chromium/error-context.md
+
+  6 failed
+    [chromium] › e2e/login.spec.ts:21:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page 
+    [chromium] › e2e/login.spec.ts:44:3 › the login card › shows the no-match alert for a null lookup and stays on /login 
+    [chromium] › e2e/login.spec.ts:60:3 › the login card › shows the service-problem alert and retries successfully 
+    [chromium] › e2e/login.spec.ts:93:3 › the login card › issues exactly one request while authenticating, and none on the users path 
+    [chromium] › e2e/login.spec.ts:124:3 › the login card › leaves no credential material in the telemetry buffer or storage 
+    [chromium] › e2e/login.spec.ts:158:3 › the login card › passes an accessibility scan in each of its five states 

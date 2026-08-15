@@ -33,7 +33,7 @@ import { installRouteMocks } from './support/routeMocks';
 // resolves relative to it), across every route this phase ships.
 const ROUTES = [
   { path: '/', heading: 'home.title' },
-  { path: '/login', heading: 'login.title' },
+  { path: '/login', heading: 'login.heading' },
 ];
 
 test.describe('right-to-left', () => {

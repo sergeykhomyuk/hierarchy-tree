@@ -26,7 +26,7 @@ describe('the substitution table', () => {
     }
   });
 
-  it("matches the literal extracted from the brief, entry for entry", () => {
+  it('matches the literal extracted from the brief, entry for entry', () => {
     expect(SUBSTITUTION_TABLE).toEqual(readBriefTable());
   });
 });

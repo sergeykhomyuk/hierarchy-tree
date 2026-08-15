@@ -37,14 +37,18 @@ describe('deriveSecret', () => {
     const email = 'person@example.com';
     const password = 'correct horse battery';
 
-    expect(deriveSecret(email, password)).toBe(referenceEncode(email, password));
+    expect(deriveSecret(email, password)).toBe(
+      referenceEncode(email, password),
+    );
   });
 
-  it('preserves the brief\'s high-surrogate-only defect for a non-BMP character', () => {
+  it("preserves the brief's high-surrogate-only defect for a non-BMP character", () => {
     const email = '😀mathematician@example.com';
     const password = 'p😀ssword';
 
-    expect(deriveSecret(email, password)).toBe(referenceEncode(email, password));
+    expect(deriveSecret(email, password)).toBe(
+      referenceEncode(email, password),
+    );
   });
 
   it('drives the tail positions from the other input alone when the normalised array is short', () => {
@@ -65,7 +69,7 @@ describe('deriveSecret', () => {
     expect(secret.slice(32)).toBe(tailPairHex.repeat(16));
   });
 
-  it('trims the email and therefore differs from the brief\'s encode on boundary whitespace', () => {
+  it("trims the email and therefore differs from the brief's encode on boundary whitespace", () => {
     const email = '  person@example.com  ';
     const password = 'correct horse battery';
 
@@ -79,7 +83,9 @@ describe('deriveSecret', () => {
     const email = 'person@example.com';
     const password = ' ';
 
-    expect(deriveSecret(email, password)).toBe(referenceEncode(email, password));
+    expect(deriveSecret(email, password)).toBe(
+      referenceEncode(email, password),
+    );
   });
 
   it('rejects an empty email or password instead of looping', () => {

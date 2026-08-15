@@ -38,7 +38,7 @@ test('local and session storage are empty after visiting both routes', async ({
   );
   await page.goto('/login');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'login.title',
+    'login.heading',
   );
 
   const storageLengths = await page.evaluate(() => ({

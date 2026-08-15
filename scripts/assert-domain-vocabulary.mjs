@@ -167,7 +167,8 @@ function checkWholeScopeVocabulary() {
       }
     }
 
-    const wholeScopeAllowlist = WHOLE_SCOPE_FILE_ALLOWLIST[filePath] ?? new Set();
+    const wholeScopeAllowlist =
+      WHOLE_SCOPE_FILE_ALLOWLIST[filePath] ?? new Set();
     if (source.includes('/secrets') && !wholeScopeAllowlist.has('/secrets')) {
       violations.push(`${filePath}: string literal contains "/secrets"`);
     }

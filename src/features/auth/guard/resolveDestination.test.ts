@@ -3,9 +3,7 @@ import { resolveDestination } from './resolveDestination';
 
 describe('resolveDestination', () => {
   it('returns the from target when it is a same-origin path', () => {
-    expect(resolveDestination('/hierarchy/users/5')).toBe(
-      '/hierarchy/users/5',
-    );
+    expect(resolveDestination('/hierarchy/users/5')).toBe('/hierarchy/users/5');
   });
 
   it('falls back to the hierarchy route for a protocol-relative, scheme-carrying or backslash-escaped value', () => {

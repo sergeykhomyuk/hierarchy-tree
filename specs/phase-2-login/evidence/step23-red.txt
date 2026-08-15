@@ -1,0 +1,189 @@
+
+Running 25 tests using 5 workers
+
+  ✓   1 [chromium] › e2e/placeholder-routes.spec.ts:6:3 › placeholder routes › the home route renders the hierarchy placeholder (276ms)
+  ✓   5 [chromium] › e2e/login.spec.ts:21:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page (371ms)
+  ✓   3 [chromium] › e2e/not-found.spec.ts:5:1 › an unknown path renders the not-found route with a working link home (379ms)
+  ✓   4 [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › / has zero axe violations (495ms)
+  ✓   7 [chromium] › e2e/login.spec.ts:44:3 › the login card › shows the no-match alert for a null lookup and stays on /login (211ms)
+  ✓   8 [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › / mirrors correctly under a forced right-to-left direction (328ms)
+  ✓  10 [chromium] › e2e/login.spec.ts:60:3 › the login card › shows the service-problem alert and retries successfully (385ms)
+  ✓  12 [chromium] › e2e/login.spec.ts:97:3 › the login card › issues exactly one request while authenticating, and none on the users path (148ms)
+  ✓  13 [chromium] › e2e/login.spec.ts:128:3 › the login card › leaves no credential material in the telemetry buffer or storage (185ms)
+  ✓  14 [chromium] › e2e/login.spec.ts:162:3 › the login card › passes an accessibility scan in each of its five states (1.2s)
+  ✘   9 [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › /login has zero axe violations (3.9m)
+  ✘   6 [chromium] › e2e/placeholder-routes.spec.ts:32:3 › placeholder routes › the login route renders the generic auth placeholder (3.9m)
+  ✘   2 [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry (3.9m)
+  ✘  11 [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › /login mirrors correctly under a forced right-to-left direction (3.9m)
+  ✘  15 [chromium] › e2e/telemetry-buffer.spec.ts:5:1 › the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage (3.9m)
+  ✓  16 [chromium] › e2e/placeholder-routes.spec.ts:49:3 › placeholder routes › the skip link is the first thing a keyboard user reaches (341ms)
+  ✓  18 [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › /does-not-exist has zero axe violations (538ms)
+  ✓  17 [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › / produces no console error or warning (602ms)
+  ✓  20 [development] › e2e/kit-route.spec.ts:12:3 › kit route › renders every documented state with no horizontal overflow (661ms)
+  ✓  21 [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › /login produces no console error or warning (253ms)
+  ✓  22 [development] › e2e/kit-route.spec.ts:29:3 › kit route › has zero axe violations in real light (614ms)
+  ✓  23 [development] › e2e/kit-route.spec.ts:46:3 › kit route › has zero axe violations in real dark (528ms)
+  ✓  24 [development] › e2e/kit-route.spec.ts:59:3 › kit route › a skeleton box equals the box of the content it stands in for (356ms)
+  ✓  25 [development] › e2e/kit-route.spec.ts:85:3 › kit route › mirrors correctly under a forced right-to-left direction (538ms)
+  ✘  19 [chromium] › e2e/telemetry-buffer.spec.ts:29:1 › local and session storage are empty after visiting both routes (5.4s)
+
+
+  1) [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › /login has zero axe violations ──
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('heading', { level: 1 })
+    Expected: "login.title"
+    Received: "login.heading"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('heading', { level: 1 })
+        8 × locator resolved to <h1>login.heading</h1>
+          - unexpected value "login.heading"
+
+
+      14 |       await installRouteMocks(page, baseURL ?? '');
+      15 |       await page.goto(route.path);
+    > 16 |       await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+         |                                                             ^
+      17 |         route.heading,
+      18 |       );
+      19 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/accessibility.spec.ts:16:61
+
+    Error Context: test-results/accessibility-accessibility-login-has-zero-axe-violations-chromium/error-context.md
+
+  2) [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('heading', { level: 1 })
+    Expected: "login.title"
+    Received: "login.heading"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('heading', { level: 1 })
+        - waiting for "http://127.0.0.1:4173/login" navigation to finish...
+        - navigated to "http://127.0.0.1:4173/login"
+        6 × locator resolved to <h1>login.heading</h1>
+          - unexpected value "login.heading"
+
+
+      51 |   await page.keyboard.press('Enter');
+      52 |
+    > 53 |   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+         |                                                         ^
+      54 |     'login.title',
+      55 |   );
+      56 |   await expect(alert).toBeHidden();
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/error-boundary.spec.ts:53:57
+
+    Error Context: test-results/error-boundary-a-forced-ro-80071-on-id-and-recovers-on-retry-chromium/error-context.md
+
+  3) [chromium] › e2e/placeholder-routes.spec.ts:32:3 › placeholder routes › the login route renders the generic auth placeholder 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('heading', { level: 1 })
+    Expected: "login.title"
+    Received: "login.heading"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('heading', { level: 1 })
+        8 × locator resolved to <h1>login.heading</h1>
+          - unexpected value "login.heading"
+
+
+      39 |     await page.goto('/login');
+      40 |
+    > 41 |     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+         |                                                           ^
+      42 |       'login.title',
+      43 |     );
+      44 |     await expect(page).toHaveTitle('login.documentTitle');
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/placeholder-routes.spec.ts:41:59
+
+    Error Context: test-results/placeholder-routes-placeho-3ecb7-he-generic-auth-placeholder-chromium/error-context.md
+
+  4) [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › /login mirrors correctly under a forced right-to-left direction 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('heading', { level: 1 })
+    Expected: "login.title"
+    Received: "login.heading"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('heading', { level: 1 })
+        7 × locator resolved to <h1>login.heading</h1>
+          - unexpected value "login.heading"
+
+
+      47 |
+      48 |       await page.goto(route.path);
+    > 49 |       await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+         |                                                             ^
+      50 |         route.heading,
+      51 |       );
+      52 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/right-to-left.spec.ts:49:61
+
+    Error Context: test-results/right-to-left-right-to-lef-5b2b0-ced-right-to-left-direction-chromium/error-context.md
+
+  5) [chromium] › e2e/telemetry-buffer.spec.ts:5:1 › the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage 
+
+    Test timeout of 30000ms exceeded while setting up "page".
+
+    Error Context: test-results/telemetry-buffer-the-buffe-c2f66-and-no-redacted-key-leakage-chromium/error-context.md
+
+  6) [chromium] › e2e/telemetry-buffer.spec.ts:29:1 › local and session storage are empty after visiting both routes 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('heading', { level: 1 })
+    Expected: "login.title"
+    Received: "login.heading"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('heading', { level: 1 })
+        14 × locator resolved to <h1>login.heading</h1>
+           - unexpected value "login.heading"
+
+
+      38 |   );
+      39 |   await page.goto('/login');
+    > 40 |   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+         |                                                         ^
+      41 |     'login.title',
+      42 |   );
+      43 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/telemetry-buffer.spec.ts:40:57
+
+    Error Context: test-results/telemetry-buffer-local-and-caf77--after-visiting-both-routes-chromium/error-context.md
+
+  6 failed
+    [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › /login has zero axe violations ───
+    [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry 
+    [chromium] › e2e/placeholder-routes.spec.ts:32:3 › placeholder routes › the login route renders the generic auth placeholder 
+    [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › /login mirrors correctly under a forced right-to-left direction 
+    [chromium] › e2e/telemetry-buffer.spec.ts:5:1 › the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage 
+    [chromium] › e2e/telemetry-buffer.spec.ts:29:1 › local and session storage are empty after visiting both routes 
+  19 passed (4.0m)

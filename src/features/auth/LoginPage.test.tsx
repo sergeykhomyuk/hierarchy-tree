@@ -52,7 +52,8 @@ function createMapStorage(): KeyValueStorage {
 }
 
 function createTestDependencies(
-  transport: Transport = () => Promise.resolve(new Response('null', { status: 200 })),
+  transport: Transport = () =>
+    Promise.resolve(new Response('null', { status: 200 })),
 ): LoginPageDependencies {
   const observability = createSpyObservability();
   const http = createHttpClient({
@@ -338,7 +339,9 @@ describe('LoginPage', () => {
 
     await user.click(screen.getByRole('button', { name: 'login.retry' }));
 
-    const loginButton = screen.getByRole('button', { name: 'login.submitting' });
+    const loginButton = screen.getByRole('button', {
+      name: 'login.submitting',
+    });
     expect(loginButton).toHaveFocus();
 
     resolveTransport?.(new Response(null, { status: 404 }));

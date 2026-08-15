@@ -15,10 +15,7 @@ export function writeSession(
   const record: SessionRecord = { version: SESSION_SCHEMA_VERSION, userId };
   setShadow(storage, record);
 
-  const persisted = storage.write(
-    SESSION_STORAGE_KEY,
-    JSON.stringify(record),
-  );
+  const persisted = storage.write(SESSION_STORAGE_KEY, JSON.stringify(record));
   if (!persisted) {
     observability.logger.warn('auth.session_persist_failed', {});
   }

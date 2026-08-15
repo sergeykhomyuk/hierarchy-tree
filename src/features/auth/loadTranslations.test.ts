@@ -55,12 +55,6 @@ describe('auth loadTranslations', () => {
     expect(testInstance.getResourceBundle(Locale.Test, 'auth')).toEqual({
       login: {
         documentTitle: 'login.documentTitle',
-        // title/message are the AuthPlaceholderPage's own strings, kept
-        // until step 23 deletes that page and its five migrated
-        // assertions - removing them now would break the still-active
-        // placeholder route before its replacement exists.
-        title: 'login.title',
-        message: 'login.message',
         wordmark: 'login.wordmark',
         heading: 'login.heading',
         subtext: 'login.subtext',
@@ -91,13 +85,10 @@ describe('auth loadTranslations', () => {
   });
 
   it('registers every key the login card renders', () => {
-    // TECH.md section 8's enumerated list, plus the still-active
-    // AuthPlaceholderPage's own title/message (removed at step 23) - every
-    // one is a surface invariant 116 requires to come from a catalogue.
+    // TECH.md section 8's enumerated list - every one is a surface
+    // invariant 116 requires to come from a catalogue.
     const expectedKeys = [
       'documentTitle',
-      'title',
-      'message',
       'wordmark',
       'heading',
       'subtext',

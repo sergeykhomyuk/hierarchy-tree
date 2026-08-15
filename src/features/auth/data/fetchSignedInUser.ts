@@ -22,7 +22,8 @@ export async function fetchSignedInUser(
   });
 
   if (result.outcome !== 'success') {
-    const reason = result.outcome === 'cancelled' ? 'cancelled' : result.failure.kind;
+    const reason =
+      result.outcome === 'cancelled' ? 'cancelled' : result.failure.kind;
     observability.logger.warn('auth.signed_in_user_unresolved', { reason });
     return null;
   }

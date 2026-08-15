@@ -51,7 +51,7 @@ test('a forced route chunk failure renders the boundary with a correlation id an
   await page.keyboard.press('Enter');
 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'login.title',
+    'login.heading',
   );
   await expect(alert).toBeHidden();
 

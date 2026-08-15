@@ -29,7 +29,7 @@ test.describe('placeholder routes', () => {
     expect(records).toEqual([]);
   });
 
-  test('the login route renders the generic auth placeholder', async ({
+  test('the login route renders the sign-in card', async ({
     page,
     baseURL,
   }) => {
@@ -39,9 +39,11 @@ test.describe('placeholder routes', () => {
     await page.goto('/login');
 
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'login.title',
+      'login.heading',
     );
     await expect(page).toHaveTitle('login.documentTitle');
+    await expect(page.getByLabel('login.emailLabel')).toBeVisible();
+    await expect(page.getByLabel('login.passwordLabel')).toBeVisible();
 
     expect(records).toEqual([]);
   });
