@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T09:19:04Z",
+  "updated": "2026-08-15T09:19:23Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -1061,7 +1061,8 @@
     "2026-08-15T09:17:07Z G4 finding Claude-8 dispositioned: fixed: renamed the test title to match the assertion (now expects and describes exactly one user request from the authenticated route's own loader).",
     "2026-08-15T09:17:08Z G4 finding Claude-9 dispositioned: fixed: extended the pageshow-restore test to submit again afterward and assert the real outcome (noMatch) replaces the untouched mask, proving the override actually lifts.",
     "2026-08-15T09:19:04Z evidence recorded: evidence/m3-findings-verify.txt (48a06b94270e) - npm run verify green after fixing Claude-8/9 (login.spec.ts test title, useLoginSubmission bfcache-restore-then-resubmit test)",
-    "2026-08-15T09:19:04Z evidence recorded: evidence/m3-findings-e2e.txt (723c3e8ddd9b) - npm run e2e green (31/31) after the M3 finding fixes"
+    "2026-08-15T09:19:04Z evidence recorded: evidence/m3-findings-e2e.txt (723c3e8ddd9b) - npm run e2e green (31/31) after the M3 finding fixes",
+    "2026-08-15T09:19:23Z milestone 3 reviewed: Fresh-context Claude review (evidence/reviews/m3-claude-review.md): 2 findings, 0 blocking. Both fixed: Claude-8 (login.spec.ts's stale test title) and Claude-9 (missing bfcache-restore-then-resubmit coverage, verified with a differential check that the new assertion actually catches the regression). Review confirmed the replace-vs-redirect current-entry logic is correct against TECH.md's own worked derivation, the authenticated loader never awaits its promise, and the isSessionGuarded barrel deviation is narrowly justified. npm run verify and npm run e2e both green after the fixes."
   ],
   "milestones": [
     {
@@ -1080,7 +1081,7 @@
       "id": 3,
       "title": "M3 - The guard, the router, and the authenticated shell",
       "verified": "2026-08-15T08:53:43Z npm run verify and npm run e2e both green (392 unit/component tests, 31/31 e2e). guard.spec.ts covers invariants 84-93 (bookmarked-URL redirect with no flash/users-request, sign-in-then-land-on-bookmark including query string, signed-in bounce off /login, Back in both current-entry and push variants, hostile from values). All seven pre-existing e2e specs the guard broke are migrated and green. Two real regressions the guard surfaced were fixed (login.spec.ts's users-request count, telemetry-buffer.spec.ts's storage-empty assertion). Evidence: evidence/milestones/m3-suite.txt, evidence/milestones/m3-e2e.txt.",
-      "reviewed": null
+      "reviewed": "2026-08-15T09:19:23Z Fresh-context Claude review (evidence/reviews/m3-claude-review.md): 2 findings, 0 blocking. Both fixed: Claude-8 (login.spec.ts's stale test title) and Claude-9 (missing bfcache-restore-then-resubmit coverage, verified with a differential check that the new assertion actually catches the regression). Review confirmed the replace-vs-redirect current-entry logic is correct against TECH.md's own worked derivation, the authenticated loader never awaits its promise, and the isSessionGuarded barrel deviation is narrowly justified. npm run verify and npm run e2e both green after the fixes."
     },
     {
       "id": 4,
