@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T09:19:23Z",
+  "updated": "2026-08-15T11:53:14Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 32,
-      "steps_done": 29
+      "steps_done": 30
     },
     "G3": {
       "status": "pending",
@@ -690,8 +690,8 @@
         "src/app/layout/SignedInName.test.tsx::SignedInName > renders a static placeholder, not the pulsing skeleton, when the name never resolves",
         "src/app/layout/SignedInName.test.tsx::SignedInName > reserves the same box in all three presentations"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T11:53:14Z evidence/step29-red.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1062,7 +1062,12 @@
     "2026-08-15T09:17:08Z G4 finding Claude-9 dispositioned: fixed: extended the pageshow-restore test to submit again afterward and assert the real outcome (noMatch) replaces the untouched mask, proving the override actually lifts.",
     "2026-08-15T09:19:04Z evidence recorded: evidence/m3-findings-verify.txt (48a06b94270e) - npm run verify green after fixing Claude-8/9 (login.spec.ts test title, useLoginSubmission bfcache-restore-then-resubmit test)",
     "2026-08-15T09:19:04Z evidence recorded: evidence/m3-findings-e2e.txt (723c3e8ddd9b) - npm run e2e green (31/31) after the M3 finding fixes",
-    "2026-08-15T09:19:23Z milestone 3 reviewed: Fresh-context Claude review (evidence/reviews/m3-claude-review.md): 2 findings, 0 blocking. Both fixed: Claude-8 (login.spec.ts's stale test title) and Claude-9 (missing bfcache-restore-then-resubmit coverage, verified with a differential check that the new assertion actually catches the regression). Review confirmed the replace-vs-redirect current-entry logic is correct against TECH.md's own worked derivation, the authenticated loader never awaits its promise, and the isSessionGuarded barrel deviation is narrowly justified. npm run verify and npm run e2e both green after the fixes."
+    "2026-08-15T09:19:23Z milestone 3 reviewed: Fresh-context Claude review (evidence/reviews/m3-claude-review.md): 2 findings, 0 blocking. Both fixed: Claude-8 (login.spec.ts's stale test title) and Claude-9 (missing bfcache-restore-then-resubmit coverage, verified with a differential check that the new assertion actually catches the regression). Review confirmed the replace-vs-redirect current-entry logic is correct against TECH.md's own worked derivation, the authenticated loader never awaits its promise, and the isSessionGuarded barrel deviation is narrowly justified. npm run verify and npm run e2e both green after the fixes.",
+    "2026-08-15T11:52:59Z evidence recorded: evidence/step29-red.txt (fc21c7fd7c53) - step 29 red: SignedInName.test.tsx fails to resolve import (impl files deleted)",
+    "2026-08-15T11:52:59Z evidence recorded: evidence/step29-green.txt (ff41781a7a6e) - step 29 green: SignedInName.test.tsx 4/4 passing",
+    "2026-08-15T11:53:14Z step 29 -> red",
+    "2026-08-15T11:53:14Z step 29 -> green",
+    "2026-08-15T11:53:14Z step 29 -> done"
   ],
   "milestones": [
     {
@@ -1395,6 +1400,16 @@
       "sha": "723c3e8ddd9b",
       "recorded": "2026-08-15T09:19:04Z",
       "note": "npm run e2e green (31/31) after the M3 finding fixes"
+    },
+    "evidence/step29-red.txt": {
+      "sha": "fc21c7fd7c53",
+      "recorded": "2026-08-15T11:52:59Z",
+      "note": "step 29 red: SignedInName.test.tsx fails to resolve import (impl files deleted)"
+    },
+    "evidence/step29-green.txt": {
+      "sha": "ff41781a7a6e",
+      "recorded": "2026-08-15T11:52:59Z",
+      "note": "step 29 green: SignedInName.test.tsx 4/4 passing"
     }
   },
   "test_file_hashes": {
@@ -1631,6 +1646,12 @@
       "step": 28,
       "recorded": "2026-08-15T08:53:12Z",
       "log_index": 314
+    },
+    "src/app/layout/SignedInName.test.tsx": {
+      "sha": "34159e1f6578",
+      "step": 29,
+      "recorded": "2026-08-15T11:53:14Z",
+      "log_index": 331
     }
   }
 }
