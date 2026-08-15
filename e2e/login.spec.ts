@@ -99,7 +99,7 @@ test.describe('the login card', () => {
     expect(secretCallCount).toBe(3);
   });
 
-  test('issues exactly one request while authenticating, and none on the users path', async ({
+  test('issues exactly one secrets request while authenticating, and exactly one users request from the landing route', async ({
     page,
     baseURL,
   }) => {

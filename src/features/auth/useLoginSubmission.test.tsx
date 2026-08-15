@@ -170,15 +170,20 @@ describe('useLoginSubmission', () => {
     expect(endInteraction).not.toHaveBeenCalled();
   });
 
-  it('aborts in flight and resets to untouched when a persisted page is restored', async () => {
+  it('aborts in flight and resets to untouched when a persisted page is restored, then unmasks on the next real submission', async () => {
     let abortedSignal: AbortSignal | undefined;
+    let callCount = 0;
     const transport: Transport = (request) => {
-      abortedSignal = request.signal;
-      return new Promise((_resolve, reject) => {
-        request.signal.addEventListener('abort', () => {
-          reject(new DOMException('aborted', 'AbortError'));
+      callCount += 1;
+      if (callCount === 1) {
+        abortedSignal = request.signal;
+        return new Promise((_resolve, reject) => {
+          request.signal.addEventListener('abort', () => {
+            reject(new DOMException('aborted', 'AbortError'));
+          });
         });
-      });
+      }
+      return Promise.resolve(new Response('null', { status: 200 }));
     };
     const dependencies = createTestDependencies(transport);
 
@@ -198,6 +203,13 @@ describe('useLoginSubmission', () => {
       expect(screen.getByTestId('pending').textContent).toBe('false'),
     );
     expect(screen.getByTestId('outcome').textContent).toBe('untouched');
+
+    // The override must lift on the next real submission - not stay
+    // stuck masking whatever this one actually settles to.
+    fireEvent.submit(form);
+    await screen.findByText('noMatch', { selector: '[data-testid="outcome"]' });
+
+    expect(callCount).toBe(2);
   });
 
   it('aborts in flight without a state update when the page unmounts', async () => {

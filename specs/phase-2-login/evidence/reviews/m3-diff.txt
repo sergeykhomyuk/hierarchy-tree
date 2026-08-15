@@ -1,0 +1,1788 @@
+diff --git a/.gitignore b/.gitignore
+index 7801314..906b6ff 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -15,6 +15,7 @@ dist-ssr
+ coverage
+ playwright-report
+ test-results
++.playwright-mcp
+ 
+ # Editor directories and files
+ .vscode/*
+diff --git a/.prettierignore b/.prettierignore
+index 7b5d397..51ad0b1 100644
+--- a/.prettierignore
++++ b/.prettierignore
+@@ -3,6 +3,7 @@ node_modules
+ coverage
+ playwright-report
+ test-results
++.playwright-mcp
+ package-lock.json
+ 
+ # Loop specs and docs: loop.json is CLI-managed, evidence files are
+diff --git a/.size-limit.json b/.size-limit.json
+index 8472076..de9a013 100644
+--- a/.size-limit.json
++++ b/.size-limit.json
+@@ -13,6 +13,13 @@
+     "gzip": true,
+     "running": false
+   },
++  {
++    "name": "route: authenticated",
++    "path": "dist/assets/AuthenticatedRoute-*.js",
++    "limit": "30 kB",
++    "gzip": true,
++    "running": false
++  },
+   {
+     "name": "route: home",
+     "path": "dist/assets/HomeRoute-*.js",
+diff --git a/build-output/entry-chunk-isolation.test.ts b/build-output/entry-chunk-isolation.test.ts
+new file mode 100644
+index 0000000..0eca738
+--- /dev/null
++++ b/build-output/entry-chunk-isolation.test.ts
+@@ -0,0 +1,30 @@
++import { globSync, readFileSync } from 'node:fs';
++import { describe, expect, it } from 'vitest';
++
++// The first eight entries of the substitution table (substitutionTable.ts),
++// rendered exactly as a minified bundle emits a number array literal - no
++// spaces after the commas. Unique enough that a false-positive match
++// elsewhere in the bundle is not a realistic concern.
++const TABLE_SIGNATURE = '156,33,64,174,120,204,69,242';
++
++function readChunk(pattern: string): string {
++  const [match] = globSync(pattern);
++  expect(match, `no chunk matched ${pattern}`).toBeDefined();
++  return readFileSync(match as string, 'utf-8');
++}
++
++describe('entry chunk isolation', () => {
++  it('the substitution table reaches LoginRoute but never the entry chunk', () => {
++    // routeDefinitions.ts imports redirectSignedInVisitor eagerly (it must
++    // run before the login chunk is fetched - TECH.md section 1.2), which
++    // makes the whole @features/auth barrel reachable from the entry
++    // chunk's module graph. package.json's sideEffects: false is what lets
++    // Rolldown shake the derivation table out of it anyway; this proves
++    // that holds rather than assuming it.
++    const entryChunk = readChunk('dist/assets/entry-*.js');
++    expect(entryChunk).not.toContain(TABLE_SIGNATURE);
++
++    const loginChunk = readChunk('dist/assets/LoginRoute-*.js');
++    expect(loginChunk).toContain(TABLE_SIGNATURE);
++  });
++});
+diff --git a/build-output/expected-build-output.json b/build-output/expected-build-output.json
+index b9d43d5..ec701a6 100644
+--- a/build-output/expected-build-output.json
++++ b/build-output/expected-build-output.json
+@@ -6,6 +6,7 @@
+     "sizeLimitEntries": [
+       { "name": "app entry (initial payload)", "limit": "150 kB" },
+       { "name": "stylesheet", "limit": "15 kB" },
++      { "name": "route: authenticated", "limit": "30 kB" },
+       { "name": "route: home", "limit": "30 kB" },
+       { "name": "route: login", "limit": "30 kB" },
+       { "name": "route: not-found", "limit": "30 kB" },
+@@ -14,6 +15,7 @@
+     ]
+   },
+   "routeChunks": {
++    "authenticated": "dist/assets/AuthenticatedRoute-*.js",
+     "home": "dist/assets/HomeRoute-*.js",
+     "login": "dist/assets/LoginRoute-*.js",
+     "notFound": "dist/assets/NotFoundRoute-*.js"
+diff --git a/build-output/route-chunks.test.ts b/build-output/route-chunks.test.ts
+index 147e2f4..804140a 100644
+--- a/build-output/route-chunks.test.ts
++++ b/build-output/route-chunks.test.ts
+@@ -1,7 +1,12 @@
+ import { globSync } from 'node:fs';
+ import { describe, expect, it } from 'vitest';
+ 
+-const ROUTE_NAMES = ['HomeRoute', 'LoginRoute', 'NotFoundRoute'];
++const ROUTE_NAMES = [
++  'AuthenticatedRoute',
++  'HomeRoute',
++  'LoginRoute',
++  'NotFoundRoute',
++];
+ 
+ describe('route chunks', () => {
+   it('emits a chunk file for each route', () => {
+diff --git a/e2e/accessibility.spec.ts b/e2e/accessibility.spec.ts
+index 3c41c20..c81e6b5 100644
+--- a/e2e/accessibility.spec.ts
++++ b/e2e/accessibility.spec.ts
+@@ -1,11 +1,9 @@
+ import { expect, test } from '@playwright/test';
+ import { createAxeBuilder } from './support/axeBuilder';
+ import { installRouteMocks } from './support/routeMocks';
++import { installSignInApiMock, signIn } from './support/signIn';
+ 
+-const ROUTES = [
+-  { path: '/', heading: 'home.title' },
+-  { path: '/does-not-exist', heading: 'notFound.title' },
+-];
++const ROUTES = [{ path: '/does-not-exist', heading: 'notFound.title' }];
+ 
+ test.describe('accessibility', () => {
+   for (const route of ROUTES) {
+@@ -31,4 +29,18 @@ test.describe('accessibility', () => {
+     const results = await createAxeBuilder(page).analyze();
+     expect(results.violations).toEqual([]);
+   });
++
++  // / is a guarded route since M3, so reaching the hierarchy placeholder
++  // needs a session first.
++  test('/ has zero axe violations', async ({ page, baseURL }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await installSignInApiMock(page);
++    await signIn(page);
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'home.title',
++    );
++
++    const results = await createAxeBuilder(page).analyze();
++    expect(results.violations).toEqual([]);
++  });
+ });
+diff --git a/e2e/deployed-smoke.spec.ts b/e2e/deployed-smoke.spec.ts
+index 391936d..8b83339 100644
+--- a/e2e/deployed-smoke.spec.ts
++++ b/e2e/deployed-smoke.spec.ts
+@@ -8,12 +8,17 @@ import { expect, test } from '@playwright/test';
+ // fallback and response headers a local `vite preview` run cannot (that
+ // server has its own fallback and sets no headers - VERIFICATION.md).
+ 
+-test('the home route renders on the live host', async ({ page }) => {
++test('an anonymous visit to the home route redirects to the sign-in card on the live host', async ({
++  page,
++}) => {
++  // / is a guarded route since M3 - the initial document response is
++  // still a plain 200 (the SPA fallback this spec exists to prove), and
++  // the redirect to /login happens client-side after hydration.
+   const response = await page.goto('/');
+ 
+   expect(response?.status()).toBe(200);
+   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+-    "The hierarchy view isn't built yet",
++    'Please login',
+   );
+ });
+ 
+@@ -23,13 +28,13 @@ test('/login renders with a 200 on direct load and on refresh', async ({
+   const firstLoad = await page.goto('/login');
+   expect(firstLoad?.status()).toBe(200);
+   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+-    "Sign in isn't built yet",
++    'Please login',
+   );
+ 
+   const reload = await page.reload();
+   expect(reload?.status()).toBe(200);
+   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+-    "Sign in isn't built yet",
++    'Please login',
+   );
+ });
+ 
+diff --git a/e2e/development-console.spec.ts b/e2e/development-console.spec.ts
+index 7e5f0c3..2554a91 100644
+--- a/e2e/development-console.spec.ts
++++ b/e2e/development-console.spec.ts
+@@ -1,23 +1,38 @@
+ import { expect, test } from '@playwright/test';
+ import { recordConsole } from './support/consoleRecorder';
+ import { installRouteMocks } from './support/routeMocks';
++import { installSignInApiMock, signIn } from './support/signIn';
+ 
+ // Invariant 100 covers the development server as well as the production
+ // build - this project runs against `npm run dev` (playwright.config.ts),
+ // where Vite's own CSP mode is the permissive development policy.
+ test.describe('development server console hygiene', () => {
+-  for (const path of ['/', '/login']) {
+-    test(`${path} produces no console error or warning`, async ({
+-      page,
+-      baseURL,
+-    }) => {
+-      await installRouteMocks(page, baseURL ?? '');
+-      const { records } = recordConsole(page);
++  test('/login produces no console error or warning', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    const { records } = recordConsole(page);
+ 
+-      await page.goto(path);
+-      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
++    await page.goto('/login');
++    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+ 
+-      expect(records).toEqual([]);
+-    });
+-  }
++    expect(records).toEqual([]);
++  });
++
++  // / is a guarded route since M3 - reaching the hierarchy placeholder
++  // needs a session first.
++  test('/ produces no console error or warning, signed in', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await installSignInApiMock(page);
++    const { records } = recordConsole(page);
++
++    await signIn(page);
++    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
++
++    expect(records).toEqual([]);
++  });
+ });
+diff --git a/e2e/guard.spec.ts b/e2e/guard.spec.ts
+new file mode 100644
+index 0000000..1dc97c9
+--- /dev/null
++++ b/e2e/guard.spec.ts
+@@ -0,0 +1,141 @@
++import type { Page } from '@playwright/test';
++import { expect, test } from '@playwright/test';
++import { deriveSecret } from '../src/features/auth/domain/deriveSecret';
++import { installApiMocks } from './support/apiMocks';
++import {
++  installMutationObserver,
++  readMutationLog,
++} from './support/mutationLog';
++import { installRouteMocks } from './support/routeMocks';
++import {
++  SIGN_IN_EMAIL,
++  SIGN_IN_PASSWORD,
++  SIGN_IN_USER_ID,
++  installSignInApiMock,
++  signIn,
++} from './support/signIn';
++
++const MATCHING_SECRET = deriveSecret(SIGN_IN_EMAIL, SIGN_IN_PASSWORD);
++
++async function submitSignInForm(page: Page): Promise<void> {
++  await page.locator('input[name="email"]').fill(SIGN_IN_EMAIL);
++  await page.locator('input[name="password"]').fill(SIGN_IN_PASSWORD);
++  await page.locator('form button[type="submit"]').click();
++}
++
++test.describe('the route guard', () => {
++  test('sends a bookmarked authenticated URL to the login card with no users request and no flash', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    let userRequestCount = 0;
++    await installApiMocks(page, {
++      secret: (secret) => ({
++        status: 200,
++        body: secret === MATCHING_SECRET ? SIGN_IN_USER_ID : null,
++      }),
++      user: () => {
++        userRequestCount += 1;
++        return { status: 200, body: null };
++      },
++    });
++    await installMutationObserver(page);
++
++    await page.goto('/');
++
++    await expect(page).toHaveURL(/\/login\?from=%2F$/);
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'login.heading',
++    );
++
++    expect(userRequestCount).toBe(0);
++    const mutationLog = await readMutationLog(page);
++    expect(mutationLog.some((text) => text.includes('home.title'))).toBe(false);
++  });
++
++  test('lands on the bookmarked path after signing in from the redirect', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await installSignInApiMock(page);
++
++    // A search string on the bookmark, not the bare `/` - the only
++    // guarded route in this phase - so a correct round trip is
++    // distinguishable from the login flow's own no-`from` default,
++    // which also lands on `/`.
++    await page.goto('/?a=1');
++    await expect(page).toHaveURL(/\/login\?from=%2F%3Fa%3D1$/);
++
++    await submitSignInForm(page);
++
++    await expect(page).toHaveURL(/\/\?a=1$/);
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'home.title',
++    );
++  });
++
++  test('bounces a signed-in visitor straight off the login route', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await installSignInApiMock(page);
++    await signIn(page);
++    await installMutationObserver(page);
++
++    await page.goto('/login');
++
++    await expect(page).toHaveURL(/\/$/);
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'home.title',
++    );
++    const mutationLog = await readMutationLog(page);
++    expect(mutationLog.some((text) => text.includes('login.heading'))).toBe(
++      false,
++    );
++  });
++
++  test('returns Back from the login card to where the visitor came from', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await installSignInApiMock(page);
++
++    // current-entry variant: a direct load of the guarded URL means it IS
++    // the current history entry, so the guard must replace() rather than
++    // push - otherwise Back would re-enter the guard instead of leaving.
++    await page.goto('/this-path-does-not-exist');
++    await page.goto('/');
++    await expect(page).toHaveURL(/\/login\?from=%2F$/);
++    await page.goBack();
++    await expect(page).toHaveURL(/\/this-path-does-not-exist$/);
++
++    // push variant: an in-app link click means the guarded URL is a NEW
++    // history entry, so the guard must push() - a replace() here would
++    // overwrite the referring page's entry instead, and Back would leave
++    // the app entirely.
++    await page.goto('/this-path-does-not-exist');
++    await page.getByRole('link', { name: 'notFound.linkHome' }).click();
++    await expect(page).toHaveURL(/\/login\?from=%2F$/);
++    await page.goBack();
++    await expect(page).toHaveURL(/\/this-path-does-not-exist$/);
++  });
++
++  test('ignores a protocol-relative or backslash-escaped from value', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await installSignInApiMock(page);
++    await signIn(page);
++
++    await page.goto('/login?from=%2F%2Fevil.example');
++    await expect(page).toHaveURL(/\/$/);
++
++    await page.goto('/login?from=%2F%5Cevil.example');
++    await expect(page).toHaveURL(/\/$/);
++  });
++});
+diff --git a/e2e/login.spec.ts b/e2e/login.spec.ts
+index 5823d37..ace5a21 100644
+--- a/e2e/login.spec.ts
++++ b/e2e/login.spec.ts
+@@ -130,7 +130,11 @@ test.describe('the login card', () => {
+     );
+ 
+     expect(secretRequestCount).toBe(1);
+-    expect(userRequestCount).toBe(0);
++    // Exactly one, not zero: the authenticated route's own loader (M3)
++    // fetches the signed-in user's record once landing on / - the
++    // sign-in flow itself still never touches the users path, only the
++    // subsequent navigation's loader does.
++    expect(userRequestCount).toBe(1);
+   });
+ 
+   test('leaves no credential material in the telemetry buffer or storage', async ({
+diff --git a/e2e/not-found.spec.ts b/e2e/not-found.spec.ts
+index 08597c2..58c0a3c 100644
+--- a/e2e/not-found.spec.ts
++++ b/e2e/not-found.spec.ts
+@@ -1,8 +1,9 @@
+ import { expect, test } from '@playwright/test';
+ import { recordConsole } from './support/consoleRecorder';
+ import { installRouteMocks } from './support/routeMocks';
++import { installSignInApiMock, signIn } from './support/signIn';
+ 
+-test('an unknown path renders the not-found route with a working link home', async ({
++test('an unknown path renders the not-found route with a working link home, signed out', async ({
+   page,
+   baseURL,
+ }) => {
+@@ -19,6 +20,36 @@ test('an unknown path renders the not-found route with a working link home', asy
+   await expect(homeLink).toBeVisible();
+   await homeLink.click();
+ 
++  // / is a guarded route since M3 - signed out, the home link's own
++  // destination redirects straight to the login card rather than
++  // reaching the hierarchy placeholder (invariant 137: not-found's own
++  // content is unchanged for both session states, but where its home
++  // link actually lands legitimately differs).
++  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++    'login.heading',
++  );
++  expect(records).toEqual([]);
++});
++
++test('an unknown path renders the not-found route with a working link home, signed in', async ({
++  page,
++  baseURL,
++}) => {
++  await installRouteMocks(page, baseURL ?? '');
++  await installSignInApiMock(page);
++  await signIn(page);
++  const { records } = recordConsole(page);
++
++  await page.goto('/this-path-does-not-exist');
++
++  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++    'notFound.title',
++  );
++
++  const homeLink = page.getByRole('link', { name: 'notFound.linkHome' });
++  await expect(homeLink).toBeVisible();
++  await homeLink.click();
++
+   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+     'home.title',
+   );
+diff --git a/e2e/placeholder-routes.spec.ts b/e2e/placeholder-routes.spec.ts
+index 4e0378c..69d73e8 100644
+--- a/e2e/placeholder-routes.spec.ts
++++ b/e2e/placeholder-routes.spec.ts
+@@ -1,16 +1,21 @@
+ import { expect, test } from '@playwright/test';
+ import { recordConsole } from './support/consoleRecorder';
+ import { installRouteMocks } from './support/routeMocks';
++import { installSignInApiMock, signIn } from './support/signIn';
+ 
+ test.describe('placeholder routes', () => {
+   test('the home route renders the hierarchy placeholder', async ({
+     page,
+     baseURL,
+   }) => {
++    // / is a guarded route since M3 - reaching the placeholder means
++    // signing in first, which is what this test is actually exercising
++    // now, alongside the placeholder itself.
+     await installRouteMocks(page, baseURL ?? '');
++    await installSignInApiMock(page);
+     const { records } = recordConsole(page);
+ 
+-    await page.goto('/');
++    await signIn(page);
+ 
+     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+       'home.title',
+@@ -54,7 +59,10 @@ test.describe('placeholder routes', () => {
+   }) => {
+     await installRouteMocks(page, baseURL ?? '');
+ 
+-    await page.goto('/');
++    // /login rather than the now-guarded / - the skip link lives on the
++    // shared ApplicationLayout every route renders inside, so an
++    // unguarded route proves the same thing without needing a session.
++    await page.goto('/login');
+     // The lazy route chunk resolves asynchronously - without this, Tab
+     // can fire before the skip link exists and land on body instead,
+     // with nothing afterward to move focus back onto it.
+diff --git a/e2e/right-to-left.spec.ts b/e2e/right-to-left.spec.ts
+index 3095b48..5a860bf 100644
+--- a/e2e/right-to-left.spec.ts
++++ b/e2e/right-to-left.spec.ts
+@@ -1,8 +1,10 @@
++import type { Page } from '@playwright/test';
+ import { expect, test } from '@playwright/test';
+ import { createAxeBuilder } from './support/axeBuilder';
+ import { recordConsole } from './support/consoleRecorder';
+ import { forceDirection } from './support/forceDirection';
+ import { installRouteMocks } from './support/routeMocks';
++import { installSignInApiMock, signIn } from './support/signIn';
+ 
+ // English is the only shipped PRODUCT locale (invariant 65) - a
+ // non-product-facing `test` locale (Locale.Test, tag 'zxx') exists for
+@@ -31,9 +33,24 @@ import { installRouteMocks } from './support/routeMocks';
+ // `dir` attribute actually cascades into computed CSS `direction`
+ // (invariant 68's structural precondition - every logical property
+ // resolves relative to it), across every route this phase ships.
++// / is a guarded route since M3 - reaching it under test needs a session
++// first, unlike /login which stays a plain unauthenticated visit.
+ const ROUTES = [
+-  { path: '/', heading: 'home.title' },
+-  { path: '/login', heading: 'login.heading' },
++  {
++    path: '/',
++    heading: 'home.title',
++    visit: async (page: Page) => {
++      await installSignInApiMock(page);
++      await signIn(page);
++    },
++  },
++  {
++    path: '/login',
++    heading: 'login.heading',
++    visit: async (page: Page) => {
++      await page.goto('/login');
++    },
++  },
+ ];
+ 
+ test.describe('right-to-left', () => {
+@@ -45,7 +62,7 @@ test.describe('right-to-left', () => {
+       await installRouteMocks(page, baseURL ?? '');
+       const { records } = recordConsole(page);
+ 
+-      await page.goto(route.path);
++      await route.visit(page);
+       await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+         route.heading,
+       );
+diff --git a/e2e/support/mutationLog.ts b/e2e/support/mutationLog.ts
+new file mode 100644
+index 0000000..9a89c66
+--- /dev/null
++++ b/e2e/support/mutationLog.ts
+@@ -0,0 +1,35 @@
++import type { Page } from '@playwright/test';
++
++// Records the textContent of every node inserted into the document for
++// the life of the page - installed via page.addInitScript BEFORE any
++// navigation, so it catches a guarded route's content even if it were
++// inserted and removed within a single frame (invariant 86). A
++// domcontentloaded snapshot plus a later count check samples two
++// discrete moments and is blind to anything in between; this observer
++// is not.
++export async function installMutationObserver(page: Page): Promise<void> {
++  await page.addInitScript(() => {
++    window.__mutationLog = [];
++    const observer = new MutationObserver((mutations) => {
++      for (const mutation of mutations) {
++        for (const node of mutation.addedNodes) {
++          window.__mutationLog?.push(node.textContent ?? '');
++        }
++      }
++    });
++    observer.observe(document.documentElement, {
++      childList: true,
++      subtree: true,
++    });
++  });
++}
++
++export async function readMutationLog(page: Page): Promise<string[]> {
++  return page.evaluate(() => window.__mutationLog ?? []);
++}
++
++declare global {
++  interface Window {
++    __mutationLog?: string[];
++  }
++}
+diff --git a/e2e/support/signIn.ts b/e2e/support/signIn.ts
+new file mode 100644
+index 0000000..60b2ff2
+--- /dev/null
++++ b/e2e/support/signIn.ts
+@@ -0,0 +1,52 @@
++import type { Page } from '@playwright/test';
++import { expect } from '@playwright/test';
++import { deriveSecret } from '../../src/features/auth/domain/deriveSecret';
++import { installApiMocks } from './apiMocks';
++
++export const SIGN_IN_EMAIL = 'e2e-user@example.com';
++export const SIGN_IN_PASSWORD = 'e2e-password-123';
++export const SIGN_IN_USER_ID = 'e2e-user-1';
++
++const MATCHING_SECRET = deriveSecret(SIGN_IN_EMAIL, SIGN_IN_PASSWORD);
++
++// Registers the route mocks every migrated spec needs to get past the
++// guard AND land cleanly on an authenticated route: a matching secret,
++// plus a schema-shaped user record for the authenticated layout's own
++// loader (M3) to resolve - without one, its fetch to the users path 404s
++// the schema parse and logs a warning, which the console-hygiene specs
++// correctly treat as noise. Call before navigating anywhere.
++export async function installSignInApiMock(page: Page): Promise<void> {
++  await installApiMocks(page, {
++    secret: (secret) => ({
++      status: 200,
++      body: secret === MATCHING_SECRET ? SIGN_IN_USER_ID : null,
++    }),
++    user: () => ({
++      status: 200,
++      body: { firstName: 'Ada', lastName: 'Lovelace' },
++    }),
++  });
++}
++
++// Signs in from a bare /login (no `from`), which resolveDestination sends
++// to `/` - the shared path every migrated spec that just needs a session
++// to get past the guard uses. guard.spec.ts's own bookmarked-redirect
++// flows drive the form directly instead, since they assert on the
++// specific destination the guard itself chose.
++//
++// Selects the fields and the submit control by their stable `name`/`type`
++// attributes rather than by label or role text - the `development`
++// Playwright project runs with no locale override (playwright.config.ts),
++// so it renders real English prose rather than the `chromium` project's
++// key-echoed zxx locale, and this helper is shared by specs under both.
++export async function signIn(page: Page): Promise<void> {
++  await page.goto('/login');
++  await page.locator('input[name="email"]').fill(SIGN_IN_EMAIL);
++  await page.locator('input[name="password"]').fill(SIGN_IN_PASSWORD);
++  await page.locator('form button[type="submit"]').click();
++  // Locale-independent: confirms the navigation actually left /login
++  // (rather than staying on it in the noMatch/serviceProblem state)
++  // without depending on which locale project rendered the heading.
++  await page.waitForURL((url) => !url.pathname.includes('login'));
++  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
++}
+diff --git a/e2e/telemetry-buffer.spec.ts b/e2e/telemetry-buffer.spec.ts
+index b3b4c36..0806c0d 100644
+--- a/e2e/telemetry-buffer.spec.ts
++++ b/e2e/telemetry-buffer.spec.ts
+@@ -1,5 +1,6 @@
+ import { expect, test } from '@playwright/test';
+ import { installRouteMocks } from './support/routeMocks';
++import { installSignInApiMock, signIn } from './support/signIn';
+ import './support/telemetryWindow';
+ 
+ test('the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage', async ({
+@@ -8,9 +9,13 @@ test('the buffer sink records exactly one route_viewed for the initial load and
+ }) => {
+   await installRouteMocks(page, baseURL ?? '');
+ 
++  // / is a guarded route since M3 - an unauthenticated visit redirects to
++  // /login before the router ever returns to idle (invariant 127), so
++  // this is still exactly one settled navigation, just to a different
++  // destination than before the guard existed.
+   await page.goto('/');
+   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+-    'home.title',
++    'login.heading',
+   );
+ 
+   const records = await page.evaluate(
+@@ -26,26 +31,31 @@ test('the buffer sink records exactly one route_viewed for the initial load and
+   expect(JSON.stringify(records)).not.toMatch(/password|secret|token/i);
+ });
+ 
+-test('local and session storage are empty after visiting both routes', async ({
++test('local and session storage are empty before sign-in, and session storage holds exactly one entry after', async ({
+   page,
+   baseURL,
+ }) => {
+   await installRouteMocks(page, baseURL ?? '');
++  await installSignInApiMock(page);
+ 
+-  await page.goto('/');
+-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+-    'home.title',
+-  );
+   await page.goto('/login');
+   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+     'login.heading',
+   );
+ 
+-  const storageLengths = await page.evaluate(() => ({
++  const beforeSignIn = await page.evaluate(() => ({
+     localStorageLength: window.localStorage.length,
+     sessionStorageLength: window.sessionStorage.length,
+   }));
++  expect(beforeSignIn.localStorageLength).toBe(0);
++  expect(beforeSignIn.sessionStorageLength).toBe(0);
+ 
+-  expect(storageLengths.localStorageLength).toBe(0);
+-  expect(storageLengths.sessionStorageLength).toBe(0);
++  await signIn(page);
++
++  const afterSignIn = await page.evaluate(() => ({
++    localStorageLength: window.localStorage.length,
++    sessionStorageLength: window.sessionStorage.length,
++  }));
++  expect(afterSignIn.localStorageLength).toBe(0);
++  expect(afterSignIn.sessionStorageLength).toBe(1);
+ });
+diff --git a/eslint.config.js b/eslint.config.js
+index be2e1bb..7fb243d 100644
+--- a/eslint.config.js
++++ b/eslint.config.js
+@@ -561,7 +561,7 @@ export default defineConfig([
+               name: 'react-router',
+               importNames: ['redirect', 'redirectDocument'],
+               message:
+-                'No loader, guard or redirect exists in this phase (invariant 97).',
++                'redirect/redirectDocument are only permitted inside src/features/auth/guard/** - no other file performs a client-side redirect.',
+             },
+           ],
+           patterns: [...FEATURE_DEEP_IMPORT_PATTERNS, SINKS_IMPORT_PATTERN],
+@@ -583,7 +583,7 @@ export default defineConfig([
+               name: 'react-router',
+               importNames: ['redirect', 'redirectDocument'],
+               message:
+-                'No loader, guard or redirect exists in this phase (invariant 97).',
++                'redirect/redirectDocument are only permitted inside src/features/auth/guard/** - no other file performs a client-side redirect.',
+             },
+           ],
+           patterns: [SINKS_IMPORT_PATTERN],
+@@ -591,6 +591,39 @@ export default defineConfig([
+       ],
+     },
+   },
++  {
++    // The one place `redirect` is permitted (invariants 84-91): the guard
++    // pair throws it to send an unauthenticated visitor to /login or a
++    // signed-in one away from it. `redirectDocument` stays banned even
++    // here - a full document load is never right for a client-side guard.
++    // This block REPLACES rather than merges the rule from the two blocks
++    // above (flat config's per-rule behaviour), so it must repeat
++    // `patterns: [SINKS_IMPORT_PATTERN]` itself or the sinks ban would
++    // silently drop for exactly the directory that handles the credential
++    // path.
++    files: ['src/features/auth/guard/**/*.{ts,tsx}'],
++    rules: {
++      'no-restricted-imports': [
++        'error',
++        {
++          paths: [
++            {
++              name: 'react-router',
++              importNames: ['redirectDocument'],
++              message:
++                'redirectDocument performs a full document load; use redirect or replace instead.',
++            },
++          ],
++          patterns: [SINKS_IMPORT_PATTERN],
++        },
++      ],
++      // The guard's contract with react-router is to throw the Response
++      // redirect()/replace() return - the router catches it specially.
++      // Not an error-handling escape hatch, so this override is scoped to
++      // the two guard files that do it.
++      '@typescript-eslint/only-throw-error': 'off',
++    },
++  },
+   {
+     // The one file allowed to construct sinks (invariant 45) - it imports
+     // them directly by design, so the ban is off for this file alone.
+diff --git a/scripts/eslint-configuration.test.ts b/scripts/eslint-configuration.test.ts
+index 8b7266b..de6b8e0 100644
+--- a/scripts/eslint-configuration.test.ts
++++ b/scripts/eslint-configuration.test.ts
+@@ -291,7 +291,53 @@ describe('demonstrable negatives', () => {
+     );
+ 
+     expect(output).toContain('no-restricted-imports');
+-    expect(output).toContain('invariant 97');
++    expect(output).toContain('src/features/auth/guard');
++  });
++
++  it('a redirect import is permitted inside src/features/auth/guard but redirectDocument is not', () => {
++    const permittedOutput = lintOutputFor(
++      'src/features/auth/guard/redirectPermittedProbe.ts',
++      "import { redirect } from 'react-router';\nexport const _probe = redirect;\n",
++    );
++    expect(permittedOutput).not.toContain('no-restricted-imports');
++
++    const bannedOutput = lintOutputFor(
++      'src/features/auth/guard/redirectDocumentBannedProbe.ts',
++      "import { redirectDocument } from 'react-router';\nexport const _probe = redirectDocument;\n",
++    );
++    expect(bannedOutput).toContain('no-restricted-imports');
++    expect(bannedOutput).toContain('full document load');
++  });
++});
++
++describe('the redirect sinks-ban narrowing', () => {
++  it('the sinks pattern is present in all three no-restricted-imports blocks', async () => {
++    const config = await readEslintConfig();
++    const restrictedImportRows = config.filter(
++      (entry) => entry.rules?.['no-restricted-imports'] !== undefined,
++    );
++
++    const redirectRows = restrictedImportRows.filter((entry) => {
++      const value = entry.rules?.['no-restricted-imports'];
++      const options = Array.isArray(value) ? value[1] : undefined;
++      const paths = (
++        options as { paths?: Array<{ name?: string }> } | undefined
++      )?.paths;
++      return paths?.some((path) => path.name === 'react-router');
++    });
++
++    expect(redirectRows.length).toBe(3);
++    for (const row of redirectRows) {
++      const value = row.rules?.['no-restricted-imports'];
++      const options = Array.isArray(value) ? value[1] : undefined;
++      const patterns = (
++        options as { patterns?: Array<{ message?: string }> } | undefined
++      )?.patterns;
++      expect(
++        patterns?.some((pattern) => pattern.message?.includes('createSink.ts')),
++        `block for ${JSON.stringify(row.files)} is missing the sinks pattern`,
++      ).toBe(true);
++    }
+   });
+ });
+ 
+diff --git a/src/app/bootstrap.test.tsx b/src/app/bootstrap.test.tsx
+index 852dd0a..8b47ce7 100644
+--- a/src/app/bootstrap.test.tsx
++++ b/src/app/bootstrap.test.tsx
+@@ -1,8 +1,29 @@
+-import { describe, expect, it } from 'vitest';
++import { afterEach, describe, expect, it } from 'vitest';
+ import { act, waitFor } from '@testing-library/react';
++import { createTabStorage } from '@platform/runtime';
+ import { bootstrap } from './bootstrap';
+ import type { ConfigurationResult } from '@platform/configuration';
+ 
++// The real session storage key and shape (session/sessionRecord.ts,
++// sessionStorageKey.ts), not reachable from app/ through the feature
++// barrel - bootstrap.ts drives the real router end to end, and / is a
++// guarded route since M3, so these tests need a real signed-in session
++// to reach it at all. Written through createTabStorage() - the one
++// sanctioned sessionStorage reader/writer - rather than the global
++// directly, which lint bans everywhere else (invariant 78).
++const SESSION_STORAGE_KEY = 'hierarchy-tree.session';
++
++function writeSignedInSession(): void {
++  createTabStorage().write(
++    SESSION_STORAGE_KEY,
++    JSON.stringify({ version: 1, userId: 'bootstrap-test-user' }),
++  );
++}
++
++afterEach(() => {
++  createTabStorage().remove(SESSION_STORAGE_KEY);
++});
++
+ const VALID_CONFIGURATION_RESULT: ConfigurationResult = {
+   ok: true,
+   configuration: Object.freeze({
+@@ -18,6 +39,7 @@ const VALID_CONFIGURATION_RESULT: ConfigurationResult = {
+ 
+ describe('bootstrap', () => {
+   it('renders the home route through the real router when configuration is valid', async () => {
++    writeSignedInSession();
+     const container = document.createElement('div');
+     document.body.appendChild(container);
+ 
+@@ -40,6 +62,7 @@ describe('bootstrap', () => {
+   });
+ 
+   it('attaches the interaction tracker to the router so a settled navigation is recorded', async () => {
++    writeSignedInSession();
+     const container = document.createElement('div');
+     document.body.appendChild(container);
+ 
+diff --git a/src/app/bootstrap.ts b/src/app/bootstrap.ts
+index 84a2c5d..7f2a6f6 100644
+--- a/src/app/bootstrap.ts
++++ b/src/app/bootstrap.ts
+@@ -8,7 +8,7 @@ import { createSystemRandomness } from '@platform/runtime';
+ import { ApplicationRoot } from './ApplicationRoot';
+ import { ConfigurationErrorScreen } from './ConfigurationErrorScreen';
+ import { createRuntime } from './composition';
+-import { createApplicationRouter } from './routing';
++import { createApplicationRouter, createBackForwardRestore } from './routing';
+ import { reportRootError } from './error-boundary';
+ 
+ // The testable startup path: main.tsx is the one file whose name is not
+@@ -49,6 +49,7 @@ export async function bootstrap(
+   const runtime = await createRuntime(configurationResult.configuration);
+   const router = createApplicationRouter(runtime);
+   runtime.interactionTracker.attach(router);
++  createBackForwardRestore(router);
+ 
+   function handleBoundaryError(error: unknown): void {
+     // React 19 logs every boundary-caught error via console.error by
+diff --git a/src/app/layout/AuthenticatedLayout.test.tsx b/src/app/layout/AuthenticatedLayout.test.tsx
+new file mode 100644
+index 0000000..ef92565
+--- /dev/null
++++ b/src/app/layout/AuthenticatedLayout.test.tsx
+@@ -0,0 +1,47 @@
++import { describe, expect, it, vi } from 'vitest';
++import type { LoaderFunctionArgs } from 'react-router';
++import type { ObservabilityFacade } from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++import type { SignedInUserStore, SignedInUserView } from '@features/auth';
++import { createAuthenticatedLoader } from './createAuthenticatedLoader';
++
++function createSpyObservability(): ObservabilityFacade {
++  return {
++    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
++    tracer: {
++      recordTiming: vi.fn(),
++      startInteraction: vi.fn(() => 'a'.repeat(32)),
++    },
++    analytics: { track: vi.fn() },
++  };
++}
++
++// A record shaped as readSession expects, handed straight back regardless
++// of the storage key requested - no need to reach the feature's private
++// SESSION_STORAGE_KEY literal or writeSession from app/layout/.
++function createSignedInStorage(userId: string): KeyValueStorage {
++  const record = JSON.stringify({ version: 1, userId });
++  return { read: () => record, write: () => true, remove: () => {} };
++}
++
++describe('AuthenticatedLayout', () => {
++  it('returns the signed-in user promise without awaiting it', () => {
++    const userPromise: Promise<SignedInUserView | null> = Promise.resolve({
++      displayName: 'Ada Lovelace',
++    });
++    const readSpy = vi.fn(() => userPromise);
++    const signedInUserStore: SignedInUserStore = { read: readSpy };
++    const loader = createAuthenticatedLoader({
++      tabStorage: createSignedInStorage('user-1'),
++      observability: createSpyObservability(),
++      signedInUserStore,
++    });
++
++    const result = loader({
++      request: new Request('https://example.test/'),
++    } as LoaderFunctionArgs);
++
++    expect(result.signedInUser).toBe(userPromise);
++    expect(readSpy).toHaveBeenCalledWith('user-1');
++  });
++});
+diff --git a/src/app/layout/AuthenticatedLayout.tsx b/src/app/layout/AuthenticatedLayout.tsx
+new file mode 100644
+index 0000000..ef644eb
+--- /dev/null
++++ b/src/app/layout/AuthenticatedLayout.tsx
+@@ -0,0 +1,8 @@
++import { memo } from 'react';
++import { Outlet } from 'react-router';
++
++// The header (M4) renders here, above the outlet; M3 adds only the route
++// that will hold it.
++export const AuthenticatedLayout = memo(function AuthenticatedLayout() {
++  return <Outlet />;
++});
+diff --git a/src/app/layout/createAuthenticatedLoader.ts b/src/app/layout/createAuthenticatedLoader.ts
+new file mode 100644
+index 0000000..2945420
+--- /dev/null
++++ b/src/app/layout/createAuthenticatedLoader.ts
+@@ -0,0 +1,37 @@
++import { requireSession } from '@features/auth';
++import type { SignedInUserStore, SignedInUserView } from '@features/auth';
++import type { LoaderFunctionArgs } from 'react-router';
++import type { ObservabilityFacade } from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++
++export type AuthenticatedLoaderDependencies = {
++  tabStorage: KeyValueStorage;
++  observability: ObservabilityFacade;
++  signedInUserStore: SignedInUserStore;
++};
++
++export type AuthenticatedLoaderData = {
++  signedInUser: Promise<SignedInUserView | null>;
++};
++
++// Returns an OBJECT HOLDING the promise, never the bare promise: react-
++// router awaits a bare returned promise before the route renders, which
++// would block the navigation until the user record arrives, show no
++// Suspense fallback, and violate "the header never blocks the page
++// beneath it" in the strongest possible way - the page would not render
++// at all (invariant 100). The promise this returns is what M4's header -
++// rendered by AuthenticatedLayout - reads through use().
++export function createAuthenticatedLoader(
++  dependencies: AuthenticatedLoaderDependencies,
++): (args: LoaderFunctionArgs) => AuthenticatedLoaderData {
++  return function authenticatedLoader({
++    request,
++  }: LoaderFunctionArgs): AuthenticatedLoaderData {
++    const { userId } = requireSession({
++      request,
++      tabStorage: dependencies.tabStorage,
++      observability: dependencies.observability,
++    });
++    return { signedInUser: dependencies.signedInUserStore.read(userId) };
++  };
++}
+diff --git a/src/app/routing/createApplicationRouter.ts b/src/app/routing/createApplicationRouter.ts
+index 64d6a12..75893df 100644
+--- a/src/app/routing/createApplicationRouter.ts
++++ b/src/app/routing/createApplicationRouter.ts
+@@ -7,8 +7,7 @@ import { routeDefinitions } from './routeDefinitions';
+ // in lib/router/router.d.ts - that type is re-exported under `DataRouter`
+ // instead (confirmed against the installed react-router@8.3.0's index.d.ts).
+ export function createApplicationRouter(runtime: Runtime): DataRouter {
+-  return createBrowserRouter(
+-    routeDefinitions(runtime.i18n, runtime.configuration.developmentRoutes),
+-    { basename: runtime.configuration.basePath },
+-  );
++  return createBrowserRouter(routeDefinitions(runtime), {
++    basename: runtime.configuration.basePath,
++  });
+ }
+diff --git a/src/app/routing/createBackForwardRestore.test.ts b/src/app/routing/createBackForwardRestore.test.ts
+new file mode 100644
+index 0000000..7585ea8
+--- /dev/null
++++ b/src/app/routing/createBackForwardRestore.test.ts
+@@ -0,0 +1,19 @@
++import { describe, expect, it, vi } from 'vitest';
++import { createBackForwardRestore } from './createBackForwardRestore';
++
++describe('createBackForwardRestore', () => {
++  it('revalidates when a persisted page is restored', () => {
++    const revalidate = vi.fn();
++
++    createBackForwardRestore({ revalidate });
++    window.dispatchEvent(
++      new PageTransitionEvent('pageshow', { persisted: false }),
++    );
++    expect(revalidate).not.toHaveBeenCalled();
++
++    window.dispatchEvent(
++      new PageTransitionEvent('pageshow', { persisted: true }),
++    );
++    expect(revalidate).toHaveBeenCalledTimes(1);
++  });
++});
+diff --git a/src/app/routing/createBackForwardRestore.ts b/src/app/routing/createBackForwardRestore.ts
+new file mode 100644
+index 0000000..d30fe9a
+--- /dev/null
++++ b/src/app/routing/createBackForwardRestore.ts
+@@ -0,0 +1,24 @@
++export type RevalidatableRouter = {
++  revalidate: () => Promise<void> | void;
++};
++
++// A same-document Back after sign-out re-runs the router's loaders and
++// lands on the login page; a bfcache restore does not - the JS heap comes
++// back with the authenticated view already rendered and no loader re-run.
++// `pageshow` is the earliest hook a restored document offers, so
++// revalidation necessarily runs AFTER the browser hands the restored
++// document back: a restored frame of authenticated content can be on
++// screen for the interval between restore and the guard's redirect. No
++// client-side mechanism closes that interval (invariant 103).
++export function createBackForwardRestore(
++  router: RevalidatableRouter,
++): () => void {
++  function handlePageShow(event: PageTransitionEvent): void {
++    if (event.persisted) {
++      void router.revalidate();
++    }
++  }
++
++  window.addEventListener('pageshow', handlePageShow);
++  return () => window.removeEventListener('pageshow', handlePageShow);
++}
+diff --git a/src/app/routing/index.ts b/src/app/routing/index.ts
+index 26d39fc..0d962e5 100644
+--- a/src/app/routing/index.ts
++++ b/src/app/routing/index.ts
+@@ -7,3 +7,4 @@ export type {
+ export { NavigationState } from './navigationState';
+ export { createApplicationRouter } from './createApplicationRouter';
+ export { routeDefinitions } from './routeDefinitions';
++export { createBackForwardRestore } from './createBackForwardRestore';
+diff --git a/src/app/routing/routeDefinitions.test.ts b/src/app/routing/routeDefinitions.test.ts
+index 87a95e3..11b0d36 100644
+--- a/src/app/routing/routeDefinitions.test.ts
++++ b/src/app/routing/routeDefinitions.test.ts
+@@ -1,29 +1,68 @@
+-import { createInstance } from 'i18next';
+ import { describe, expect, it } from 'vitest';
++import type { RouteObject } from 'react-router';
++import { isSessionGuarded } from '@features/auth';
++import { buildTestRuntime } from '../testing/renderRoute';
+ import { routeDefinitions } from './routeDefinitions';
+ 
+-function paths(developmentRoutes: boolean): (string | undefined)[] {
+-  const [root] = routeDefinitions(createInstance(), developmentRoutes);
+-  return (root?.children ?? []).map((route) => route.path);
++async function buildChildren(
++  developmentRoutes: boolean,
++): Promise<RouteObject[]> {
++  const runtime = await buildTestRuntime({ developmentRoutes });
++  const [root] = routeDefinitions(runtime);
++  return root?.children ?? [];
++}
++
++function topLevelPaths(children: RouteObject[]): (string | undefined)[] {
++  return children.map((route) => route.path);
++}
++
++function findAuthenticated(children: RouteObject[]): RouteObject | undefined {
++  return children.find((route) => route.id === 'authenticated');
+ }
+ 
+ describe('routeDefinitions', () => {
+-  it('registers the kit route before the wildcard when development routes are on', () => {
+-    const registeredPaths = paths(true);
++  it('registers the kit route before the wildcard when development routes are on', async () => {
++    const paths = topLevelPaths(await buildChildren(true));
+ 
+-    expect(registeredPaths).toContain('__kit');
+-    expect(registeredPaths.indexOf('__kit')).toBeLessThan(
+-      registeredPaths.indexOf('*'),
+-    );
++    expect(paths).toContain('__kit');
++    expect(paths.indexOf('__kit')).toBeLessThan(paths.indexOf('*'));
++  });
++
++  it('omits the kit route entirely when the runtime flag is off', async () => {
++    expect(topLevelPaths(await buildChildren(false))).not.toContain('__kit');
++  });
++
++  it('always registers the not-found wildcard last', async () => {
++    const paths = topLevelPaths(await buildChildren(true));
++    expect(paths[paths.length - 1]).toBe('*');
+   });
+ 
+-  it('omits the kit route entirely when the runtime flag is off', () => {
+-    expect(paths(false)).not.toContain('__kit');
++  it('keep the route set at home, login and not-found', async () => {
++    const children = await buildChildren(true);
++
++    // The authenticated layout is pathless (invariant 136) - it wraps the
++    // home route rather than adding a path of its own, so the route SET
++    // stays exactly `/`, `login`, `__kit` and `*`.
++    expect(topLevelPaths(children)).toEqual([undefined, 'login', '__kit', '*']);
++
++    const authenticated = findAuthenticated(children);
++    expect(authenticated?.path).toBeUndefined();
++    expect((authenticated?.children ?? []).map((route) => route.index)).toEqual(
++      [true],
++    );
+   });
+ 
+-  it('always registers the not-found wildcard last', () => {
+-    const registeredPaths = paths(true);
++  it("wrap every guarded route's loader in withSessionGuard", async () => {
++    const authenticated = findAuthenticated(await buildChildren(true));
+ 
+-    expect(registeredPaths[registeredPaths.length - 1]).toBe('*');
++    // Phase 2 wraps nothing - the only route beneath the authenticated
++    // layout (HomeRoute) has no loader of its own yet - but this converts
++    // that accident into an enforced property (invariant 146): any FUTURE
++    // child loader that skips withSessionGuard fails here.
++    for (const child of authenticated?.children ?? []) {
++      if ('loader' in child && child.loader !== undefined) {
++        expect(isSessionGuarded(child.loader)).toBe(true);
++      }
++    }
+   });
+ });
+diff --git a/src/app/routing/routeDefinitions.ts b/src/app/routing/routeDefinitions.ts
+index 7f0ce86..dafb5d4 100644
+--- a/src/app/routing/routeDefinitions.ts
++++ b/src/app/routing/routeDefinitions.ts
+@@ -1,33 +1,56 @@
+ import { createElement } from 'react';
+-import type { i18n } from 'i18next';
+-import type { RouteObject } from 'react-router';
++import type { LoaderFunctionArgs, RouteObject } from 'react-router';
++import { redirectSignedInVisitor } from '@features/auth';
++import type { Runtime } from '../composition';
+ import { ApplicationLayout } from '../layout/ApplicationLayout';
+ import { RouteErrorBoundary } from '../error-boundary/RouteErrorBoundary';
+ 
+ // Each lazy() awaits its feature's own loadTranslations(instance) before
+ // resolving, so a route never renders before its namespace is registered
+-// (invariant 62). No loader, no guard, no redirect - this phase's routes
+-// resolve to a component and nothing else (invariant 97).
+-export function routeDefinitions(
+-  instance: i18n,
+-  developmentRoutes: boolean,
+-): RouteObject[] {
++// (invariant 62). The authenticated layout is pathless (invariant 136):
++// the route SET stays `/`, `login` and `*` (plus `__kit` in development) -
++// a guard adds a wrapper, not a new path.
++export function routeDefinitions(runtime: Runtime): RouteObject[] {
++  const { i18n, configuration, tabStorage, observability, signedInUserStore } =
++    runtime;
++
+   const children: RouteObject[] = [
+     {
+-      index: true,
++      id: 'authenticated',
+       lazy: async () => {
+-        const { HomeRoute, loadTranslations } =
+-          await import('./routes/HomeRoute');
+-        await loadTranslations(instance);
+-        return { Component: HomeRoute };
++        const { AuthenticatedLayout, createAuthenticatedLoader } =
++          await import('./routes/AuthenticatedRoute');
++        return {
++          Component: AuthenticatedLayout,
++          loader: createAuthenticatedLoader({
++            tabStorage,
++            observability,
++            signedInUserStore,
++          }),
++        };
+       },
++      children: [
++        {
++          index: true,
++          lazy: async () => {
++            const { HomeRoute, loadTranslations } =
++              await import('./routes/HomeRoute');
++            await loadTranslations(i18n);
++            return { Component: HomeRoute };
++          },
++        },
++      ],
+     },
+     {
+       path: 'login',
++      // Cannot be lazy: it must run before the login chunk is fetched, or
++      // a signed-in visitor would pay for a chunk they never see.
++      loader: ({ request }: LoaderFunctionArgs) =>
++        redirectSignedInVisitor({ request, tabStorage, observability }),
+       lazy: async () => {
+         const { LoginRoute, loadTranslations } =
+           await import('./routes/LoginRoute');
+-        await loadTranslations(instance);
++        await loadTranslations(i18n);
+         return { Component: LoginRoute };
+       },
+     },
+@@ -41,7 +64,7 @@ export function routeDefinitions(
+   // the runtime flag (what the configuration schema and e2e suite
+   // express). Registered before the wildcard, which would otherwise match
+   // `/__kit` first and render not-found instead.
+-  if (import.meta.env.DEV && developmentRoutes) {
++  if (import.meta.env.DEV && configuration.developmentRoutes) {
+     children.push({
+       path: '__kit',
+       lazy: async () => {
+diff --git a/src/app/routing/routes/AuthenticatedRoute.tsx b/src/app/routing/routes/AuthenticatedRoute.tsx
+new file mode 100644
+index 0000000..f60be28
+--- /dev/null
++++ b/src/app/routing/routes/AuthenticatedRoute.tsx
+@@ -0,0 +1,2 @@
++export { AuthenticatedLayout } from '../../layout/AuthenticatedLayout';
++export { createAuthenticatedLoader } from '../../layout/createAuthenticatedLoader';
+diff --git a/src/features/auth/guard/guardContext.ts b/src/features/auth/guard/guardContext.ts
+new file mode 100644
+index 0000000..1bc3205
+--- /dev/null
++++ b/src/features/auth/guard/guardContext.ts
+@@ -0,0 +1,8 @@
++import type { ObservabilityFacade } from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++
++export type GuardContext = {
++  request: Request;
++  tabStorage: KeyValueStorage;
++  observability: ObservabilityFacade;
++};
+diff --git a/src/features/auth/guard/redirectSignedInVisitor.test.ts b/src/features/auth/guard/redirectSignedInVisitor.test.ts
+new file mode 100644
+index 0000000..f39d0aa
+--- /dev/null
++++ b/src/features/auth/guard/redirectSignedInVisitor.test.ts
+@@ -0,0 +1,87 @@
++import { afterEach, describe, expect, it, vi } from 'vitest';
++import type { ObservabilityFacade } from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++import { userIdentifier } from '../domain/userIdentifier';
++import { writeSession } from '../session/writeSession';
++import { redirectSignedInVisitor } from './redirectSignedInVisitor';
++
++function createSpyObservability(): ObservabilityFacade {
++  return {
++    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
++    tracer: {
++      recordTiming: vi.fn(),
++      startInteraction: vi.fn(() => 'a'.repeat(32)),
++    },
++    analytics: { track: vi.fn() },
++  };
++}
++
++function createMapStorage(): KeyValueStorage {
++  const map = new Map<string, string>();
++  return {
++    read: (key) => map.get(key) ?? null,
++    write: (key, value) => {
++      map.set(key, value);
++      return true;
++    },
++    remove: (key) => {
++      map.delete(key);
++    },
++  };
++}
++
++function throwsResponse(callback: () => unknown): Response {
++  try {
++    callback();
++  } catch (error) {
++    if (error instanceof Response) return error;
++    throw error;
++  }
++  throw new Error(
++    'expected redirectSignedInVisitor to throw a redirect Response',
++  );
++}
++
++afterEach(() => {
++  window.history.pushState({}, '', '/');
++});
++
++describe('redirectSignedInVisitor', () => {
++  it('sends a signed-in visitor to the from target or the hierarchy route', () => {
++    const observability = createSpyObservability();
++    const emptyStorage = createMapStorage();
++
++    window.history.pushState({}, '', '/login');
++    const noSessionResult = redirectSignedInVisitor({
++      request: new Request('https://example.test/login'),
++      tabStorage: emptyStorage,
++      observability,
++    });
++    expect(noSessionResult).toBeNull();
++
++    const signedInStorage = createMapStorage();
++    writeSession(signedInStorage, observability, userIdentifier('user-1'));
++
++    window.history.pushState({}, '', '/login?from=%2Fhierarchy%2Fusers%2F5');
++    const withFromResponse = throwsResponse(() =>
++      redirectSignedInVisitor({
++        request: new Request(
++          'https://example.test/login?from=%2Fhierarchy%2Fusers%2F5',
++        ),
++        tabStorage: signedInStorage,
++        observability,
++      }),
++    );
++    expect(withFromResponse.headers.get('Location')).toBe('/hierarchy/users/5');
++
++    window.history.pushState({}, '', '/login');
++    const withoutFromResponse = throwsResponse(() =>
++      redirectSignedInVisitor({
++        request: new Request('https://example.test/login'),
++        tabStorage: signedInStorage,
++        observability,
++      }),
++    );
++    expect(withoutFromResponse.headers.get('Location')).toBe('/');
++  });
++});
+diff --git a/src/features/auth/guard/redirectSignedInVisitor.ts b/src/features/auth/guard/redirectSignedInVisitor.ts
+new file mode 100644
+index 0000000..9e02567
+--- /dev/null
++++ b/src/features/auth/guard/redirectSignedInVisitor.ts
+@@ -0,0 +1,29 @@
++import { redirect, replace } from 'react-router';
++import { readSession } from '../session/readSession';
++import type { GuardContext } from './guardContext';
++import { resolveDestination } from './resolveDestination';
++
++// The login-route guard (invariants 88-91): a signed-in visitor never
++// sees the form. Returns null and lets the route render when signed out,
++// which is the default path - invariant 88's "before the form renders"
++// is structural, since the loader settles before the route component is
++// ever constructed. Chooses replace() or redirect() by the same
++// current-entry test requireSession uses, for the same reason.
++export function redirectSignedInVisitor({
++  request,
++  tabStorage,
++  observability,
++}: GuardContext): null {
++  const session = readSession(tabStorage, observability);
++  if (session.status !== 'signedIn') {
++    return null;
++  }
++
++  const url = new URL(request.url);
++  const destination = resolveDestination(url.searchParams.get('from'));
++  const guardedLocation = `${url.pathname}${url.search}`;
++  const isCurrentEntry =
++    `${window.location.pathname}${window.location.search}` === guardedLocation;
++
++  throw isCurrentEntry ? replace(destination) : redirect(destination);
++}
+diff --git a/src/features/auth/guard/requireSession.test.ts b/src/features/auth/guard/requireSession.test.ts
+new file mode 100644
+index 0000000..51b7b5f
+--- /dev/null
++++ b/src/features/auth/guard/requireSession.test.ts
+@@ -0,0 +1,75 @@
++import { afterEach, describe, expect, it, vi } from 'vitest';
++import type { ObservabilityFacade } from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++import { requireSession } from './requireSession';
++
++function createSpyObservability(): ObservabilityFacade {
++  return {
++    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
++    tracer: {
++      recordTiming: vi.fn(),
++      startInteraction: vi.fn(() => 'a'.repeat(32)),
++    },
++    analytics: { track: vi.fn() },
++  };
++}
++
++function createEmptyStorage(): KeyValueStorage {
++  return { read: () => null, write: () => true, remove: () => {} };
++}
++
++function throwsResponse(callback: () => unknown): Response {
++  try {
++    callback();
++  } catch (error) {
++    if (error instanceof Response) return error;
++    throw error;
++  }
++  throw new Error('expected requireSession to throw a redirect Response');
++}
++
++afterEach(() => {
++  window.history.pushState({}, '', '/');
++});
++
++describe('requireSession', () => {
++  it('redirects a visitor with no session to the login route carrying from', () => {
++    window.history.pushState({}, '', '/hierarchy/users/5?a=1');
++    const observability = createSpyObservability();
++    const tabStorage = createEmptyStorage();
++    const request = new Request('https://example.test/hierarchy/users/5?a=1');
++
++    const response = throwsResponse(() =>
++      requireSession({ request, tabStorage, observability }),
++    );
++
++    expect(response.headers.get('Location')).toBe(
++      '/login?from=%2Fhierarchy%2Fusers%2F5%3Fa%3D1',
++    );
++  });
++
++  it('replaces the current entry on a direct load and pushes on an in-app navigation', () => {
++    const observability = createSpyObservability();
++    const tabStorage = createEmptyStorage();
++
++    window.history.pushState({}, '', '/hierarchy/users/5');
++    const directLoadResponse = throwsResponse(() =>
++      requireSession({
++        request: new Request('https://example.test/hierarchy/users/5'),
++        tabStorage,
++        observability,
++      }),
++    );
++    expect(directLoadResponse.headers.get('X-Remix-Replace')).toBe('true');
++
++    window.history.pushState({}, '', '/somewhere-else');
++    const pushResponse = throwsResponse(() =>
++      requireSession({
++        request: new Request('https://example.test/hierarchy/users/5'),
++        tabStorage,
++        observability,
++      }),
++    );
++    expect(pushResponse.headers.get('X-Remix-Replace')).toBeNull();
++  });
++});
+diff --git a/src/features/auth/guard/requireSession.ts b/src/features/auth/guard/requireSession.ts
+new file mode 100644
+index 0000000..129a727
+--- /dev/null
++++ b/src/features/auth/guard/requireSession.ts
+@@ -0,0 +1,31 @@
++import { redirect, replace } from 'react-router';
++import { readSession } from '../session/readSession';
++import type { UserIdentifier } from '../domain/userIdentifier';
++import type { GuardContext } from './guardContext';
++
++const LOGIN_PATH = '/login';
++
++// The authenticated-route guard (invariants 84-87). Signed out, it throws
++// a redirect to the login route carrying `from` - replace() when the
++// guarded URL is already the current history entry (a direct load, a
++// reload, a POP), redirect() when it is the target of an in-app push, so
++// Back always returns to where the visitor actually came from rather
++// than re-entering the guard or leaving the app.
++export function requireSession({
++  request,
++  tabStorage,
++  observability,
++}: GuardContext): { userId: UserIdentifier } {
++  const session = readSession(tabStorage, observability);
++  if (session.status === 'signedIn') {
++    return { userId: session.userId };
++  }
++
++  const url = new URL(request.url);
++  const guardedLocation = `${url.pathname}${url.search}`;
++  const destination = `${LOGIN_PATH}?from=${encodeURIComponent(guardedLocation)}`;
++  const isCurrentEntry =
++    `${window.location.pathname}${window.location.search}` === guardedLocation;
++
++  throw isCurrentEntry ? replace(destination) : redirect(destination);
++}
+diff --git a/src/features/auth/guard/withSessionGuard.test.ts b/src/features/auth/guard/withSessionGuard.test.ts
+new file mode 100644
+index 0000000..b6ba322
+--- /dev/null
++++ b/src/features/auth/guard/withSessionGuard.test.ts
+@@ -0,0 +1,68 @@
++import { describe, expect, it, vi } from 'vitest';
++import type { ObservabilityFacade } from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++import { userIdentifier } from '../domain/userIdentifier';
++import { writeSession } from '../session/writeSession';
++import { isSessionGuarded, withSessionGuard } from './withSessionGuard';
++
++function createSpyObservability(): ObservabilityFacade {
++  return {
++    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
++    tracer: {
++      recordTiming: vi.fn(),
++      startInteraction: vi.fn(() => 'a'.repeat(32)),
++    },
++    analytics: { track: vi.fn() },
++  };
++}
++
++function createMapStorage(): KeyValueStorage {
++  const map = new Map<string, string>();
++  return {
++    read: (key) => map.get(key) ?? null,
++    write: (key, value) => {
++      map.set(key, value);
++      return true;
++    },
++    remove: (key) => {
++      map.delete(key);
++    },
++  };
++}
++
++describe('withSessionGuard', () => {
++  it('runs the session check before the wrapped loader and skips it entirely on redirect', () => {
++    const observability = createSpyObservability();
++    const innerLoader = vi.fn(() => 'inner-result');
++
++    const signedOutGuarded = withSessionGuard(
++      { tabStorage: createMapStorage(), observability },
++      innerLoader,
++    );
++
++    let thrown: unknown;
++    try {
++      signedOutGuarded({ request: new Request('https://example.test/') });
++    } catch (error) {
++      thrown = error;
++    }
++    expect(thrown).toBeInstanceOf(Response);
++    expect(innerLoader).not.toHaveBeenCalled();
++
++    const signedInStorage = createMapStorage();
++    writeSession(signedInStorage, observability, userIdentifier('user-1'));
++    const signedInGuarded = withSessionGuard(
++      { tabStorage: signedInStorage, observability },
++      innerLoader,
++    );
++
++    const result = signedInGuarded({
++      request: new Request('https://example.test/'),
++    });
++
++    expect(result).toBe('inner-result');
++    expect(innerLoader).toHaveBeenCalledTimes(1);
++    expect(isSessionGuarded(signedInGuarded)).toBe(true);
++    expect(isSessionGuarded(innerLoader)).toBe(false);
++  });
++});
+diff --git a/src/features/auth/guard/withSessionGuard.ts b/src/features/auth/guard/withSessionGuard.ts
+new file mode 100644
+index 0000000..c8de7d1
+--- /dev/null
++++ b/src/features/auth/guard/withSessionGuard.ts
+@@ -0,0 +1,31 @@
++import { requireSession } from './requireSession';
++import type { GuardContext } from './guardContext';
++
++type Loader = (args: { request: Request }) => unknown;
++
++const guardedLoaders = new WeakSet<Loader>();
++
++// Wraps a child loader so the session guard runs as its FIRST statement
++// (invariant 85): react-router runs every matched route's loaders in
++// parallel and short-circuits on the first redirect, so a guard on a
++// parent route alone does not stop a child's loader from having already
++// started. Phase 2 wraps no route - the guarded route (HomeRoute) has no
++// loader yet - but the structural test that checks every route beneath
++// the authenticated layout is either loader-less or produced by this
++// converts that accident into an enforced property, so phase 3 cannot
++// add a bare loader there unnoticed (invariant 146's named exception).
++export function withSessionGuard<Args extends { request: Request }, R>(
++  context: Pick<GuardContext, 'tabStorage' | 'observability'>,
++  loader: (args: Args) => R,
++): (args: Args) => R {
++  function guarded(args: Args): R {
++    requireSession({ request: args.request, ...context });
++    return loader(args);
++  }
++  guardedLoaders.add(guarded as Loader);
++  return guarded;
++}
++
++export function isSessionGuarded(loader: unknown): boolean {
++  return typeof loader === 'function' && guardedLoaders.has(loader as Loader);
++}
+diff --git a/src/features/auth/index.ts b/src/features/auth/index.ts
+index c72712d..cd82116 100644
+--- a/src/features/auth/index.ts
++++ b/src/features/auth/index.ts
+@@ -1,6 +1,18 @@
+ export { loadTranslations } from './loadTranslations';
+ export { createSignedInUserStore } from './data/createSignedInUserStore';
+ export type { SignedInUserStore } from './data/createSignedInUserStore';
++export type { SignedInUserView } from './data/signedInUserView';
+ export { LoginPage } from './LoginPage';
+ export type { LoginPageDependencies } from './LoginPage';
+ export { resolveDestination } from './guard/resolveDestination';
++export { requireSession } from './guard/requireSession';
++export { redirectSignedInVisitor } from './guard/redirectSignedInVisitor';
++// isSessionGuarded is not part of TECH.md's stated barrel list - added
++// alongside withSessionGuard (a deliberate, logged deviation, the same
++// treatment resolveDestination got at step 22) because
++// routeDefinitions.test.ts's structural check (invariant 146) needs to
++// ask whether a given loader was produced by withSessionGuard, and
++// app cannot deep-import past this feature's public entry.
++export { withSessionGuard, isSessionGuarded } from './guard/withSessionGuard';
++export { clearSession } from './session/clearSession';
++export { readSession } from './session/readSession';
+diff --git a/src/features/auth/useLoginSubmission.test.tsx b/src/features/auth/useLoginSubmission.test.tsx
+index 599cd06..b6e1fbc 100644
+--- a/src/features/auth/useLoginSubmission.test.tsx
++++ b/src/features/auth/useLoginSubmission.test.tsx
+@@ -170,6 +170,36 @@ describe('useLoginSubmission', () => {
+     expect(endInteraction).not.toHaveBeenCalled();
+   });
+ 
++  it('aborts in flight and resets to untouched when a persisted page is restored', async () => {
++    let abortedSignal: AbortSignal | undefined;
++    const transport: Transport = (request) => {
++      abortedSignal = request.signal;
++      return new Promise((_resolve, reject) => {
++        request.signal.addEventListener('abort', () => {
++          reject(new DOMException('aborted', 'AbortError'));
++        });
++      });
++    };
++    const dependencies = createTestDependencies(transport);
++
++    render(<TestForm dependencies={dependencies} />);
++    const form = screen.getByTestId('login-form');
++
++    fireEvent.submit(form);
++    await Promise.resolve();
++    expect(screen.getByTestId('pending').textContent).toBe('true');
++
++    window.dispatchEvent(
++      new PageTransitionEvent('pageshow', { persisted: true }),
++    );
++
++    expect(abortedSignal?.aborted).toBe(true);
++    await waitFor(() =>
++      expect(screen.getByTestId('pending').textContent).toBe('false'),
++    );
++    expect(screen.getByTestId('outcome').textContent).toBe('untouched');
++  });
++
+   it('aborts in flight without a state update when the page unmounts', async () => {
+     let abortedSignal: AbortSignal | undefined;
+     const transport: Transport = (request) => {
+diff --git a/src/features/auth/useLoginSubmission.ts b/src/features/auth/useLoginSubmission.ts
+index 3efec09..f9bac3f 100644
+--- a/src/features/auth/useLoginSubmission.ts
++++ b/src/features/auth/useLoginSubmission.ts
+@@ -1,4 +1,10 @@
+-import { useActionState, useCallback, useEffect, useRef } from 'react';
++import {
++  useActionState,
++  useCallback,
++  useEffect,
++  useRef,
++  useState,
++} from 'react';
+ import type { FormEvent } from 'react';
+ import type { HttpClient } from '@platform/http';
+ import {
+@@ -39,6 +45,12 @@ export function useLoginSubmission(
+   destination: string,
+ ): UseLoginSubmissionResult {
+   const controllerRef = useRef<AbortController | null>(null);
++  // A bfcache restore (invariant 48a) freezes the JS heap rather than
++  // unmounting anything, so the useEffect cleanup below never runs for
++  // it; useActionState has no external setter to reset its own state, so
++  // this override takes precedence over its result/isPending until the
++  // next real submission clears it (first line of the action, below).
++  const [restoredWhilePending, setRestoredWhilePending] = useState(false);
+ 
+   useEffect(() => {
+     return () => {
+@@ -46,8 +58,20 @@ export function useLoginSubmission(
+     };
+   }, []);
+ 
++  useEffect(() => {
++    function handlePageShow(event: PageTransitionEvent): void {
++      if (event.persisted && controllerRef.current) {
++        controllerRef.current.abort();
++        setRestoredWhilePending(true);
++      }
++    }
++    window.addEventListener('pageshow', handlePageShow);
++    return () => window.removeEventListener('pageshow', handlePageShow);
++  }, []);
++
+   const [result, dispatch, isPending] = useActionState<LoginResult, FormData>(
+     async (previousResult, formData) => {
++      setRestoredWhilePending(false);
+       const rawEmail = formData.get('email');
+       const rawPassword = formData.get('password');
+       const email = typeof rawEmail === 'string' ? rawEmail : '';
+@@ -115,12 +139,17 @@ export function useLoginSubmission(
+ 
+   const onSubmit = useCallback(
+     (event: FormEvent<HTMLFormElement>) => {
+-      if (isPending) {
++      if (!restoredWhilePending && isPending) {
+         event.preventDefault();
+       }
+     },
+-    [isPending],
++    [isPending, restoredWhilePending],
+   );
+ 
+-  return { result, isPending, formAction: dispatch, onSubmit };
++  return {
++    result: restoredWhilePending ? UNTOUCHED : result,
++    isPending: restoredWhilePending ? false : isPending,
++    formAction: dispatch,
++    onSubmit,
++  };
+ }

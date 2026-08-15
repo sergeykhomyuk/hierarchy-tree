@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T08:53:12Z",
+  "updated": "2026-08-15T09:19:04Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -316,6 +316,18 @@
           "blocking": false,
           "disposition": "fixed: LoginAlert.tsx's comment corrected to describe the actual describedBy wiring (no-match only).",
           "round": "milestone-2"
+        },
+        "Claude-8": {
+          "desc": "e2e/login.spec.ts's test title 'issues exactly one request while authenticating, and none on the users path' contradicts its own assertion, which now expects exactly ONE user request (correct M3 behavior: the authenticated route's own loader fetches the user record on landing). The title still claims zero.",
+          "blocking": false,
+          "disposition": "fixed: renamed the test title to match the assertion (now expects and describes exactly one user request from the authenticated route's own loader).",
+          "round": "milestone-3"
+        },
+        "Claude-9": {
+          "desc": "No test exercises a real resubmission after a bfcache-restore override in useLoginSubmission.ts - the pageshow test only proves the mask applies, not that it lifts and the next real submission's outcome becomes visible. Code is correct (setRestoredWhilePending(false) runs synchronously as the action's first line) but the regression-catching coverage is missing.",
+          "blocking": false,
+          "disposition": "fixed: extended the pageshow-restore test to submit again afterward and assert the real outcome (noMatch) replaces the untouched mask, proving the override actually lifts.",
+          "round": "milestone-3"
         }
       }
     },
@@ -1038,7 +1050,18 @@
     "2026-08-15T08:53:08Z evidence recorded: evidence/step28-verify.txt (b1de873f66b4) - npm run verify green after step 28 (typecheck, lint, format, coverage, build, build-output, size)",
     "2026-08-15T08:53:12Z step 28 -> red",
     "2026-08-15T08:53:12Z step 28 -> green",
-    "2026-08-15T08:53:12Z step 28 -> done"
+    "2026-08-15T08:53:12Z step 28 -> done",
+    "2026-08-15T08:53:42Z evidence recorded: evidence/milestones/m3-suite.txt (b1de873f66b4) - M3 boundary: npm run verify green",
+    "2026-08-15T08:53:43Z evidence recorded: evidence/milestones/m3-e2e.txt (06f978b47a9e) - M3 boundary: npm run e2e green, 31/31, covering the guard flows, the authenticated layout route, back-forward restore, and all seven migrated pre-existing specs",
+    "2026-08-15T08:53:43Z milestone 3 boundary verified: npm run verify and npm run e2e both green (392 unit/component tests, 31/31 e2e). guard.spec.ts covers invariants 84-93 (bookmarked-URL redirect with no flash/users-request, sign-in-then-land-on-bookmark including query string, signed-in bounce off /login, Back in both current-entry and push variants, hostile from values). All seven pre-existing e2e specs the guard broke are migrated and green. Two real regressions the guard surfaced were fixed (login.spec.ts's users-request count, telemetry-buffer.spec.ts's storage-empty assertion). Evidence: evidence/milestones/m3-suite.txt, evidence/milestones/m3-e2e.txt.",
+    "2026-08-15T09:04:09Z evidence recorded: evidence/reviews/m3-diff.txt (41e09cfff06c) - M3 boundary review diff: git diff e3faf21..HEAD, 41 files",
+    "2026-08-15T09:04:09Z evidence recorded: evidence/reviews/m3-claude-review.md (2fbd3c43689f) - M3 boundary fresh-context Claude review: 2 findings, 0 blocking",
+    "2026-08-15T09:04:09Z G4 finding Claude-8 recorded [round: milestone-3]: e2e/login.spec.ts's test title 'issues exactly one request while authenticating, and none on the users path' contradicts its own assertion, which now expects exactly ONE user request (correct M3 behavior: the authenticated route's own loader fetches the user record on landing). The title still claims zero.",
+    "2026-08-15T09:04:09Z G4 finding Claude-9 recorded [round: milestone-3]: No test exercises a real resubmission after a bfcache-restore override in useLoginSubmission.ts - the pageshow test only proves the mask applies, not that it lifts and the next real submission's outcome becomes visible. Code is correct (setRestoredWhilePending(false) runs synchronously as the action's first line) but the regression-catching coverage is missing.",
+    "2026-08-15T09:17:07Z G4 finding Claude-8 dispositioned: fixed: renamed the test title to match the assertion (now expects and describes exactly one user request from the authenticated route's own loader).",
+    "2026-08-15T09:17:08Z G4 finding Claude-9 dispositioned: fixed: extended the pageshow-restore test to submit again afterward and assert the real outcome (noMatch) replaces the untouched mask, proving the override actually lifts.",
+    "2026-08-15T09:19:04Z evidence recorded: evidence/m3-findings-verify.txt (48a06b94270e) - npm run verify green after fixing Claude-8/9 (login.spec.ts test title, useLoginSubmission bfcache-restore-then-resubmit test)",
+    "2026-08-15T09:19:04Z evidence recorded: evidence/m3-findings-e2e.txt (723c3e8ddd9b) - npm run e2e green (31/31) after the M3 finding fixes"
   ],
   "milestones": [
     {
@@ -1056,7 +1079,7 @@
     {
       "id": 3,
       "title": "M3 - The guard, the router, and the authenticated shell",
-      "verified": null,
+      "verified": "2026-08-15T08:53:43Z npm run verify and npm run e2e both green (392 unit/component tests, 31/31 e2e). guard.spec.ts covers invariants 84-93 (bookmarked-URL redirect with no flash/users-request, sign-in-then-land-on-bookmark including query string, signed-in bounce off /login, Back in both current-entry and push variants, hostile from values). All seven pre-existing e2e specs the guard broke are migrated and green. Two real regressions the guard surfaced were fixed (login.spec.ts's users-request count, telemetry-buffer.spec.ts's storage-empty assertion). Evidence: evidence/milestones/m3-suite.txt, evidence/milestones/m3-e2e.txt.",
       "reviewed": null
     },
     {
@@ -1341,6 +1364,36 @@
       "sha": "b1de873f66b4",
       "recorded": "2026-08-15T08:53:08Z",
       "note": "npm run verify green after step 28 (typecheck, lint, format, coverage, build, build-output, size)"
+    },
+    "evidence/milestones/m3-suite.txt": {
+      "sha": "b1de873f66b4",
+      "recorded": "2026-08-15T08:53:42Z",
+      "note": "M3 boundary: npm run verify green"
+    },
+    "evidence/milestones/m3-e2e.txt": {
+      "sha": "06f978b47a9e",
+      "recorded": "2026-08-15T08:53:43Z",
+      "note": "M3 boundary: npm run e2e green, 31/31, covering the guard flows, the authenticated layout route, back-forward restore, and all seven migrated pre-existing specs"
+    },
+    "evidence/reviews/m3-diff.txt": {
+      "sha": "41e09cfff06c",
+      "recorded": "2026-08-15T09:04:09Z",
+      "note": "M3 boundary review diff: git diff e3faf21..HEAD, 41 files"
+    },
+    "evidence/reviews/m3-claude-review.md": {
+      "sha": "2fbd3c43689f",
+      "recorded": "2026-08-15T09:04:09Z",
+      "note": "M3 boundary fresh-context Claude review: 2 findings, 0 blocking"
+    },
+    "evidence/m3-findings-verify.txt": {
+      "sha": "48a06b94270e",
+      "recorded": "2026-08-15T09:19:04Z",
+      "note": "npm run verify green after fixing Claude-8/9 (login.spec.ts test title, useLoginSubmission bfcache-restore-then-resubmit test)"
+    },
+    "evidence/m3-findings-e2e.txt": {
+      "sha": "723c3e8ddd9b",
+      "recorded": "2026-08-15T09:19:04Z",
+      "note": "npm run e2e green (31/31) after the M3 finding fixes"
     }
   },
   "test_file_hashes": {
