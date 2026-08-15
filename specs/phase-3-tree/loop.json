@@ -1,0 +1,442 @@
+{
+  "task": "phase-3-tree",
+  "title": "Phase 3 - Hierarchy Tree page: pure tree domain, four states, ARIA keyboard contract, persisted expansion",
+  "type": "feature",
+  "size": "L",
+  "status": "active",
+  "phase": "validate",
+  "phase_entered": "2026-08-15T09:16:59Z",
+  "created": "2026-08-15",
+  "updated": "2026-08-15T11:58:24Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "L",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": null,
+    "evidence": "evidence/",
+    "product": "PRODUCT.md",
+    "tech": "TECH.md"
+  },
+  "gates": {
+    "G1": {
+      "status": "passed",
+      "attempts": 1,
+      "findings": {
+        "Codex-1": {
+          "desc": "setSearchParams performs a navigation and react-router revalidates route loaders on a search-parameter change by default, so every toggle refetches users.json unless the route defines shouldRevalidate for expansion-only changes. Directly violates invariants 103 and 155, and can replace the loader promise under the rendered page on every mouse or keyboard toggle. Refs PRODUCT 107-119, TECH section 4, src/app/routing/routeDefinitions.ts:15-24.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-2": {
+          "desc": "Invariant 43 (password values never exist as a value anywhere in application memory) is unsatisfiable by the proposed boundary: response.json() materializes the complete raw records, password included, before Zod strips unknown fields (src/platform/http/performAttempt.ts:50-55). Invariant 159's weaker not-kept-past-parsing wording is feasible; 43 as written is neither satisfiable nor testable.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-3": {
+          "desc": "Invariants 4 and 155 say the page issues no request except the users read and contacts no origin other than the database, which contradicts invariants 156-157 requiring browser image requests to arbitrary https origins. A test cannot know which requirement is authoritative.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-4": {
+          "desc": "The repository's own guard scripts reject exactly what TECH proposes: scripts/assert-domain-vocabulary.mjs bans the identifiers buildForest and flattenVisible repo-wide (lines 28-34) and fails the build on a literal role=tree attribute (line 165), with scripts/guard-scripts.test.ts asserting that behaviour. TECH schedules no retirement or narrowing of these phase-1 tripwires, so M1's and M3's stated npm run verify boundaries are unreachable. Independently confirmed by the orchestrator against the script.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-5": {
+          "desc": "Invariant 67 requires a NEW correlation id per retry, but useRevalidator uses the router's separate revalidation lifecycle while createInteractionTracker mints ids from navigation.state, so reading currentCorrelationId() after a revalidate repeats the previous id. TECH must call beginInteraction() explicitly before retry or extend the tracker wiring.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md, PARTIAL on the retry callback path (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - the route module now owns the useRevalidator wrapper and passes onRetry/onRefresh props, and invariant 193 forbids the feature calling revalidation directly"
+        },
+        "Codex-6": {
+          "desc": "Invariant 94 requires the person's name to be formatted through Intl, but ECMA-402 has no person-name formatter and Intl.ListFormat formats lists, not culturally ordered names. TECH names no implementable substitute, so the invariant cannot be implemented faithfully.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-7": {
+          "desc": "The six milestones are not independently verifiable as claimed: M3 owns invariant 66, whose URL-expansion preservation arrives only in M4, and invariants 105-106, whose keyboard toggles arrive only in M5; M4 owns invariant 113/117 behaviour whose keyboard half arrives only in M5. TECH section Milestone split.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md, NOT RESOLVED at first pass (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - the milestone section now names every overlap explicitly: 45 and 49 split kind-from-render across M2/M3, and 114-115 split mouse-from-keyboard across M3/M4"
+        },
+        "Codex-8": {
+          "desc": "Invariant 89's exactly-once photo-failure telemetry has no named integration seam: src/shared/ui/Avatar.tsx handles its image error internally and accepts no failure callback, while TECH claims the kit is consumed unchanged. Either a parent error-capture wrapper or a kit API change is required, and TECH specifies neither.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-9": {
+          "desc": "Invariant 47 requires branded emails, but TECH defines only PersonIdentifier and leaves Person.email an unspecified string. No compile-time test can prove a raw string is rejected until a concrete EmailAddress brand and its schema transform are specified.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-10": {
+          "desc": "Type-ahead (invariant 127) is not deterministic enough to write the promised key-by-key tests: case and locale sensitivity, whether matching uses the trimmed full name or the email fallback of invariant 50, punctuation handling, and how a multi-character buffer interacts with repeated-character cycling are all unspecified.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-11": {
+          "desc": "The asterisk key (invariant 128) has no URL, history, announcement or telemetry cardinality rule. Expanding several siblings could mean one history entry and one aggregate announcement, or one of each per branch; invariant 129's same-path-as-the-mouse does not settle it.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-12": {
+          "desc": "TECH claims the flat treeitem structure is the one architectural deviation, which is false: invariant 93 makes the avatar image decorative, while ARCHITECTURE section 4 requires avatars carrying meaningful alternatives. The second deviation needs its own decision-log entry.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-13": {
+          "desc": "Invariants 8 and 13 cite invariant 96 for anomaly reporting, but 96 governs row wrapping. They mean invariant 149.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-14": {
+          "desc": "TECH's test strategy claims whole invariant ranges (component invariants 53-106) without naming discriminating checks for layout shift (59), unrelated-row render isolation (84), scroll retention (104), no rebuild or refetch (103), referrer behaviour (91), exactly-once photo telemetry (89/151), or single-line layout at every width (96).",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md, PARTIAL on the layout-shift check (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - invariant 64 now names a bounding-box comparison of header, rail and card frame before and after resolution, and TECH's test list carries it"
+        },
+        "Codex-15": {
+          "desc": "The signed-in-id seam assumes a number, but phase 2's UserIdentifier permits branded string or numeric ids (src/features/auth/domain/userIdentifier.ts, lookupResultSchema.ts), so passing it as a plain number does not type-check without narrowing. TECH should specify the conversion and the string-id case, normally no matching row and therefore no marker.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-16": {
+          "desc": "The collapsed manager wording is ambiguous: invariant 95's N hidden could mean direct reports or every hidden descendant, while the row model carries only the direct reportCount of invariant 18. A deep subtree renders different copy depending on the reading.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Codex-17": {
+          "desc": "The expanded parameter grammar is underspecified beyond comma separation: whitespace, empty segments, signs, decimals, exponent notation, unsafe integers, a repeated expanded parameter, and mixed valid and invalid entries have no prescribed result, so invariants 110-112 cannot be tested exhaustively.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md"
+        },
+        "Claude-1": {
+          "desc": "A toggle pushes a search-param navigation and react-router revalidates every loader when the search string changes (router.js:1965 defaultShouldRevalidate on search change), so every expand or collapse refetches users.json AND rebuilds the forest, and the new expanded set commits only when the navigation settles. Falsifies invariants 102, 103, 39, 161. TECH never mentions shouldRevalidate. Independently confirmed by Codex-1.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-2": {
+          "desc": "npm run lint, inside npm run verify, hard-fails on the three names TECH's design is built from: assert-domain-vocabulary.mjs:29-34 bans buildForest and flattenVisible anywhere in src, :163-164 fails on any role=tree attribute, and guard-scripts.test.ts:43-59 pins the ban. M1's stated boundary cannot go green. Retiring the tripwires is a decision invariant 178 makes someone sanction, and neither file appears in TECH's proposed changes or any milestone. Independently confirmed by Codex-4.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-3": {
+          "desc": "Invariant 95's N hidden number is not computable from the row model: invariant 18 forbids putting subtree size on reportCount, invariant 28 carries only the direct count, invariant 27 puts the collapsed subtree outside the row list, and invariant 36 forbids computing it a second way. Mockup 1e does not discriminate because roni yashar's children are both leaves. Collapsing Annie Vuuren on live data gives different copy under the two readings. Overlaps Codex-16.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-4": {
+          "desc": "Invariants 110 and 112 give opposite answers for the same URL and TECH implements only one. For /?expanded=abc, invariant 110 says unknown id ignored so everything collapses, invariant 112 says malformed so the default expansion applies. The partially-valid case is worse. The spec never defines the boundary between an unknown id and a malformed parameter, so 108-112 cannot all be tested. Overlaps Codex-17.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-5": {
+          "desc": "The kit ErrorState accepts exactly one action and no glyph slot (src/shared/ui/ErrorState.tsx:7), EmptyState likewise, but invariant 65 and mockup 1h require two actions and invariants 62 and 73 require glyphs - while invariant 175 freezes the kit. Both kit states also render their own card container, so composing them inside the page Card nests two card frames, which invariants 57 and 165 do not anticipate.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-6": {
+          "desc": "TECH names no retry mechanism at all, and the natural one cannot produce invariant 67's new correlation id: router.revalidate leaves navigation.state idle (router.js:655), and createInteractionTracker only opens an interaction when navigation.state is not Idle, so currentCorrelationId returns the previous id and both failures share one id. Phase 2 added beginInteraction for exactly this case. Independently confirmed by Codex-5.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-7": {
+          "desc": "The spec assumes a JSON array envelope, but Firebase RTDB REST returns null for an empty node and an object-keyed map as soon as array keys are not contiguous. Deleting one record from the shared public database therefore takes the page to the error state under invariant 44, and mockup 1g's empty state is unreachable from the real backend. This is the opposite of the resilience invariants 8, 42 and 46 exist to deliver, and neither behaviour is specified.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-8": {
+          "desc": "Nothing routes the observability facade or a Clock into the hierarchy feature's components: eslint.config.js bans setTimeout, setInterval and requestAnimationFrame across all of src with no feature override, and forbids feature to app imports, so useRuntime is unreachable from the feature. Invariants 105, 106, 127 and 151 have no implementation path. Phase 2 solved this with a dependencies object passed from the route; TECH never adopts that pattern.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-9": {
+          "desc": "M3 owns invariants 97-105 (toggling, announcements, toggle telemetry) but M4 owns useExpansion, and TECH forbids a second copy of expansion in component state - so M3 must either build M4's work early or build the forbidden copy. M3 is not independently verifiable as claimed. Overlaps Codex-7.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-10": {
+          "desc": "Invariant 153 requires adding hierarchy events to platform's closed AnalyticsPayloads map, which invariant 175 freezes and which ARCHITECTURE section 2 says must never know what a user is; invariant 147's payload carries people, manager and root counts. assert-domain-vocabulary.mjs:16-26 also bans exported platform identifiers carrying manager, hierarchy, tree or report, so a named payload type there fails lint. Needs a decision before M2.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-11": {
+          "desc": "Five invariant cross-references point at the wrong invariant, in a document that declares its numbers the reference system for PLAN.md and PROOF.md. Invariants 8, 10 and 13 cite 96 (row wrapping) where they mean 149 (anomaly reporting), and TECH repeats it; invariant 63 cites 122 where it means the deviations section; invariant 74 cites 123 likewise. Systematic drift from an earlier draft - every citation needs re-checking. Overlaps Codex-13.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-12": {
+          "desc": "HttpResult's cancelled outcome has no branch in HierarchyResult and no invariant in PRODUCT. react-router aborts the previous loader's signal when a navigation is interrupted, which two quick toggles under the current design produce, so fetchPeople must return something and the only candidates are failure (renders Couldn't load the hierarchy because the user clicked twice) or empty (renders No users in the hierarchy yet). Both wrong, neither specified.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-13": {
+          "desc": "The kit Avatar owns its own onError and exposes no callback (src/shared/ui/Avatar.tsx:27,39; props are imageSource, displayName, size, decorative), so invariants 89 and 151's per-row photo-failure telemetry cannot be implemented without changing the kit invariant 175 freezes - while invariant 90 makes that failure a live first-load path and M3's boundary e2e-tests it. Independently confirmed by Codex-8; orchestrator verified the file.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-14": {
+          "desc": "Invariant 43 is false as written, contradicts invariant 159, and no test could fail it: performAttempt.ts:51-54 awaits response.json() so the object graph holds all 33 plaintext passwords before Zod runs, and TECH's claim that Zod strips them by construction is wrong about the pre-parse payload. The testable claim is invariant 159's not-kept-past-parsing. Shipping 43 means a security invariant gets a PROOF tick it did not earn. Independently confirmed by Codex-2.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-15": {
+          "desc": "Focus is undefined when Back or Forward changes expansion out from under the focused row: a POP delivers a new expanded set with no collapsing-row event, so TECH's stated focus rule does not fire, the focused row unmounts, focus falls to document.body and the roving tabindex has no owner. Invariant 121's the row that last had it then names a row that does not exist. On the path of ROADMAP exit criterion 4.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-16": {
+          "desc": "ROADMAP phase 3 outcome 6 (signing out returns to the login page and cannot be undone with the back button) maps to no invariant, while invariant 172 requires this phase to tick that box. Orchestrator note: this worktree's ROADMAP is main's copy; phase 2's branch already moved that outcome into phase 2 on 2026-08-14, so this is a rebase artifact - but PRODUCT must say so rather than leave a box unmapped.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-17": {
+          "desc": "TECH contradicts itself about which phase-2 surface this phase touches: it claims createAuthenticatedLoader gaining userId is the only one, then three bullets later renders NavigationRail inside AuthenticatedLayout, a phase-2 file. Separately the rail is decorative, focusless and aria-hidden, appears nowhere in GOAL.md, and its scope was never put to the user despite costing a phase-2 edit and bytes against a 30 kB route budget.",
+          "blocking": true,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-18": {
+          "desc": "The asterisk key has undefined history semantics under push-per-toggle (one entry or eight for eight siblings, so eight Backs could undo one keystroke) and at that row's level reads two ways - siblings under the same parent, or every row at the same depth anywhere in the forest, which on live data with three roots expands different sets. Overlaps Codex-11.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-19": {
+          "desc": "Invariant 129 read literally makes every arrow-key focus change write the URL and emit telemetry - holding Down through 33 rows would push 33 history entries and 33 events. The intent is that the keyboard and mouse share one implementation, but as written it is an invariant a test could be written against, wrongly.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-20": {
+          "desc": "memo over freshly-built VisibleRow objects does not satisfy invariant 84 - flattening returns new objects every recompute, so a memo comparing a VisibleRow prop fails for all 33 rows on every toggle, the opposite of what TECH cites it for. Satisfying it needs primitives spread into props plus a stable toggle callback, neither stated, and PRODUCT names no way to observe a re-render.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-21": {
+          "desc": "Invariant 94 asks Intl to format a personal name, and ECMA-402 has no such API: Intl.DisplayNames covers languages, regions, scripts and currencies, and Intl.ListFormat would render Justin and uerra. An implementer will either misuse ListFormat on live record 4353773161 or quietly concatenate and tick 94. The right mechanism is a catalogue string with placeholders, which invariant 143 already prescribes elsewhere. Independently confirmed by Codex-6.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-22": {
+          "desc": "Invariants 76 and 77 define the people count two different ways and diverge exactly when invariant 13 fires: validation keeps 33 records, the forest has 32 nodes after a duplicate id is dropped, so the summary either reads 33 while 32 rows render or reads 32 and contradicts 77. TECH computes counts in fetchPeople from unstated inputs.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-23": {
+          "desc": "Under push-per-toggle the existing app.route_viewed event fires once per toggle (createInteractionTracker startInteraction on every non-idle navigation, settle emits the event), so a session with four toggles holds five route_viewed events and, if the view event lives in the loader, five hierarchy-view events with identical counts - breaking invariant 147's one event and the buffer assertions. Survives a shouldRevalidate fix, because the tracker keys off navigation, not revalidation.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md, PARTIAL on the route-viewed premise (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - the reconciling sentence was false once revalidation is suppressed, so invariant 161 now states that a toggle runs no loader, opens no interaction and emits no route-viewed event"
+        },
+        "Claude-24": {
+          "desc": "A flat treeitem takes its accessible name from its contents (axe-core role table, nameFromContent true), so the computed name is the person plus email plus report count plus the toggle glyph - contradicting invariant 93, complicating invariant 79's you marker, and leaving invariant 127's type-ahead name undefined for the nameless-user row invariant 50 creates. TECH says M5 asserts focus by accessible name, so every keyboard test pins whichever composition ships.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-25": {
+          "desc": "TreeToggle is a button inside the treeitem, which is a second tab stop unless it carries tabindex -1, and TECH says nothing about that. With 16 managers on live data the tree becomes 17 tab stops instead of the one invariant 120 and a ROADMAP exit criterion claim, and axe will not catch it because treeitem has no childrenPresentational so nested-interactive does not fire.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        },
+        "Claude-26": {
+          "desc": "Four real invariants belong to no milestone: 152 (no telemetry, log or error report carries a password, email, name or photo URL), 154 (the e2e suite asserts events against the buffer sink), 156 (photo URLs never fetched with credentials, never a link target, never echoed to telemetry) and 158 (nothing writes to storage). Three are the phase's privacy invariants and one is what makes the telemetry contract tested. Invariant 52 is also double-assigned to M1 and M2 without the deliberate-overlap note 107-112 gets.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md, PARTIAL on milestone assignment (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - TECH now names four deliberate overlaps including invariant 194, and moves three telemetry invariants to milestones that can verify them"
+        },
+        "Claude-27": {
+          "desc": "Invariants 96 and 164 are unfalsifiable as stated: 96 quantifies over an unbounded viewport range and arbitrary data with no named check, and playwright.config.ts defines no viewport sweep; 164 names an interaction budget that exists as no gate, since .size-limit.json sets running false on all seven entries and the only interaction number in the repo is ARCHITECTURE's field INP target, asserted nowhere. Overlaps Codex-14.",
+          "blocking": false,
+          "disposition": "resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md"
+        }
+      },
+      "note": "44 findings: 44 resolved, 0 rejected (27 Claude grill + 17 Codex, 23 blocking). Four review rounds: initial dual review; raiser confirmations (Claude 25/27 resolved + 10 new problems, Codex 14/17 + 11 new); a delta check of those fixes (2 of 9 correct, 3 blocking); and a final narrow check of the round-3 deltas (1 of 4 correct, 3 blocking, first round with no new design defect). Reviews: evidence/reviews/g1-grill-claude.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-confirmation-claude.md, evidence/reviews/g1-confirmation-codex.md, evidence/reviews/g1-round2-delta-check.md, evidence/reviews/g1-round3-delta-check.md, evidence/reviews/g1-confirmation-summary.md, evidence/reviews/g1-round3-summary.md. User sign-off: chose 'one narrow pass, then sign off' and settled the twelve product decisions the rounds surfaced, the last being invariant 98's manual verification. Round-4 edits after that instruction were consistency corrections the narrow pass named, plus that decision.",
+      "user_signoff": "2026-08-15T11:58:24Z"
+    },
+    "G2": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G3": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G4": {
+      "status": "pending",
+      "attempts": 0,
+      "security_pass": null
+    },
+    "G5": {
+      "status": "pending",
+      "attempts": 0
+    }
+  },
+  "retro": null,
+  "plan_steps": [],
+  "log": [
+    "2026-08-15T08:25:51Z init: type=feature size=L flags=[]",
+    "2026-08-15T08:25:51Z triage: feature/L confirmed by user. Type=feature (new behavior, ROADMAP phase 3). Size=L on ambiguity+blast radius+verification surface: pure tree domain (multiple roots, missing managers, cycles), Zod boundary tolerance, four page states, full ARIA tree keyboard contract, expansion persistence across refresh/link/back-button, plus README and decision-log updates - cross-cutting across domain, feature slice, app shell and e2e. Flags: none (design=false, screens 1e-1h already exist in specs/hierarchy-tree-mockups.html and serve as the visual contract; security_review=false per user decision, though the Zod boundary and the never-fetch-the-user-table rule stay PRODUCT invariants). Concurrency: phase-2-login is active on the main worktree; user chose to record blocked-on and spec now. Running in a separate worktree at ../hierarchy-tree-phase-3 on branch loop/feature/phase-3-tree off main (6511fb1).",
+    "2026-08-15T08:26:12Z sequencing: user chose to record phase-3-tree blocked-on phase-2-login, but the CLI refuses the link because phase-2-login's loop.json does not exist on main (it lives on the unmerged loop/feature/phase-2-login branch) and this worktree branched off main. Recorded here instead; the link will be added once phase 2 merges and this branch rebases onto it. Practical effect is unchanged: implementation of phase 3 waits for phase 2's header/route-guard/app-shell to land.",
+    "2026-08-15T08:26:12Z phase -> frame",
+    "2026-08-15T08:41:08Z evidence recorded: evidence/live-users-shape.md (8043154fa854) - Confirmed live users schema (array envelope, 7 fields, 3 roots, 16 managers, no cycles) pasted by the user at Frame; passwords redacted",
+    "2026-08-15T08:41:08Z frame: four product decisions taken with the user. (1) Live schema confirmed from the real payload the user pasted - array envelope, fields id/firstName/lastName/email/password/managerId?/photo?, 33 records, 3 roots, 16 managers, no dangling manager and no cycle in live data; recorded in evidence/live-users-shape.md with passwords redacted. (2) Sibling order = payload (array index) order, not alphabetical. (3) The error state's mono chip carries the correlation id, not a backend error code - a deliberate mockup deviation matching what phase 2 did for its service-problem state. (4) The empty state drops mockup 1g's 'View docs' button and keeps 'Refresh' alone - second deliberate deviation. Mockup screens 1e-1h captured to specs/phase-3-tree/mockups/ from specs/hierarchy-tree-mockups.html.",
+    "2026-08-15T08:41:08Z phase -> specify",
+    "2026-08-15T09:02:43Z set product = PRODUCT.md",
+    "2026-08-15T09:02:43Z specify: PRODUCT.md drafted - 180 invariants over 15 sections (scope, forest building, row model, boundary parsing, the four states, the row, toggling, URL expansion, keyboard/ARIA, i18n, telemetry, security, performance, mockup fidelity, docs, what must not change). Four open product questions closed with the user before TECH.md: img-src widens to 'self' data: https: (rejected: nine-host allow-list, dropping photos); an all-rows-invalid payload renders the error state, not the empty state; each toggle pushes a history entry so Back undoes one toggle; the '*' key stays in scope. Three mockup deviations named for the decision log: correlation id in the error chip instead of a backend code, one button in the empty state instead of two, and the CSP widening.",
+    "2026-08-15T09:06:34Z set tech = TECH.md",
+    "2026-08-15T09:06:35Z specify: TECH.md drafted against the real code (main 6511fb1 plus phase 2's in-flight branch, every phase-2 reference marked as such). Six sequential milestones: M1 pure domain, M2 boundary+loader, M3 the four states, M4 URL expansion, M5 keyboard/ARIA, M6 closing. Two things TECH raises rather than decides: the flat treeitem structure deviates from ARCHITECTURE section 4's role=group wording, and createAuthenticatedLoader gains a userId field - the one phase-2 surface this phase touches.",
+    "2026-08-15T09:16:59Z phase -> validate",
+    "2026-08-15T09:51:25Z G1 finding Codex-1 recorded (blocking): setSearchParams performs a navigation and react-router revalidates route loaders on a search-parameter change by default, so every toggle refetches users.json unless the route defines shouldRevalidate for expansion-only changes. Directly violates invariants 103 and 155, and can replace the loader promise under the rendered page on every mouse or keyboard toggle. Refs PRODUCT 107-119, TECH section 4, src/app/routing/routeDefinitions.ts:15-24.",
+    "2026-08-15T09:51:25Z G1 finding Codex-2 recorded (blocking): Invariant 43 (password values never exist as a value anywhere in application memory) is unsatisfiable by the proposed boundary: response.json() materializes the complete raw records, password included, before Zod strips unknown fields (src/platform/http/performAttempt.ts:50-55). Invariant 159's weaker not-kept-past-parsing wording is feasible; 43 as written is neither satisfiable nor testable.",
+    "2026-08-15T09:51:25Z G1 finding Codex-3 recorded (blocking): Invariants 4 and 155 say the page issues no request except the users read and contacts no origin other than the database, which contradicts invariants 156-157 requiring browser image requests to arbitrary https origins. A test cannot know which requirement is authoritative.",
+    "2026-08-15T09:51:25Z G1 finding Codex-4 recorded (blocking): The repository's own guard scripts reject exactly what TECH proposes: scripts/assert-domain-vocabulary.mjs bans the identifiers buildForest and flattenVisible repo-wide (lines 28-34) and fails the build on a literal role=tree attribute (line 165), with scripts/guard-scripts.test.ts asserting that behaviour. TECH schedules no retirement or narrowing of these phase-1 tripwires, so M1's and M3's stated npm run verify boundaries are unreachable. Independently confirmed by the orchestrator against the script.",
+    "2026-08-15T09:51:25Z G1 finding Codex-5 recorded (blocking): Invariant 67 requires a NEW correlation id per retry, but useRevalidator uses the router's separate revalidation lifecycle while createInteractionTracker mints ids from navigation.state, so reading currentCorrelationId() after a revalidate repeats the previous id. TECH must call beginInteraction() explicitly before retry or extend the tracker wiring.",
+    "2026-08-15T09:51:25Z G1 finding Codex-6 recorded (blocking): Invariant 94 requires the person's name to be formatted through Intl, but ECMA-402 has no person-name formatter and Intl.ListFormat formats lists, not culturally ordered names. TECH names no implementable substitute, so the invariant cannot be implemented faithfully.",
+    "2026-08-15T09:51:25Z G1 finding Codex-7 recorded (blocking): The six milestones are not independently verifiable as claimed: M3 owns invariant 66, whose URL-expansion preservation arrives only in M4, and invariants 105-106, whose keyboard toggles arrive only in M5; M4 owns invariant 113/117 behaviour whose keyboard half arrives only in M5. TECH section Milestone split.",
+    "2026-08-15T09:51:25Z G1 finding Codex-8 recorded: Invariant 89's exactly-once photo-failure telemetry has no named integration seam: src/shared/ui/Avatar.tsx handles its image error internally and accepts no failure callback, while TECH claims the kit is consumed unchanged. Either a parent error-capture wrapper or a kit API change is required, and TECH specifies neither.",
+    "2026-08-15T09:51:25Z G1 finding Codex-9 recorded: Invariant 47 requires branded emails, but TECH defines only PersonIdentifier and leaves Person.email an unspecified string. No compile-time test can prove a raw string is rejected until a concrete EmailAddress brand and its schema transform are specified.",
+    "2026-08-15T09:51:25Z G1 finding Codex-10 recorded: Type-ahead (invariant 127) is not deterministic enough to write the promised key-by-key tests: case and locale sensitivity, whether matching uses the trimmed full name or the email fallback of invariant 50, punctuation handling, and how a multi-character buffer interacts with repeated-character cycling are all unspecified.",
+    "2026-08-15T09:51:26Z G1 finding Codex-11 recorded: The asterisk key (invariant 128) has no URL, history, announcement or telemetry cardinality rule. Expanding several siblings could mean one history entry and one aggregate announcement, or one of each per branch; invariant 129's same-path-as-the-mouse does not settle it.",
+    "2026-08-15T09:51:26Z G1 finding Codex-12 recorded: TECH claims the flat treeitem structure is the one architectural deviation, which is false: invariant 93 makes the avatar image decorative, while ARCHITECTURE section 4 requires avatars carrying meaningful alternatives. The second deviation needs its own decision-log entry.",
+    "2026-08-15T09:51:26Z G1 finding Codex-13 recorded: Invariants 8 and 13 cite invariant 96 for anomaly reporting, but 96 governs row wrapping. They mean invariant 149.",
+    "2026-08-15T09:51:26Z G1 finding Codex-14 recorded: TECH's test strategy claims whole invariant ranges (component invariants 53-106) without naming discriminating checks for layout shift (59), unrelated-row render isolation (84), scroll retention (104), no rebuild or refetch (103), referrer behaviour (91), exactly-once photo telemetry (89/151), or single-line layout at every width (96).",
+    "2026-08-15T09:51:26Z G1 finding Codex-15 recorded: The signed-in-id seam assumes a number, but phase 2's UserIdentifier permits branded string or numeric ids (src/features/auth/domain/userIdentifier.ts, lookupResultSchema.ts), so passing it as a plain number does not type-check without narrowing. TECH should specify the conversion and the string-id case, normally no matching row and therefore no marker.",
+    "2026-08-15T09:51:26Z G1 finding Codex-16 recorded: The collapsed manager wording is ambiguous: invariant 95's N hidden could mean direct reports or every hidden descendant, while the row model carries only the direct reportCount of invariant 18. A deep subtree renders different copy depending on the reading.",
+    "2026-08-15T09:51:26Z G1 finding Codex-17 recorded: The expanded parameter grammar is underspecified beyond comma separation: whitespace, empty segments, signs, decimals, exponent notation, unsafe integers, a repeated expanded parameter, and mixed valid and invalid entries have no prescribed result, so invariants 110-112 cannot be tested exhaustively.",
+    "2026-08-15T09:51:26Z evidence recorded: evidence/reviews/g1-codex-review.md (179cde41ea60) - Codex G1 second opinion, verbatim: 17 findings, 7 blocking",
+    "2026-08-15T10:09:51Z G1 finding Claude-1 recorded (blocking): A toggle pushes a search-param navigation and react-router revalidates every loader when the search string changes (router.js:1965 defaultShouldRevalidate on search change), so every expand or collapse refetches users.json AND rebuilds the forest, and the new expanded set commits only when the navigation settles. Falsifies invariants 102, 103, 39, 161. TECH never mentions shouldRevalidate. Independently confirmed by Codex-1.",
+    "2026-08-15T10:09:51Z G1 finding Claude-2 recorded (blocking): npm run lint, inside npm run verify, hard-fails on the three names TECH's design is built from: assert-domain-vocabulary.mjs:29-34 bans buildForest and flattenVisible anywhere in src, :163-164 fails on any role=tree attribute, and guard-scripts.test.ts:43-59 pins the ban. M1's stated boundary cannot go green. Retiring the tripwires is a decision invariant 178 makes someone sanction, and neither file appears in TECH's proposed changes or any milestone. Independently confirmed by Codex-4.",
+    "2026-08-15T10:09:51Z G1 finding Claude-3 recorded (blocking): Invariant 95's N hidden number is not computable from the row model: invariant 18 forbids putting subtree size on reportCount, invariant 28 carries only the direct count, invariant 27 puts the collapsed subtree outside the row list, and invariant 36 forbids computing it a second way. Mockup 1e does not discriminate because roni yashar's children are both leaves. Collapsing Annie Vuuren on live data gives different copy under the two readings. Overlaps Codex-16.",
+    "2026-08-15T10:09:51Z G1 finding Claude-4 recorded (blocking): Invariants 110 and 112 give opposite answers for the same URL and TECH implements only one. For /?expanded=abc, invariant 110 says unknown id ignored so everything collapses, invariant 112 says malformed so the default expansion applies. The partially-valid case is worse. The spec never defines the boundary between an unknown id and a malformed parameter, so 108-112 cannot all be tested. Overlaps Codex-17.",
+    "2026-08-15T10:09:51Z G1 finding Claude-5 recorded (blocking): The kit ErrorState accepts exactly one action and no glyph slot (src/shared/ui/ErrorState.tsx:7), EmptyState likewise, but invariant 65 and mockup 1h require two actions and invariants 62 and 73 require glyphs - while invariant 175 freezes the kit. Both kit states also render their own card container, so composing them inside the page Card nests two card frames, which invariants 57 and 165 do not anticipate.",
+    "2026-08-15T10:09:52Z G1 finding Claude-6 recorded (blocking): TECH names no retry mechanism at all, and the natural one cannot produce invariant 67's new correlation id: router.revalidate leaves navigation.state idle (router.js:655), and createInteractionTracker only opens an interaction when navigation.state is not Idle, so currentCorrelationId returns the previous id and both failures share one id. Phase 2 added beginInteraction for exactly this case. Independently confirmed by Codex-5.",
+    "2026-08-15T10:09:52Z G1 finding Claude-7 recorded (blocking): The spec assumes a JSON array envelope, but Firebase RTDB REST returns null for an empty node and an object-keyed map as soon as array keys are not contiguous. Deleting one record from the shared public database therefore takes the page to the error state under invariant 44, and mockup 1g's empty state is unreachable from the real backend. This is the opposite of the resilience invariants 8, 42 and 46 exist to deliver, and neither behaviour is specified.",
+    "2026-08-15T10:09:52Z G1 finding Claude-8 recorded (blocking): Nothing routes the observability facade or a Clock into the hierarchy feature's components: eslint.config.js bans setTimeout, setInterval and requestAnimationFrame across all of src with no feature override, and forbids feature to app imports, so useRuntime is unreachable from the feature. Invariants 105, 106, 127 and 151 have no implementation path. Phase 2 solved this with a dependencies object passed from the route; TECH never adopts that pattern.",
+    "2026-08-15T10:09:52Z G1 finding Claude-9 recorded (blocking): M3 owns invariants 97-105 (toggling, announcements, toggle telemetry) but M4 owns useExpansion, and TECH forbids a second copy of expansion in component state - so M3 must either build M4's work early or build the forbidden copy. M3 is not independently verifiable as claimed. Overlaps Codex-7.",
+    "2026-08-15T10:09:52Z G1 finding Claude-10 recorded (blocking): Invariant 153 requires adding hierarchy events to platform's closed AnalyticsPayloads map, which invariant 175 freezes and which ARCHITECTURE section 2 says must never know what a user is; invariant 147's payload carries people, manager and root counts. assert-domain-vocabulary.mjs:16-26 also bans exported platform identifiers carrying manager, hierarchy, tree or report, so a named payload type there fails lint. Needs a decision before M2.",
+    "2026-08-15T10:09:52Z G1 finding Claude-11 recorded (blocking): Five invariant cross-references point at the wrong invariant, in a document that declares its numbers the reference system for PLAN.md and PROOF.md. Invariants 8, 10 and 13 cite 96 (row wrapping) where they mean 149 (anomaly reporting), and TECH repeats it; invariant 63 cites 122 where it means the deviations section; invariant 74 cites 123 likewise. Systematic drift from an earlier draft - every citation needs re-checking. Overlaps Codex-13.",
+    "2026-08-15T10:09:52Z G1 finding Claude-12 recorded (blocking): HttpResult's cancelled outcome has no branch in HierarchyResult and no invariant in PRODUCT. react-router aborts the previous loader's signal when a navigation is interrupted, which two quick toggles under the current design produce, so fetchPeople must return something and the only candidates are failure (renders Couldn't load the hierarchy because the user clicked twice) or empty (renders No users in the hierarchy yet). Both wrong, neither specified.",
+    "2026-08-15T10:09:52Z G1 finding Claude-13 recorded (blocking): The kit Avatar owns its own onError and exposes no callback (src/shared/ui/Avatar.tsx:27,39; props are imageSource, displayName, size, decorative), so invariants 89 and 151's per-row photo-failure telemetry cannot be implemented without changing the kit invariant 175 freezes - while invariant 90 makes that failure a live first-load path and M3's boundary e2e-tests it. Independently confirmed by Codex-8; orchestrator verified the file.",
+    "2026-08-15T10:09:52Z G1 finding Claude-14 recorded (blocking): Invariant 43 is false as written, contradicts invariant 159, and no test could fail it: performAttempt.ts:51-54 awaits response.json() so the object graph holds all 33 plaintext passwords before Zod runs, and TECH's claim that Zod strips them by construction is wrong about the pre-parse payload. The testable claim is invariant 159's not-kept-past-parsing. Shipping 43 means a security invariant gets a PROOF tick it did not earn. Independently confirmed by Codex-2.",
+    "2026-08-15T10:09:52Z G1 finding Claude-15 recorded (blocking): Focus is undefined when Back or Forward changes expansion out from under the focused row: a POP delivers a new expanded set with no collapsing-row event, so TECH's stated focus rule does not fire, the focused row unmounts, focus falls to document.body and the roving tabindex has no owner. Invariant 121's the row that last had it then names a row that does not exist. On the path of ROADMAP exit criterion 4.",
+    "2026-08-15T10:09:53Z G1 finding Claude-16 recorded (blocking): ROADMAP phase 3 outcome 6 (signing out returns to the login page and cannot be undone with the back button) maps to no invariant, while invariant 172 requires this phase to tick that box. Orchestrator note: this worktree's ROADMAP is main's copy; phase 2's branch already moved that outcome into phase 2 on 2026-08-14, so this is a rebase artifact - but PRODUCT must say so rather than leave a box unmapped.",
+    "2026-08-15T10:09:53Z G1 finding Claude-17 recorded (blocking): TECH contradicts itself about which phase-2 surface this phase touches: it claims createAuthenticatedLoader gaining userId is the only one, then three bullets later renders NavigationRail inside AuthenticatedLayout, a phase-2 file. Separately the rail is decorative, focusless and aria-hidden, appears nowhere in GOAL.md, and its scope was never put to the user despite costing a phase-2 edit and bytes against a 30 kB route budget.",
+    "2026-08-15T10:09:53Z G1 finding Claude-18 recorded: The asterisk key has undefined history semantics under push-per-toggle (one entry or eight for eight siblings, so eight Backs could undo one keystroke) and at that row's level reads two ways - siblings under the same parent, or every row at the same depth anywhere in the forest, which on live data with three roots expands different sets. Overlaps Codex-11.",
+    "2026-08-15T10:09:53Z G1 finding Claude-19 recorded: Invariant 129 read literally makes every arrow-key focus change write the URL and emit telemetry - holding Down through 33 rows would push 33 history entries and 33 events. The intent is that the keyboard and mouse share one implementation, but as written it is an invariant a test could be written against, wrongly.",
+    "2026-08-15T10:09:53Z G1 finding Claude-20 recorded: memo over freshly-built VisibleRow objects does not satisfy invariant 84 - flattening returns new objects every recompute, so a memo comparing a VisibleRow prop fails for all 33 rows on every toggle, the opposite of what TECH cites it for. Satisfying it needs primitives spread into props plus a stable toggle callback, neither stated, and PRODUCT names no way to observe a re-render.",
+    "2026-08-15T10:09:53Z G1 finding Claude-21 recorded: Invariant 94 asks Intl to format a personal name, and ECMA-402 has no such API: Intl.DisplayNames covers languages, regions, scripts and currencies, and Intl.ListFormat would render Justin and uerra. An implementer will either misuse ListFormat on live record 4353773161 or quietly concatenate and tick 94. The right mechanism is a catalogue string with placeholders, which invariant 143 already prescribes elsewhere. Independently confirmed by Codex-6.",
+    "2026-08-15T10:09:53Z G1 finding Claude-22 recorded: Invariants 76 and 77 define the people count two different ways and diverge exactly when invariant 13 fires: validation keeps 33 records, the forest has 32 nodes after a duplicate id is dropped, so the summary either reads 33 while 32 rows render or reads 32 and contradicts 77. TECH computes counts in fetchPeople from unstated inputs.",
+    "2026-08-15T10:09:53Z G1 finding Claude-23 recorded: Under push-per-toggle the existing app.route_viewed event fires once per toggle (createInteractionTracker startInteraction on every non-idle navigation, settle emits the event), so a session with four toggles holds five route_viewed events and, if the view event lives in the loader, five hierarchy-view events with identical counts - breaking invariant 147's one event and the buffer assertions. Survives a shouldRevalidate fix, because the tracker keys off navigation, not revalidation.",
+    "2026-08-15T10:09:53Z G1 finding Claude-24 recorded: A flat treeitem takes its accessible name from its contents (axe-core role table, nameFromContent true), so the computed name is the person plus email plus report count plus the toggle glyph - contradicting invariant 93, complicating invariant 79's you marker, and leaving invariant 127's type-ahead name undefined for the nameless-user row invariant 50 creates. TECH says M5 asserts focus by accessible name, so every keyboard test pins whichever composition ships.",
+    "2026-08-15T10:09:53Z G1 finding Claude-25 recorded: TreeToggle is a button inside the treeitem, which is a second tab stop unless it carries tabindex -1, and TECH says nothing about that. With 16 managers on live data the tree becomes 17 tab stops instead of the one invariant 120 and a ROADMAP exit criterion claim, and axe will not catch it because treeitem has no childrenPresentational so nested-interactive does not fire.",
+    "2026-08-15T10:09:54Z G1 finding Claude-26 recorded: Four real invariants belong to no milestone: 152 (no telemetry, log or error report carries a password, email, name or photo URL), 154 (the e2e suite asserts events against the buffer sink), 156 (photo URLs never fetched with credentials, never a link target, never echoed to telemetry) and 158 (nothing writes to storage). Three are the phase's privacy invariants and one is what makes the telemetry contract tested. Invariant 52 is also double-assigned to M1 and M2 without the deliberate-overlap note 107-112 gets.",
+    "2026-08-15T10:09:54Z G1 finding Claude-27 recorded: Invariants 96 and 164 are unfalsifiable as stated: 96 quantifies over an unbounded viewport range and arbitrary data with no named check, and playwright.config.ts defines no viewport sweep; 164 names an interaction budget that exists as no gate, since .size-limit.json sets running false on all seven entries and the only interaction number in the repo is ARCHITECTURE's field INP target, asserted nowhere. Overlaps Codex-14.",
+    "2026-08-15T10:09:54Z evidence recorded: evidence/reviews/g1-grill-claude.md (5946f56aac6e) - Claude adversarial G1 grill, verbatim: 27 findings, 16 blocking",
+    "2026-08-15T10:55:20Z G1 finding Claude-1 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:20Z G1 finding Claude-2 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:20Z G1 finding Claude-3 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:20Z G1 finding Claude-4 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:20Z G1 finding Claude-5 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:20Z G1 finding Claude-6 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:20Z G1 finding Claude-7 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:20Z G1 finding Claude-8 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-9 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-10 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-11 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-12 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-13 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-14 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-15 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-16 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-17 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-18 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:21Z G1 finding Claude-19 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:22Z G1 finding Claude-20 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:22Z G1 finding Claude-21 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:22Z G1 finding Claude-22 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:22Z G1 finding Claude-24 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:22Z G1 finding Claude-25 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:22Z G1 finding Claude-27 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md",
+    "2026-08-15T10:55:22Z G1 finding Claude-23 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md, PARTIAL on the route-viewed premise (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - the reconciling sentence was false once revalidation is suppressed, so invariant 161 now states that a toggle runs no loader, opens no interaction and emits no route-viewed event",
+    "2026-08-15T10:55:22Z G1 finding Claude-26 dispositioned: resolved: spec rewritten; confirmed by a fresh re-briefed loop-spec-validator in evidence/reviews/g1-confirmation-claude.md, PARTIAL on milestone assignment (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - TECH now names four deliberate overlaps including invariant 194, and moves three telemetry invariants to milestones that can verify them",
+    "2026-08-15T10:55:22Z G1 finding Codex-1 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:22Z G1 finding Codex-2 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:23Z G1 finding Codex-3 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:23Z G1 finding Codex-4 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:23Z G1 finding Codex-6 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:23Z G1 finding Codex-8 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:23Z G1 finding Codex-9 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:23Z G1 finding Codex-10 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:23Z G1 finding Codex-11 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:23Z G1 finding Codex-12 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:24Z G1 finding Codex-13 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:24Z G1 finding Codex-15 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:24Z G1 finding Codex-16 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:24Z G1 finding Codex-17 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md",
+    "2026-08-15T10:55:24Z G1 finding Codex-5 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md, PARTIAL on the retry callback path (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - the route module now owns the useRevalidator wrapper and passes onRetry/onRefresh props, and invariant 193 forbids the feature calling revalidation directly",
+    "2026-08-15T10:55:24Z G1 finding Codex-7 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md, NOT RESOLVED at first pass (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - the milestone section now names every overlap explicitly: 45 and 49 split kind-from-render across M2/M3, and 114-115 split mouse-from-keyboard across M3/M4",
+    "2026-08-15T10:55:24Z G1 finding Codex-14 dispositioned: resolved: spec rewritten; confirmed by the raising Codex thread in evidence/reviews/g1-confirmation-codex.md, PARTIAL on the layout-shift check (round-2 residue from that confirmation fixed in the same pass, recorded in evidence/reviews/g1-confirmation-summary.md) - invariant 64 now names a bounding-box comparison of header, rail and card frame before and after resolution, and TECH's test list carries it",
+    "2026-08-15T10:55:24Z evidence recorded: evidence/reviews/g1-confirmation-claude.md (76bd1d5ebd8b) - Fresh re-briefed validator confirming the 27 grill findings: 25 resolved, 2 partial, 10 new problems incl. one blocking",
+    "2026-08-15T10:55:25Z evidence recorded: evidence/reviews/g1-confirmation-codex.md (254046dd1c30) - Raising Codex thread confirming its 17 findings: 14 resolved, 1 not, 2 partial, 11 new problems",
+    "2026-08-15T10:55:25Z evidence recorded: evidence/reviews/g1-confirmation-summary.md (133b390fd0ee) - Summary of both confirmation passes and the round-2 changes made in response",
+    "2026-08-15T11:11:53Z evidence recorded: evidence/reviews/g1-round2-delta-check.md (63a4633579ad) - Focused delta check of the round-2 changes: 2 of 9 correct, 7 with problems, 3 blocking; all acted on in round 3",
+    "2026-08-15T11:12:09Z evidence recorded: evidence/reviews/g1-round3-summary.md (33b90a50f33b) - Round-3 changes made in response to the delta check",
+    "2026-08-15T11:58:05Z evidence recorded: evidence/reviews/g1-round3-delta-check.md (97b9711065e5) - Round-3 delta check: 1 of 4 correct, 3 blocking, first round with no new design defect; all fixed in round 4 bar the invariant-98 credential question, which went to the user",
+    "2026-08-15T11:58:24Z G1 -> passed (44 findings: 44 resolved, 0 rejected (27 Claude grill + 17 Codex, 23 blocking). Four review rounds: initial dual review; raiser confirmations (Claude 25/27 resolved + 10 new problems, Codex 14/17 + 11 new); a delta check of those fixes (2 of 9 correct, 3 blocking); and a final narrow check of the round-3 deltas (1 of 4 correct, 3 blocking, first round with no new design defect). Reviews: evidence/reviews/g1-grill-claude.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-confirmation-claude.md, evidence/reviews/g1-confirmation-codex.md, evidence/reviews/g1-round2-delta-check.md, evidence/reviews/g1-round3-delta-check.md, evidence/reviews/g1-confirmation-summary.md, evidence/reviews/g1-round3-summary.md. User sign-off: chose 'one narrow pass, then sign off' and settled the twelve product decisions the rounds surfaced, the last being invariant 98's manual verification. Round-4 edits after that instruction were consistency corrections the narrow pass named, plus that decision.)"
+  ],
+  "milestones": [],
+  "evidence_hashes": {
+    "evidence/live-users-shape.md": {
+      "sha": "8043154fa854",
+      "recorded": "2026-08-15T08:41:08Z",
+      "note": "Confirmed live users schema (array envelope, 7 fields, 3 roots, 16 managers, no cycles) pasted by the user at Frame; passwords redacted"
+    },
+    "evidence/reviews/g1-codex-review.md": {
+      "sha": "179cde41ea60",
+      "recorded": "2026-08-15T09:51:26Z",
+      "note": "Codex G1 second opinion, verbatim: 17 findings, 7 blocking"
+    },
+    "evidence/reviews/g1-grill-claude.md": {
+      "sha": "5946f56aac6e",
+      "recorded": "2026-08-15T10:09:54Z",
+      "note": "Claude adversarial G1 grill, verbatim: 27 findings, 16 blocking"
+    },
+    "evidence/reviews/g1-confirmation-claude.md": {
+      "sha": "76bd1d5ebd8b",
+      "recorded": "2026-08-15T10:55:24Z",
+      "note": "Fresh re-briefed validator confirming the 27 grill findings: 25 resolved, 2 partial, 10 new problems incl. one blocking"
+    },
+    "evidence/reviews/g1-confirmation-codex.md": {
+      "sha": "254046dd1c30",
+      "recorded": "2026-08-15T10:55:25Z",
+      "note": "Raising Codex thread confirming its 17 findings: 14 resolved, 1 not, 2 partial, 11 new problems"
+    },
+    "evidence/reviews/g1-confirmation-summary.md": {
+      "sha": "133b390fd0ee",
+      "recorded": "2026-08-15T10:55:25Z",
+      "note": "Summary of both confirmation passes and the round-2 changes made in response"
+    },
+    "evidence/reviews/g1-round2-delta-check.md": {
+      "sha": "63a4633579ad",
+      "recorded": "2026-08-15T11:11:53Z",
+      "note": "Focused delta check of the round-2 changes: 2 of 9 correct, 7 with problems, 3 blocking; all acted on in round 3"
+    },
+    "evidence/reviews/g1-round3-summary.md": {
+      "sha": "33b90a50f33b",
+      "recorded": "2026-08-15T11:12:09Z",
+      "note": "Round-3 changes made in response to the delta check"
+    },
+    "evidence/reviews/g1-round3-delta-check.md": {
+      "sha": "97b9711065e5",
+      "recorded": "2026-08-15T11:58:05Z",
+      "note": "Round-3 delta check: 1 of 4 correct, 3 blocking, first round with no new design defect; all fixed in round 4 bar the invariant-98 credential question, which went to the user"
+    }
+  }
+}
