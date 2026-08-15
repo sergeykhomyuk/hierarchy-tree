@@ -6,8 +6,9 @@ import {
 } from '@platform/observability';
 import { createSystemClock, createSystemRandomness } from '@platform/runtime';
 import { deriveSecret } from '../../src/features/auth/domain/deriveSecret';
+import { fetchSignedInUser } from '../../src/features/auth/data/fetchSignedInUser';
 import { lookupUserIdentifier } from '../../src/features/auth/data/lookupUserIdentifier';
-import { signedInUserSchema } from '../../src/features/auth/data/signedInUserSchema';
+import { userIdentifier } from '../../src/features/auth/domain/userIdentifier';
 
 // Outside every default Vitest project (vitest.config.ts's `tooling`
 // project matches `scripts/*.test.ts` only, one path segment) and
@@ -160,43 +161,50 @@ describe('live smoke', () => {
         );
       }
 
-      // No per-id path exists (signedInUserSchema.ts's own note) - the
-      // real header fetches the whole collection and finds the matching
-      // `id` field itself, so this proves the same thing the same way.
-      const result = await client.request({
-        method: 'GET',
-        resourcePath: '/users.json',
-        parse: (payload) => payload,
-      });
-      expect(result.outcome).toBe('success');
-      if (result.outcome !== 'success') return;
-
-      const rawEntries = Array.isArray(result.value) ? result.value : [];
-      const rawMatch = rawEntries.find(
-        (entry) =>
-          typeof entry === 'object' &&
-          entry !== null &&
-          String((entry as Record<string, unknown>).id) === resolvedUserId,
+      // Calls the app's OWN fetchSignedInUser rather than reimplementing
+      // its collection fetch, id-match and schema parse here - this
+      // proves the real request path a live regression could actually
+      // break, not a hand-rolled copy of it that could drift from the
+      // production code and stay green.
+      const view = await fetchSignedInUser(
+        client,
+        userIdentifier(resolvedUserId),
+        observability,
       );
-      if (rawMatch === undefined) {
-        throw new Error(
-          `no record in /users.json has an id field matching "${resolvedUserId}"`,
-        );
-      }
 
-      const parsed = signedInUserSchema.safeParse(rawMatch);
-      if (!parsed.success) {
-        const keys =
-          typeof rawMatch === 'object' && rawMatch !== null
-            ? Object.keys(rawMatch)
+      if (view === null) {
+        // fetchSignedInUser swallows the failure reason into a warn log
+        // by design (invariant 97c never rejects its promise), so on
+        // failure this re-fetches raw, diagnostic-only, to fail with the
+        // field keys actually found rather than a bare assertion -
+        // docs/reference.md:13 records them as unconfirmed.
+        const result = await client.request({
+          method: 'GET',
+          resourcePath: '/users.json',
+          parse: (payload) => payload,
+        });
+        const rawEntries =
+          result.outcome === 'success' && Array.isArray(result.value)
+            ? result.value
             : [];
+        const rawMatch = rawEntries.find(
+          (entry) =>
+            typeof entry === 'object' &&
+            entry !== null &&
+            String((entry as Record<string, unknown>).id) === resolvedUserId,
+        );
+        if (rawMatch === undefined) {
+          throw new Error(
+            `no record in /users.json has an id field matching "${resolvedUserId}"`,
+          );
+        }
+        const keys = Object.keys(rawMatch);
         throw new Error(
           `the /users.json record with id "${resolvedUserId}" did not match signedInUserSchema (expected id plus string firstName/lastName fields); the fields it actually has are: [${keys.join(', ')}]`,
         );
       }
 
-      const displayName = `${parsed.data.firstName} ${parsed.data.lastName}`;
-      expect(displayName.trim().length).toBeGreaterThan(0);
+      expect(view.displayName.trim().length).toBeGreaterThan(0);
     });
   });
 });

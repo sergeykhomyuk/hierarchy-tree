@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T12:34:50Z",
+  "updated": "2026-08-15T13:00:37Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -261,10 +261,11 @@
       "user_signoff": "2026-08-14T20:10:22Z"
     },
     "G2": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "steps_total": 32,
-      "steps_done": 32
+      "steps_done": 32,
+      "note": "All 4 milestones verified and reviewed. M1: pure domain layer, 100% coverage, 3 findings accepted. M2: login card five states, 4 findings fixed. M3: guard/router/authenticated shell, 2 findings fixed. M4: header contents and sign-out, 4 findings fixed (including a real production defect the live smoke suite discovered - the collection-fetch pivot documented in ARCHITECTURE.md's decision log). 32 steps done across all milestones."
     },
     "G3": {
       "status": "pending",
@@ -328,6 +329,30 @@
           "blocking": false,
           "disposition": "fixed: extended the pageshow-restore test to submit again afterward and assert the real outcome (noMatch) replaces the untouched mask, proving the override actually lifts.",
           "round": "milestone-3"
+        },
+        "Claude-10": {
+          "desc": "fetchSignedInUser's String(candidate.id) === String(userId) match is only exercised by string ids in every gating test (unit, component, e2e); the numeric-id branch that motivated this milestone's whole collection-fetch fix is only covered by the non-gating live smoke suite, which also hand-rolls its own match instead of calling fetchSignedInUser directly (see Claude-12). A regression narrowing the comparison to a strict === would pass every gate and silently reproduce the original bug.",
+          "blocking": false,
+          "disposition": "fixed",
+          "round": "milestone-4"
+        },
+        "Claude-11": {
+          "desc": "accessibility.spec.ts's header axe checks (light+dark) only exercise the fully-resolved presentation via signIn(); the pending (role=status skeleton) and neutral-fallback (SignedInAvatarPlaceholder) presentations are never run through axe anywhere in the gating suite, though invariant 111 asks for every state of the header.",
+          "blocking": false,
+          "disposition": "fixed",
+          "round": "milestone-4"
+        },
+        "Claude-12": {
+          "desc": "live-smoke.test.ts's second test hand-rolls its own array .find() + signedInUserSchema.safeParse instead of calling the production fetchSignedInUser/parseSignedInUsers directly against the live client; it proves the schema matches the live payload's field names but not that the app's actual request/match code works against real data.",
+          "blocking": false,
+          "disposition": "fixed",
+          "round": "milestone-4"
+        },
+        "Claude-13": {
+          "desc": "userIdentifier.ts's charset-restriction comment still says a string id 'may reach a resource path via userResourcePath' - that module was deleted this milestone (no id is interpolated into a URL path anymore); the comment is stale and will mislead a future reader.",
+          "blocking": false,
+          "disposition": "fixed",
+          "round": "milestone-4"
         }
       }
     },
@@ -1082,7 +1107,25 @@
     "2026-08-15T12:34:47Z step 31: live smoke suite (invariant 97e) discovered that /users/<id>.json never resolves for a real user - /secrets.json resolves to each record's own internal id field, not the /users.json array's positional storage key, and there is no Firebase index on id. Fixed with user approval: fetchSignedInUser now fetches the whole /users.json collection via parseSignedInUsers (row-tolerant) and matches by id; userResourcePath.ts deleted. Documented in ARCHITECTURE.md's decision log (2026-08-15).",
     "2026-08-15T12:34:50Z step 31 -> red",
     "2026-08-15T12:34:50Z step 31 -> green",
-    "2026-08-15T12:34:50Z step 31 -> done"
+    "2026-08-15T12:34:50Z step 31 -> done",
+    "2026-08-15T12:36:05Z evidence recorded: evidence/milestones/m4-suite.txt (a593589620c8) - M4 boundary: npm run verify green end to end (typecheck, lint, format, coverage, build, verify:build, size)",
+    "2026-08-15T12:36:05Z evidence recorded: evidence/milestones/m4-e2e.txt (e69ff1db7ab9) - M4 boundary: npm run e2e green, 37/37 across chromium + development projects",
+    "2026-08-15T12:36:10Z milestone 4 boundary verified: npm run verify green end to end (typecheck, lint, format, coverage, build, verify:build, size); npm run e2e green 37/37 (chromium + development). Steps 29-31 all done. Live smoke suite (npm run smoke:live) 4/4 green against the real database, including invariant 97e's live proof. Evidence: evidence/milestones/m4-suite.txt, evidence/milestones/m4-e2e.txt, evidence/step31-live-smoke.txt.",
+    "2026-08-15T12:44:38Z G4 finding Claude-10 recorded [round: milestone-4]: fetchSignedInUser's String(candidate.id) === String(userId) match is only exercised by string ids in every gating test (unit, component, e2e); the numeric-id branch that motivated this milestone's whole collection-fetch fix is only covered by the non-gating live smoke suite, which also hand-rolls its own match instead of calling fetchSignedInUser directly (see Claude-12). A regression narrowing the comparison to a strict === would pass every gate and silently reproduce the original bug.",
+    "2026-08-15T12:44:38Z G4 finding Claude-11 recorded [round: milestone-4]: accessibility.spec.ts's header axe checks (light+dark) only exercise the fully-resolved presentation via signIn(); the pending (role=status skeleton) and neutral-fallback (SignedInAvatarPlaceholder) presentations are never run through axe anywhere in the gating suite, though invariant 111 asks for every state of the header.",
+    "2026-08-15T12:44:39Z G4 finding Claude-12 recorded [round: milestone-4]: live-smoke.test.ts's second test hand-rolls its own array .find() + signedInUserSchema.safeParse instead of calling the production fetchSignedInUser/parseSignedInUsers directly against the live client; it proves the schema matches the live payload's field names but not that the app's actual request/match code works against real data.",
+    "2026-08-15T12:44:39Z G4 finding Claude-13 recorded [round: milestone-4]: userIdentifier.ts's charset-restriction comment still says a string id 'may reach a resource path via userResourcePath' - that module was deleted this milestone (no id is interpolated into a URL path anymore); the comment is stale and will mislead a future reader.",
+    "2026-08-15T12:56:43Z G4 finding Claude-10 dispositioned: fixed",
+    "2026-08-15T12:56:43Z G4 finding Claude-11 dispositioned: fixed",
+    "2026-08-15T12:56:43Z G4 finding Claude-12 dispositioned: fixed",
+    "2026-08-15T12:56:43Z G4 finding Claude-13 dispositioned: fixed",
+    "2026-08-15T12:58:24Z evidence recorded: evidence/milestones/m4-suite-post-review.txt (b183e6b14bf2) - M4 boundary (post-review-fixes): npm run verify green end to end",
+    "2026-08-15T12:58:24Z evidence recorded: evidence/milestones/m4-e2e-post-review.txt (4c3fbd17e83c) - M4 boundary (post-review-fixes): npm run e2e green, 41/41 across chromium + development",
+    "2026-08-15T12:58:24Z evidence recorded: evidence/step31-live-smoke-post-review.txt (2d525505278b) - M4 boundary (post-Claude-12 fix): live smoke 4/4 green, second test now calls production fetchSignedInUser directly",
+    "2026-08-15T12:59:04Z process note: evidence/milestones/m4-suite.txt and m4-e2e.txt were registered, then accidentally overwritten in place while capturing post-review-fix results (should have used a new filename from the start, as evidence/step31-live-smoke.txt correctly was). Original byte content is unrecoverable (never committed to git). Deleted the now-empty stale files rather than leave 0-byte garbage; loop evidence check will WARN 'missing' for these two paths going forward. The superseding, correctly-registered evidence is evidence/milestones/m4-suite-post-review.txt and m4-e2e-post-review.txt, both npm run verify / npm run e2e green, and these are what PROOF.md cites for M4.",
+    "2026-08-15T12:59:46Z milestone 4 reviewed: Fresh-context Claude review (evidence/reviews/ - see below): 4 findings, 0 blocking. Claude-10 (numeric-id matching branch untested in the gating suite - the exact case that caused the original production bug), Claude-11 (axe never checked the header's pending/fallback presentations), Claude-12 (live smoke's display-name proof reimplemented match/parse logic instead of calling the real fetchSignedInUser), and Claude-13 (stale comment referencing the deleted userResourcePath) - all fixed. New coverage: a mismatched-type id-matching unit test (verified via a differential check that narrowing to strict === makes only that test fail), 4 new axe checks for the header's pending/fallback states in both themes (accessibility.spec.ts, all zero violations), and live-smoke.test.ts's second case now calls fetchSignedInUser directly. npm run verify and npm run e2e both green after the fixes (41/41 e2e, up from 37); live smoke 4/4 green against the real database. Evidence: evidence/milestones/m4-suite-post-review.txt, evidence/milestones/m4-e2e-post-review.txt, evidence/step31-live-smoke-post-review.txt.",
+    "2026-08-15T13:00:27Z evidence recorded: evidence/reviews/m4-claude-review.md (10d42d7d2ffd) - M4 fresh-context Claude review record: 4 findings, 0 blocking, all fixed",
+    "2026-08-15T13:00:37Z G2 -> passed (All 4 milestones verified and reviewed. M1: pure domain layer, 100% coverage, 3 findings accepted. M2: login card five states, 4 findings fixed. M3: guard/router/authenticated shell, 2 findings fixed. M4: header contents and sign-out, 4 findings fixed (including a real production defect the live smoke suite discovered - the collection-fetch pivot documented in ARCHITECTURE.md's decision log). 32 steps done across all milestones.)"
   ],
   "milestones": [
     {
@@ -1106,8 +1149,8 @@
     {
       "id": 4,
       "title": "M4 - The header's contents and signing out",
-      "verified": null,
-      "reviewed": null
+      "verified": "2026-08-15T12:36:10Z npm run verify green end to end (typecheck, lint, format, coverage, build, verify:build, size); npm run e2e green 37/37 (chromium + development). Steps 29-31 all done. Live smoke suite (npm run smoke:live) 4/4 green against the real database, including invariant 97e's live proof. Evidence: evidence/milestones/m4-suite.txt, evidence/milestones/m4-e2e.txt, evidence/step31-live-smoke.txt.",
+      "reviewed": "2026-08-15T12:59:46Z Fresh-context Claude review (evidence/reviews/ - see below): 4 findings, 0 blocking. Claude-10 (numeric-id matching branch untested in the gating suite - the exact case that caused the original production bug), Claude-11 (axe never checked the header's pending/fallback presentations), Claude-12 (live smoke's display-name proof reimplemented match/parse logic instead of calling the real fetchSignedInUser), and Claude-13 (stale comment referencing the deleted userResourcePath) - all fixed. New coverage: a mismatched-type id-matching unit test (verified via a differential check that narrowing to strict === makes only that test fail), 4 new axe checks for the header's pending/fallback states in both themes (accessibility.spec.ts, all zero violations), and live-smoke.test.ts's second case now calls fetchSignedInUser directly. npm run verify and npm run e2e both green after the fixes (41/41 e2e, up from 37); live smoke 4/4 green against the real database. Evidence: evidence/milestones/m4-suite-post-review.txt, evidence/milestones/m4-e2e-post-review.txt, evidence/step31-live-smoke-post-review.txt."
     }
   ],
   "evidence_hashes": {
@@ -1465,6 +1508,36 @@
       "sha": "d445055721f2",
       "recorded": "2026-08-15T12:34:42Z",
       "note": "genuine red: fetchSignedInUser collection-based tests against old single-record implementation"
+    },
+    "evidence/milestones/m4-suite.txt": {
+      "sha": "a593589620c8",
+      "recorded": "2026-08-15T12:36:05Z",
+      "note": "M4 boundary: npm run verify green end to end (typecheck, lint, format, coverage, build, verify:build, size)"
+    },
+    "evidence/milestones/m4-e2e.txt": {
+      "sha": "e69ff1db7ab9",
+      "recorded": "2026-08-15T12:36:05Z",
+      "note": "M4 boundary: npm run e2e green, 37/37 across chromium + development projects"
+    },
+    "evidence/milestones/m4-suite-post-review.txt": {
+      "sha": "b183e6b14bf2",
+      "recorded": "2026-08-15T12:58:24Z",
+      "note": "M4 boundary (post-review-fixes): npm run verify green end to end"
+    },
+    "evidence/milestones/m4-e2e-post-review.txt": {
+      "sha": "4c3fbd17e83c",
+      "recorded": "2026-08-15T12:58:24Z",
+      "note": "M4 boundary (post-review-fixes): npm run e2e green, 41/41 across chromium + development"
+    },
+    "evidence/step31-live-smoke-post-review.txt": {
+      "sha": "2d525505278b",
+      "recorded": "2026-08-15T12:58:24Z",
+      "note": "M4 boundary (post-Claude-12 fix): live smoke 4/4 green, second test now calls production fetchSignedInUser directly"
+    },
+    "evidence/reviews/m4-claude-review.md": {
+      "sha": "10d42d7d2ffd",
+      "recorded": "2026-08-15T13:00:27Z",
+      "note": "M4 fresh-context Claude review record: 4 findings, 0 blocking, all fixed"
     }
   },
   "test_file_hashes": {

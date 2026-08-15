@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { createAxeBuilder } from './support/axeBuilder';
+import {
+  installDeferredUserMock,
+  submitSignInForm,
+} from './support/deferredUserMock';
 import { installRouteMocks } from './support/routeMocks';
 import { installSignInApiMock, signIn } from './support/signIn';
 
@@ -48,6 +52,43 @@ test.describe('accessibility', () => {
       await expect(
         page.getByRole('button', { name: 'header.logout' }),
       ).toBeVisible();
+
+      const results = await createAxeBuilder(page).analyze();
+      expect(results.violations).toEqual([]);
+    });
+  }
+
+  // The header's other two presentations (invariant 99) - the pending
+  // aria-busy skeleton and the neutral signedInFallback shown when a
+  // name never arrives - are not axe-checked by the resolved-only test
+  // above and get their own coverage here, in both themes.
+  for (const colorScheme of ['light', 'dark'] as const) {
+    test(`/ has zero axe violations while the header's name is still resolving, in ${colorScheme}`, async ({
+      page,
+      baseURL,
+    }) => {
+      await installRouteMocks(page, baseURL ?? '');
+      await page.emulateMedia({ colorScheme });
+      await installDeferredUserMock(page);
+
+      await submitSignInForm(page);
+      await expect(page.getByLabel('header.nameLoading')).toBeVisible();
+
+      const results = await createAxeBuilder(page).analyze();
+      expect(results.violations).toEqual([]);
+    });
+
+    test(`/ has zero axe violations when the header's name cannot resolve, in ${colorScheme}`, async ({
+      page,
+      baseURL,
+    }) => {
+      await installRouteMocks(page, baseURL ?? '');
+      await page.emulateMedia({ colorScheme });
+      const getResolveUser = await installDeferredUserMock(page);
+
+      await submitSignInForm(page);
+      getResolveUser()({ status: 200, body: [] });
+      await expect(page.getByText('header.signedInFallback')).toBeVisible();
 
       const results = await createAxeBuilder(page).analyze();
       expect(results.violations).toEqual([]);

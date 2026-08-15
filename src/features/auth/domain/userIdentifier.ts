@@ -3,9 +3,13 @@ export type UserIdentifier = (string | number) & {
 };
 
 // Shared by lookupResultSchema and sessionRecordSchema so the id charset
-// has one source of truth. A string may reach a resource path via
-// userResourcePath and a raw record via storage, and either can carry a
-// traversal or a URL-structural character (invariant 18a).
+// has one source of truth. A string reaches storage (the session record)
+// and is compared against the users collection's own id field
+// (fetchSignedInUser.ts) - no id is interpolated into a URL path since
+// ARCHITECTURE.md's 2026-08-15 decision log entry (there is no per-id
+// path against the real database), but a stored value or a comparison
+// key can still carry a traversal or a URL-structural character worth
+// rejecting at the boundary (invariant 18a).
 export const USER_IDENTIFIER_PATTERN = /^[A-Za-z0-9_-]+$/;
 
 export function userIdentifier(value: string | number): UserIdentifier {

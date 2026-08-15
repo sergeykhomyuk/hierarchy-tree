@@ -1,8 +1,10 @@
-import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import { deriveSecret } from '../src/features/auth/domain/deriveSecret';
-import type { ApiMockResponse } from './support/apiMocks';
 import { installApiMocks } from './support/apiMocks';
+import {
+  installDeferredUserMock,
+  submitSignInForm,
+} from './support/deferredUserMock';
 import {
   installMutationObserver,
   readMutationLog,
@@ -17,40 +19,6 @@ import {
 } from './support/signIn';
 
 const MATCHING_SECRET = deriveSecret(SIGN_IN_EMAIL, SIGN_IN_PASSWORD);
-
-// Holds the user request open until the test chooses to settle it, so a
-// pending name can be observed before deciding how it resolves - the
-// login card's own `mode = 'hang'` pattern (login.spec.ts), applied to
-// the header's fetch instead of the sign-in request.
-async function installDeferredUserMock(
-  page: Page,
-): Promise<() => (response: ApiMockResponse) => void> {
-  let resolveUser: ((response: ApiMockResponse) => void) | undefined;
-  await installApiMocks(page, {
-    secret: (secret) => ({
-      status: 200,
-      body: secret === MATCHING_SECRET ? SIGN_IN_USER_ID : null,
-    }),
-    user: () =>
-      new Promise<ApiMockResponse>((resolve) => {
-        resolveUser = resolve;
-      }),
-  });
-  return () => {
-    if (resolveUser === undefined) {
-      throw new Error('the user request has not been made yet');
-    }
-    return resolveUser;
-  };
-}
-
-async function submitSignInForm(page: Page): Promise<void> {
-  await page.goto('/login');
-  await page.locator('input[name="email"]').fill(SIGN_IN_EMAIL);
-  await page.locator('input[name="password"]').fill(SIGN_IN_PASSWORD);
-  await page.locator('form button[type="submit"]').click();
-  await page.waitForURL((url) => !url.pathname.includes('login'));
-}
 
 test.describe('the signed-in header', () => {
   test('shows the skeleton, then the resolved name and initials', async ({

@@ -109,6 +109,39 @@ describe('fetchSignedInUser', () => {
     expect(observability.logger.warn).not.toHaveBeenCalled();
   });
 
+  it('matches a numeric record id against a resolved id of the same value but a different JS type', async () => {
+    // The live database serves id as a JSON number (ARCHITECTURE.md's
+    // decision log, 2026-08-15), and lookupResultSchema accepts either a
+    // string or an int for what the secrets endpoint resolves - so the
+    // two can legitimately disagree on JS type for the same logical id.
+    // A strict === here (candidate.id === userId) would silently fail
+    // this exact case while every OTHER test in this file, which keeps
+    // both sides string-typed, would still pass - the real risk
+    // fetchSignedInUser's String() coercion exists to close, and the
+    // one this milestone's whole collection-fetch fix was about.
+    const observability = createSpyObservability();
+    const transport: Transport = () =>
+      Promise.resolve(
+        new Response(
+          JSON.stringify([
+            { id: 4260010878, firstName: 'Grace', lastName: 'Hopper' },
+            { id: 2217873750, firstName: 'Ada', lastName: 'Lovelace' },
+          ]),
+          { status: 200 },
+        ),
+      );
+    const client = createTestClient(transport, observability);
+
+    const view = await fetchSignedInUser(
+      client,
+      userIdentifier('2217873750'),
+      observability,
+    );
+
+    expect(view).toEqual({ displayName: 'Ada Lovelace' });
+    expect(observability.logger.warn).not.toHaveBeenCalled();
+  });
+
   it('resolves to null and warns when no record in the collection matches the id', async () => {
     const observability = createSpyObservability();
     const transport: Transport = () =>
