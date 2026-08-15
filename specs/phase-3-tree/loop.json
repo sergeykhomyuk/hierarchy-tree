@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "validate",
-  "phase_entered": "2026-08-15T09:16:59Z",
+  "phase": "plan",
+  "phase_entered": "2026-08-15T12:06:14Z",
   "created": "2026-08-15",
-  "updated": "2026-08-15T11:58:24Z",
+  "updated": "2026-08-15T12:12:46Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -262,7 +262,9 @@
     },
     "G2": {
       "status": "pending",
-      "attempts": 0
+      "attempts": 0,
+      "steps_total": 43,
+      "steps_done": 0
     },
     "G3": {
       "status": "pending",
@@ -279,7 +281,540 @@
     }
   },
   "retro": null,
-  "plan_steps": [],
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "Retire the phase-1 anticipation tripwires: drop buildForest/flattenVisible from WHOLE_SCOPE_BANNED_NAMES and the role=tree attribute check from assert-domain-vocabulary.mjs. Every other banned word, the platform/shared export bans and the /secrets literal check stay. Lands first because nothing after it can go green. Invariants 194.",
+      "tests": [
+        "the retired phase-3 tripwires no longer fire and every other banned word still does"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 2,
+      "desc": "Branded PersonIdentifier and EmailAddress with their parsers, plus the person, treeNode and forestAnomaly types and the fixture set. Invariants 52 (mechanism; proven at M2 boundary), 24.",
+      "tests": [
+        "parsePersonIdentifier accepts a safe positive integer and rejects everything else",
+        "parseEmailAddress brands a non-empty string and rejects a non-string"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 3,
+      "desc": "buildForest shape: ordered roots, ordered children, manager status, direct report counts, and the three summary counts computed after duplicate removal. Invariants 6, 8, 9, 17, 18, 19, 20, 21, 22, 23.",
+      "tests": [
+        "a person with no managerId is a root and a person whose managerId names another person is that person's child",
+        "roots and children appear in payload order regardless of name, email, id value or subtree size",
+        "a manager is someone with at least one direct report and the report count is direct children only",
+        "an empty list produces an empty forest and a single person produces one childless root"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 4,
+      "desc": "buildForest anomaly handling: dangling manager references, self-references, cycles broken at the earliest ring member, and duplicate ids where the first valid occurrence wins. All returned as data, never logged from inside the domain. Invariants 7, 10, 11, 12, 13, 14, 15, 16.",
+      "tests": [
+        "a dangling manager reference makes a root and is counted, never dropped",
+        "a self-managing person is a root and does not appear as their own child",
+        "a ring is broken at its earliest member and every other manager edge survives",
+        "building the same list twice produces an identical forest",
+        "a ring of two, a ring of three and a ring of everyone all terminate",
+        "the first valid occurrence of a duplicate id wins and children attach to the survivor"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 5,
+      "desc": "buildForest purity and linearity: no mutation of the array or the person objects handed in, no clock, randomness, network, storage, React or logging, and a bounded per-person visit count measured by instrumented operations across sizes rather than by timing. Invariants 24, 25, 26.",
+      "tests": [
+        "buildForest mutates neither the array nor the person objects handed to it",
+        "buildForest visits each person a bounded number of times as the input grows"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 6,
+      "desc": "flattenVisible: an iterative pre-order walk over an explicit stack producing the VisibleRow list - person, depth, hasChildren, isExpanded, setSize, posInSet and the direct report count - as the single source of what renders, what the ARIA attributes say and what the keyboard moves through. Invariants 27 to 40.",
+      "tests": [
+        "rows come out in pre-order and a collapsed node's whole subtree is absent at every depth",
+        "setSize and posInSet describe the row's siblings under the same parent",
+        "isExpanded is false for every childless row whatever the expanded set contains",
+        "an expanded id naming no node or naming a childless node changes nothing",
+        "flattening an empty forest returns an empty row list",
+        "expanding a node and collapsing it again reproduces the original row list exactly"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 7,
+      "desc": "defaultExpansion: every root plus every root's direct children that have children of their own, and nothing deeper, computed from the forest rather than hardcoded. Invariants 87, 88 (pure half; rendered at M3).",
+      "tests": [
+        "the default expansion is every root plus every root's child that has children",
+        "the default expansion rule holds for three roots and for thirty"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 8,
+      "desc": "parseExpansion and formatExpansion, total by construction: split on commas, trim, skip empty segments, skip anything that is not a safe positive integer, skip ids naming no manager, dedupe, and return the surviving set plus a skipped count. Absent and present-but-empty are distinct inputs with distinct results. Invariants 118, 119, 120, 121.",
+      "tests": [
+        "an absent parameter and a present but empty parameter give different results",
+        "a bad segment never affects a good one",
+        "signs, decimals, exponents and unsafe integers are skipped",
+        "an id naming no person or naming a non-manager is skipped",
+        "duplicates are honoured once and the skipped segments are counted"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 1
+    },
+    {
+      "id": 9,
+      "desc": "personSchema and usersResourcePath: id a safe positive integer, firstName, lastName and email required strings, managerId and photo optional, and everything else - password included - stripped by Zod. Failures report the failing field names and the element position, never the values. Invariants 47, 50, 51, 52, 53.",
+      "tests": [
+        "the parsed person carries no password field",
+        "each required field missing in turn drops the row",
+        "each optional field mistyped in turn drops the row",
+        "an id that is negative, fractional or beyond the safe integer range is rejected",
+        "a validation failure reports the failing field names and the element position and no values"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 10,
+      "desc": "parsePeople envelope normalization ahead of validation: a dense array, an array whose null holes are removed before validation rather than counted as malformed rows, an object read in its own key order, null as an empty list, and every scalar as invalidEnvelope. Invariants 42, 43, 44, 45 (the kind), 46.",
+      "tests": [
+        "an array carrying a null hole produces no dropped row",
+        "an object-keyed envelope is read in its own key order",
+        "null, an empty array, an array of only holes and an empty object all mean no users",
+        "a string, a number and a boolean each produce invalidEnvelope",
+        "which envelope arrived never changes the surviving records or their order"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 11,
+      "desc": "Display derivation on the parsed person: whitespace around a name trimmed for display and neither name re-cased, the email kept exactly as stored, and a person whose names are both empty after trimming falling back to their email. Invariants 54, 55, 56.",
+      "tests": [
+        "a name is trimmed for display and never re-cased",
+        "the email is carried exactly as stored",
+        "a person whose names are both empty after trimming falls back to their email"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 12,
+      "desc": "The fetchPeople repository: the total HierarchyResult union of data, empty, failure and cancelled; allRowsInvalid as a failure rather than an empty; cancelled as its own kind reachable with a pre-aborted signal; one users request per navigation. It never throws and never rejects. Invariants 41, 48, 49, 57, 170, 174.",
+      "tests": [
+        "one bad record is dropped and counted while the rest still builds a forest",
+        "a payload whose every element fails validation returns allRowsInvalid rather than empty",
+        "a pre-aborted signal returns cancelled and not a failure",
+        "fetchPeople never throws and never rejects on any outcome"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 13,
+      "desc": "The telemetry the repository itself emits: one hierarchy-viewed event per completed load carrying the people, manager and root counts and the number of rows dropped; one drop report per load; one report per anomaly kind; one error event with the failure kind and the correlation id; and none at all for a cancelled request. No name, email or id on any of them. Invariants 160, 161 (the emission half), 162, 163, 164, 165 (the load half).",
+      "tests": [
+        "a completed load emits exactly one hierarchy-viewed event carrying the counts and the drop count",
+        "dropped rows are reported once per load with the count and the failing field names",
+        "each anomaly kind is reported with its count",
+        "a failed load emits one error event with the failure kind and the correlation id",
+        "a cancelled request emits no event"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 14,
+      "desc": "AnalyticsPayloads becomes an interface a feature augments by declaration merging, targeting the module that declares it rather than the observability barrel, so the hierarchy event names and payload types live in features/hierarchy and platform stays ignorant of what a manager is. AnalyticsEventName as keyof AnalyticsPayloads survives unaltered. Invariants 168.",
+      "tests": [
+        "the hierarchy events are visible to the observability facade through declaration merging",
+        "no hierarchy vocabulary appears in an exported platform identifier"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 15,
+      "desc": "The app-layer loader: createHierarchyLoader returning an object holding a Promise of HierarchyResult without awaiting it, reading the correlation id from the interaction tracker, and forwarding the loader request signal into HttpRequest.signal. createAuthenticatedLoader returns userId alongside signedInUser, and createRuntime exposes the clock it already builds. Invariants 41, 170, 173, plus the app-layer half of 190.",
+      "tests": [
+        "the hierarchy loader returns an object holding a promise and does not await it",
+        "the loader forwards the request signal into the users request",
+        "the authenticated loader returns the signed-in userId alongside signedInUser",
+        "the runtime exposes the clock it builds"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 16,
+      "desc": "The shouldRevalidate predicate on BOTH the authenticated route and the index route: compute the set of search parameters whose values differ between the current and next URL, return false only when that set is non-empty and every member of it is expanded, otherwise return defaultShouldRevalidate. The non-empty clause is load-bearing - without it an identical-URL revalidation is vacuously true and Retry, Refresh and phase 2 bfcache guard all silently no-op. Plus the interaction tracker learning to ignore a state change where navigation.state is unchanged and revalidation changed, and nothing wider. Invariants 124 (mechanism), 161 and 165 (the no-route-viewed halves).",
+      "tests": [
+        "an expanded-only difference suppresses revalidation on both routes",
+        "an identical-URL revalidation returns defaultShouldRevalidate rather than false",
+        "a difference in any other search parameter falls back to defaultShouldRevalidate",
+        "a revalidation-only state change opens no interaction and settles none"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 2
+    },
+    {
+      "id": 17,
+      "desc": "The UI kit widens generically: ErrorState gains an optional secondaryAction, an optional glyph and an optional framed defaulting to true so the page can compose it inside its own Card without nesting two frames; EmptyState gains a glyph and the same framed; Avatar gains an onImageError callback fired once per failed source. No user, session, tree node or hierarchy concept enters a kit signature. Invariants 190, 191.",
+      "tests": [
+        "ErrorState renders a second action and a glyph and can render unframed",
+        "EmptyState renders a glyph and can render unframed",
+        "Avatar calls onImageError once when its source fails"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 18,
+      "desc": "The content security policy img-src widens to self, data: and https: and no other directive changes, so secure third-party photo hosts load while http:// URLs stay blocked - which is what keeps the mixed-content fallback a real path. Photo requests carry no referrer and photos are loaded as images and nothing else. Invariants 99, 171, 172.",
+      "tests": [
+        "the content security policy permits https image origins and changes no other directive",
+        "an intercepted image request carries no Referer header"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 19,
+      "desc": "HierarchySkeleton and the loading state: the card title with a loading indicator over skeleton rows shaped like tree rows at varying indents, decorative to assistive technology with no rows, no tree role, no interactive element and no text in the placeholder shapes, announced busy once, no summary line, and no minimum display time. Invariants 58, 59, 60, 61, 62, 63, 65.",
+      "tests": [
+        "the skeleton exposes no row, no tree role and no interactive element",
+        "the loading state announces itself busy once and stops when data arrives",
+        "a response faster than the skeleton still renders the data state"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 20,
+      "desc": "The error state inside the card: the alert glyph, the heading, the body explaining the request failed and the session is still valid, the monospace chip carrying the correlation id of the failed request, Retry and Back to login, exposed as the page live status, never reaching an error boundary, blaming nobody, and leaving the expanded parameter untouched. Invariants 45 and 49 (rendered), 66, 67, 68, 69, 73, 74, 75, 76, 77.",
+      "tests": [
+        "every failure kind renders the error state inside the card with the header and nav rail unchanged",
+        "the chip carries the correlation id of the failed request",
+        "Back to login navigates without signing the user out",
+        "the error state never reaches the route error boundary",
+        "failing to load leaves the expanded parameter untouched"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 21,
+      "desc": "The empty state: the outline glyph, the heading, the body explaining the tree builds itself from the manager id on each record, and exactly one action - Refresh. Mockup 1g second button is deliberately not built. No tree, no summary line, no rows and no tree role. Invariants 44 (rendered), 78, 79, 80.",
+      "tests": [
+        "an empty collection in each of its three envelope shapes renders the empty state",
+        "the empty state exposes no tree role, no summary line and exactly one action"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 22,
+      "desc": "HomeRoute stops being a bare re-export and becomes the module that assembles the feature dependencies (observability, clock), the userId, and the Retry and Refresh callbacks - each wrapping beginInteraction, revalidate and endInteraction, with endInteraction on unmount too so a navigation started during a slow retry mints its own correlation id instead of inheriting the retry one. useRevalidator joins the feature layer no-restricted-imports list so the feature cannot bypass the wrapper. Invariants 70, 71, 72, 79, 193.",
+      "tests": [
+        "retry mints a new correlation id and emits no route-viewed event",
+        "retry after a failure that then succeeds renders the data state with the URL expansion intact",
+        "retry that fails again shows a different correlation id and never disables the button",
+        "the feature layer may not import useRevalidator"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 23,
+      "desc": "HierarchySummary: the All users title on one side and the people, manager and root counts on the other, all three computed from the forest after validation drops and duplicate drops, describing the whole forest rather than the visible rows. Invariants 81, 82, 83.",
+      "tests": [
+        "a payload of 33 records containing one duplicate id reads 32 people",
+        "collapsing a branch never changes the counts"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 24,
+      "desc": "HierarchyTree and TreeRow: every visible row from the row model in its order and nothing else, indentation by depth with a vertical rail marking each nested group, the row anatomy (control slot, badge, name, email, report count), an explicit accessible name rather than one computed from the row contents, the badge showing the photo or the kit initials, the you marker on exactly one row and inside its accessible name, and memoization over primitives with a callback made stable over a ref. Invariants 84, 85, 86, 89, 90, 91, 93, 94, 95, 96, 100, 101, 102, 103.",
+      "tests": [
+        "toggling a branch under one root leaves the render count of a row under another root unchanged",
+        "the row accessible name is the person name plus the you marker and not the email, the count or the toggle glyph",
+        "a string signed-in identifier marks no row and changes nothing else",
+        "the photo is decorative in the accessibility tree",
+        "a manager row shows its direct report count and a non-manager row shows none",
+        "the hidden wording counts direct reports so the number never changes with expansion"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 25,
+      "desc": "The photo failure fallback: any failure - 404, mixed content, CSP, offline - falls back to the initials badge silently for the user and is reported once per person per load. The dedupe set is keyed by person id, held by the page rather than by a row, and resets when a new payload resolves, so a retry that reloads the data reports a still-broken photo again. The report never carries the photo URL. Invariants 97, 166.",
+      "tests": [
+        "collapsing and re-expanding a branch three times produces one photo-failure report for that person",
+        "a second resolved payload reports the same still-broken photo again",
+        "the photo-failure report carries no photo URL"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 26,
+      "desc": "TreeToggle and the mouse toggle path: the control only on a manager row showing plus when collapsed and minus when expanded, the inert glyph in the same slot elsewhere, tabIndex minus one so the tree stays one tab stop, clicking elsewhere on the row toggling nothing and selecting nothing, a whole subtree hidden in one step, descendant expansion restored on re-expand, and the change immediate with no request, no spinner and no forest rebuild. Invariants 105, 106, 107, 108, 109, 110, 111, 112, and the mouse path of 114 and 115.",
+      "tests": [
+        "the inert glyph on a non-manager row is not focusable, not clickable and hidden from assistive technology",
+        "the toggle control is not a tab stop of its own",
+        "clicking a row outside the control toggles nothing and selects nothing",
+        "collapsing a parent and re-expanding it restores exactly the expansion its descendants had",
+        "a sequence of toggles intercepts no request and calls the forest builder once"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 27,
+      "desc": "useExpansion over useSearchParams: reading through parseExpansion, writing through formatExpansion, pushing a history entry per toggle so Back undoes the last one, preserving every other search parameter untouched, and writing nothing to storage. The default expansion renders on first arrival with no expanded in the URL, and a URL that carries one wins over it. Invariants 87 and 88 (rendered), 116, 117, 122, 123, 124 (rendered), 125, 126, 127, 128, 129.",
+      "tests": [
+        "a URL carrying expanded renders exactly those branches open and ignores the default expansion",
+        "Back undoes the last toggle and Forward redoes it",
+        "Back past the first toggle returns to the default expansion",
+        "a history entry that changes the expansion fetches nothing",
+        "a toggle preserves every other search parameter",
+        "expansion writes nothing to local storage, session storage or a cookie"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 28,
+      "desc": "NavigationRail in src/app/layout, rendered by AuthenticatedLayout so it appears on every authenticated page rather than only this one, holding no link, no button and no focusable element and hidden from assistive technology entirely. Invariants 92.",
+      "tests": [
+        "the nav rail holds no focusable element and is hidden from assistive technology"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 29,
+      "desc": "The hierarchy catalogue: every user-visible string in this phase, all four states, the summary line, the report counts, the tree accessible name, each row accessible name and every live-region message. Counts pluralize through the catalogue plural rules rather than an equality branch, numbers format through Intl, the summary composes from one placeholder string rather than joined fragments, the layout uses logical properties throughout including indentation, and the catalogue loads with the route rather than the app entry. Invariants 153, 154, 155, 156, 157, 158, 159.",
+      "tests": [
+        "no user-visible string in the hierarchy feature is a literal",
+        "the report count pluralizes through the catalogue rather than an equality branch",
+        "the summary line composes from one catalogue string with placeholders",
+        "the hierarchy catalogue loads with the route and not with the app entry"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 30,
+      "desc": "Mockup fidelity and the three layout assertions jsdom cannot make, written in Playwright instead where rects are real: the four states against mockups 1e, 1f, 1g and 1h in structure, hierarchy, spacing rhythm and token usage; both themes at the project contrast floor including row hover, indent rail, toggle border and report-count text; the header, nav rail and card frame bounding boxes identical before and after the data resolves; the scroll position held across a toggle; and the name, email and count on one line at 320, 768 and 1280 px at the deepest indent the live data produces. Screenshots per state. Invariants 64, 104, 113, 179, 180, 181, 182.",
+      "tests": [
+        "the header, nav rail and card frame have identical bounding boxes before and after the data resolves",
+        "toggling a branch does not move the scroll position of the rows above it",
+        "the name, email and count stay on one line at 320, 768 and 1280 px"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 3
+    },
+    {
+      "id": 31,
+      "desc": "Roving tabindex: the tree is a single tab stop, the first Tab into a freshly loaded tree lands on the first visible row, exactly one row is tabbable at a time, and returning with Tab restores the row that last had focus - falling back to the first visible row when that row is no longer in the list. The toggle control assertion from M3 is re-asserted here as part of the tab sequence. Invariants 107, 130, 131, 132.",
+      "tests": [
+        "Tab enters the tree once and the next Tab leaves it entirely",
+        "the first Tab into a freshly loaded tree lands on the first visible row",
+        "returning to the tree restores the row that last had focus and falls back to the first when it is gone"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 32,
+      "desc": "Arrow, Home and End movement: Down and Up to the next and previous visible row crossing branch boundaries and inert at the ends; Right expanding a collapsed manager in place and descending to the first child of an expanded one and inert on a non-manager; Left collapsing an expanded manager in place, ascending to the parent otherwise, and inert on an already-collapsed root; Home and End to the first and last visible rows. Invariants 133, 134, 135, 136.",
+      "tests": [
+        "Down and Up cross branch boundaries and do nothing at the ends of the list",
+        "Right expands a collapsed manager in place and moves to the first child of an expanded one",
+        "Left collapses an expanded manager in place and moves to the parent otherwise",
+        "Home and End move to the first and last visible rows"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 33,
+      "desc": "Enter and Space both toggle the focused manager branch and do nothing on a non-manager row, through the same implementation the mouse uses - so a toggle made with either updates the URL, the live region and telemetry identically. Moving focus is not a toggle: arrows, Home, End and type-ahead change focus only and write nothing to the URL and nothing to telemetry. Invariants 137, 142, and the keyboard path of 114 and 115.",
+      "tests": [
+        "Enter and Space both toggle the focused manager and do nothing on a non-manager",
+        "a keyboard toggle and a mouse toggle produce the same URL, the same announcement and the same event",
+        "moving focus writes nothing to the URL and nothing to telemetry"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 34,
+      "desc": "Type-ahead against the row accessible name - which for the nameless-person row is their email - matching case-insensitively and accent-insensitively through a locale-aware comparison, wrapping to the top, with the buffer reset driven by the injected Clock rather than setTimeout, which the lint config bans across src with no feature override. A repeated single character cycles; two or more distinct characters match as a prefix. Invariants 138, 139.",
+      "tests": [
+        "typing moves focus to the next row whose accessible name starts with what was typed and wraps to the top",
+        "type-ahead matching is case-insensitive and accent-insensitive",
+        "the type-ahead buffer resets after a second of no typing",
+        "a repeated single character cycles and two distinct characters match as a prefix"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 35,
+      "desc": "The asterisk key expands every sibling of the focused row under the same parent - not every row at the same depth elsewhere in the forest - leaving deeper levels as they were, as ONE action: one history entry, one live-region announcement naming how many branches opened, one telemetry event. An asterisk that would open nothing does nothing at all. Invariants 140, 141.",
+      "tests": [
+        "the asterisk key expands every sibling under the same parent and leaves deeper levels alone",
+        "an asterisk that opens eight branches pushes one history entry and emits one event",
+        "a second asterisk on the same row pushes no history entry and emits no event"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 36,
+      "desc": "Focus is never orphaned and the ARIA contract is complete: collapsing a branch containing the focused row moves focus to the row being collapsed; a Back or Forward that removes the focused row without any collapse moves focus to its nearest still-visible ancestor, or to the first visible row when there is none, so the tree never ends a history navigation with focus on document.body. Plus the visible focus ring in both themes at the contrast floor, level, position and set size from the row model, expanded exposed on managers only, the tree accessible name from the catalogue, polite announcements, prefers-reduced-motion respected, and an axe scan clean on all four states as components and as pages. Invariants 143, 144, 145, 146, 147, 148, 149, 150, 151, 152.",
+      "tests": [
+        "collapsing a branch containing the focused row moves focus to the row being collapsed",
+        "a history navigation that removes the focused row moves focus to its nearest visible ancestor",
+        "a non-manager row exposes no expanded state at all",
+        "every state has zero axe violations as a component and as a page"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 4
+    },
+    {
+      "id": 37,
+      "desc": "README.md rewritten to describe this project - what it does, how to run it, how to test it, how it is deployed, and where the specs live - with no sentence of the Vite template surviving, and the security gap stated plainly: a client-side lookup is not authentication and the database is public. Guarded by a documentation-agreement test in scripts/, following the repository deployment-configuration.test.ts precedent, because G2 requires every step to name a test. Invariants 183, 184.",
+      "tests": [
+        "README.md describes this project and carries no sentence of the Vite template",
+        "README.md states that a client-side lookup is not authentication and the database is public"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 38,
+      "desc": "The eight decision-log entries in ARCHITECTURE.md - the correlation-id chip, the one-button empty state, the img-src widening, flat treeitems over nested groups, the decorative avatar, the kit widening, the extensible analytics map and the retired tripwires - each with what was chosen, why, and what was rejected; plus ROADMAP.md status board, phase 3 checkboxes and progress log updated in the same change. Two of the eight depart from the mockups and six from ARCHITECTURE.md or a phase-1 decision. Invariant 185 states the count in three places and requires the three to agree, which is what makes it mechanically checkable. Invariants 185, 186.",
+      "tests": [
+        "the deviation count agrees in PRODUCT.md, the deviations section and the decision log",
+        "every phase 3 checkbox in ROADMAP.md is ticked and the status board agrees"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 39,
+      "desc": "npm run smoke:live gains an assertion that the real payload still parses into a forest with more than one root, so a shape change in the shared public database is caught by the one suite that talks to it. It stays outside verify and outside every default Vitest project.",
+      "tests": [
+        "the live users payload still parses into a forest with more than one root"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 40,
+      "desc": "Built-output and budget assertions: the login route chunk imports no hierarchy module and no hierarchy catalogue, the tree route chunk stays inside the existing per-route size budget, and the app entry budget is unchanged by this phase. No virtualization, windowing or pagination ships; the row model is the seam a windowing layer would consume. Invariants 175, 176, 177, 178.",
+      "tests": [
+        "the login route chunk imports no hierarchy module and no hierarchy catalogue",
+        "the hierarchy route chunk stays inside the per-route size budget"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 41,
+      "desc": "Phase 2 untouched, asserted rather than claimed: its derivation, lookup, session, guard, header, sign-out and all five login states re-run through phase 2 own suite and e2e flows unchanged; the route set still slash, slash-login and the not-found wildcard; the layer boundaries holding with the hierarchy feature importing no other feature and nothing from app; the shared-surface diff matching invariant 190 enumerated list exactly, with anything beyond it raised as a finding; and nothing anticipating a later phase. Invariants 187, 188, 189, 190, 191, 192, 193, 196.",
+      "tests": [
+        "the route set is slash, slash-login and the not-found wildcard and nothing else",
+        "the hierarchy feature imports no other feature and nothing from app",
+        "the hierarchy domain imports no React"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 42,
+      "desc": "The finished event set swept for privacy and the console swept for noise, both across M3 toggle event and M4 asterisk event rather than milestone by milestone: no telemetry event, log line or error report from this page carries a password, an email, a person name or a photo URL; the e2e suite asserts the buffer exact contents after a toggle sequence and after a retry rather than counting loosely; and the console stays free of errors and warnings on every flow this phase adds, failure paths included, in development and in the production build alike. Invariants 167, 169, 195.",
+      "tests": [
+        "the buffer holds one hierarchy-viewed event and one toggle event per toggle and no additional route-viewed event",
+        "no event in the buffer carries a password, an email, a person name or a photo URL",
+        "every hierarchy flow produces no console error or warning"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    },
+    {
+      "id": 43,
+      "desc": "Pipeline integrity re-checked against the finished chain - no check disabled, skipped or set to continue-on-error and no coverage threshold lowered, with the M1 tripwire retirement re-examined as the reviewed decision it is rather than an edit made to go green - and the one check no automated run makes: invariant 98 mixed-content block verified BY HAND against the deployed https origin, with the screenshot of that row rendering initials stored under evidence/ and cited from PROOF.md. Automating it would put a real account plaintext password into CI for a single assertion, which invariant 51 rules out; the user decision is recorded in invariant 98. npm run e2e:deployed still runs post-merge for the existing smoke coverage. Invariants 98, 194.",
+      "tests": [
+        "no pipeline check is disabled, skipped or set to continue-on-error",
+        "no coverage threshold is lower than the phase 1 pipeline set"
+      ],
+      "red_observed": null,
+      "status": "pending",
+      "milestone": 5
+    }
+  ],
   "log": [
     "2026-08-15T08:25:51Z init: type=feature size=L flags=[]",
     "2026-08-15T08:25:51Z triage: feature/L confirmed by user. Type=feature (new behavior, ROADMAP phase 3). Size=L on ambiguity+blast radius+verification surface: pure tree domain (multiple roots, missing managers, cycles), Zod boundary tolerance, four page states, full ARIA tree keyboard contract, expansion persistence across refresh/link/back-button, plus README and decision-log updates - cross-cutting across domain, feature slice, app shell and e2e. Flags: none (design=false, screens 1e-1h already exist in specs/hierarchy-tree-mockups.html and serve as the visual contract; security_review=false per user decision, though the Zod boundary and the never-fetch-the-user-table rule stay PRODUCT invariants). Concurrency: phase-2-login is active on the main worktree; user chose to record blocked-on and spec now. Running in a separate worktree at ../hierarchy-tree-phase-3 on branch loop/feature/phase-3-tree off main (6511fb1).",
@@ -389,9 +924,90 @@
     "2026-08-15T11:11:53Z evidence recorded: evidence/reviews/g1-round2-delta-check.md (63a4633579ad) - Focused delta check of the round-2 changes: 2 of 9 correct, 7 with problems, 3 blocking; all acted on in round 3",
     "2026-08-15T11:12:09Z evidence recorded: evidence/reviews/g1-round3-summary.md (33b90a50f33b) - Round-3 changes made in response to the delta check",
     "2026-08-15T11:58:05Z evidence recorded: evidence/reviews/g1-round3-delta-check.md (97b9711065e5) - Round-3 delta check: 1 of 4 correct, 3 blocking, first round with no new design defect; all fixed in round 4 bar the invariant-98 credential question, which went to the user",
-    "2026-08-15T11:58:24Z G1 -> passed (44 findings: 44 resolved, 0 rejected (27 Claude grill + 17 Codex, 23 blocking). Four review rounds: initial dual review; raiser confirmations (Claude 25/27 resolved + 10 new problems, Codex 14/17 + 11 new); a delta check of those fixes (2 of 9 correct, 3 blocking); and a final narrow check of the round-3 deltas (1 of 4 correct, 3 blocking, first round with no new design defect). Reviews: evidence/reviews/g1-grill-claude.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-confirmation-claude.md, evidence/reviews/g1-confirmation-codex.md, evidence/reviews/g1-round2-delta-check.md, evidence/reviews/g1-round3-delta-check.md, evidence/reviews/g1-confirmation-summary.md, evidence/reviews/g1-round3-summary.md. User sign-off: chose 'one narrow pass, then sign off' and settled the twelve product decisions the rounds surfaced, the last being invariant 98's manual verification. Round-4 edits after that instruction were consistency corrections the narrow pass named, plus that decision.)"
+    "2026-08-15T11:58:24Z G1 -> passed (44 findings: 44 resolved, 0 rejected (27 Claude grill + 17 Codex, 23 blocking). Four review rounds: initial dual review; raiser confirmations (Claude 25/27 resolved + 10 new problems, Codex 14/17 + 11 new); a delta check of those fixes (2 of 9 correct, 3 blocking); and a final narrow check of the round-3 deltas (1 of 4 correct, 3 blocking, first round with no new design defect). Reviews: evidence/reviews/g1-grill-claude.md, evidence/reviews/g1-codex-review.md, evidence/reviews/g1-confirmation-claude.md, evidence/reviews/g1-confirmation-codex.md, evidence/reviews/g1-round2-delta-check.md, evidence/reviews/g1-round3-delta-check.md, evidence/reviews/g1-confirmation-summary.md, evidence/reviews/g1-round3-summary.md. User sign-off: chose 'one narrow pass, then sign off' and settled the twelve product decisions the rounds surfaced, the last being invariant 98's manual verification. Round-4 edits after that instruction were consistency corrections the narrow pass named, plus that decision.)",
+    "2026-08-15T12:06:08Z plan: corrected two stale 'index route only' phrases in TECH.md (section heading at the shouldRevalidate bullet, and risk 2's mitigation) that survived round 3's fix - the normative paragraph in the same section already required the predicate on BOTH the authenticated and index routes, and invariant 161 depends on it. Documentation-only correction of a resolved G1 finding; no rule changed.",
+    "2026-08-15T12:06:14Z phase -> plan",
+    "2026-08-15T12:06:15Z milestone 1 added: The tree domain, and the tripwires that block it",
+    "2026-08-15T12:06:15Z milestone 2 added: The boundary, the repository and the loader",
+    "2026-08-15T12:06:15Z milestone 3 added: The page: four states, the tree, and expansion",
+    "2026-08-15T12:06:15Z milestone 4 added: The keyboard and the ARIA contract",
+    "2026-08-15T12:06:15Z milestone 5 added: Closing: docs, budgets, privacy sweep and the by-hand mixed-content check",
+    "2026-08-15T12:09:23Z step 1 added (milestone 1): Retire the phase-1 anticipation tripwires: drop buildForest/flattenVisible from WHOLE_SCOPE_BANNED_NAMES and the role=tree attribute check from assert-domain-vocabulary.mjs. Every other banned word, the platform/shared export bans and the /secrets literal check stay. Lands first because nothing after it can go green. Invariants 194.",
+    "2026-08-15T12:09:23Z step 2 added (milestone 1): Branded PersonIdentifier and EmailAddress with their parsers, plus the person, treeNode and forestAnomaly types and the fixture set. Invariants 52 (mechanism; proven at M2 boundary), 24.",
+    "2026-08-15T12:09:24Z step 3 added (milestone 1): buildForest shape: ordered roots, ordered children, manager status, direct report counts, and the three summary counts computed after duplicate removal. Invariants 6, 8, 9, 17, 18, 19, 20, 21, 22, 23.",
+    "2026-08-15T12:09:24Z step 4 added (milestone 1): buildForest anomaly handling: dangling manager references, self-references, cycles broken at the earliest ring member, and duplicate ids where the first valid occurrence wins. All returned as data, never logged from inside the domain. Invariants 7, 10, 11, 12, 13, 14, 15, 16.",
+    "2026-08-15T12:09:37Z step 5 added (milestone 1): buildForest purity and linearity: no mutation of the array or the person objects handed in, no clock, randomness, network, storage, React or logging, and a bounded per-person visit count measured by instrumented operations across sizes rather than by timing. Invariants 24, 25, 26.",
+    "2026-08-15T12:09:37Z step 6 added (milestone 1): flattenVisible: an iterative pre-order walk over an explicit stack producing the VisibleRow list - person, depth, hasChildren, isExpanded, setSize, posInSet and the direct report count - as the single source of what renders, what the ARIA attributes say and what the keyboard moves through. Invariants 27 to 40.",
+    "2026-08-15T12:09:37Z step 7 added (milestone 1): defaultExpansion: every root plus every root's direct children that have children of their own, and nothing deeper, computed from the forest rather than hardcoded. Invariants 87, 88 (pure half; rendered at M3).",
+    "2026-08-15T12:09:37Z step 8 added (milestone 1): parseExpansion and formatExpansion, total by construction: split on commas, trim, skip empty segments, skip anything that is not a safe positive integer, skip ids naming no manager, dedupe, and return the surviving set plus a skipped count. Absent and present-but-empty are distinct inputs with distinct results. Invariants 118, 119, 120, 121.",
+    "2026-08-15T12:09:52Z step 9 added (milestone 2): personSchema and usersResourcePath: id a safe positive integer, firstName, lastName and email required strings, managerId and photo optional, and everything else - password included - stripped by Zod. Failures report the failing field names and the element position, never the values. Invariants 47, 50, 51, 52, 53.",
+    "2026-08-15T12:09:52Z step 10 added (milestone 2): parsePeople envelope normalization ahead of validation: a dense array, an array whose null holes are removed before validation rather than counted as malformed rows, an object read in its own key order, null as an empty list, and every scalar as invalidEnvelope. Invariants 42, 43, 44, 45 (the kind), 46.",
+    "2026-08-15T12:09:52Z step 11 added (milestone 2): Display derivation on the parsed person: whitespace around a name trimmed for display and neither name re-cased, the email kept exactly as stored, and a person whose names are both empty after trimming falling back to their email. Invariants 54, 55, 56.",
+    "2026-08-15T12:09:52Z step 12 added (milestone 2): The fetchPeople repository: the total HierarchyResult union of data, empty, failure and cancelled; allRowsInvalid as a failure rather than an empty; cancelled as its own kind reachable with a pre-aborted signal; one users request per navigation. It never throws and never rejects. Invariants 41, 48, 49, 57, 170, 174.",
+    "2026-08-15T12:10:08Z step 13 added (milestone 2): The telemetry the repository itself emits: one hierarchy-viewed event per completed load carrying the people, manager and root counts and the number of rows dropped; one drop report per load; one report per anomaly kind; one error event with the failure kind and the correlation id; and none at all for a cancelled request. No name, email or id on any of them. Invariants 160, 161 (the emission half), 162, 163, 164, 165 (the load half).",
+    "2026-08-15T12:10:08Z step 14 added (milestone 2): AnalyticsPayloads becomes an interface a feature augments by declaration merging, targeting the module that declares it rather than the observability barrel, so the hierarchy event names and payload types live in features/hierarchy and platform stays ignorant of what a manager is. AnalyticsEventName as keyof AnalyticsPayloads survives unaltered. Invariants 168.",
+    "2026-08-15T12:10:08Z step 15 added (milestone 2): The app-layer loader: createHierarchyLoader returning an object holding a Promise of HierarchyResult without awaiting it, reading the correlation id from the interaction tracker, and forwarding the loader request signal into HttpRequest.signal. createAuthenticatedLoader returns userId alongside signedInUser, and createRuntime exposes the clock it already builds. Invariants 41, 170, 173, plus the app-layer half of 190.",
+    "2026-08-15T12:10:08Z step 16 added (milestone 2): The shouldRevalidate predicate on BOTH the authenticated route and the index route: compute the set of search parameters whose values differ between the current and next URL, return false only when that set is non-empty and every member of it is expanded, otherwise return defaultShouldRevalidate. The non-empty clause is load-bearing - without it an identical-URL revalidation is vacuously true and Retry, Refresh and phase 2 bfcache guard all silently no-op. Plus the interaction tracker learning to ignore a state change where navigation.state is unchanged and revalidation changed, and nothing wider. Invariants 124 (mechanism), 161 and 165 (the no-route-viewed halves).",
+    "2026-08-15T12:10:22Z step 17 added (milestone 3): The UI kit widens generically: ErrorState gains an optional secondaryAction, an optional glyph and an optional framed defaulting to true so the page can compose it inside its own Card without nesting two frames; EmptyState gains a glyph and the same framed; Avatar gains an onImageError callback fired once per failed source. No user, session, tree node or hierarchy concept enters a kit signature. Invariants 190, 191.",
+    "2026-08-15T12:10:22Z step 18 added (milestone 3): The content security policy img-src widens to self, data: and https: and no other directive changes, so secure third-party photo hosts load while http:// URLs stay blocked - which is what keeps the mixed-content fallback a real path. Photo requests carry no referrer and photos are loaded as images and nothing else. Invariants 99, 171, 172.",
+    "2026-08-15T12:10:22Z step 19 added (milestone 3): HierarchySkeleton and the loading state: the card title with a loading indicator over skeleton rows shaped like tree rows at varying indents, decorative to assistive technology with no rows, no tree role, no interactive element and no text in the placeholder shapes, announced busy once, no summary line, and no minimum display time. Invariants 58, 59, 60, 61, 62, 63, 65.",
+    "2026-08-15T12:10:22Z step 20 added (milestone 3): The error state inside the card: the alert glyph, the heading, the body explaining the request failed and the session is still valid, the monospace chip carrying the correlation id of the failed request, Retry and Back to login, exposed as the page live status, never reaching an error boundary, blaming nobody, and leaving the expanded parameter untouched. Invariants 45 and 49 (rendered), 66, 67, 68, 69, 73, 74, 75, 76, 77.",
+    "2026-08-15T12:10:37Z step 21 added (milestone 3): The empty state: the outline glyph, the heading, the body explaining the tree builds itself from the manager id on each record, and exactly one action - Refresh. Mockup 1g second button is deliberately not built. No tree, no summary line, no rows and no tree role. Invariants 44 (rendered), 78, 79, 80.",
+    "2026-08-15T12:10:37Z step 22 added (milestone 3): HomeRoute stops being a bare re-export and becomes the module that assembles the feature dependencies (observability, clock), the userId, and the Retry and Refresh callbacks - each wrapping beginInteraction, revalidate and endInteraction, with endInteraction on unmount too so a navigation started during a slow retry mints its own correlation id instead of inheriting the retry one. useRevalidator joins the feature layer no-restricted-imports list so the feature cannot bypass the wrapper. Invariants 70, 71, 72, 79, 193.",
+    "2026-08-15T12:10:37Z step 23 added (milestone 3): HierarchySummary: the All users title on one side and the people, manager and root counts on the other, all three computed from the forest after validation drops and duplicate drops, describing the whole forest rather than the visible rows. Invariants 81, 82, 83.",
+    "2026-08-15T12:10:38Z step 24 added (milestone 3): HierarchyTree and TreeRow: every visible row from the row model in its order and nothing else, indentation by depth with a vertical rail marking each nested group, the row anatomy (control slot, badge, name, email, report count), an explicit accessible name rather than one computed from the row contents, the badge showing the photo or the kit initials, the you marker on exactly one row and inside its accessible name, and memoization over primitives with a callback made stable over a ref. Invariants 84, 85, 86, 89, 90, 91, 93, 94, 95, 96, 100, 101, 102, 103.",
+    "2026-08-15T12:10:53Z step 25 added (milestone 3): The photo failure fallback: any failure - 404, mixed content, CSP, offline - falls back to the initials badge silently for the user and is reported once per person per load. The dedupe set is keyed by person id, held by the page rather than by a row, and resets when a new payload resolves, so a retry that reloads the data reports a still-broken photo again. The report never carries the photo URL. Invariants 97, 166.",
+    "2026-08-15T12:10:53Z step 26 added (milestone 3): TreeToggle and the mouse toggle path: the control only on a manager row showing plus when collapsed and minus when expanded, the inert glyph in the same slot elsewhere, tabIndex minus one so the tree stays one tab stop, clicking elsewhere on the row toggling nothing and selecting nothing, a whole subtree hidden in one step, descendant expansion restored on re-expand, and the change immediate with no request, no spinner and no forest rebuild. Invariants 105, 106, 107, 108, 109, 110, 111, 112, and the mouse path of 114 and 115.",
+    "2026-08-15T12:10:53Z step 27 added (milestone 3): useExpansion over useSearchParams: reading through parseExpansion, writing through formatExpansion, pushing a history entry per toggle so Back undoes the last one, preserving every other search parameter untouched, and writing nothing to storage. The default expansion renders on first arrival with no expanded in the URL, and a URL that carries one wins over it. Invariants 87 and 88 (rendered), 116, 117, 122, 123, 124 (rendered), 125, 126, 127, 128, 129.",
+    "2026-08-15T12:10:53Z step 28 added (milestone 3): NavigationRail in src/app/layout, rendered by AuthenticatedLayout so it appears on every authenticated page rather than only this one, holding no link, no button and no focusable element and hidden from assistive technology entirely. Invariants 92.",
+    "2026-08-15T12:11:10Z step 29 added (milestone 3): The hierarchy catalogue: every user-visible string in this phase, all four states, the summary line, the report counts, the tree accessible name, each row accessible name and every live-region message. Counts pluralize through the catalogue plural rules rather than an equality branch, numbers format through Intl, the summary composes from one placeholder string rather than joined fragments, the layout uses logical properties throughout including indentation, and the catalogue loads with the route rather than the app entry. Invariants 153, 154, 155, 156, 157, 158, 159.",
+    "2026-08-15T12:11:10Z step 30 added (milestone 3): Mockup fidelity and the three layout assertions jsdom cannot make, written in Playwright instead where rects are real: the four states against mockups 1e, 1f, 1g and 1h in structure, hierarchy, spacing rhythm and token usage; both themes at the project contrast floor including row hover, indent rail, toggle border and report-count text; the header, nav rail and card frame bounding boxes identical before and after the data resolves; the scroll position held across a toggle; and the name, email and count on one line at 320, 768 and 1280 px at the deepest indent the live data produces. Screenshots per state. Invariants 64, 104, 113, 179, 180, 181, 182.",
+    "2026-08-15T12:11:10Z step 31 added (milestone 4): Roving tabindex: the tree is a single tab stop, the first Tab into a freshly loaded tree lands on the first visible row, exactly one row is tabbable at a time, and returning with Tab restores the row that last had focus - falling back to the first visible row when that row is no longer in the list. The toggle control assertion from M3 is re-asserted here as part of the tab sequence. Invariants 107, 130, 131, 132.",
+    "2026-08-15T12:11:10Z step 32 added (milestone 4): Arrow, Home and End movement: Down and Up to the next and previous visible row crossing branch boundaries and inert at the ends; Right expanding a collapsed manager in place and descending to the first child of an expanded one and inert on a non-manager; Left collapsing an expanded manager in place, ascending to the parent otherwise, and inert on an already-collapsed root; Home and End to the first and last visible rows. Invariants 133, 134, 135, 136.",
+    "2026-08-15T12:11:26Z step 33 added (milestone 4): Enter and Space both toggle the focused manager branch and do nothing on a non-manager row, through the same implementation the mouse uses - so a toggle made with either updates the URL, the live region and telemetry identically. Moving focus is not a toggle: arrows, Home, End and type-ahead change focus only and write nothing to the URL and nothing to telemetry. Invariants 137, 142, and the keyboard path of 114 and 115.",
+    "2026-08-15T12:11:26Z step 34 added (milestone 4): Type-ahead against the row accessible name - which for the nameless-person row is their email - matching case-insensitively and accent-insensitively through a locale-aware comparison, wrapping to the top, with the buffer reset driven by the injected Clock rather than setTimeout, which the lint config bans across src with no feature override. A repeated single character cycles; two or more distinct characters match as a prefix. Invariants 138, 139.",
+    "2026-08-15T12:11:26Z step 35 added (milestone 4): The asterisk key expands every sibling of the focused row under the same parent - not every row at the same depth elsewhere in the forest - leaving deeper levels as they were, as ONE action: one history entry, one live-region announcement naming how many branches opened, one telemetry event. An asterisk that would open nothing does nothing at all. Invariants 140, 141.",
+    "2026-08-15T12:11:27Z step 36 added (milestone 4): Focus is never orphaned and the ARIA contract is complete: collapsing a branch containing the focused row moves focus to the row being collapsed; a Back or Forward that removes the focused row without any collapse moves focus to its nearest still-visible ancestor, or to the first visible row when there is none, so the tree never ends a history navigation with focus on document.body. Plus the visible focus ring in both themes at the contrast floor, level, position and set size from the row model, expanded exposed on managers only, the tree accessible name from the catalogue, polite announcements, prefers-reduced-motion respected, and an axe scan clean on all four states as components and as pages. Invariants 143, 144, 145, 146, 147, 148, 149, 150, 151, 152.",
+    "2026-08-15T12:12:23Z step 37 added (milestone 5): README.md rewritten to describe this project - what it does, how to run it, how to test it, how it is deployed, and where the specs live - with no sentence of the Vite template surviving, and the security gap stated plainly: a client-side lookup is not authentication and the database is public. Guarded by a documentation-agreement test in scripts/, following the repository deployment-configuration.test.ts precedent, because G2 requires every step to name a test. Invariants 183, 184.",
+    "2026-08-15T12:12:23Z step 38 added (milestone 5): The eight decision-log entries in ARCHITECTURE.md - the correlation-id chip, the one-button empty state, the img-src widening, flat treeitems over nested groups, the decorative avatar, the kit widening, the extensible analytics map and the retired tripwires - each with what was chosen, why, and what was rejected; plus ROADMAP.md status board, phase 3 checkboxes and progress log updated in the same change. Two of the eight depart from the mockups and six from ARCHITECTURE.md or a phase-1 decision. Invariant 185 states the count in three places and requires the three to agree, which is what makes it mechanically checkable. Invariants 185, 186.",
+    "2026-08-15T12:12:23Z step 39 added (milestone 5): npm run smoke:live gains an assertion that the real payload still parses into a forest with more than one root, so a shape change in the shared public database is caught by the one suite that talks to it. It stays outside verify and outside every default Vitest project.",
+    "2026-08-15T12:12:23Z step 40 added (milestone 5): Built-output and budget assertions: the login route chunk imports no hierarchy module and no hierarchy catalogue, the tree route chunk stays inside the existing per-route size budget, and the app entry budget is unchanged by this phase. No virtualization, windowing or pagination ships; the row model is the seam a windowing layer would consume. Invariants 175, 176, 177, 178.",
+    "2026-08-15T12:12:46Z step 41 added (milestone 5): Phase 2 untouched, asserted rather than claimed: its derivation, lookup, session, guard, header, sign-out and all five login states re-run through phase 2 own suite and e2e flows unchanged; the route set still slash, slash-login and the not-found wildcard; the layer boundaries holding with the hierarchy feature importing no other feature and nothing from app; the shared-surface diff matching invariant 190 enumerated list exactly, with anything beyond it raised as a finding; and nothing anticipating a later phase. Invariants 187, 188, 189, 190, 191, 192, 193, 196.",
+    "2026-08-15T12:12:46Z step 42 added (milestone 5): The finished event set swept for privacy and the console swept for noise, both across M3 toggle event and M4 asterisk event rather than milestone by milestone: no telemetry event, log line or error report from this page carries a password, an email, a person name or a photo URL; the e2e suite asserts the buffer exact contents after a toggle sequence and after a retry rather than counting loosely; and the console stays free of errors and warnings on every flow this phase adds, failure paths included, in development and in the production build alike. Invariants 167, 169, 195.",
+    "2026-08-15T12:12:46Z step 43 added (milestone 5): Pipeline integrity re-checked against the finished chain - no check disabled, skipped or set to continue-on-error and no coverage threshold lowered, with the M1 tripwire retirement re-examined as the reviewed decision it is rather than an edit made to go green - and the one check no automated run makes: invariant 98 mixed-content block verified BY HAND against the deployed https origin, with the screenshot of that row rendering initials stored under evidence/ and cited from PROOF.md. Automating it would put a real account plaintext password into CI for a single assertion, which invariant 51 rules out; the user decision is recorded in invariant 98. npm run e2e:deployed still runs post-merge for the existing smoke coverage. Invariants 98, 194."
   ],
-  "milestones": [],
+  "milestones": [
+    {
+      "id": 1,
+      "title": "The tree domain, and the tripwires that block it",
+      "verified": null,
+      "reviewed": null
+    },
+    {
+      "id": 2,
+      "title": "The boundary, the repository and the loader",
+      "verified": null,
+      "reviewed": null
+    },
+    {
+      "id": 3,
+      "title": "The page: four states, the tree, and expansion",
+      "verified": null,
+      "reviewed": null
+    },
+    {
+      "id": 4,
+      "title": "The keyboard and the ARIA contract",
+      "verified": null,
+      "reviewed": null
+    },
+    {
+      "id": 5,
+      "title": "Closing: docs, budgets, privacy sweep and the by-hand mixed-content check",
+      "verified": null,
+      "reviewed": null
+    }
+  ],
   "evidence_hashes": {
     "evidence/live-users-shape.md": {
       "sha": "8043154fa854",

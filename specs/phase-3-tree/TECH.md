@@ -184,7 +184,8 @@ user who clicked twice.
   files.
 - The loader returns `{ hierarchy: Promise<HierarchyResult> }` and reads
   `interactionTracker.currentCorrelationId()` for the id it hands to `fetchPeople`.
-- **`shouldRevalidate` on the index route only.** Without it react-router revalidates every
+- **`shouldRevalidate` on both the `authenticated` route and the index route.** Without it
+  react-router revalidates every
   loader on every toggle (`router.js:1965` sets `defaultShouldRevalidate` when
   `currentUrl.search !== nextUrl.search`), which would refetch the payload, rebuild the
   forest, hand `use()` a new promise, and delay the row change until the navigation settled -
@@ -470,7 +471,8 @@ design comparison at G3.
    draft of the rule breaking Retry, Refresh and phase 2's post-sign-out bfcache guard at
    once - a vacuously-true `every()` over an empty difference set returning `false` for an
    identical-URL revalidation. The rule is now stated exactly (non-empty difference, all
-   members `expanded`, index route only), and it is mitigated three ways: the predicate is
+   members `expanded`, on **both** the `authenticated` and index routes), and it is mitigated
+   three ways: the predicate is
    unit-tested as a pure function including the identical-URL case, M3's e2e counts requests
    across a toggle sequence, and M5 re-runs phase 2's own auth e2e flows unchanged, which is
    what would catch a regression in the bfcache guard.
