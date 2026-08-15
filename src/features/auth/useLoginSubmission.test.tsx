@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createFakeClock, createFakeRandomness } from '@shared/testing';
 import { createHttpClient } from '@platform/http';
 import type { Transport } from '@platform/http';
+import { SignInOutcome } from '@platform/observability';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { KeyValueStorage } from '@platform/runtime';
 import { useLoginSubmission } from './useLoginSubmission';
@@ -168,6 +169,71 @@ describe('useLoginSubmission', () => {
     await waitFor(() => expect(dependencies.navigate).toHaveBeenCalledTimes(1));
 
     expect(endInteraction).not.toHaveBeenCalled();
+  });
+
+  function settledOutcome(
+    observability: ObservabilityFacade,
+  ): SignInOutcome | undefined {
+    const calls = (observability.analytics.track as ReturnType<typeof vi.fn>)
+      .mock.calls as Array<[string, Record<string, unknown>]>;
+    const settled = calls.find(([name]) => name === 'auth.sign_in_settled');
+    return settled?.[1].outcome as SignInOutcome | undefined;
+  }
+
+  function correlationIdsMatch(observability: ObservabilityFacade): boolean {
+    const calls = (observability.analytics.track as ReturnType<typeof vi.fn>)
+      .mock.calls as Array<[string, Record<string, unknown>]>;
+    const started = calls.find(([name]) => name === 'auth.sign_in_started');
+    const settled = calls.find(([name]) => name === 'auth.sign_in_settled');
+    return (
+      started !== undefined &&
+      settled !== undefined &&
+      started[1].correlationId === settled[1].correlationId
+    );
+  }
+
+  it("emits auth.sign_in_settled with outcome signedIn, sharing the started event's correlation id", async () => {
+    const observability = createSpyObservability();
+    const transport: Transport = () =>
+      Promise.resolve(new Response('"user-1"', { status: 200 }));
+    const dependencies = createTestDependencies(transport, { observability });
+
+    render(<TestForm dependencies={dependencies} />);
+    fireEvent.submit(screen.getByTestId('login-form'));
+    await waitFor(() => expect(dependencies.navigate).toHaveBeenCalledTimes(1));
+
+    expect(settledOutcome(observability)).toBe(SignInOutcome.SignedIn);
+    expect(correlationIdsMatch(observability)).toBe(true);
+  });
+
+  it("emits auth.sign_in_settled with outcome noMatch, sharing the started event's correlation id", async () => {
+    const observability = createSpyObservability();
+    const transport: Transport = () =>
+      Promise.resolve(new Response('null', { status: 200 }));
+    const dependencies = createTestDependencies(transport, { observability });
+
+    render(<TestForm dependencies={dependencies} />);
+    fireEvent.submit(screen.getByTestId('login-form'));
+    await screen.findByText('noMatch', { selector: '[data-testid="outcome"]' });
+
+    expect(settledOutcome(observability)).toBe(SignInOutcome.NoMatch);
+    expect(correlationIdsMatch(observability)).toBe(true);
+  });
+
+  it("emits auth.sign_in_settled with outcome serviceProblem, sharing the started event's correlation id", async () => {
+    const observability = createSpyObservability();
+    const transport: Transport = () =>
+      Promise.resolve(new Response(null, { status: 404 }));
+    const dependencies = createTestDependencies(transport, { observability });
+
+    render(<TestForm dependencies={dependencies} />);
+    fireEvent.submit(screen.getByTestId('login-form'));
+    await screen.findByText('serviceProblem', {
+      selector: '[data-testid="outcome"]',
+    });
+
+    expect(settledOutcome(observability)).toBe(SignInOutcome.ServiceProblem);
+    expect(correlationIdsMatch(observability)).toBe(true);
   });
 
   it('aborts in flight and resets to untouched when a persisted page is restored, then unmasks on the next real submission', async () => {

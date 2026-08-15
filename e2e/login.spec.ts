@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import { deriveSecret } from '../src/features/auth/domain/deriveSecret';
+import { assertNoCredentialLeak } from './support/assertNoCredentialLeak';
 import { createAxeBuilder } from './support/axeBuilder';
 import { installApiMocks } from './support/apiMocks';
 import { installRouteMocks } from './support/routeMocks';
@@ -157,18 +158,45 @@ test.describe('the login card', () => {
       'home.title',
     );
 
+    const credentials = {
+      email: EMAIL,
+      password: PASSWORD,
+      secret: MATCHING_SECRET,
+    };
+
+    // Every surface invariants 125, 129 and 131 name, each checked for
+    // both a whole-value leak and any twelve-character window of a
+    // credential (section 9) - not just the two surfaces (telemetry,
+    // storage) the original version of this test covered.
     const records = await page.evaluate(
       () => window.__hierarchyTreeTelemetry?.read() ?? [],
     );
-    const serializedRecords = JSON.stringify(records);
-    expect(serializedRecords).not.toContain(PASSWORD);
-    expect(serializedRecords.toUpperCase()).not.toContain(MATCHING_SECRET);
+    assertNoCredentialLeak(
+      JSON.stringify(records),
+      credentials,
+      'the telemetry buffer',
+    );
 
     const storageDump = await page.evaluate(() =>
       JSON.stringify(window.sessionStorage),
     );
-    expect(storageDump).not.toContain(PASSWORD);
-    expect(storageDump.toUpperCase()).not.toContain(MATCHING_SECRET);
+    assertNoCredentialLeak(storageDump, credentials, 'sessionStorage');
+
+    const locationHref = await page.evaluate(() => window.location.href);
+    assertNoCredentialLeak(locationHref, credentials, 'location.href');
+
+    const documentTitle = await page.evaluate(() => document.title);
+    assertNoCredentialLeak(documentTitle, credentials, 'document.title');
+
+    const historyState = await page.evaluate(() =>
+      JSON.stringify(history.state),
+    );
+    assertNoCredentialLeak(historyState, credentials, 'history.state');
+
+    const serializedDom = await page.evaluate(
+      () => document.documentElement.outerHTML,
+    );
+    assertNoCredentialLeak(serializedDom, credentials, 'the serialised DOM');
   });
 
   test('passes an accessibility scan in each of its five states', async ({

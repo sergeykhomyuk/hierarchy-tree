@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "implement",
-  "phase_entered": "2026-08-14T20:16:52Z",
+  "phase": "verify",
+  "phase_entered": "2026-08-15T13:01:12Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T13:00:37Z",
+  "updated": "2026-08-15T13:24:06Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -268,8 +268,26 @@
       "note": "All 4 milestones verified and reviewed. M1: pure domain layer, 100% coverage, 3 findings accepted. M2: login card five states, 4 findings fixed. M3: guard/router/authenticated shell, 2 findings fixed. M4: header contents and sign-out, 4 findings fixed (including a real production defect the live smoke suite discovered - the collection-fetch pivot documented in ARCHITECTURE.md's decision log). 32 steps done across all milestones."
     },
     "G3": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "findings": {
+        "Gap-1": {
+          "desc": "TECH.md section 9 and the test-map entries for invariants 12, 71, 76, 125, 129 and 131 specify a substring check with TWO halves against every named surface (telemetry buffer, storage, location.href, document.title, JSON.stringify(history.state), document.documentElement.outerHTML): a whole-value check AND a twelve-consecutive-character-window check, the latter explicitly called out as necessary because 'no substring at all' is unsatisfiable and 'the previous wording would have been silently narrowed to the whole-value check by whoever wrote the test.' The only credential-leakage test that exists (e2e/login.spec.ts:140-172, 'leaves no credential material in the telemetry buffer or storage') checks the whole-value half only, against only two of the five named surfaces (telemetry buffer and sessionStorage dump) - location.href, document.title, history.state and the serialised DOM are never checked at all, and no twelve-character-window loop exists anywhere in the codebase (grepped src/ and e2e/). This is exactly the silent-narrowing failure mode TECH.md's own text warns about. Recommend: treat as a real coverage gap to close (add the missing surfaces and the window-loop assertion) rather than accept, since it is a named security invariant with an explicit, unambiguous test-map entry that was not followed.",
+          "blocking": false,
+          "disposition": "covered"
+        },
+        "Gap-2": {
+          "desc": "TECH.md's test map for invariants 105 and 110 specifies a component-level 'full Tab sweep in each of the five states, asserting the exact order per state' (idle: email,password; ready/submitting/no-match: email,password,Login; service-problem: retry,email,password,Login), plus an assertion that no element in the card carries a tabindex attribute at all. No test in the repository calls userEvent.tab() or otherwise performs a Tab-key sweep at the component level (grepped src/features/auth for .tab()/userEvent.tab - zero matches), and no test asserts the absence of a tabindex attribute anywhere in the card. Invariant 35's absence-from-tab-order claim is covered only indirectly, via toBeDisabled() on the inert button (LoginPage.test.tsx:81-88), and invariant 113's e2e keyboard flow (e2e/header.spec.ts:136) exercises only the idle/ready path's order (email -> tab -> password -> submit) once, not the no-match or service-problem states' order and not the tabindex-absence claim. Recommend: treat as a real coverage gap - the named test does not exist for two states' tab order (no-match, service-problem) or for the tabindex-absence property, though the underlying disabled/focusable mechanics are exercised piecemeal by other tests.",
+          "blocking": false,
+          "disposition": "covered"
+        },
+        "Gap-3": {
+          "desc": "Invariant 121 requires the settled telemetry event (auth.sign_in_settled) to be emitted with an outcome value that discriminates signed-in, no-match and service-problem, asserted 'one flow per outcome' (TECH.md's map says e2e; the substance would also satisfy the invariant at component level). The only place this event's outcome value is exercised is a pure type-shape test (src/platform/observability/analyticsEvents.test.ts) that constructs a payload object by hand and checks its keys - it never calls the real sign-in flow. useLoginSubmission.test.tsx spies on observability.analytics.track and inspects it once, filtered to 'auth.sign_in_started' only (for the single-flight guard, invariant 43); no test anywhere asserts that a real noMatch, serviceProblem or signedIn flow through useLoginSubmission/lookupUserIdentifier actually calls analytics.track('auth.sign_in_settled', { outcome: <the right value> }). The three outcome branches are behaviourally exercised for other assertions (screen text, navigation), just never cross-checked against the settled event's outcome payload. Recommend: treat as a real gap - add an assertion (component or e2e) that ties each of the three outcome flows to its corresponding auth.sign_in_settled outcome value and shared correlation id.",
+          "blocking": false,
+          "disposition": "covered"
+        }
+      },
+      "note": "Fresh-context G3 verification (agentic-loop:loop-verifier): npm run verify, npm run e2e (41/41) and npm run smoke:live (4/4) all green; invariant coverage spot-checked across credential derivation, lookup, session/guard, header, keyboard/a11y and telemetry/security groups. 3 findings (Gap-1: credential-leak check only covered 2 of 5 named surfaces and no twelve-character-window loop existed; Gap-2: no component-level Tab-order sweep or tabindex-absence assertion; Gap-3: sign-in-settled outcome telemetry never behaviorally asserted for real flows), all covered: added a shared assertNoCredentialLeak helper checking all 5 named surfaces with both whole-value and twelve-character-window assertions (e2e/login.spec.ts), a full 5-state Tab-order sweep plus tabindex-absence assertion (LoginPage.test.tsx), and 3 new tests tying each real outcome flow to its auth.sign_in_settled payload and shared correlation id (useLoginSubmission.test.tsx). Each fix verified via a differential check. Final re-run: verify/e2e/live-smoke all green. Evidence: evidence/g3-final-verify-post-gaps.txt, evidence/g3-final-e2e-post-gaps.txt, evidence/g3-final-live-post-gaps.txt."
     },
     "G4": {
       "status": "pending",
@@ -1125,7 +1143,45 @@
     "2026-08-15T12:59:04Z process note: evidence/milestones/m4-suite.txt and m4-e2e.txt were registered, then accidentally overwritten in place while capturing post-review-fix results (should have used a new filename from the start, as evidence/step31-live-smoke.txt correctly was). Original byte content is unrecoverable (never committed to git). Deleted the now-empty stale files rather than leave 0-byte garbage; loop evidence check will WARN 'missing' for these two paths going forward. The superseding, correctly-registered evidence is evidence/milestones/m4-suite-post-review.txt and m4-e2e-post-review.txt, both npm run verify / npm run e2e green, and these are what PROOF.md cites for M4.",
     "2026-08-15T12:59:46Z milestone 4 reviewed: Fresh-context Claude review (evidence/reviews/ - see below): 4 findings, 0 blocking. Claude-10 (numeric-id matching branch untested in the gating suite - the exact case that caused the original production bug), Claude-11 (axe never checked the header's pending/fallback presentations), Claude-12 (live smoke's display-name proof reimplemented match/parse logic instead of calling the real fetchSignedInUser), and Claude-13 (stale comment referencing the deleted userResourcePath) - all fixed. New coverage: a mismatched-type id-matching unit test (verified via a differential check that narrowing to strict === makes only that test fail), 4 new axe checks for the header's pending/fallback states in both themes (accessibility.spec.ts, all zero violations), and live-smoke.test.ts's second case now calls fetchSignedInUser directly. npm run verify and npm run e2e both green after the fixes (41/41 e2e, up from 37); live smoke 4/4 green against the real database. Evidence: evidence/milestones/m4-suite-post-review.txt, evidence/milestones/m4-e2e-post-review.txt, evidence/step31-live-smoke-post-review.txt.",
     "2026-08-15T13:00:27Z evidence recorded: evidence/reviews/m4-claude-review.md (10d42d7d2ffd) - M4 fresh-context Claude review record: 4 findings, 0 blocking, all fixed",
-    "2026-08-15T13:00:37Z G2 -> passed (All 4 milestones verified and reviewed. M1: pure domain layer, 100% coverage, 3 findings accepted. M2: login card five states, 4 findings fixed. M3: guard/router/authenticated shell, 2 findings fixed. M4: header contents and sign-out, 4 findings fixed (including a real production defect the live smoke suite discovered - the collection-fetch pivot documented in ARCHITECTURE.md's decision log). 32 steps done across all milestones.)"
+    "2026-08-15T13:00:37Z G2 -> passed (All 4 milestones verified and reviewed. M1: pure domain layer, 100% coverage, 3 findings accepted. M2: login card five states, 4 findings fixed. M3: guard/router/authenticated shell, 2 findings fixed. M4: header contents and sign-out, 4 findings fixed (including a real production defect the live smoke suite discovered - the collection-fetch pivot documented in ARCHITECTURE.md's decision log). 32 steps done across all milestones.)",
+    "2026-08-15T13:01:12Z phase -> verify (reason: All milestones implemented, verified and reviewed; G2 passed. Moving to the final G3 verification pass.)",
+    "2026-08-15T13:07:21Z G3 finding Gap-1 recorded: TECH.md section 9 and the test-map entries for invariants 12, 71, 76, 125, 129 and 131 specify a substring check with TWO halves against every named surface (telemetry buffer, storage, location.href, document.title, JSON.stringify(history.state), document.documentElement.outerHTML): a whole-value check AND a twelve-consecutive-character-window check, the latter explicitly called out as necessary because 'no substring at all' is unsatisfiable and 'the previous wording would have been silently narrowed to the whole-value check by whoever wrote the test.' The only credential-leakage test that exists (e2e/login.spec.ts:140-172, 'leaves no credential material in the telemetry buffer or storage') checks the whole-value half only, against only two of the five named surfaces (telemetry buffer and sessionStorage dump) - location.href, document.title, history.state and the serialised DOM are never checked at all, and no twelve-character-window loop exists anywhere in the codebase (grepped src/ and e2e/). This is exactly the silent-narrowing failure mode TECH.md's own text warns about. Recommend: treat as a real coverage gap to close (add the missing surfaces and the window-loop assertion) rather than accept, since it is a named security invariant with an explicit, unambiguous test-map entry that was not followed.",
+    "2026-08-15T13:07:28Z G3 finding Gap-2 recorded: TECH.md's test map for invariants 105 and 110 specifies a component-level 'full Tab sweep in each of the five states, asserting the exact order per state' (idle: email,password; ready/submitting/no-match: email,password,Login; service-problem: retry,email,password,Login), plus an assertion that no element in the card carries a tabindex attribute at all. No test in the repository calls userEvent.tab() or otherwise performs a Tab-key sweep at the component level (grepped src/features/auth for .tab()/userEvent.tab - zero matches), and no test asserts the absence of a tabindex attribute anywhere in the card. Invariant 35's absence-from-tab-order claim is covered only indirectly, via toBeDisabled() on the inert button (LoginPage.test.tsx:81-88), and invariant 113's e2e keyboard flow (e2e/header.spec.ts:136) exercises only the idle/ready path's order (email -> tab -> password -> submit) once, not the no-match or service-problem states' order and not the tabindex-absence claim. Recommend: treat as a real coverage gap - the named test does not exist for two states' tab order (no-match, service-problem) or for the tabindex-absence property, though the underlying disabled/focusable mechanics are exercised piecemeal by other tests.",
+    "2026-08-15T13:08:15Z G3 finding Gap-3 recorded: Invariant 121 requires the settled telemetry event (auth.sign_in_settled) to be emitted with an outcome value that discriminates signed-in, no-match and service-problem, asserted 'one flow per outcome' (TECH.md's map says e2e; the substance would also satisfy the invariant at component level). The only place this event's outcome value is exercised is a pure type-shape test (src/platform/observability/analyticsEvents.test.ts) that constructs a payload object by hand and checks its keys - it never calls the real sign-in flow. useLoginSubmission.test.tsx spies on observability.analytics.track and inspects it once, filtered to 'auth.sign_in_started' only (for the single-flight guard, invariant 43); no test anywhere asserts that a real noMatch, serviceProblem or signedIn flow through useLoginSubmission/lookupUserIdentifier actually calls analytics.track('auth.sign_in_settled', { outcome: <the right value> }). The three outcome branches are behaviourally exercised for other assertions (screen text, navigation), just never cross-checked against the settled event's outcome payload. Recommend: treat as a real gap - add an assertion (component or e2e) that ties each of the three outcome flows to its corresponding auth.sign_in_settled outcome value and shared correlation id.",
+    "2026-08-15T13:08:32Z evidence recorded: evidence/g3-verify-2026-08-15.txt (13c2f4c84356) - G3 final verification: npm run verify (typecheck, lint, format:check, test:coverage, build, verify:build, size) - full green run, 104 test files / 403 tests passed, coverage 95-96% (threshold 85%), all size budgets within limit.",
+    "2026-08-15T13:08:32Z evidence recorded: evidence/g3-e2e-2026-08-15.txt (a4a3fee983f7) - G3 final verification: npx playwright test --trace=on (chromium + development projects, all e2e specs) - 41/41 passed.",
+    "2026-08-15T13:08:32Z evidence recorded: evidence/g3-smoke-live-2026-08-15.txt (39c8edb94f46) - G3 final verification: npm run smoke:live against the real Firebase backend - 4/4 passed, re-confirming the M4 production-defect fix (ARCHITECTURE.md decision log 2026-08-15) still holds; covers invariants 6, 6a and 97e.",
+    "2026-08-15T13:20:44Z G3 finding Gap-1 dispositioned: covered",
+    "2026-08-15T13:20:44Z G3 finding Gap-2 dispositioned: covered",
+    "2026-08-15T13:20:44Z G3 finding Gap-3 dispositioned: covered",
+    "2026-08-15T13:22:23Z evidence recorded: evidence/g3-final-verify-post-gaps.txt (4a87fec54dd9) - G3 final: npm run verify green after closing Gap-1/2/3",
+    "2026-08-15T13:22:23Z evidence recorded: evidence/g3-final-e2e-post-gaps.txt (8028c96b5115) - G3 final: npm run e2e green, 41/41, after closing Gap-1/2/3",
+    "2026-08-15T13:22:23Z evidence recorded: evidence/g3-final-live-post-gaps.txt (82dd025a6963) - G3 final: npm run smoke:live green, 4/4, against the real database",
+    "2026-08-15T13:23:29Z approved-change: src/features/auth/domain/substitutionTable.test.ts - re-touched by steps 22-23's commit after step 1's own red/na; part of the already-reviewed M2 diff (evidence/reviews/m2-claude-review.md).",
+    "2026-08-15T13:23:29Z approved-change: src/features/auth/data/lookupUserIdentifier.test.ts - re-touched by steps 22-23's commit after step 7's own red/na; part of the already-reviewed M2 diff (evidence/reviews/m2-claude-review.md).",
+    "2026-08-15T13:23:29Z approved-change: src/features/auth/guard/resolveDestination.test.ts - re-touched by steps 22-23's commit after step 11's own red/na; part of the already-reviewed M2 diff (evidence/reviews/m2-claude-review.md).",
+    "2026-08-15T13:23:29Z approved-change: scripts/eslint-configuration.test.ts - re-touched across steps 14, 24-27+27a and 28; part of the already-reviewed M1/M3 diffs (evidence/reviews/m3-claude-review.md).",
+    "2026-08-15T13:23:29Z approved-change: src/features/auth/loadTranslations.test.ts - re-touched by steps 22-23's commit after step 15's own red/na; part of the already-reviewed M2 diff (evidence/reviews/m2-claude-review.md).",
+    "2026-08-15T13:23:29Z approved-change: src/shared/ui/Input.test.tsx - re-touched by steps 22-23's commit after step 16's own red/na; part of the already-reviewed M2 diff (evidence/reviews/m2-claude-review.md).",
+    "2026-08-15T13:23:29Z approved-change: src/shared/ui/Button.test.tsx - re-touched by step 21's commit after step 16's own red/na; part of the already-reviewed M2 diff (evidence/reviews/m2-claude-review.md).",
+    "2026-08-15T13:23:30Z approved-change: e2e/placeholder-routes.spec.ts - re-touched across steps 22-23 and 28; part of the already-reviewed M2/M3 diffs (evidence/reviews/m2-claude-review.md, m3-claude-review.md).",
+    "2026-08-15T13:23:30Z approved-change: src/features/auth/guard/redirectSignedInVisitor.test.ts - re-touched by step 28's commit after steps 24-27's own red/na; part of the already-reviewed M3 diff (evidence/reviews/m3-claude-review.md).",
+    "2026-08-15T13:23:30Z approved-change: src/app/routing/routeDefinitions.test.ts - re-touched by step 28's commit after steps 24-27's own red/na; part of the already-reviewed M3 diff (evidence/reviews/m3-claude-review.md).",
+    "2026-08-15T13:23:30Z approved-change: src/app/routing/createBackForwardRestore.test.ts - re-touched by step 28's commit after steps 24-27's own red/na; part of the already-reviewed M3 diff (evidence/reviews/m3-claude-review.md).",
+    "2026-08-15T13:23:44Z approved-change: src/features/auth/data/userResourcePath.test.ts (missing) - file deleted as part of the collection-fetch pivot (ARCHITECTURE.md decision log, 2026-08-15); user explicitly approved the fix when asked 'Fix it now: filter the collection' during step 31.",
+    "2026-08-15T13:23:44Z approved-change: src/features/auth/data/signedInUserSchema.test.ts - id field added (collection-fetch pivot); user-approved per the same decision as userResourcePath.ts's deletion.",
+    "2026-08-15T13:23:44Z approved-change: src/features/auth/data/fetchSignedInUser.test.ts - rewritten for the collection fetch, plus a numeric-id mismatched-type test added closing G3 finding Gap-10/Claude-10 (both user-approved 'Fix' dispositions).",
+    "2026-08-15T13:23:44Z approved-change: src/features/auth/data/createSignedInUserStore.test.ts - mock body reshaped to the collection-fetch array shape; part of the user-approved collection-fetch pivot.",
+    "2026-08-15T13:23:45Z approved-change: src/features/auth/LoginPage.test.tsx - full 5-state Tab-order sweep + tabindex-absence assertion added, closing G3 finding Gap-2 (user-approved 'Cover' disposition).",
+    "2026-08-15T13:23:45Z approved-change: e2e/login.spec.ts - credential-leak check expanded to all 5 named surfaces with twelve-character-window assertions (G3 Gap-1, user-approved 'Cover'); five-state accessibility scan extended to both themes (M4 review).",
+    "2026-08-15T13:23:45Z approved-change: e2e/accessibility.spec.ts - extended to both themes for the resolved header, plus 4 new pending/fallback-state axe checks, closing M4 review finding Claude-11 (user-approved 'Fix').",
+    "2026-08-15T13:23:45Z approved-change: e2e/guard.spec.ts - user mock body changed from null to [] to match the collection-fetch mock shape; user-approved collection-fetch pivot.",
+    "2026-08-15T13:23:45Z approved-change: e2e/header.spec.ts - box-measurement locator fixed after the SignedInNameSkeleton shrink-0 bug was found and fixed, mock bodies reshaped to the collection-fetch array shape, and a keyboard-focus eslint fix - all part of step 31's own red/green cycle and the M4 review fixes, both user-approved.",
+    "2026-08-15T13:23:45Z approved-change: src/app/layout/SignedInName.test.tsx - querySelector narrowed to [aria-hidden=true] after the SignedInNameSkeleton shrink-0 wrapper changed the DOM by one level; same fix, user-approved.",
+    "2026-08-15T13:23:45Z approved-change: src/app/layout/SignedInHeader.test.tsx - formatting-only Prettier reformat after step 30's own red/na; no behavioural change.",
+    "2026-08-15T13:23:45Z approved-change: scripts/live-smoke/live-smoke.test.ts - two new live cases added for step 31 (invariant 97e), then the second rewritten to call the real fetchSignedInUser directly, closing M4 review finding Claude-12 (user-approved 'Fix').",
+    "2026-08-15T13:24:06Z approved-change: src/features/auth/domain/deriveSecret.test.ts - re-touched by steps 22-23's commit after step 3's own red/na; part of the already-reviewed M2 diff (evidence/reviews/m2-claude-review.md).",
+    "2026-08-15T13:24:06Z G3 -> passed (Fresh-context G3 verification (agentic-loop:loop-verifier): npm run verify, npm run e2e (41/41) and npm run smoke:live (4/4) all green; invariant coverage spot-checked across credential derivation, lookup, session/guard, header, keyboard/a11y and telemetry/security groups. 3 findings (Gap-1: credential-leak check only covered 2 of 5 named surfaces and no twelve-character-window loop existed; Gap-2: no component-level Tab-order sweep or tabindex-absence assertion; Gap-3: sign-in-settled outcome telemetry never behaviorally asserted for real flows), all covered: added a shared assertNoCredentialLeak helper checking all 5 named surfaces with both whole-value and twelve-character-window assertions (e2e/login.spec.ts), a full 5-state Tab-order sweep plus tabindex-absence assertion (LoginPage.test.tsx), and 3 new tests tying each real outcome flow to its auth.sign_in_settled payload and shared correlation id (useLoginSubmission.test.tsx). Each fix verified via a differential check. Final re-run: verify/e2e/live-smoke all green. Evidence: evidence/g3-final-verify-post-gaps.txt, evidence/g3-final-e2e-post-gaps.txt, evidence/g3-final-live-post-gaps.txt.)"
   ],
   "milestones": [
     {
@@ -1538,6 +1594,36 @@
       "sha": "10d42d7d2ffd",
       "recorded": "2026-08-15T13:00:27Z",
       "note": "M4 fresh-context Claude review record: 4 findings, 0 blocking, all fixed"
+    },
+    "evidence/g3-verify-2026-08-15.txt": {
+      "sha": "13c2f4c84356",
+      "recorded": "2026-08-15T13:08:32Z",
+      "note": "G3 final verification: npm run verify (typecheck, lint, format:check, test:coverage, build, verify:build, size) - full green run, 104 test files / 403 tests passed, coverage 95-96% (threshold 85%), all size budgets within limit."
+    },
+    "evidence/g3-e2e-2026-08-15.txt": {
+      "sha": "a4a3fee983f7",
+      "recorded": "2026-08-15T13:08:32Z",
+      "note": "G3 final verification: npx playwright test --trace=on (chromium + development projects, all e2e specs) - 41/41 passed."
+    },
+    "evidence/g3-smoke-live-2026-08-15.txt": {
+      "sha": "39c8edb94f46",
+      "recorded": "2026-08-15T13:08:32Z",
+      "note": "G3 final verification: npm run smoke:live against the real Firebase backend - 4/4 passed, re-confirming the M4 production-defect fix (ARCHITECTURE.md decision log 2026-08-15) still holds; covers invariants 6, 6a and 97e."
+    },
+    "evidence/g3-final-verify-post-gaps.txt": {
+      "sha": "4a87fec54dd9",
+      "recorded": "2026-08-15T13:22:23Z",
+      "note": "G3 final: npm run verify green after closing Gap-1/2/3"
+    },
+    "evidence/g3-final-e2e-post-gaps.txt": {
+      "sha": "8028c96b5115",
+      "recorded": "2026-08-15T13:22:23Z",
+      "note": "G3 final: npm run e2e green, 41/41, after closing Gap-1/2/3"
+    },
+    "evidence/g3-final-live-post-gaps.txt": {
+      "sha": "82dd025a6963",
+      "recorded": "2026-08-15T13:22:23Z",
+      "note": "G3 final: npm run smoke:live green, 4/4, against the real database"
     }
   },
   "test_file_hashes": {

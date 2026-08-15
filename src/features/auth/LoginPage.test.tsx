@@ -1,7 +1,13 @@
 import type { ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import {
+  // eslint-disable-next-line testing-library/no-manual-cleanup -- the automatic afterEach cleanup runs only between it() blocks; the tab-order sweep below renders all five card states in one test and needs each render isolated from the last.
+  cleanup,
+  render,
+  screen,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { UserEvent } from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import {
   createInternationalization,
@@ -75,6 +81,34 @@ function createTestDependencies(
     endInteraction: vi.fn(),
     navigate: vi.fn(),
   };
+}
+
+// Blurs whatever the previous state's setup (typing into a field) left
+// focused, so the sweep's first Tab press lands on the first element in
+// reading order rather than the element after wherever focus happened to
+// be - the property invariant 105 asks for is DOM order, not "order
+// starting from an arbitrary prior focus".
+async function assertTabOrder(
+  user: UserEvent,
+  expectedElements: readonly HTMLElement[],
+): Promise<void> {
+  // eslint-disable-next-line testing-library/no-node-access -- there is no RTL query for "the currently focused element, if any"; document.activeElement is the standard way to read it.
+  (document.activeElement as HTMLElement | null)?.blur();
+  for (const element of expectedElements) {
+    await user.tab();
+    expect(element).toHaveFocus();
+  }
+}
+
+// No RTL query answers "does anything in this tree carry a tabindex
+// attribute at all" - that is exactly invariant 105's own claim (DOM
+// order, visual order and tab order are the same order because nothing
+// reorders it), so this reads the DOM directly rather than through a
+// role/label/text query.
+function assertNoTabIndexAnywhere(): void {
+  // eslint-disable-next-line testing-library/no-node-access -- see the comment above; there is no accessible-query equivalent for "no element carries this attribute".
+  const withTabIndex = document.body.querySelectorAll('[tabindex]');
+  expect(withTabIndex).toHaveLength(0);
 }
 
 describe('LoginPage', () => {
@@ -370,5 +404,106 @@ describe('LoginPage', () => {
     expect(loginButton).toHaveFocus();
 
     resolveTransport?.(new Response(null, { status: 404 }));
+  });
+
+  it('keeps DOM order, visual order and tab order the same order in every state, with no tabindex anywhere', async () => {
+    const user = userEvent.setup();
+
+    // idle - Login is inert and absent from the order entirely
+    // (invariant 35), not third in it.
+    await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+    await assertTabOrder(user, [
+      screen.getByLabelText('login.emailLabel'),
+      screen.getByLabelText('login.passwordLabel'),
+    ]);
+    assertNoTabIndexAnywhere();
+    cleanup();
+
+    // ready
+    await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+    const readyEmail = screen.getByLabelText('login.emailLabel');
+    const readyPassword = screen.getByLabelText('login.passwordLabel');
+    await user.type(readyEmail, 'person@example.com');
+    await user.type(readyPassword, 'hunter2');
+    await assertTabOrder(user, [
+      readyEmail,
+      readyPassword,
+      screen.getByRole('button', { name: 'login.submit' }),
+    ]);
+    assertNoTabIndexAnywhere();
+    cleanup();
+
+    // submitting - the control stays focusable while busy (invariant 44)
+    let resolveHanging: ((response: Response) => void) | undefined;
+    const hangingTransport: Transport = () =>
+      new Promise((resolve) => {
+        resolveHanging = resolve;
+      });
+    await renderLoginPage(
+      <LoginPage
+        dependencies={createTestDependencies(hangingTransport)}
+        destination="/"
+      />,
+    );
+    const submittingEmail = screen.getByLabelText('login.emailLabel');
+    const submittingPassword = screen.getByLabelText('login.passwordLabel');
+    await user.type(submittingEmail, 'person@example.com');
+    await user.type(submittingPassword, 'hunter2');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+    await assertTabOrder(user, [
+      submittingEmail,
+      submittingPassword,
+      await screen.findByRole('button', { name: 'login.submitting' }),
+    ]);
+    assertNoTabIndexAnywhere();
+    resolveHanging?.(new Response('null', { status: 200 }));
+    cleanup();
+
+    // noMatch - no control in the alert, so the order is unchanged from
+    // ready/submitting
+    await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+    const noMatchEmail = screen.getByLabelText('login.emailLabel');
+    const noMatchPassword = screen.getByLabelText('login.passwordLabel');
+    await user.type(noMatchEmail, 'person@example.com');
+    await user.type(noMatchPassword, 'wrong-password');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+    await screen.findByRole('alert');
+    await assertTabOrder(user, [
+      noMatchEmail,
+      noMatchPassword,
+      screen.getByRole('button', { name: 'login.submit' }),
+    ]);
+    assertNoTabIndexAnywhere();
+    cleanup();
+
+    // serviceProblem - the alert's retry control sits before the fields
+    // in DOM order (invariant 24), so it is reached first
+    const failingTransport: Transport = () =>
+      Promise.resolve(new Response(null, { status: 404 }));
+    await renderLoginPage(
+      <LoginPage
+        dependencies={createTestDependencies(failingTransport)}
+        destination="/"
+      />,
+    );
+    const serviceProblemEmail = screen.getByLabelText('login.emailLabel');
+    const serviceProblemPassword = screen.getByLabelText('login.passwordLabel');
+    await user.type(serviceProblemEmail, 'person@example.com');
+    await user.type(serviceProblemPassword, 'hunter2');
+    await user.click(screen.getByRole('button', { name: 'login.submit' }));
+    await screen.findByRole('alert');
+    await assertTabOrder(user, [
+      screen.getByRole('button', { name: 'login.retry' }),
+      serviceProblemEmail,
+      serviceProblemPassword,
+      screen.getByRole('button', { name: 'login.submit' }),
+    ]);
+    assertNoTabIndexAnywhere();
   });
 });
