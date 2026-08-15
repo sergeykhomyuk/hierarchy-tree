@@ -4,7 +4,9 @@ import { isSessionGuarded } from '@features/auth';
 import { buildTestRuntime } from '../testing/renderRoute';
 import { routeDefinitions } from './routeDefinitions';
 
-async function buildChildren(developmentRoutes: boolean): Promise<RouteObject[]> {
+async function buildChildren(
+  developmentRoutes: boolean,
+): Promise<RouteObject[]> {
   const runtime = await buildTestRuntime({ developmentRoutes });
   const [root] = routeDefinitions(runtime);
   return root?.children ?? [];
@@ -45,9 +47,9 @@ describe('routeDefinitions', () => {
 
     const authenticated = findAuthenticated(children);
     expect(authenticated?.path).toBeUndefined();
-    expect((authenticated?.children ?? []).map((route) => route.index)).toEqual([
-      true,
-    ]);
+    expect((authenticated?.children ?? []).map((route) => route.index)).toEqual(
+      [true],
+    );
   });
 
   it("wrap every guarded route's loader in withSessionGuard", async () => {

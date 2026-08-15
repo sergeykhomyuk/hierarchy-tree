@@ -72,9 +72,7 @@ describe('redirectSignedInVisitor', () => {
         observability,
       }),
     );
-    expect(withFromResponse.headers.get('Location')).toBe(
-      '/hierarchy/users/5',
-    );
+    expect(withFromResponse.headers.get('Location')).toBe('/hierarchy/users/5');
 
     window.history.pushState({}, '', '/login');
     const withoutFromResponse = throwsResponse(() =>

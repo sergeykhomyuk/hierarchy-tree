@@ -1,16 +1,21 @@
 import { expect, test } from '@playwright/test';
 import { recordConsole } from './support/consoleRecorder';
 import { installRouteMocks } from './support/routeMocks';
+import { installSignInApiMock, signIn } from './support/signIn';
 
 test.describe('placeholder routes', () => {
   test('the home route renders the hierarchy placeholder', async ({
     page,
     baseURL,
   }) => {
+    // / is a guarded route since M3 - reaching the placeholder means
+    // signing in first, which is what this test is actually exercising
+    // now, alongside the placeholder itself.
     await installRouteMocks(page, baseURL ?? '');
+    await installSignInApiMock(page);
     const { records } = recordConsole(page);
 
-    await page.goto('/');
+    await signIn(page);
 
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
       'home.title',
@@ -54,7 +59,10 @@ test.describe('placeholder routes', () => {
   }) => {
     await installRouteMocks(page, baseURL ?? '');
 
-    await page.goto('/');
+    // /login rather than the now-guarded / - the skip link lives on the
+    // shared ApplicationLayout every route renders inside, so an
+    // unguarded route proves the same thing without needing a session.
+    await page.goto('/login');
     // The lazy route chunk resolves asynchronously - without this, Tab
     // can fire before the skip link exists and land on body instead,
     // with nothing afterward to move focus back onto it.

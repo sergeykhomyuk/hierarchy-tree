@@ -130,7 +130,11 @@ test.describe('the login card', () => {
     );
 
     expect(secretRequestCount).toBe(1);
-    expect(userRequestCount).toBe(0);
+    // Exactly one, not zero: the authenticated route's own loader (M3)
+    // fetches the signed-in user's record once landing on / - the
+    // sign-in flow itself still never touches the users path, only the
+    // subsequent navigation's loader does.
+    expect(userRequestCount).toBe(1);
   });
 
   test('leaves no credential material in the telemetry buffer or storage', async ({

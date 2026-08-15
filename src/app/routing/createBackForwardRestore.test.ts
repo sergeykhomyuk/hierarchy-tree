@@ -6,10 +6,14 @@ describe('createBackForwardRestore', () => {
     const revalidate = vi.fn();
 
     createBackForwardRestore({ revalidate });
-    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: false }));
+    window.dispatchEvent(
+      new PageTransitionEvent('pageshow', { persisted: false }),
+    );
     expect(revalidate).not.toHaveBeenCalled();
 
-    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+    window.dispatchEvent(
+      new PageTransitionEvent('pageshow', { persisted: true }),
+    );
     expect(revalidate).toHaveBeenCalledTimes(1);
   });
 });

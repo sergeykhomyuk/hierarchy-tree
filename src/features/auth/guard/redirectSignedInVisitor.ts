@@ -23,8 +23,7 @@ export function redirectSignedInVisitor({
   const destination = resolveDestination(url.searchParams.get('from'));
   const guardedLocation = `${url.pathname}${url.search}`;
   const isCurrentEntry =
-    `${window.location.pathname}${window.location.search}` ===
-    guardedLocation;
+    `${window.location.pathname}${window.location.search}` === guardedLocation;
 
   throw isCurrentEntry ? replace(destination) : redirect(destination);
 }

@@ -3,6 +3,7 @@ node_modules
 coverage
 playwright-report
 test-results
+.playwright-mcp
 package-lock.json
 
 # Loop specs and docs: loop.json is CLI-managed, evidence files are

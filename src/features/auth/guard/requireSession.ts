@@ -25,8 +25,7 @@ export function requireSession({
   const guardedLocation = `${url.pathname}${url.search}`;
   const destination = `${LOGIN_PATH}?from=${encodeURIComponent(guardedLocation)}`;
   const isCurrentEntry =
-    `${window.location.pathname}${window.location.search}` ===
-    guardedLocation;
+    `${window.location.pathname}${window.location.search}` === guardedLocation;
 
   throw isCurrentEntry ? replace(destination) : redirect(destination);
 }

@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T08:38:46Z",
+  "updated": "2026-08-15T08:53:12Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 32,
-      "steps_done": 28
+      "steps_done": 29
     },
     "G3": {
       "status": "pending",
@@ -665,8 +665,8 @@
         "e2e/guard.spec.ts::the route guard > returns Back from the login card to where the visitor came from",
         "e2e/guard.spec.ts::the route guard > ignores a protocol-relative or backslash-escaped from value"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T08:53:12Z evidence/step28-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1032,7 +1032,13 @@
     "2026-08-15T08:38:37Z step 32 -> red",
     "2026-08-15T08:38:37Z step 32 -> green",
     "2026-08-15T08:38:38Z step 32 -> done",
-    "2026-08-15T08:38:46Z step 32: loop warned it could not locate a tamper hash for useLoginSubmission.test.tsx's new test (same non-blocking drift as steps 15-21's registration warnings) - the test exists and passes; loop check's grep-based leaf-text verification confirms the title is present in the file."
+    "2026-08-15T08:38:46Z step 32: loop warned it could not locate a tamper hash for useLoginSubmission.test.tsx's new test (same non-blocking drift as steps 15-21's registration warnings) - the test exists and passes; loop check's grep-based leaf-text verification confirms the title is present in the file.",
+    "2026-08-15T08:53:08Z evidence recorded: evidence/step28-red.txt (6c12cf8601a1) - guard.spec.ts red: all 5 tests fail against the pre-M3 unguarded route table (differential check - built from routeDefinitions.ts's committed HEAD~1 version, verified against the real dist/ build)",
+    "2026-08-15T08:53:08Z evidence recorded: evidence/step28-green.txt (06f978b47a9e) - full e2e suite green (31/31) including guard.spec.ts and all 7 migrated pre-existing specs",
+    "2026-08-15T08:53:08Z evidence recorded: evidence/step28-verify.txt (b1de873f66b4) - npm run verify green after step 28 (typecheck, lint, format, coverage, build, build-output, size)",
+    "2026-08-15T08:53:12Z step 28 -> red",
+    "2026-08-15T08:53:12Z step 28 -> green",
+    "2026-08-15T08:53:12Z step 28 -> done"
   ],
   "milestones": [
     {
@@ -1320,6 +1326,21 @@
       "sha": "dd07a4c5b535",
       "recorded": "2026-08-15T08:38:37Z",
       "note": "useLoginSubmission.test.tsx pageshow-restore green"
+    },
+    "evidence/step28-red.txt": {
+      "sha": "6c12cf8601a1",
+      "recorded": "2026-08-15T08:53:08Z",
+      "note": "guard.spec.ts red: all 5 tests fail against the pre-M3 unguarded route table (differential check - built from routeDefinitions.ts's committed HEAD~1 version, verified against the real dist/ build)"
+    },
+    "evidence/step28-green.txt": {
+      "sha": "06f978b47a9e",
+      "recorded": "2026-08-15T08:53:08Z",
+      "note": "full e2e suite green (31/31) including guard.spec.ts and all 7 migrated pre-existing specs"
+    },
+    "evidence/step28-verify.txt": {
+      "sha": "b1de873f66b4",
+      "recorded": "2026-08-15T08:53:08Z",
+      "note": "npm run verify green after step 28 (typecheck, lint, format, coverage, build, build-output, size)"
     }
   },
   "test_file_hashes": {
@@ -1550,6 +1571,12 @@
       "step": 27,
       "recorded": "2026-08-15T08:36:42Z",
       "log_index": 300
+    },
+    "e2e/guard.spec.ts": {
+      "sha": "74fd6bbc59f4",
+      "step": 28,
+      "recorded": "2026-08-15T08:53:12Z",
+      "log_index": 314
     }
   }
 }

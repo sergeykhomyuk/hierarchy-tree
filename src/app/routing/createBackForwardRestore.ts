@@ -10,7 +10,9 @@ export type RevalidatableRouter = {
 // document back: a restored frame of authenticated content can be on
 // screen for the interval between restore and the guard's redirect. No
 // client-side mechanism closes that interval (invariant 103).
-export function createBackForwardRestore(router: RevalidatableRouter): () => void {
+export function createBackForwardRestore(
+  router: RevalidatableRouter,
+): () => void {
   function handlePageShow(event: PageTransitionEvent): void {
     if (event.persisted) {
       void router.revalidate();

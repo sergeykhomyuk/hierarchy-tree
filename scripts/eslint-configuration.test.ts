@@ -320,8 +320,9 @@ describe('the redirect sinks-ban narrowing', () => {
     const redirectRows = restrictedImportRows.filter((entry) => {
       const value = entry.rules?.['no-restricted-imports'];
       const options = Array.isArray(value) ? value[1] : undefined;
-      const paths = (options as { paths?: Array<{ name?: string }> } | undefined)
-        ?.paths;
+      const paths = (
+        options as { paths?: Array<{ name?: string }> } | undefined
+      )?.paths;
       return paths?.some((path) => path.name === 'react-router');
     });
 
@@ -333,9 +334,7 @@ describe('the redirect sinks-ban narrowing', () => {
         options as { patterns?: Array<{ message?: string }> } | undefined
       )?.patterns;
       expect(
-        patterns?.some((pattern) =>
-          pattern.message?.includes('createSink.ts'),
-        ),
+        patterns?.some((pattern) => pattern.message?.includes('createSink.ts')),
         `block for ${JSON.stringify(row.files)} is missing the sinks pattern`,
       ).toBe(true);
     }
