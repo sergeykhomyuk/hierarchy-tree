@@ -7,7 +7,7 @@
   "phase": "review",
   "phase_entered": "2026-08-15T13:24:31Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T13:58:50Z",
+  "updated": "2026-08-15T14:00:56Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -1211,7 +1211,10 @@
     "2026-08-15T13:58:50Z G4 finding Claude-14 dispositioned: fixed",
     "2026-08-15T13:58:50Z G4 finding Codex-1 dispositioned: fixed",
     "2026-08-15T13:58:50Z G4 finding Codex-2 dispositioned: fixed",
-    "2026-08-15T13:58:50Z G4 finding Codex-3 dispositioned: fixed"
+    "2026-08-15T13:58:50Z G4 finding Codex-3 dispositioned: fixed",
+    "2026-08-15T14:00:26Z evidence recorded: evidence/g4-final-verify.txt (35d58b2ca62f) - G4 final: npm run verify green after all final review fixes",
+    "2026-08-15T14:00:26Z evidence recorded: evidence/g4-final-e2e.txt (4aa08a7d254b) - G4 final: npm run e2e green, 41/41, after all final review fixes",
+    "2026-08-15T14:00:56Z evidence recorded: evidence/reviews/g4-claude-final-review.md (28bad08e6a4b) - Final G4 fresh-context Claude review record: 1 blocking finding (fixed)"
   ],
   "milestones": [
     {
@@ -1659,6 +1662,21 @@
       "sha": "187fde91cfa5",
       "recorded": "2026-08-15T13:34:53Z",
       "note": "Final G4 Codex second opinion: 3 findings (2 blocking), verbatim"
+    },
+    "evidence/g4-final-verify.txt": {
+      "sha": "35d58b2ca62f",
+      "recorded": "2026-08-15T14:00:26Z",
+      "note": "G4 final: npm run verify green after all final review fixes"
+    },
+    "evidence/g4-final-e2e.txt": {
+      "sha": "4aa08a7d254b",
+      "recorded": "2026-08-15T14:00:26Z",
+      "note": "G4 final: npm run e2e green, 41/41, after all final review fixes"
+    },
+    "evidence/reviews/g4-claude-final-review.md": {
+      "sha": "28bad08e6a4b",
+      "recorded": "2026-08-15T14:00:56Z",
+      "note": "Final G4 fresh-context Claude review record: 1 blocking finding (fixed)"
     }
   },
   "test_file_hashes": {
