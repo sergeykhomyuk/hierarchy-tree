@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "review",
-  "phase_entered": "2026-08-15T13:24:31Z",
+  "phase": "prove",
+  "phase_entered": "2026-08-15T16:06:28Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T16:06:10Z",
+  "updated": "2026-08-15T16:11:29Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -26,7 +26,7 @@
     "spec": null,
     "plan": "PLAN.md",
     "design": null,
-    "proof": null,
+    "proof": "PROOF.md",
     "evidence": "evidence/",
     "product": "PRODUCT.md",
     "tech": "TECH.md"
@@ -290,8 +290,8 @@
       "note": "Fresh-context G3 verification (agentic-loop:loop-verifier): npm run verify, npm run e2e (41/41) and npm run smoke:live (4/4) all green; invariant coverage spot-checked across credential derivation, lookup, session/guard, header, keyboard/a11y and telemetry/security groups. 3 findings (Gap-1: credential-leak check only covered 2 of 5 named surfaces and no twelve-character-window loop existed; Gap-2: no component-level Tab-order sweep or tabindex-absence assertion; Gap-3: sign-in-settled outcome telemetry never behaviorally asserted for real flows), all covered: added a shared assertNoCredentialLeak helper checking all 5 named surfaces with both whole-value and twelve-character-window assertions (e2e/login.spec.ts), a full 5-state Tab-order sweep plus tabindex-absence assertion (LoginPage.test.tsx), and 3 new tests tying each real outcome flow to its auth.sign_in_settled payload and shared correlation id (useLoginSubmission.test.tsx). Each fix verified via a differential check. Final re-run: verify/e2e/live-smoke all green. Evidence: evidence/g3-final-verify-post-gaps.txt, evidence/g3-final-e2e-post-gaps.txt, evidence/g3-final-live-post-gaps.txt."
     },
     "G4": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "security_pass": "Dedicated fresh-context security review (agentic-loop:loop-reviewer, security-focused pass, separate from the general G4 dual review): PASS, 0 findings. Covered credential handling end to end (no leak to log/URL/telemetry/storage beyond the one permitted secrets-lookup URL), session integrity (charset-restricted, shadow-first, unforgeable within the app's own stated client-only-lookup threat model), route guard completeness (no path for an unauthenticated visitor to reach authenticated content or trigger an authenticated fetch, including the open-redirect and parallel-loader-race surfaces), the M4 collection-fetch trade-off (the plaintext-password-bearing /users.json collection is stripped of password at the parse boundary and never retained beyond momentary use), redact.ts's path-segment rule (traced end to end, unit-asserted), and other injection surfaces (no dangerouslySetInnerHTML, CSRF not applicable to a GET-only client-side lookup). Evidence: evidence/reviews/security-review.md.",
       "findings": {
         "Claude-1": {
@@ -392,7 +392,8 @@
           "blocking": false,
           "disposition": "fixed"
         }
-      }
+      },
+      "note": "Final dual review: fresh-context Claude (evidence/reviews/g4-claude-final-review.md) and Codex second opinion (evidence/reviews/g4-codex-final-review.md), both independently found the same blocking issue - PRODUCT.md/TECH.md's stale claim that the header fetches a single record and never the collection, contradicted by M4's user-approved collection-fetch fix. Codex additionally found a vacuous structural guard test and a minor console-log identifier disclosure. All 4 findings (Claude-14, Codex-1, Codex-2, Codex-3) fixed and verified (differential checks where applicable). Dedicated security review (evidence/reviews/security-review.md): PASS, 0 findings. npm run verify and npm run e2e (41/41) both green; npm run smoke:live (4/4) green against the real database. Evidence: evidence/g4-final-verify.txt, evidence/g4-final-e2e.txt."
     },
     "G5": {
       "status": "pending",
@@ -1216,7 +1217,11 @@
     "2026-08-15T14:00:26Z evidence recorded: evidence/g4-final-e2e.txt (4aa08a7d254b) - G4 final: npm run e2e green, 41/41, after all final review fixes",
     "2026-08-15T14:00:56Z evidence recorded: evidence/reviews/g4-claude-final-review.md (28bad08e6a4b) - Final G4 fresh-context Claude review record: 1 blocking finding (fixed)",
     "2026-08-15T16:06:10Z evidence recorded: evidence/reviews/security-review.md (fec9844aa897) - Dedicated security review: PASS, 0 findings",
-    "2026-08-15T16:06:10Z set security-pass = Dedicated fresh-context security review (agentic-loop:loop-reviewer, security-focused pass, separate from the general G4 dual review): PASS, 0 findings. Covered credential handling end to end (no leak to log/URL/telemetry/storage beyond the one permitted secrets-lookup URL), session integrity (charset-restricted, shadow-first, unforgeable within the app's own stated client-only-lookup threat model), route guard completeness (no path for an unauthenticated visitor to reach authenticated content or trigger an authenticated fetch, including the open-redirect and parallel-loader-race surfaces), the M4 collection-fetch trade-off (the plaintext-password-bearing /users.json collection is stripped of password at the parse boundary and never retained beyond momentary use), redact.ts's path-segment rule (traced end to end, unit-asserted), and other injection surfaces (no dangerouslySetInnerHTML, CSRF not applicable to a GET-only client-side lookup). Evidence: evidence/reviews/security-review.md."
+    "2026-08-15T16:06:10Z set security-pass = Dedicated fresh-context security review (agentic-loop:loop-reviewer, security-focused pass, separate from the general G4 dual review): PASS, 0 findings. Covered credential handling end to end (no leak to log/URL/telemetry/storage beyond the one permitted secrets-lookup URL), session integrity (charset-restricted, shadow-first, unforgeable within the app's own stated client-only-lookup threat model), route guard completeness (no path for an unauthenticated visitor to reach authenticated content or trigger an authenticated fetch, including the open-redirect and parallel-loader-race surfaces), the M4 collection-fetch trade-off (the plaintext-password-bearing /users.json collection is stripped of password at the parse boundary and never retained beyond momentary use), redact.ts's path-segment rule (traced end to end, unit-asserted), and other injection surfaces (no dangerouslySetInnerHTML, CSRF not applicable to a GET-only client-side lookup). Evidence: evidence/reviews/security-review.md.",
+    "2026-08-15T16:06:23Z G4 -> passed (Final dual review: fresh-context Claude (evidence/reviews/g4-claude-final-review.md) and Codex second opinion (evidence/reviews/g4-codex-final-review.md), both independently found the same blocking issue - PRODUCT.md/TECH.md's stale claim that the header fetches a single record and never the collection, contradicted by M4's user-approved collection-fetch fix. Codex additionally found a vacuous structural guard test and a minor console-log identifier disclosure. All 4 findings (Claude-14, Codex-1, Codex-2, Codex-3) fixed and verified (differential checks where applicable). Dedicated security review (evidence/reviews/security-review.md): PASS, 0 findings. npm run verify and npm run e2e (41/41) both green; npm run smoke:live (4/4) green against the real database. Evidence: evidence/g4-final-verify.txt, evidence/g4-final-e2e.txt.)",
+    "2026-08-15T16:06:28Z phase -> prove (reason: G4 passed with security-pass recorded. All 4 gates (G1-G4) complete. Moving to write PROOF.md.)",
+    "2026-08-15T16:11:28Z set proof = PROOF.md",
+    "2026-08-15T16:11:29Z evidence recorded: PROOF.md (b67ac2728467) - final proof of completion document"
   ],
   "milestones": [
     {
@@ -1684,6 +1689,11 @@
       "sha": "fec9844aa897",
       "recorded": "2026-08-15T16:06:10Z",
       "note": "Dedicated security review: PASS, 0 findings"
+    },
+    "PROOF.md": {
+      "sha": "b67ac2728467",
+      "recorded": "2026-08-15T16:11:29Z",
+      "note": "final proof of completion document"
     }
   },
   "test_file_hashes": {
