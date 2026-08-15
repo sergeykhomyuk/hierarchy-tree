@@ -7,7 +7,7 @@
   "phase": "review",
   "phase_entered": "2026-08-15T13:24:31Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T14:00:56Z",
+  "updated": "2026-08-15T16:06:10Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -292,7 +292,7 @@
     "G4": {
       "status": "pending",
       "attempts": 0,
-      "security_pass": null,
+      "security_pass": "Dedicated fresh-context security review (agentic-loop:loop-reviewer, security-focused pass, separate from the general G4 dual review): PASS, 0 findings. Covered credential handling end to end (no leak to log/URL/telemetry/storage beyond the one permitted secrets-lookup URL), session integrity (charset-restricted, shadow-first, unforgeable within the app's own stated client-only-lookup threat model), route guard completeness (no path for an unauthenticated visitor to reach authenticated content or trigger an authenticated fetch, including the open-redirect and parallel-loader-race surfaces), the M4 collection-fetch trade-off (the plaintext-password-bearing /users.json collection is stripped of password at the parse boundary and never retained beyond momentary use), redact.ts's path-segment rule (traced end to end, unit-asserted), and other injection surfaces (no dangerouslySetInnerHTML, CSRF not applicable to a GET-only client-side lookup). Evidence: evidence/reviews/security-review.md.",
       "findings": {
         "Claude-1": {
           "desc": "redact()'s new path-segment redaction applies to EVERY string, not just resource paths, using a loose substring pattern (REDACTED_KEY_PATTERN) - a future path like /api/tokens/42 would have its next segment scrubbed even though it isn't secret data. Safe-direction (over-redaction) but broader scope than this milestone's own invariant needed.",
@@ -1214,7 +1214,9 @@
     "2026-08-15T13:58:50Z G4 finding Codex-3 dispositioned: fixed",
     "2026-08-15T14:00:26Z evidence recorded: evidence/g4-final-verify.txt (35d58b2ca62f) - G4 final: npm run verify green after all final review fixes",
     "2026-08-15T14:00:26Z evidence recorded: evidence/g4-final-e2e.txt (4aa08a7d254b) - G4 final: npm run e2e green, 41/41, after all final review fixes",
-    "2026-08-15T14:00:56Z evidence recorded: evidence/reviews/g4-claude-final-review.md (28bad08e6a4b) - Final G4 fresh-context Claude review record: 1 blocking finding (fixed)"
+    "2026-08-15T14:00:56Z evidence recorded: evidence/reviews/g4-claude-final-review.md (28bad08e6a4b) - Final G4 fresh-context Claude review record: 1 blocking finding (fixed)",
+    "2026-08-15T16:06:10Z evidence recorded: evidence/reviews/security-review.md (fec9844aa897) - Dedicated security review: PASS, 0 findings",
+    "2026-08-15T16:06:10Z set security-pass = Dedicated fresh-context security review (agentic-loop:loop-reviewer, security-focused pass, separate from the general G4 dual review): PASS, 0 findings. Covered credential handling end to end (no leak to log/URL/telemetry/storage beyond the one permitted secrets-lookup URL), session integrity (charset-restricted, shadow-first, unforgeable within the app's own stated client-only-lookup threat model), route guard completeness (no path for an unauthenticated visitor to reach authenticated content or trigger an authenticated fetch, including the open-redirect and parallel-loader-race surfaces), the M4 collection-fetch trade-off (the plaintext-password-bearing /users.json collection is stripped of password at the parse boundary and never retained beyond momentary use), redact.ts's path-segment rule (traced end to end, unit-asserted), and other injection surfaces (no dangerouslySetInnerHTML, CSRF not applicable to a GET-only client-side lookup). Evidence: evidence/reviews/security-review.md."
   ],
   "milestones": [
     {
@@ -1677,6 +1679,11 @@
       "sha": "28bad08e6a4b",
       "recorded": "2026-08-15T14:00:56Z",
       "note": "Final G4 fresh-context Claude review record: 1 blocking finding (fixed)"
+    },
+    "evidence/reviews/security-review.md": {
+      "sha": "fec9844aa897",
+      "recorded": "2026-08-15T16:06:10Z",
+      "note": "Dedicated security review: PASS, 0 findings"
     }
   },
   "test_file_hashes": {
