@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T11:53:14Z",
+  "updated": "2026-08-15T12:00:46Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 32,
-      "steps_done": 30
+      "steps_done": 31
     },
     "G3": {
       "status": "pending",
@@ -702,8 +702,8 @@
         "src/app/layout/SignedInHeader.test.tsx::SignedInHeader > keeps logout operable before a name is known and when one never arrives",
         "src/app/layout/SignedInHeader.test.tsx::SignedInHeader > clears the session and returns to the login route"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T12:00:46Z evidence/step30-red.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1067,7 +1067,12 @@
     "2026-08-15T11:52:59Z evidence recorded: evidence/step29-green.txt (ff41781a7a6e) - step 29 green: SignedInName.test.tsx 4/4 passing",
     "2026-08-15T11:53:14Z step 29 -> red",
     "2026-08-15T11:53:14Z step 29 -> green",
-    "2026-08-15T11:53:14Z step 29 -> done"
+    "2026-08-15T11:53:14Z step 29 -> done",
+    "2026-08-15T12:00:38Z evidence recorded: evidence/step30-red.txt (811397aad8a9) - step 30 red: SignedInHeader.test.tsx fails to resolve import (no implementation yet)",
+    "2026-08-15T12:00:38Z evidence recorded: evidence/step30-green.txt (66e7daa4f739) - step 30 green: SignedInHeader.test.tsx 3/3 passing",
+    "2026-08-15T12:00:46Z step 30 -> red",
+    "2026-08-15T12:00:46Z step 30 -> green",
+    "2026-08-15T12:00:46Z step 30 -> done"
   ],
   "milestones": [
     {
@@ -1410,6 +1415,16 @@
       "sha": "ff41781a7a6e",
       "recorded": "2026-08-15T11:52:59Z",
       "note": "step 29 green: SignedInName.test.tsx 4/4 passing"
+    },
+    "evidence/step30-red.txt": {
+      "sha": "811397aad8a9",
+      "recorded": "2026-08-15T12:00:38Z",
+      "note": "step 30 red: SignedInHeader.test.tsx fails to resolve import (no implementation yet)"
+    },
+    "evidence/step30-green.txt": {
+      "sha": "66e7daa4f739",
+      "recorded": "2026-08-15T12:00:38Z",
+      "note": "step 30 green: SignedInHeader.test.tsx 3/3 passing"
     }
   },
   "test_file_hashes": {
@@ -1652,6 +1667,12 @@
       "step": 29,
       "recorded": "2026-08-15T11:53:14Z",
       "log_index": 331
+    },
+    "src/app/layout/SignedInHeader.test.tsx": {
+      "sha": "6a54530bcc45",
+      "step": 30,
+      "recorded": "2026-08-15T12:00:46Z",
+      "log_index": 336
     }
   }
 }

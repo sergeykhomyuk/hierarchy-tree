@@ -3,8 +3,8 @@
     "skipLink": "Skip to main content"
   },
   "header": {
-    "eyebrow": "Hierarchy",
-    "pageTitle": "Your workspace",
+    "eyebrow": "Directory",
+    "pageTitle": "Hierarchy Tree",
     "logout": "Log out",
     "signedInFallback": "Signed in",
     "nameLoading": "Loading your name"
