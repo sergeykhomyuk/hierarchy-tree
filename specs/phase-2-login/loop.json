@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "verify",
-  "phase_entered": "2026-08-15T13:01:12Z",
+  "phase": "review",
+  "phase_entered": "2026-08-15T13:24:31Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T13:24:06Z",
+  "updated": "2026-08-15T13:58:50Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -371,6 +371,26 @@
           "blocking": false,
           "disposition": "fixed",
           "round": "milestone-4"
+        },
+        "Claude-14": {
+          "desc": "PRODUCT.md invariants 14 and 97, and TECH.md's file tree/test-map, still state the header fetches a single user record by id ('never fetches the collection - the thing that carries every plaintext password') and describe the deleted userResourcePath.ts. The shipped M4 code (ARCHITECTURE.md's 2026-08-15 decision log entry) correctly fetches the whole /users.json collection instead, since no per-id path exists against the real database. The spec's own numbered acceptance criteria now contradict the shipped, tested, user-approved behavior. This is security-tagged since invariant 14 frames it as the invariant that 'keeps the plaintext password table out of the client at login.'",
+          "blocking": true,
+          "disposition": "fixed"
+        },
+        "Codex-1": {
+          "desc": "Independently confirms Claude-14: PRODUCT.md invariants 97/97d still prohibit the collection request, TECH.md still specifies /users/{id}.json, and plan_steps still name the deleted userResourcePath.test.ts - the phase cannot truthfully claim its numbered acceptance criteria and invariant-to-test map pass.",
+          "blocking": true,
+          "disposition": "fixed"
+        },
+        "Codex-2": {
+          "desc": "routeDefinitions.test.ts's structural guard test ('wrap every guarded route's loader in withSessionGuard') inspects the STATIC route object's own 'loader' property, but every child route is registered via lazy() (confirmed: HomeRoute's child is {index:true, lazy: async () => {...}}, no static loader). A loader added inside a future lazy() callback's returned object (e.g. return {Component, loader: unguardedFn}) would never be inspected by this test - it only ever sees the pre-resolution route object where loader is always undefined for a lazy route. The test's own comment claims 'any FUTURE child loader that skips withSessionGuard fails here,' which is false for the lazy-route case, the only case this codebase actually uses.",
+          "blocking": true,
+          "disposition": "fixed"
+        },
+        "Codex-3": {
+          "desc": "live-smoke.test.ts logs the real resolved user id to console output (console.log at line ~150-151) via a test that is never gating but is retained in CI artifacts when run. Not a credential (public-database identifier, not an auth token) and the login leak assertions correctly don't need to catch it, but it's an unnecessary identifier disclosure outside the otherwise identifier-free telemetry posture.",
+          "blocking": false,
+          "disposition": "fixed"
         }
       }
     },
@@ -1181,7 +1201,17 @@
     "2026-08-15T13:23:45Z approved-change: src/app/layout/SignedInHeader.test.tsx - formatting-only Prettier reformat after step 30's own red/na; no behavioural change.",
     "2026-08-15T13:23:45Z approved-change: scripts/live-smoke/live-smoke.test.ts - two new live cases added for step 31 (invariant 97e), then the second rewritten to call the real fetchSignedInUser directly, closing M4 review finding Claude-12 (user-approved 'Fix').",
     "2026-08-15T13:24:06Z approved-change: src/features/auth/domain/deriveSecret.test.ts - re-touched by steps 22-23's commit after step 3's own red/na; part of the already-reviewed M2 diff (evidence/reviews/m2-claude-review.md).",
-    "2026-08-15T13:24:06Z G3 -> passed (Fresh-context G3 verification (agentic-loop:loop-verifier): npm run verify, npm run e2e (41/41) and npm run smoke:live (4/4) all green; invariant coverage spot-checked across credential derivation, lookup, session/guard, header, keyboard/a11y and telemetry/security groups. 3 findings (Gap-1: credential-leak check only covered 2 of 5 named surfaces and no twelve-character-window loop existed; Gap-2: no component-level Tab-order sweep or tabindex-absence assertion; Gap-3: sign-in-settled outcome telemetry never behaviorally asserted for real flows), all covered: added a shared assertNoCredentialLeak helper checking all 5 named surfaces with both whole-value and twelve-character-window assertions (e2e/login.spec.ts), a full 5-state Tab-order sweep plus tabindex-absence assertion (LoginPage.test.tsx), and 3 new tests tying each real outcome flow to its auth.sign_in_settled payload and shared correlation id (useLoginSubmission.test.tsx). Each fix verified via a differential check. Final re-run: verify/e2e/live-smoke all green. Evidence: evidence/g3-final-verify-post-gaps.txt, evidence/g3-final-e2e-post-gaps.txt, evidence/g3-final-live-post-gaps.txt.)"
+    "2026-08-15T13:24:06Z G3 -> passed (Fresh-context G3 verification (agentic-loop:loop-verifier): npm run verify, npm run e2e (41/41) and npm run smoke:live (4/4) all green; invariant coverage spot-checked across credential derivation, lookup, session/guard, header, keyboard/a11y and telemetry/security groups. 3 findings (Gap-1: credential-leak check only covered 2 of 5 named surfaces and no twelve-character-window loop existed; Gap-2: no component-level Tab-order sweep or tabindex-absence assertion; Gap-3: sign-in-settled outcome telemetry never behaviorally asserted for real flows), all covered: added a shared assertNoCredentialLeak helper checking all 5 named surfaces with both whole-value and twelve-character-window assertions (e2e/login.spec.ts), a full 5-state Tab-order sweep plus tabindex-absence assertion (LoginPage.test.tsx), and 3 new tests tying each real outcome flow to its auth.sign_in_settled payload and shared correlation id (useLoginSubmission.test.tsx). Each fix verified via a differential check. Final re-run: verify/e2e/live-smoke all green. Evidence: evidence/g3-final-verify-post-gaps.txt, evidence/g3-final-e2e-post-gaps.txt, evidence/g3-final-live-post-gaps.txt.)",
+    "2026-08-15T13:24:31Z phase -> review (reason: G3 passed. Moving to the final G4 dual review (Claude + Codex) and security review.)",
+    "2026-08-15T13:34:46Z G4 finding Claude-14 recorded (blocking): PRODUCT.md invariants 14 and 97, and TECH.md's file tree/test-map, still state the header fetches a single user record by id ('never fetches the collection - the thing that carries every plaintext password') and describe the deleted userResourcePath.ts. The shipped M4 code (ARCHITECTURE.md's 2026-08-15 decision log entry) correctly fetches the whole /users.json collection instead, since no per-id path exists against the real database. The spec's own numbered acceptance criteria now contradict the shipped, tested, user-approved behavior. This is security-tagged since invariant 14 frames it as the invariant that 'keeps the plaintext password table out of the client at login.'",
+    "2026-08-15T13:34:46Z G4 finding Codex-1 recorded (blocking): Independently confirms Claude-14: PRODUCT.md invariants 97/97d still prohibit the collection request, TECH.md still specifies /users/{id}.json, and plan_steps still name the deleted userResourcePath.test.ts - the phase cannot truthfully claim its numbered acceptance criteria and invariant-to-test map pass.",
+    "2026-08-15T13:34:46Z G4 finding Codex-2 recorded (blocking): routeDefinitions.test.ts's structural guard test ('wrap every guarded route's loader in withSessionGuard') inspects the STATIC route object's own 'loader' property, but every child route is registered via lazy() (confirmed: HomeRoute's child is {index:true, lazy: async () => {...}}, no static loader). A loader added inside a future lazy() callback's returned object (e.g. return {Component, loader: unguardedFn}) would never be inspected by this test - it only ever sees the pre-resolution route object where loader is always undefined for a lazy route. The test's own comment claims 'any FUTURE child loader that skips withSessionGuard fails here,' which is false for the lazy-route case, the only case this codebase actually uses.",
+    "2026-08-15T13:34:46Z G4 finding Codex-3 recorded: live-smoke.test.ts logs the real resolved user id to console output (console.log at line ~150-151) via a test that is never gating but is retained in CI artifacts when run. Not a credential (public-database identifier, not an auth token) and the login leak assertions correctly don't need to catch it, but it's an unnecessary identifier disclosure outside the otherwise identifier-free telemetry posture.",
+    "2026-08-15T13:34:53Z evidence recorded: evidence/reviews/g4-codex-final-review.md (187fde91cfa5) - Final G4 Codex second opinion: 3 findings (2 blocking), verbatim",
+    "2026-08-15T13:58:50Z G4 finding Claude-14 dispositioned: fixed",
+    "2026-08-15T13:58:50Z G4 finding Codex-1 dispositioned: fixed",
+    "2026-08-15T13:58:50Z G4 finding Codex-2 dispositioned: fixed",
+    "2026-08-15T13:58:50Z G4 finding Codex-3 dispositioned: fixed"
   ],
   "milestones": [
     {
@@ -1624,6 +1654,11 @@
       "sha": "82dd025a6963",
       "recorded": "2026-08-15T13:22:23Z",
       "note": "G3 final: npm run smoke:live green, 4/4, against the real database"
+    },
+    "evidence/reviews/g4-codex-final-review.md": {
+      "sha": "187fde91cfa5",
+      "recorded": "2026-08-15T13:34:53Z",
+      "note": "Final G4 Codex second opinion: 3 findings (2 blocking), verbatim"
     }
   },
   "test_file_hashes": {

@@ -129,7 +129,7 @@ describe('live smoke', () => {
         );
       }
 
-      const [id, record] = match;
+      const [, record] = match;
       const email = record.email as string;
       const password = record.password as string;
       const secret = deriveSecret(email, password);
@@ -147,10 +147,11 @@ describe('live smoke', () => {
       // not a map keyed by the id /secrets.json resolves to - the two
       // need not (and here do not) agree, so the id this test carries
       // forward is whichever one the real lookup - the same call the
-      // app itself makes - actually returned.
-      console.log(
-        `account at /users.json key "${id}" resolved through /secrets/<derived>.json to id "${String(lookup.userId)}"`,
-      );
+      // app itself makes - actually returned. Not logged: a resolved
+      // account identifier is unnecessary disclosure this suite's
+      // otherwise identifier-free telemetry posture doesn't need, even
+      // though it names a public-database record rather than a
+      // credential.
       resolvedUserId = String(lookup.userId);
     });
 

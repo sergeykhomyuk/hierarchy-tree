@@ -52,6 +52,25 @@ describe('routeDefinitions', () => {
     );
   });
 
+  // Every child under the authenticated layout is registered via lazy()
+  // (routeDefinitions.ts), which means its loader - if it has one - lives
+  // on the object lazy() RESOLVES to, not on the static RouteObject
+  // returned before react-router has ever matched the route. Reading
+  // `child.loader` directly (as an earlier version of this test did)
+  // always reads undefined for a lazy route regardless of what its lazy()
+  // callback returns, so it could never actually catch an unguarded
+  // loader added inside one - the only shape this codebase uses.
+  async function resolvedLoader(child: RouteObject): Promise<unknown> {
+    if ('loader' in child && child.loader !== undefined) {
+      return child.loader;
+    }
+    if (typeof child.lazy === 'function') {
+      const resolved = await child.lazy();
+      return 'loader' in resolved ? resolved.loader : undefined;
+    }
+    return undefined;
+  }
+
   it("wrap every guarded route's loader in withSessionGuard", async () => {
     const authenticated = findAuthenticated(await buildChildren(true));
 
@@ -60,8 +79,9 @@ describe('routeDefinitions', () => {
     // that accident into an enforced property (invariant 146): any FUTURE
     // child loader that skips withSessionGuard fails here.
     for (const child of authenticated?.children ?? []) {
-      if ('loader' in child && child.loader !== undefined) {
-        expect(isSessionGuarded(child.loader)).toBe(true);
+      const loader = await resolvedLoader(child);
+      if (loader !== undefined) {
+        expect(isSessionGuarded(loader)).toBe(true);
       }
     }
   });

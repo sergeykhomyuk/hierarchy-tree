@@ -577,36 +577,31 @@ z.union([
 Everything else - an object, an array, an empty string, a boolean, a fractional or infinite
 number - fails the parse, and so does **any string carrying a character outside the pattern**.
 
-**Why the pattern, and why here (invariant 18a).** The id is interpolated into a request path
-by `userResourcePath` and written into the session record, and neither the `` `/${string}` ``
-template type nor `new URL()` will object to a value that changes which resource is addressed.
-`/users/../secrets.json` resolves to `/secrets.json` - same origin, so `createHttpClient`'s
-origin check (lines 63-69) passes it - and `/`, `?`, `#` and a backslash each redirect the
-request somewhere the caller did not ask for. The parse boundary is the right place because it
-is the only place that runs **before** the value is used or stored: an id that never becomes a
-`UserIdentifier` cannot reach a path, a record or a component. A rejected value takes the
-existing `parse`-throw route to `{ kind: 'parse' }` and therefore to the service-problem state
-(invariant 18), which is the correct classification - a malformed response is not evidence that
-a credential is wrong.
+**Why the pattern, and why here (invariant 18a).** *Amended at M4 (ARCHITECTURE.md's decision
+log, 2026-08-15): the paragraphs below describe the M1 design, when the id was meant to be
+interpolated into a per-user request path via `userResourcePath`. That path never worked against
+the real database - `/users.json` is a flat array keyed by storage position, unrelated to the id
+`/secrets/<secret>.json` resolves to - so `userResourcePath.ts` is deleted and the id is no
+longer interpolated into any path at all. It is still written into the session record and now
+also compared against every record in the fetched users collection to find the signed-in user's
+own one (`fetchSignedInUser.ts`), so the charset restriction below is still load-bearing - a
+hostile value could otherwise be written to storage or, more remotely, participate in a string
+comparison keyed by attacker-controlled input - it is simply guarding a stored/compared value
+rather than a path segment now.* The id is written into the session record, and neither JSON
+serialization nor `sessionStorage` itself will object to a value that changes what a later
+`JSON.parse` of it produces. The parse boundary is the right place because it is the only place
+that runs **before** the value is used or stored: an id that never becomes a `UserIdentifier`
+cannot reach a record, a comparison or a component. A rejected value takes the existing
+`parse`-throw route to `{ kind: 'parse' }` and therefore to the service-problem state (invariant
+18), which is the correct classification - a malformed response is not evidence that a
+credential is wrong.
 
 `sessionRecordSchema` reuses the same pattern, so a hand-edited or downgraded storage record
 carrying a hostile id is unreadable in invariant 77's sense rather than a live identifier.
 
-`userResourcePath` percent-encodes regardless:
-
-```ts
-// userResourcePath.ts
-export function userResourcePath(userId: UserIdentifier): ResourcePath {
-  return `/users/${encodeURIComponent(String(userId))}.json`;
-}
-```
-
-Belt and braces on purpose. The charset check is the guarantee; the encoding is what keeps the
-guarantee from depending on the check having been applied on every path into this function, and
-`encodeURIComponent` is already on the vocabulary scanner's allowed-identifier list
-(`scripts/assert-domain-vocabulary.mjs:36-42`). `secretResourcePath` needs no encoding for the
-same reason it needs no check - invariant 1 fixes the secret's alphabet - but it is written the
-same way so the two paths do not diverge in shape. `parse` throwing is mapped by the client to
+`userResourcePath` no longer exists; the code block and the "belt and braces" percent-encoding
+paragraph that followed it here described a request-path safeguard that has no path left to
+guard. `parse` throwing is mapped by the client to
 `{ kind: 'parse' }` (`src/platform/http/performAttempt.ts:57-63`), which is a `failure`
 outcome, so invariant 18 falls out of the existing mapping without a special case: a
 malformed body reaches the service-problem state by the same route a 500 does, and never the
@@ -650,15 +645,20 @@ The three places the secret would otherwise appear are then all covered by one r
 per-attempt timing record (`createHttpClient.ts:142-151`), the cancellation debug record
 (lines 105-108), and the invalid-path error record (lines 65-67).
 
-**The header's one-record fetch (invariants 97, 97a).** `fetchSignedInUser` issues
-`GET /users/${id}.json` through the same client, with `signedInUserSchema` doing the work
-invariant 97a describes: the schema is a `z.object({...})` listing only the identifying
-fields and the name parts and nothing else, so Zod's default object behaviour strips
-`password` at the parse boundary and it never exists as a value in application memory. The
-schema is written with `.loose()` deliberately NOT used. The parsed result is mapped to
-`SignedInUserView` (`{ displayName: string }` plus whatever the name parts compose into),
-which is the only shape that crosses back out - so even a future schema change cannot widen
-what the header holds.
+**The header's fetch (invariants 97, 97a).** *Amended at M4 (ARCHITECTURE.md's decision log,
+2026-08-15): this paragraph originally described `fetchSignedInUser` issuing
+`GET /users/${id}.json`. That per-id path does not exist against the real database -
+`/users.json` is a flat array keyed by storage position, unrelated to the id
+`/secrets/<secret>.json` resolves to - so `fetchSignedInUser` instead issues `GET /users.json`
+(the whole collection, via `usersCollectionResourcePath.ts`) and finds the matching record
+client-side (`parseSignedInUsers.ts`, row-tolerant: a malformed sibling record is dropped, not a
+reason to fail the whole lookup).* `signedInUserSchema` still does the work invariant 97a
+describes: the schema is a `z.object({...})` listing only the identifying fields, the join-key
+`id`, and the name parts, and nothing else, so Zod's default object behaviour strips `password`
+at the parse boundary and it never exists as a value in application memory. The schema is
+written with `.loose()` deliberately NOT used. The parsed result is mapped to `SignedInUserView`
+(`{ displayName: string }` plus whatever the name parts compose into), which is the only shape
+that crosses back out - so even a future schema change cannot widen what the header holds.
 
 ### 4. Session storage access
 
@@ -1016,7 +1016,7 @@ public entry. `features/hierarchy` never learns the header exists (invariant 143
 untouched), and `features/auth` never imports `features/hierarchy`. `app -> feature` is an
 allowed edge (`eslint.config.js:328-346`).
 
-**The one-record fetch and its hold (invariants 97, 97a-97d).** `createSignedInUserStore({ http, observability })`
+**The fetch and its hold (invariants 97, 97a-97d).** `createSignedInUserStore({ http, observability })`
 returns `{ read(userId): Promise<SignedInUserView | null> }`, memoising the promise by user id
 for the store's lifetime. The store is built once in `createRuntime.ts`, so its lifetime is
 the page's - which is exactly invariant 97b, and it means a reload re-requests (the honest
@@ -1611,13 +1611,14 @@ assertion), **live** (the explicitly invoked live suite), **review**.
   collects every request to the API origin with a timestamp. The assertion is in two parts:
   within the authentication window - from the submission until the lookup response is observed -
   there is **exactly one** request, its path starts with `/secrets/`, and no path contains
-  `users`; and across the whole flow, no request path is `/users.json` or any collection form,
-  ever. After M4 the log legitimately contains a second request, `/users/<id>.json`, issued
-  after the window closes (invariants 14, 97); the check must be written this way from M2
-  onward, because a flat "exactly one request to the API origin, and no path contains `users`"
-  goes green in M2 and **must** go red in M4, and a check that has to be rewritten to keep
-  passing is a check nobody trusts. Invariant 97/97d's own entry asserts the second request from
-  the other side.
+  `users`; the window itself never touches the users path, in any form, before or after M4. After
+  M4 the log legitimately contains a second request, `/users.json` (the whole collection - see
+  invariant 97's amended text and ARCHITECTURE.md's decision log, 2026-08-15, not the per-id path
+  this entry originally named), issued after the window closes (invariants 14, 97); the check
+  must be written this way from M2 onward, because a flat "exactly one request to the API
+  origin, and no path contains `users`" goes green in M2 and **must** go red in M4, and a check
+  that has to be rewritten to keep passing is a check nobody trusts. Invariant 97/97d's own entry
+  asserts the second request from the other side.
 - 15 - unit: the `HttpRequest` object the fake transport receives has no query string, no body
   and no header beyond `traceparent` (which `performAttempt.ts:18` sets for every request).
 - 16 - unit: a `null` body produces `{ kind: 'noMatch' }`, exactly one transport call (no
@@ -1627,15 +1628,20 @@ assertion), **live** (the explicitly invoked live suite), **review**.
   `serviceProblem`, and explicitly **not** `noMatch`. The last two are the cases a naive
   `typeof === 'number'` check would pass.
 - 18a - unit, three groups. (i) `'u-7'`, `'u_7'` and `42` all produce `signedIn` and all carry
-  forward as the same `UserIdentifier` type, asserted by round-tripping each through
-  `userResourcePath`. (ii) The hostile charset table - `'../secrets'`, `'a/b'`, `'a?b'`,
+  forward as the same `UserIdentifier` type, asserted directly against `userIdentifier()`'s
+  return value (`userIdentifier.test.ts`) rather than by round-tripping through a resource-path
+  builder, since none exists after M4 (`userResourcePath.ts` deleted, ARCHITECTURE.md's decision
+  log, 2026-08-15). (ii) The hostile charset table - `'../secrets'`, `'a/b'`, `'a?b'`,
   `'a#b'`, `` 'a\\b' ``, `'a b'`, `'a.b'`, `''` - each produces `serviceProblem` and explicitly
-  **not** `signedIn`, so a path-traversing id never becomes an identifier. (iii) The encoding
-  half, asserted independently of (ii) so neither is the other's only line of defence: given a
-  `UserIdentifier` built directly in the test, `userResourcePath` percent-encodes it and the
-  resolved URL's pathname still begins `/users/`. The same charset table is run against
-  `sessionRecordSchema`, asserting a stored record carrying one is treated as unreadable
-  (invariant 77) rather than as a session.
+  **not** `signedIn`, so a hostile id never becomes an identifier. (iii) *This paragraph
+  originally asserted a percent-encoding half against `userResourcePath`; that half no longer
+  applies (no path is built from the id).* In its place, `fetchSignedInUser.test.ts` asserts the
+  comparison half M4 actually needs: `String(candidate.id) === String(userId)` matches a
+  resolved id against a collection record's `id` field of a different JS type (a string lookup
+  id against a numeric record id, the real database's own shape) - a differential check against
+  a naive `===` confirms this test genuinely fails without the coercion. The same charset table
+  is run against `sessionRecordSchema`, asserting a stored record carrying one is treated as
+  unreadable (invariant 77) rather than as a session.
 - 19 - unit, one case per failure kind (a throwing transport, a deadline reached on the fake
   clock, 404, 500), each asserted to produce `serviceProblem` and never `noMatch`; plus the
   component test asserting the two states render differently and the e2e asserting the two
@@ -1883,13 +1889,15 @@ assertion), **live** (the explicitly invoked live suite), **review**.
 - 94, 96 - component + e2e: the header's parts in order; the avatar rendering initials derived
   from the resolved name and carrying no image element.
 - 95 - e2e: no header on `/login` and none on the not-found route, in both session states.
-- 97, 97d - e2e: exactly one request to `/users/<id>.json` **after** the authentication window
-  closes, and no request to `/users.json` or any other collection form at any point. This is the
-  other side of the 13/14/128 entry: that one asserts nothing on the users path *inside* the
-  window, this one asserts exactly one single-record request *outside* it, and the two together
-  are the whole network contract. Plus a unit assertion that the path is
-  `encodeURIComponent`-encoded (invariant 18a), so an id that somehow reached this far cannot
-  address another resource.
+- 97, 97d - e2e: exactly one request to `/users.json` **after** the authentication window
+  closes, and none inside it. This is the other side of the 13/14/128 entry: that one asserts
+  nothing on the users path *inside* the window, this one asserts exactly one collection request
+  *outside* it, and the two together are the whole network contract. This entry originally named
+  a per-id request and a unit assertion that its path was `encodeURIComponent`-encoded; both are
+  gone with `userResourcePath.ts` (deleted, ARCHITECTURE.md's decision log, 2026-08-15) - the
+  charset restriction (invariant 18a) still applies to the id as a stored value and a comparison
+  key, unit-tested in `signedInUserSchema.test.ts` and `fetchSignedInUser.test.ts`, just no
+  longer through a path-encoding assertion, since there is no longer a path to encode into.
 - 97a - unit: `signedInUserSchema` fed a fixture containing a `password` field produces a value
   whose serialisation contains neither the key nor the value, at any depth; plus a component
   test asserting the rendered DOM and the buffer contain neither.
