@@ -1,7 +1,12 @@
 import { globSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-const ROUTE_NAMES = ['HomeRoute', 'LoginRoute', 'NotFoundRoute'];
+const ROUTE_NAMES = [
+  'AuthenticatedRoute',
+  'HomeRoute',
+  'LoginRoute',
+  'NotFoundRoute',
+];
 
 describe('route chunks', () => {
   it('emits a chunk file for each route', () => {

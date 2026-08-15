@@ -7,3 +7,4 @@ export type {
 export { NavigationState } from './navigationState';
 export { createApplicationRouter } from './createApplicationRouter';
 export { routeDefinitions } from './routeDefinitions';
+export { createBackForwardRestore } from './createBackForwardRestore';

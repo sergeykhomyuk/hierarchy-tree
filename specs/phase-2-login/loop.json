@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T08:02:54Z",
+  "updated": "2026-08-15T08:38:46Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -263,8 +263,8 @@
     "G2": {
       "status": "pending",
       "attempts": 0,
-      "steps_total": 31,
-      "steps_done": 23
+      "steps_total": 32,
+      "steps_done": 28
     },
     "G3": {
       "status": "pending",
@@ -619,8 +619,8 @@
         "src/features/auth/guard/requireSession.test.ts::requireSession > replaces the current entry on a direct load and pushes on an in-app navigation",
         "src/features/auth/guard/redirectSignedInVisitor.test.ts::redirectSignedInVisitor > sends a signed-in visitor to the from target or the hierarchy route"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T08:09:21Z evidence/step24-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -630,8 +630,8 @@
         "src/features/auth/guard/withSessionGuard.test.ts::withSessionGuard > runs the session check before the wrapped loader and skips it entirely on redirect",
         "src/app/routing/routeDefinitions.test.ts::the route definitions > wrap every guarded route's loader in withSessionGuard"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T08:36:42Z evidence/step25-red.txt; evidence/step25-26-routeDefinitions-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -641,8 +641,8 @@
         "src/app/routing/routeDefinitions.test.ts::the route definitions > keep the route set at home, login and not-found",
         "src/app/layout/AuthenticatedLayout.test.tsx::AuthenticatedLayout > returns the signed-in user promise without awaiting it"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T08:36:42Z evidence/step25-26-routeDefinitions-red.txt; evidence/step26-authlayout-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -651,8 +651,8 @@
       "tests": [
         "src/app/routing/createBackForwardRestore.test.ts::createBackForwardRestore > revalidates when a persisted page is restored"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T08:36:42Z evidence/step27-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -709,6 +709,16 @@
       "red_observed": null,
       "status": "pending",
       "milestone": 4
+    },
+    {
+      "id": 32,
+      "desc": "Step 27a - useLoginSubmission's missing pageshow/bfcache-restore handling (invariant 48a gap found in M2)",
+      "tests": [
+        "useLoginSubmission.test.tsx::useLoginSubmission > aborts in flight and resets to untouched when a persisted page is restored"
+      ],
+      "red_observed": "2026-08-15T08:38:37Z evidence/step27a-red.txt",
+      "status": "done",
+      "milestone": 3
     }
   ],
   "log": [
@@ -991,7 +1001,38 @@
     "2026-08-15T07:58:52Z G4 finding Claude-7 dispositioned: fixed: LoginAlert.tsx's comment corrected to describe the actual describedBy wiring (no-match only).",
     "2026-08-15T07:58:52Z G4 finding Claude-4 dispositioned: accepted: matches the M1-accepted resolveDestination barrel-export precedent; M4 wires auth.signed_out as planned.",
     "2026-08-15T08:02:54Z evidence recorded: evidence/m2-findings-verify.txt (8f22a24d0521) - npm run verify green after fixing Claude-5/6/7 (endInteraction wiring, retry readiness guard, LoginAlert comment fix)",
-    "2026-08-15T08:02:54Z evidence recorded: evidence/m2-findings-e2e.txt (f988531ce9ad) - npm run e2e green (25/25) after the M2 finding fixes"
+    "2026-08-15T08:02:54Z evidence recorded: evidence/m2-findings-e2e.txt (f988531ce9ad) - npm run e2e green (25/25) after the M2 finding fixes",
+    "2026-08-15T08:03:11Z milestone 2 reviewed: Fresh-context Claude review (evidence/reviews/m2-claude-review.md): 4 findings, 0 blocking. Claude-5 (stale correlation id reuse after a non-navigating submission), Claude-6 (Retry control's implicit readiness guard) and Claude-7 (LoginAlert comment/code mismatch) fixed with new tests; Claude-4 (auth.signed_out shipped ahead of its M4 consumer) accepted, matching the M1-accepted resolveDestination precedent. npm run verify and npm run e2e both green after the fixes.",
+    "2026-08-15T08:09:21Z evidence recorded: evidence/step24-red.txt (fac45e888cb1) - requireSession.test.ts and redirectSignedInVisitor.test.ts red: files did not exist",
+    "2026-08-15T08:09:21Z evidence recorded: evidence/step24-green.txt (6585b80f2590) - requireSession, redirectSignedInVisitor, and the redirect-narrowing eslint-configuration tests all green",
+    "2026-08-15T08:09:21Z step 24 -> red",
+    "2026-08-15T08:09:22Z step 24 -> green",
+    "2026-08-15T08:09:22Z step 24 -> done",
+    "2026-08-15T08:36:35Z evidence recorded: evidence/step25-red.txt (67c8756c1b5f) - withSessionGuard.test.ts red: file did not exist",
+    "2026-08-15T08:36:36Z evidence recorded: evidence/step25-green.txt (fd17598102f2) - withSessionGuard.test.ts green",
+    "2026-08-15T08:36:36Z evidence recorded: evidence/step25-26-routeDefinitions-red.txt (f3b2eaba793a) - routeDefinitions.test.ts red against the pre-M3 (instance, developmentRoutes) signature: kit-route-ordering and route-set assertions fail",
+    "2026-08-15T08:36:36Z evidence recorded: evidence/step25-26-routeDefinitions-green.txt (a2a4f85f9a09) - routeDefinitions.test.ts and withSessionGuard.test.ts green against the M3 runtime-based signature",
+    "2026-08-15T08:36:36Z evidence recorded: evidence/step26-authlayout-red.txt (e77ff0306f1c) - AuthenticatedLayout.test.tsx red: createAuthenticatedLoader did not exist",
+    "2026-08-15T08:36:36Z evidence recorded: evidence/step26-authlayout-green.txt (507c44831f29) - AuthenticatedLayout.test.tsx green",
+    "2026-08-15T08:36:36Z evidence recorded: evidence/step27-red.txt (b37d7617386f) - createBackForwardRestore.test.ts red: file did not exist",
+    "2026-08-15T08:36:36Z evidence recorded: evidence/step27-green.txt (f50a4ee672c1) - createBackForwardRestore.test.ts green",
+    "2026-08-15T08:36:42Z step 25 -> red",
+    "2026-08-15T08:36:42Z step 25 -> green",
+    "2026-08-15T08:36:42Z step 25 -> done",
+    "2026-08-15T08:36:42Z step 26 -> red",
+    "2026-08-15T08:36:42Z step 26 -> green",
+    "2026-08-15T08:36:42Z step 26 -> done",
+    "2026-08-15T08:36:42Z step 27 -> red",
+    "2026-08-15T08:36:42Z step 27 -> green",
+    "2026-08-15T08:36:42Z step 27 -> done",
+    "2026-08-15T08:36:48Z gap found: PLAN.md step 18's own description text says useLoginSubmission aborts 'on unmount and on pageshow' and cites invariant 48a, but step 18's registered Tests list never included a pageshow test - useLoginSubmission never got the pageshow/bfcache-restore handling TECH.md section 5.3 describes. Adding it now as step 27a while wiring the related createBackForwardRestore (M3), since it is the same bfcache-restore concern and the fix is small and self-contained.",
+    "2026-08-15T08:36:53Z step 32 added (milestone 3): Step 27a - useLoginSubmission's missing pageshow/bfcache-restore handling (invariant 48a gap found in M2)",
+    "2026-08-15T08:38:37Z evidence recorded: evidence/step27a-red.txt (4e2a67be3caa) - useLoginSubmission.test.tsx pageshow-restore red: behavior did not exist",
+    "2026-08-15T08:38:37Z evidence recorded: evidence/step27a-green.txt (dd07a4c5b535) - useLoginSubmission.test.tsx pageshow-restore green",
+    "2026-08-15T08:38:37Z step 32 -> red",
+    "2026-08-15T08:38:37Z step 32 -> green",
+    "2026-08-15T08:38:38Z step 32 -> done",
+    "2026-08-15T08:38:46Z step 32: loop warned it could not locate a tamper hash for useLoginSubmission.test.tsx's new test (same non-blocking drift as steps 15-21's registration warnings) - the test exists and passes; loop check's grep-based leaf-text verification confirms the title is present in the file."
   ],
   "milestones": [
     {
@@ -1004,7 +1045,7 @@
       "id": 2,
       "title": "M2 - The login card and its five states",
       "verified": "2026-08-15T06:29:00Z npm run verify and npm run e2e both green (377 unit/component tests, 25/25 e2e); all five login card states covered by component tests (idle/ready/submitting/noMatch/serviceProblem) plus keyboard contract and axe; login.spec.ts's 6 e2e tests cover the real sign-in flow, no-match, service-problem+retry, request-count invariants, credential-material leakage and a five-state axe sweep; the placeholder migration (step 23) is green across all 6 affected specs. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt.",
-      "reviewed": null
+      "reviewed": "2026-08-15T08:03:11Z Fresh-context Claude review (evidence/reviews/m2-claude-review.md): 4 findings, 0 blocking. Claude-5 (stale correlation id reuse after a non-navigating submission), Claude-6 (Retry control's implicit readiness guard) and Claude-7 (LoginAlert comment/code mismatch) fixed with new tests; Claude-4 (auth.signed_out shipped ahead of its M4 consumer) accepted, matching the M1-accepted resolveDestination precedent. npm run verify and npm run e2e both green after the fixes."
     },
     {
       "id": 3,
@@ -1219,6 +1260,66 @@
       "sha": "f988531ce9ad",
       "recorded": "2026-08-15T08:02:54Z",
       "note": "npm run e2e green (25/25) after the M2 finding fixes"
+    },
+    "evidence/step24-red.txt": {
+      "sha": "fac45e888cb1",
+      "recorded": "2026-08-15T08:09:21Z",
+      "note": "requireSession.test.ts and redirectSignedInVisitor.test.ts red: files did not exist"
+    },
+    "evidence/step24-green.txt": {
+      "sha": "6585b80f2590",
+      "recorded": "2026-08-15T08:09:21Z",
+      "note": "requireSession, redirectSignedInVisitor, and the redirect-narrowing eslint-configuration tests all green"
+    },
+    "evidence/step25-red.txt": {
+      "sha": "67c8756c1b5f",
+      "recorded": "2026-08-15T08:36:35Z",
+      "note": "withSessionGuard.test.ts red: file did not exist"
+    },
+    "evidence/step25-green.txt": {
+      "sha": "fd17598102f2",
+      "recorded": "2026-08-15T08:36:36Z",
+      "note": "withSessionGuard.test.ts green"
+    },
+    "evidence/step25-26-routeDefinitions-red.txt": {
+      "sha": "f3b2eaba793a",
+      "recorded": "2026-08-15T08:36:36Z",
+      "note": "routeDefinitions.test.ts red against the pre-M3 (instance, developmentRoutes) signature: kit-route-ordering and route-set assertions fail"
+    },
+    "evidence/step25-26-routeDefinitions-green.txt": {
+      "sha": "a2a4f85f9a09",
+      "recorded": "2026-08-15T08:36:36Z",
+      "note": "routeDefinitions.test.ts and withSessionGuard.test.ts green against the M3 runtime-based signature"
+    },
+    "evidence/step26-authlayout-red.txt": {
+      "sha": "e77ff0306f1c",
+      "recorded": "2026-08-15T08:36:36Z",
+      "note": "AuthenticatedLayout.test.tsx red: createAuthenticatedLoader did not exist"
+    },
+    "evidence/step26-authlayout-green.txt": {
+      "sha": "507c44831f29",
+      "recorded": "2026-08-15T08:36:36Z",
+      "note": "AuthenticatedLayout.test.tsx green"
+    },
+    "evidence/step27-red.txt": {
+      "sha": "b37d7617386f",
+      "recorded": "2026-08-15T08:36:36Z",
+      "note": "createBackForwardRestore.test.ts red: file did not exist"
+    },
+    "evidence/step27-green.txt": {
+      "sha": "f50a4ee672c1",
+      "recorded": "2026-08-15T08:36:36Z",
+      "note": "createBackForwardRestore.test.ts green"
+    },
+    "evidence/step27a-red.txt": {
+      "sha": "4e2a67be3caa",
+      "recorded": "2026-08-15T08:38:37Z",
+      "note": "useLoginSubmission.test.tsx pageshow-restore red: behavior did not exist"
+    },
+    "evidence/step27a-green.txt": {
+      "sha": "dd07a4c5b535",
+      "recorded": "2026-08-15T08:38:37Z",
+      "note": "useLoginSubmission.test.tsx pageshow-restore green"
     }
   },
   "test_file_hashes": {
@@ -1413,6 +1514,42 @@
       "step": 23,
       "recorded": "2026-08-15T06:28:44Z",
       "log_index": 262
+    },
+    "src/features/auth/guard/requireSession.test.ts": {
+      "sha": "4eb815d8503e",
+      "step": 24,
+      "recorded": "2026-08-15T08:09:21Z",
+      "log_index": 283
+    },
+    "src/features/auth/guard/redirectSignedInVisitor.test.ts": {
+      "sha": "0eb5eb6c694e",
+      "step": 24,
+      "recorded": "2026-08-15T08:09:21Z",
+      "log_index": 283
+    },
+    "src/features/auth/guard/withSessionGuard.test.ts": {
+      "sha": "aac14d4375b6",
+      "step": 25,
+      "recorded": "2026-08-15T08:36:42Z",
+      "log_index": 294
+    },
+    "src/app/routing/routeDefinitions.test.ts": {
+      "sha": "1b28c176c2bc",
+      "step": 26,
+      "recorded": "2026-08-15T08:36:42Z",
+      "log_index": 297
+    },
+    "src/app/layout/AuthenticatedLayout.test.tsx": {
+      "sha": "7ef08b8ded22",
+      "step": 26,
+      "recorded": "2026-08-15T08:36:42Z",
+      "log_index": 297
+    },
+    "src/app/routing/createBackForwardRestore.test.ts": {
+      "sha": "9220dab50bc2",
+      "step": 27,
+      "recorded": "2026-08-15T08:36:42Z",
+      "log_index": 300
     }
   }
 }

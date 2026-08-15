@@ -170,6 +170,36 @@ describe('useLoginSubmission', () => {
     expect(endInteraction).not.toHaveBeenCalled();
   });
 
+  it('aborts in flight and resets to untouched when a persisted page is restored', async () => {
+    let abortedSignal: AbortSignal | undefined;
+    const transport: Transport = (request) => {
+      abortedSignal = request.signal;
+      return new Promise((_resolve, reject) => {
+        request.signal.addEventListener('abort', () => {
+          reject(new DOMException('aborted', 'AbortError'));
+        });
+      });
+    };
+    const dependencies = createTestDependencies(transport);
+
+    render(<TestForm dependencies={dependencies} />);
+    const form = screen.getByTestId('login-form');
+
+    fireEvent.submit(form);
+    await Promise.resolve();
+    expect(screen.getByTestId('pending').textContent).toBe('true');
+
+    window.dispatchEvent(
+      new PageTransitionEvent('pageshow', { persisted: true }),
+    );
+
+    expect(abortedSignal?.aborted).toBe(true);
+    await waitFor(() =>
+      expect(screen.getByTestId('pending').textContent).toBe('false'),
+    );
+    expect(screen.getByTestId('outcome').textContent).toBe('untouched');
+  });
+
   it('aborts in flight without a state update when the page unmounts', async () => {
     let abortedSignal: AbortSignal | undefined;
     const transport: Transport = (request) => {

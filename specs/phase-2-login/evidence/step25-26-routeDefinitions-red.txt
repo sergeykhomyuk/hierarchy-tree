@@ -1,0 +1,50 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/routing/routeDefinitions.test.ts (5 tests | 2 failed) 6ms
+     × registers the kit route before the wildcard when development routes are on 3ms
+     × keep the route set at home, login and not-found 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/routing/routeDefinitions.test.ts > routeDefinitions > registers the kit route before the wildcard when development routes are on
+AssertionError: expected [ undefined, 'login', '*' ] to include '__kit'
+ ❯ src/app/routing/routeDefinitions.test.ts:25:19
+     23|     const paths = topLevelPaths(await buildChildren(true));
+     24|
+     25|     expect(paths).toContain('__kit');
+       |                   ^
+     26|     expect(paths.indexOf('__kit')).toBeLessThan(paths.indexOf('*'));
+     27|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/app/routing/routeDefinitions.test.ts > routeDefinitions > keep the route set at home, login and not-found
+AssertionError: expected [ undefined, 'login', '*' ] to deeply equal [ undefined, 'login', '__kit', '*' ]
+
+- Expected
++ Received
+
+  [
+    undefined,
+    "login",
+-   "__kit",
+    "*",
+  ]
+
+ ❯ src/app/routing/routeDefinitions.test.ts:44:37
+     42|     // home route rather than adding a path of its own, so the route S…
+     43|     // stays exactly `/`, `login`, `__kit` and `*`.
+     44|     expect(topLevelPaths(children)).toEqual([undefined, 'login', '__ki…
+       |                                     ^
+     45|
+     46|     const authenticated = findAuthenticated(children);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  09:29:08
+   Duration  645ms (transform 117ms, setup 91ms, import 151ms, tests 6ms, environment 334ms)
+

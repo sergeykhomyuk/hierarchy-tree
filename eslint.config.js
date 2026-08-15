@@ -561,7 +561,7 @@ export default defineConfig([
               name: 'react-router',
               importNames: ['redirect', 'redirectDocument'],
               message:
-                'No loader, guard or redirect exists in this phase (invariant 97).',
+                'redirect/redirectDocument are only permitted inside src/features/auth/guard/** - no other file performs a client-side redirect.',
             },
           ],
           patterns: [...FEATURE_DEEP_IMPORT_PATTERNS, SINKS_IMPORT_PATTERN],
@@ -583,12 +583,45 @@ export default defineConfig([
               name: 'react-router',
               importNames: ['redirect', 'redirectDocument'],
               message:
-                'No loader, guard or redirect exists in this phase (invariant 97).',
+                'redirect/redirectDocument are only permitted inside src/features/auth/guard/** - no other file performs a client-side redirect.',
             },
           ],
           patterns: [SINKS_IMPORT_PATTERN],
         },
       ],
+    },
+  },
+  {
+    // The one place `redirect` is permitted (invariants 84-91): the guard
+    // pair throws it to send an unauthenticated visitor to /login or a
+    // signed-in one away from it. `redirectDocument` stays banned even
+    // here - a full document load is never right for a client-side guard.
+    // This block REPLACES rather than merges the rule from the two blocks
+    // above (flat config's per-rule behaviour), so it must repeat
+    // `patterns: [SINKS_IMPORT_PATTERN]` itself or the sinks ban would
+    // silently drop for exactly the directory that handles the credential
+    // path.
+    files: ['src/features/auth/guard/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'react-router',
+              importNames: ['redirectDocument'],
+              message:
+                'redirectDocument performs a full document load; use redirect or replace instead.',
+            },
+          ],
+          patterns: [SINKS_IMPORT_PATTERN],
+        },
+      ],
+      // The guard's contract with react-router is to throw the Response
+      // redirect()/replace() return - the router catches it specially.
+      // Not an error-handling escape hatch, so this override is scoped to
+      // the two guard files that do it.
+      '@typescript-eslint/only-throw-error': 'off',
     },
   },
   {

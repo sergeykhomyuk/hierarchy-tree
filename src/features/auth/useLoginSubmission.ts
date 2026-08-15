@@ -1,4 +1,10 @@
-import { useActionState, useCallback, useEffect, useRef } from 'react';
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import type { FormEvent } from 'react';
 import type { HttpClient } from '@platform/http';
 import {
@@ -39,6 +45,12 @@ export function useLoginSubmission(
   destination: string,
 ): UseLoginSubmissionResult {
   const controllerRef = useRef<AbortController | null>(null);
+  // A bfcache restore (invariant 48a) freezes the JS heap rather than
+  // unmounting anything, so the useEffect cleanup below never runs for
+  // it; useActionState has no external setter to reset its own state, so
+  // this override takes precedence over its result/isPending until the
+  // next real submission clears it (first line of the action, below).
+  const [restoredWhilePending, setRestoredWhilePending] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -46,8 +58,20 @@ export function useLoginSubmission(
     };
   }, []);
 
+  useEffect(() => {
+    function handlePageShow(event: PageTransitionEvent): void {
+      if (event.persisted && controllerRef.current) {
+        controllerRef.current.abort();
+        setRestoredWhilePending(true);
+      }
+    }
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
+
   const [result, dispatch, isPending] = useActionState<LoginResult, FormData>(
     async (previousResult, formData) => {
+      setRestoredWhilePending(false);
       const rawEmail = formData.get('email');
       const rawPassword = formData.get('password');
       const email = typeof rawEmail === 'string' ? rawEmail : '';
@@ -115,12 +139,17 @@ export function useLoginSubmission(
 
   const onSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      if (isPending) {
+      if (!restoredWhilePending && isPending) {
         event.preventDefault();
       }
     },
-    [isPending],
+    [isPending, restoredWhilePending],
   );
 
-  return { result, isPending, formAction: dispatch, onSubmit };
+  return {
+    result: restoredWhilePending ? UNTOUCHED : result,
+    isPending: restoredWhilePending ? false : isPending,
+    formAction: dispatch,
+    onSubmit,
+  };
 }

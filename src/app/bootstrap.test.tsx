@@ -1,7 +1,28 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { act, waitFor } from '@testing-library/react';
+import { createTabStorage } from '@platform/runtime';
 import { bootstrap } from './bootstrap';
 import type { ConfigurationResult } from '@platform/configuration';
+
+// The real session storage key and shape (session/sessionRecord.ts,
+// sessionStorageKey.ts), not reachable from app/ through the feature
+// barrel - bootstrap.ts drives the real router end to end, and / is a
+// guarded route since M3, so these tests need a real signed-in session
+// to reach it at all. Written through createTabStorage() - the one
+// sanctioned sessionStorage reader/writer - rather than the global
+// directly, which lint bans everywhere else (invariant 78).
+const SESSION_STORAGE_KEY = 'hierarchy-tree.session';
+
+function writeSignedInSession(): void {
+  createTabStorage().write(
+    SESSION_STORAGE_KEY,
+    JSON.stringify({ version: 1, userId: 'bootstrap-test-user' }),
+  );
+}
+
+afterEach(() => {
+  createTabStorage().remove(SESSION_STORAGE_KEY);
+});
 
 const VALID_CONFIGURATION_RESULT: ConfigurationResult = {
   ok: true,
@@ -18,6 +39,7 @@ const VALID_CONFIGURATION_RESULT: ConfigurationResult = {
 
 describe('bootstrap', () => {
   it('renders the home route through the real router when configuration is valid', async () => {
+    writeSignedInSession();
     const container = document.createElement('div');
     document.body.appendChild(container);
 
@@ -40,6 +62,7 @@ describe('bootstrap', () => {
   });
 
   it('attaches the interaction tracker to the router so a settled navigation is recorded', async () => {
+    writeSignedInSession();
     const container = document.createElement('div');
     document.body.appendChild(container);
 

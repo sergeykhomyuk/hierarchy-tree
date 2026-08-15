@@ -8,7 +8,7 @@ import { createSystemRandomness } from '@platform/runtime';
 import { ApplicationRoot } from './ApplicationRoot';
 import { ConfigurationErrorScreen } from './ConfigurationErrorScreen';
 import { createRuntime } from './composition';
-import { createApplicationRouter } from './routing';
+import { createApplicationRouter, createBackForwardRestore } from './routing';
 import { reportRootError } from './error-boundary';
 
 // The testable startup path: main.tsx is the one file whose name is not
@@ -49,6 +49,7 @@ export async function bootstrap(
   const runtime = await createRuntime(configurationResult.configuration);
   const router = createApplicationRouter(runtime);
   runtime.interactionTracker.attach(router);
+  createBackForwardRestore(router);
 
   function handleBoundaryError(error: unknown): void {
     // React 19 logs every boundary-caught error via console.error by
