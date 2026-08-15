@@ -116,7 +116,7 @@ test.describe('the login card', () => {
       },
       user: () => {
         userRequestCount += 1;
-        return { status: 200, body: null };
+        return { status: 200, body: [] };
       },
     });
 
@@ -194,45 +194,53 @@ test.describe('the login card', () => {
     const password = page.getByLabel('login.passwordLabel');
     const submitButton = page.getByRole('button', { name: 'login.submit' });
 
-    // idle
-    await page.goto('/login');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'login.heading',
-    );
-    await assertAccessible(page);
+    // Invariant 111 asks for both themes, not just whichever the browser
+    // context defaults to - each theme runs the whole five-state sequence
+    // from a fresh idle load rather than sharing state across themes.
+    for (const colorScheme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme });
 
-    // ready
-    await email.fill(EMAIL);
-    await password.fill(PASSWORD);
-    await expect(submitButton).toBeEnabled();
-    await assertAccessible(page);
+      // idle
+      mode = 'noMatch';
+      await page.goto('/login');
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        'login.heading',
+      );
+      await assertAccessible(page);
 
-    // submitting - the route never resolves, so the card stays busy for
-    // the rest of this state's assertions; the next state's page.goto
-    // discards the still-pending request rather than waiting it out.
-    mode = 'hang';
-    await submitButton.click();
-    await expect(
-      page.getByRole('button', { name: 'login.submitting' }),
-    ).toBeVisible();
-    await assertAccessible(page);
+      // ready
+      await email.fill(EMAIL);
+      await password.fill(PASSWORD);
+      await expect(submitButton).toBeEnabled();
+      await assertAccessible(page);
 
-    // noMatch
-    mode = 'noMatch';
-    await page.goto('/login');
-    await email.fill(EMAIL);
-    await password.fill(WRONG_PASSWORD);
-    await submitButton.click();
-    await expect(page.getByRole('alert')).toBeVisible();
-    await assertAccessible(page);
+      // submitting - the route never resolves, so the card stays busy for
+      // the rest of this state's assertions; the next state's page.goto
+      // discards the still-pending request rather than waiting it out.
+      mode = 'hang';
+      await submitButton.click();
+      await expect(
+        page.getByRole('button', { name: 'login.submitting' }),
+      ).toBeVisible();
+      await assertAccessible(page);
 
-    // serviceProblem - resubmitted with the same (still-filled) fields,
-    // matching the retry path's own re-derive-in-place behaviour.
-    mode = 'serviceProblem';
-    await submitButton.click();
-    await expect(page.getByRole('alert')).toContainText(
-      'login.serviceProblemMessage',
-    );
-    await assertAccessible(page);
+      // noMatch
+      mode = 'noMatch';
+      await page.goto('/login');
+      await email.fill(EMAIL);
+      await password.fill(WRONG_PASSWORD);
+      await submitButton.click();
+      await expect(page.getByRole('alert')).toBeVisible();
+      await assertAccessible(page);
+
+      // serviceProblem - resubmitted with the same (still-filled) fields,
+      // matching the retry path's own re-derive-in-place behaviour.
+      mode = 'serviceProblem';
+      await submitButton.click();
+      await expect(page.getByRole('alert')).toContainText(
+        'login.serviceProblemMessage',
+      );
+      await assertAccessible(page);
+    }
   });
 });

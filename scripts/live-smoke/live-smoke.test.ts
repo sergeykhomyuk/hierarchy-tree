@@ -5,6 +5,9 @@ import {
   createCorrelationId,
 } from '@platform/observability';
 import { createSystemClock, createSystemRandomness } from '@platform/runtime';
+import { deriveSecret } from '../../src/features/auth/domain/deriveSecret';
+import { lookupUserIdentifier } from '../../src/features/auth/data/lookupUserIdentifier';
+import { signedInUserSchema } from '../../src/features/auth/data/signedInUserSchema';
 
 // Outside every default Vitest project (vitest.config.ts's `tooling`
 // project matches `scripts/*.test.ts` only, one path segment) and
@@ -76,5 +79,124 @@ describe('live smoke', () => {
     });
 
     expect(result.outcome).toBe('success');
+  });
+
+  // Invariants 6, 6a, 97e: proves the production request path against a
+  // real account rather than a fixture. The two tests below share one
+  // account, discovered here and read by the second - not because
+  // sharing is desirable in general, but because "derive this account's
+  // secret" and "resolve that account's name" are one continuous claim
+  // (TECH.md section 9) and re-discovering the account twice would prove
+  // nothing extra for twice the live requests. Nothing credential-shaped
+  // is written down; the account is whichever the database serves.
+  describe('the signed-in user this account resolves to', () => {
+    let resolvedUserId: string | undefined;
+
+    it("derives a real account's secret and resolves it to that account's id", async () => {
+      const usersResult = await client.request({
+        method: 'GET',
+        resourcePath: '/users.json',
+        parse: parseAsRecord,
+      });
+      expect(usersResult.outcome).toBe('success');
+      if (usersResult.outcome !== 'success') return;
+
+      const entries = Object.entries(usersResult.value);
+      const match = entries.find(
+        (entry): entry is [string, Record<string, unknown>] => {
+          const record = entry[1];
+          return (
+            typeof record === 'object' &&
+            record !== null &&
+            typeof (record as Record<string, unknown>).email === 'string' &&
+            typeof (record as Record<string, unknown>).password === 'string'
+          );
+        },
+      );
+      if (match === undefined) {
+        const fieldsByUserId = entries
+          .map(([id, record]) => {
+            const keys =
+              typeof record === 'object' && record !== null
+                ? Object.keys(record)
+                : [];
+            return `${id}: [${keys.join(', ')}]`;
+          })
+          .join('; ');
+        throw new Error(
+          `no record in /users.json carries both an email and a password field; found ${fieldsByUserId}`,
+        );
+      }
+
+      const [id, record] = match;
+      const email = record.email as string;
+      const password = record.password as string;
+      const secret = deriveSecret(email, password);
+
+      const lookup = await lookupUserIdentifier(
+        client,
+        secret,
+        createCorrelationId(randomness),
+      );
+      expect(lookup.kind).toBe('signedIn');
+      if (lookup.kind !== 'signedIn') return;
+
+      // /users.json is the flat, numerically-indexed collection
+      // docs/task.md's own element-access example describes (users[1]),
+      // not a map keyed by the id /secrets.json resolves to - the two
+      // need not (and here do not) agree, so the id this test carries
+      // forward is whichever one the real lookup - the same call the
+      // app itself makes - actually returned.
+      console.log(
+        `account at /users.json key "${id}" resolved through /secrets/<derived>.json to id "${String(lookup.userId)}"`,
+      );
+      resolvedUserId = String(lookup.userId);
+    });
+
+    it("resolves the signed-in user's display name through the real schema", async () => {
+      if (resolvedUserId === undefined) {
+        throw new Error(
+          'the prior test did not resolve an account id to look up - see its own failure for why',
+        );
+      }
+
+      // No per-id path exists (signedInUserSchema.ts's own note) - the
+      // real header fetches the whole collection and finds the matching
+      // `id` field itself, so this proves the same thing the same way.
+      const result = await client.request({
+        method: 'GET',
+        resourcePath: '/users.json',
+        parse: (payload) => payload,
+      });
+      expect(result.outcome).toBe('success');
+      if (result.outcome !== 'success') return;
+
+      const rawEntries = Array.isArray(result.value) ? result.value : [];
+      const rawMatch = rawEntries.find(
+        (entry) =>
+          typeof entry === 'object' &&
+          entry !== null &&
+          String((entry as Record<string, unknown>).id) === resolvedUserId,
+      );
+      if (rawMatch === undefined) {
+        throw new Error(
+          `no record in /users.json has an id field matching "${resolvedUserId}"`,
+        );
+      }
+
+      const parsed = signedInUserSchema.safeParse(rawMatch);
+      if (!parsed.success) {
+        const keys =
+          typeof rawMatch === 'object' && rawMatch !== null
+            ? Object.keys(rawMatch)
+            : [];
+        throw new Error(
+          `the /users.json record with id "${resolvedUserId}" did not match signedInUserSchema (expected id plus string firstName/lastName fields); the fields it actually has are: [${keys.join(', ')}]`,
+        );
+      }
+
+      const displayName = `${parsed.data.firstName} ${parsed.data.lastName}`;
+      expect(displayName.trim().length).toBeGreaterThan(0);
+    });
   });
 });

@@ -84,7 +84,7 @@ describe('SignedInName', () => {
       await renderIsolated(pendingForever());
     // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access -- an aria-hidden skeleton placeholder has no accessible role to query by.
     const pendingAvatar = pendingContainer.querySelector(
-      '[aria-busy="true"] span',
+      '[aria-busy="true"] [aria-hidden="true"]',
     );
     for (const className of AVATAR_BOX_CLASSES) {
       expect(pendingAvatar?.className).toContain(className);

@@ -23,7 +23,7 @@ export async function installSignInApiMock(page: Page): Promise<void> {
     }),
     user: () => ({
       status: 200,
-      body: { firstName: 'Ada', lastName: 'Lovelace' },
+      body: [{ id: SIGN_IN_USER_ID, firstName: 'Ada', lastName: 'Lovelace' }],
     }),
   });
 }

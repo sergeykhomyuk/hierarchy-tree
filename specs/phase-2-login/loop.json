@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-14T20:16:52Z",
   "created": "2026-08-14",
-  "updated": "2026-08-15T12:00:46Z",
+  "updated": "2026-08-15T12:34:50Z",
   "security_review": true,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 32,
-      "steps_done": 31
+      "steps_done": 32
     },
     "G3": {
       "status": "pending",
@@ -718,8 +718,8 @@
         "scripts/live-smoke/live-smoke.test.ts::live smoke > derives a real account's secret and resolves it to that account's id",
         "scripts/live-smoke/live-smoke.test.ts::live smoke > resolves the signed-in user's display name through the real schema"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-15T12:34:50Z evidence/step31-header-e2e-red.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1072,7 +1072,17 @@
     "2026-08-15T12:00:38Z evidence recorded: evidence/step30-green.txt (66e7daa4f739) - step 30 green: SignedInHeader.test.tsx 3/3 passing",
     "2026-08-15T12:00:46Z step 30 -> red",
     "2026-08-15T12:00:46Z step 30 -> green",
-    "2026-08-15T12:00:46Z step 30 -> done"
+    "2026-08-15T12:00:46Z step 30 -> done",
+    "2026-08-15T12:34:41Z evidence recorded: evidence/step31-header-e2e-red.txt (8f57da9e6930) - step 31 red: 5 header e2e tests genuinely fail against pre-M4 AuthenticatedLayout",
+    "2026-08-15T12:34:42Z evidence recorded: evidence/step31-header-e2e-green.txt (bc0b8b066e8d) - step 31 green: 5 header e2e tests pass against real implementation",
+    "2026-08-15T12:34:42Z evidence recorded: evidence/step31-live-smoke.txt (c21ffbe3dbd0) - step 31 live smoke: 4/4 pass against the real database (derives secret, resolves id, resolves display name via real schema)",
+    "2026-08-15T12:34:42Z evidence recorded: evidence/step31-fix-red-schema.txt (18d49fa82a84) - genuine red: signedInUserSchema id-field test against old schema, found while proving live smoke (invariant 97e discovered /users/<id>.json never resolves for a real user)",
+    "2026-08-15T12:34:42Z evidence recorded: evidence/step31-fix-red-parseSignedInUsers.txt (e823c7f5e595) - genuine red: parseSignedInUsers.ts did not exist yet",
+    "2026-08-15T12:34:42Z evidence recorded: evidence/step31-fix-red-fetchSignedInUser.txt (d445055721f2) - genuine red: fetchSignedInUser collection-based tests against old single-record implementation",
+    "2026-08-15T12:34:47Z step 31: live smoke suite (invariant 97e) discovered that /users/<id>.json never resolves for a real user - /secrets.json resolves to each record's own internal id field, not the /users.json array's positional storage key, and there is no Firebase index on id. Fixed with user approval: fetchSignedInUser now fetches the whole /users.json collection via parseSignedInUsers (row-tolerant) and matches by id; userResourcePath.ts deleted. Documented in ARCHITECTURE.md's decision log (2026-08-15).",
+    "2026-08-15T12:34:50Z step 31 -> red",
+    "2026-08-15T12:34:50Z step 31 -> green",
+    "2026-08-15T12:34:50Z step 31 -> done"
   ],
   "milestones": [
     {
@@ -1425,6 +1435,36 @@
       "sha": "66e7daa4f739",
       "recorded": "2026-08-15T12:00:38Z",
       "note": "step 30 green: SignedInHeader.test.tsx 3/3 passing"
+    },
+    "evidence/step31-header-e2e-red.txt": {
+      "sha": "8f57da9e6930",
+      "recorded": "2026-08-15T12:34:41Z",
+      "note": "step 31 red: 5 header e2e tests genuinely fail against pre-M4 AuthenticatedLayout"
+    },
+    "evidence/step31-header-e2e-green.txt": {
+      "sha": "bc0b8b066e8d",
+      "recorded": "2026-08-15T12:34:42Z",
+      "note": "step 31 green: 5 header e2e tests pass against real implementation"
+    },
+    "evidence/step31-live-smoke.txt": {
+      "sha": "c21ffbe3dbd0",
+      "recorded": "2026-08-15T12:34:42Z",
+      "note": "step 31 live smoke: 4/4 pass against the real database (derives secret, resolves id, resolves display name via real schema)"
+    },
+    "evidence/step31-fix-red-schema.txt": {
+      "sha": "18d49fa82a84",
+      "recorded": "2026-08-15T12:34:42Z",
+      "note": "genuine red: signedInUserSchema id-field test against old schema, found while proving live smoke (invariant 97e discovered /users/<id>.json never resolves for a real user)"
+    },
+    "evidence/step31-fix-red-parseSignedInUsers.txt": {
+      "sha": "e823c7f5e595",
+      "recorded": "2026-08-15T12:34:42Z",
+      "note": "genuine red: parseSignedInUsers.ts did not exist yet"
+    },
+    "evidence/step31-fix-red-fetchSignedInUser.txt": {
+      "sha": "d445055721f2",
+      "recorded": "2026-08-15T12:34:42Z",
+      "note": "genuine red: fetchSignedInUser collection-based tests against old single-record implementation"
     }
   },
   "test_file_hashes": {
@@ -1673,6 +1713,18 @@
       "step": 30,
       "recorded": "2026-08-15T12:00:46Z",
       "log_index": 336
+    },
+    "e2e/header.spec.ts": {
+      "sha": "7042e320c71e",
+      "step": 31,
+      "recorded": "2026-08-15T12:34:50Z",
+      "log_index": 346
+    },
+    "scripts/live-smoke/live-smoke.test.ts": {
+      "sha": "45108b449bda",
+      "step": 31,
+      "recorded": "2026-08-15T12:34:50Z",
+      "log_index": 346
     }
   }
 }

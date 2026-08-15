@@ -13,7 +13,11 @@ export type ApiMockResponse = { status: number; body: unknown } | 'abort';
 
 export type ApiMockHandlers = {
   secret: (secret: string) => ApiMockResponse | Promise<ApiMockResponse>;
-  user?: (userId: string) => ApiMockResponse | Promise<ApiMockResponse>;
+  // The whole /users.json collection, not a per-user record: the real
+  // database has no per-id path or indexed query (ARCHITECTURE.md's
+  // decision log), so the app fetches the collection once and finds the
+  // matching `id` field itself.
+  user?: () => ApiMockResponse | Promise<ApiMockResponse>;
 };
 
 function pathSegment(url: string): string {
@@ -49,17 +53,17 @@ export async function installApiMocks(
     await fulfillOrAbort(route, response);
   });
 
-  await page.route(`${API_ORIGIN}/users/*.json`, async (route) => {
+  await page.route(`${API_ORIGIN}/users.json`, async (route) => {
     const handleUser = handlers.user;
     if (!handleUser) {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: 'null',
+        body: '[]',
       });
       return;
     }
-    const response = await handleUser(pathSegment(route.request().url()));
+    const response = await handleUser();
     await fulfillOrAbort(route, response);
   });
 }

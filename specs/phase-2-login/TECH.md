@@ -283,12 +283,15 @@ src/
       userIdentifier.ts                        type UserIdentifier (branded), invariant 18a
     data/
       secretResourcePath.ts                    (secret) -> ResourcePath
-      userResourcePath.ts                      (id) -> ResourcePath
+      usersCollectionResourcePath.ts           the ONE /users.json path constant (see ARCHITECTURE.md's
+                                                decision log, 2026-08-15 - there is no per-id path)
       lookupResultSchema.ts                    Zod: null | charset-restricted string | finite integer (18a)
       lookupUserIdentifier.ts                  the ONE request (invariants 13-22)
-      signedInUserSchema.ts                    Zod, drops `password` at the boundary (97a)
+      signedInUserSchema.ts                    Zod, keeps `id` (the join key) and drops `password` at
+                                                the boundary (97a)
+      parseSignedInUsers.ts                    row-tolerant collection parse + filter
       signedInUserView.ts                      type SignedInUserView
-      fetchSignedInUser.ts                     the one-record fetch (97)
+      fetchSignedInUser.ts                     fetches the collection, finds the matching `id` (97)
       createSignedInUserStore.ts               per-runtime memo (97b)
     session/
       sessionRecord.ts                         type + SESSION_SCHEMA_VERSION

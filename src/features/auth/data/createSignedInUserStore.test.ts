@@ -24,7 +24,9 @@ describe('createSignedInUserStore', () => {
       calls += 1;
       return Promise.resolve(
         new Response(
-          JSON.stringify({ firstName: 'Ada', lastName: 'Lovelace' }),
+          JSON.stringify([
+            { id: 'user_1', firstName: 'Ada', lastName: 'Lovelace' },
+          ]),
           { status: 200 },
         ),
       );

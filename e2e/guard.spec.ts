@@ -37,7 +37,7 @@ test.describe('the route guard', () => {
       }),
       user: () => {
         userRequestCount += 1;
-        return { status: 200, body: null };
+        return { status: 200, body: [] };
       },
     });
     await installMutationObserver(page);

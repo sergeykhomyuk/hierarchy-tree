@@ -1,0 +1,122 @@
+
+Running 5 tests using 1 worker
+
+  ✘  1 [chromium] › e2e/header.spec.ts:56:3 › the signed-in header › shows the skeleton, then the resolved name and initials (5.4s)
+  ✘  2 [chromium] › e2e/header.spec.ts:87:3 › the signed-in header › renders the neutral presentation and the page beneath when the name cannot resolve (30.0s)
+  ✘  3 [chromium] › e2e/header.spec.ts:120:3 › the signed-in header › requests the user record once across two authenticated navigations (5.3s)
+  ✘  4 [chromium] › e2e/header.spec.ts:159:3 › the signed-in header › signs in and out entirely from the keyboard (232ms)
+  ✘  5 [chromium] › e2e/header.spec.ts:209:3 › the signed-in header › does not return to an authenticated view with Back after signing out (30.0s)
+
+
+  1) [chromium] › e2e/header.spec.ts:56:3 › the signed-in header › shows the skeleton, then the resolved name and initials 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByLabel('header.nameLoading')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByLabel('header.nameLoading')
+
+
+      63 |     await submitSignInForm(page);
+      64 |
+    > 65 |     await expect(page.getByLabel('header.nameLoading')).toBeVisible();
+         |                                                         ^
+      66 |     const skeletonBox = await page
+      67 |       .locator('header [aria-busy="true"] span')
+      68 |       .first()
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/header.spec.ts:65:57
+
+    Error Context: test-results/header-the-signed-in-heade-b6b68--resolved-name-and-initials-chromium/error-context.md
+
+  2) [chromium] › e2e/header.spec.ts:87:3 › the signed-in header › renders the neutral presentation and the page beneath when the name cannot resolve 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.boundingBox: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('header [aria-busy="true"] span').first()
+
+
+       97 |       .locator('header [aria-busy="true"] span')
+       98 |       .first()
+    >  99 |       .boundingBox();
+          |        ^
+      100 |
+      101 |     (await getResolveUser())({ status: 500, body: null });
+      102 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/header.spec.ts:99:8
+
+    Error Context: test-results/header-the-signed-in-heade-1baae-hen-the-name-cannot-resolve-chromium/error-context.md
+
+  3) [chromium] › e2e/header.spec.ts:120:3 › the signed-in header › requests the user record once across two authenticated navigations 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Ada Lovelace')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('Ada Lovelace')
+
+
+      139 |
+      140 |     await submitSignInForm(page);
+    > 141 |     await expect(page.getByText('Ada Lovelace')).toBeVisible();
+          |                                                  ^
+      142 |     expect(userRequestCount).toBe(1);
+      143 |
+      144 |     // Simulates a second navigation into the authenticated route without
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/header.spec.ts:141:50
+
+    Error Context: test-results/header-the-signed-in-heade-49286-o-authenticated-navigations-chromium/error-context.md
+
+  4) [chromium] › e2e/header.spec.ts:159:3 › the signed-in header › signs in and out entirely from the keyboard 
+
+    Error: the logout control was not reached by tabbing
+
+      181 |         if (isLogout) return;
+      182 |       }
+    > 183 |       throw new Error('the logout control was not reached by tabbing');
+          |             ^
+      184 |     }
+      185 |
+      186 |     for (const activationKey of ['Enter', 'Space'] as const) {
+        at tabToLogout (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/header.spec.ts:183:13)
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/header.spec.ts:199:7
+
+    Error Context: test-results/header-the-signed-in-heade-43fd0--entirely-from-the-keyboard-chromium/error-context.md
+
+  5) [chromium] › e2e/header.spec.ts:209:3 › the signed-in header › does not return to an authenticated view with Back after signing out 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'header.logout' })
+
+
+      225 |     );
+      226 |
+    > 227 |     await page.getByRole('button', { name: 'header.logout' }).click();
+          |                                                               ^
+      228 |     await expect(page).toHaveURL(/\/login$/);
+      229 |
+      230 |     await page.goBack();
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/header.spec.ts:227:63
+
+    Error Context: test-results/header-the-signed-in-heade-5f78e-with-Back-after-signing-out-chromium/error-context.md
+
+  5 failed
+    [chromium] › e2e/header.spec.ts:56:3 › the signed-in header › shows the skeleton, then the resolved name and initials 
+    [chromium] › e2e/header.spec.ts:87:3 › the signed-in header › renders the neutral presentation and the page beneath when the name cannot resolve 
+    [chromium] › e2e/header.spec.ts:120:3 › the signed-in header › requests the user record once across two authenticated navigations 
+    [chromium] › e2e/header.spec.ts:159:3 › the signed-in header › signs in and out entirely from the keyboard 
+    [chromium] › e2e/header.spec.ts:209:3 › the signed-in header › does not return to an authenticated view with Back after signing out 

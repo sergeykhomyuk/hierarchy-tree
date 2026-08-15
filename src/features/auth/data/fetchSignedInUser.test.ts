@@ -85,12 +85,15 @@ describe('fetchSignedInUser', () => {
     }
   });
 
-  it('resolves to the composed display name for a well-formed record', async () => {
+  it('resolves to the composed display name for the matching record in the collection', async () => {
     const observability = createSpyObservability();
     const transport: Transport = () =>
       Promise.resolve(
         new Response(
-          JSON.stringify({ firstName: 'Ada', lastName: 'Lovelace' }),
+          JSON.stringify([
+            { id: 'user_0', firstName: 'Grace', lastName: 'Hopper' },
+            { id: 'user_1', firstName: 'Ada', lastName: 'Lovelace' },
+          ]),
           { status: 200 },
         ),
       );
@@ -104,5 +107,32 @@ describe('fetchSignedInUser', () => {
 
     expect(view).toEqual({ displayName: 'Ada Lovelace' });
     expect(observability.logger.warn).not.toHaveBeenCalled();
+  });
+
+  it('resolves to null and warns when no record in the collection matches the id', async () => {
+    const observability = createSpyObservability();
+    const transport: Transport = () =>
+      Promise.resolve(
+        new Response(
+          JSON.stringify([
+            { id: 'someone_else', firstName: 'Grace', lastName: 'Hopper' },
+          ]),
+          { status: 200 },
+        ),
+      );
+    const client = createTestClient(transport, observability);
+
+    const view = await fetchSignedInUser(
+      client,
+      userIdentifier('user_1'),
+      observability,
+    );
+
+    expect(view).toBe(null);
+    expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+    expect(observability.logger.warn).toHaveBeenCalledWith(
+      'auth.signed_in_user_unresolved',
+      { reason: 'not_found' },
+    );
   });
 });
