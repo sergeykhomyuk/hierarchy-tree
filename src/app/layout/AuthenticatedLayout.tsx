@@ -39,7 +39,13 @@ export const AuthenticatedLayout = memo(function AuthenticatedLayout() {
       />
       <div className="flex">
         <NavigationRail />
-        <Outlet />
+        {/* min-w-0 alongside flex-1: a flex item with neither would sit at
+            its content's natural width instead of filling the row's
+            remaining space - the hierarchy card's own width would then
+            track whatever text is longest inside it (invariant 64). */}
+        <div className="min-w-0 flex-1">
+          <Outlet />
+        </div>
       </div>
     </>
   );

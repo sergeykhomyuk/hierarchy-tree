@@ -66,16 +66,27 @@ export const HomeRoute = memo(function HomeRoute() {
   );
 
   return (
-    <Suspense fallback={<HierarchySkeleton />}>
-      <HierarchyPage
-        hierarchy={hierarchy}
-        onRetry={handleReload}
-        onRefresh={handleReload}
-        dependencies={dependencies}
-        {...(authenticatedData?.userId !== undefined
-          ? { userId: authenticatedData.userId }
-          : {})}
-      />
-    </Suspense>
+    // The single card frame every one of the four states renders inside
+    // (ErrorState/EmptyState's own framed={false} exists for exactly this
+    // - the page supplies ONE frame, not each state its own). Outside the
+    // Suspense boundary so the same DOM node persists across the loading-
+    // to-data transition rather than two differently-styled elements that
+    // merely happen to match (invariant 64).
+    <div
+      data-testid="hierarchy-card-frame"
+      className="rounded-card border border-border-hairline bg-surface p-6"
+    >
+      <Suspense fallback={<HierarchySkeleton />}>
+        <HierarchyPage
+          hierarchy={hierarchy}
+          onRetry={handleReload}
+          onRefresh={handleReload}
+          dependencies={dependencies}
+          {...(authenticatedData?.userId !== undefined
+            ? { userId: authenticatedData.userId }
+            : {})}
+        />
+      </Suspense>
+    </div>
   );
 });

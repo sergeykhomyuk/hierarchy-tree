@@ -3,6 +3,7 @@ import type { ObservabilityFacade } from '@platform/observability';
 import { flattenVisible } from './domain/flattenVisible';
 import type { PersonIdentifier } from './domain/personIdentifier';
 import type { TreeNode } from './domain/treeNode';
+import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
 import { TreeRow } from './TreeRow';
 
 export type HierarchyTreeProps = {
@@ -57,7 +58,7 @@ export const HierarchyTree = memo(function HierarchyTree({
   );
 
   return (
-    <div role="tree">
+    <div role="tree" className={ROW_LIST_MAX_HEIGHT_CLASS}>
       {rows.map((row) => (
         <TreeRow
           key={row.person.id}

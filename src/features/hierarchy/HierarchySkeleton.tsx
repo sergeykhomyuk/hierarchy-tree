@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Skeleton, SkeletonSize } from '@shared/ui';
+import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
 
 // Shaped like tree rows at varying indents (invariant 59), decorative in
 // full: no rows, no tree role, no interactive element and no text in the
@@ -43,7 +44,7 @@ export const HierarchySkeleton = memo(function HierarchySkeleton() {
           <span>{t('page.loadingLabel')}</span>
         </span>
       </div>
-      <div aria-hidden="true">
+      <div aria-hidden="true" className={ROW_LIST_MAX_HEIGHT_CLASS}>
         {SKELETON_ROW_INDENT_CLASS.map((indentClass, index) => (
           <div
             key={index}
