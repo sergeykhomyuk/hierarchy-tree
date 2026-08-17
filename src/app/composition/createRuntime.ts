@@ -12,9 +12,9 @@ import {
 } from '@platform/http';
 import {
   createInternationalization,
-  createKeyEchoCatalogue,
   detectLocale,
   Locale,
+  resolveLocaleCatalogue,
 } from '@platform/internationalization';
 import {
   createSystemClock,
@@ -70,10 +70,9 @@ export async function createRuntime(
   const language = detectLocale(navigator.languages);
   const i18n = await createInternationalization({
     resources: {
-      common:
-        language === Locale.Test
-          ? createKeyEchoCatalogue(commonCatalogue)
-          : commonCatalogue,
+      common: resolveLocaleCatalogue(language, {
+        [Locale.English]: commonCatalogue,
+      }),
     },
     language,
     observability,

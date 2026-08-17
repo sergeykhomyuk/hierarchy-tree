@@ -1,4 +1,4 @@
-type Catalogue = { readonly [key: string]: Catalogue | string };
+import type { Catalogue } from './catalogue';
 
 export function createKeyEchoCatalogue(catalogue: Catalogue): Catalogue {
   return echoLeaves(catalogue, []);
