@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T12:14:12Z",
+  "updated": "2026-08-17T12:17:50Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 5
+      "steps_done": 6
     },
     "G3": {
       "status": "pending",
@@ -346,15 +346,15 @@
       "id": 6,
       "desc": "flattenVisible: an iterative pre-order walk over an explicit stack producing the VisibleRow list - person, depth, hasChildren, isExpanded, setSize, posInSet and the direct report count - as the single source of what renders, what the ARIA attributes say and what the keyboard moves through. Invariants 27 to 40.",
       "tests": [
-        "rows come out in pre-order and a collapsed node's whole subtree is absent at every depth",
-        "setSize and posInSet describe the row's siblings under the same parent",
-        "isExpanded is false for every childless row whatever the expanded set contains",
-        "an expanded id naming no node or naming a childless node changes nothing",
-        "flattening an empty forest returns an empty row list",
-        "expanding a node and collapsing it again reproduces the original row list exactly"
+        "src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > rows come out in pre-order and a collapsed node's whole subtree is absent at every depth",
+        "src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > setSize and posInSet describe the row's siblings under the same parent",
+        "src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > isExpanded is false for every childless row whatever the expanded set contains",
+        "src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > an expanded id naming no node or naming a childless node changes nothing",
+        "src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > flattening an empty forest returns an empty row list",
+        "src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > expanding a node and collapsing it again reproduces the original row list exactly"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T12:17:17Z evidence/logs/step6-red.txt: flattenVisible.ts does not exist yet",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -1001,7 +1001,12 @@
     "2026-08-17T12:13:02Z step 5 -> na",
     "2026-08-17T12:14:11Z step 5 -> green",
     "2026-08-17T12:14:12Z step 5 -> done",
-    "2026-08-17T12:14:12Z evidence recorded: evidence/logs/step5-green.txt (9c413bc7942f) - green: purity and linearity tests pass; na was recorded for red since the step 4 implementation already satisfied both"
+    "2026-08-17T12:14:12Z evidence recorded: evidence/logs/step5-green.txt (9c413bc7942f) - green: purity and linearity tests pass; na was recorded for red since the step 4 implementation already satisfied both",
+    "2026-08-17T12:15:08Z step 6 amended: desc: 'flattenVisible: an iterative pre-order walk over an explicit stack producing the VisibleRow list - person, depth, hasChildren, isExpanded, setSize, posInSet and the direct report count - as the single source of what renders, what the ARIA attributes say and what the keyboard moves through. Invariants 27 to 40.' -> 'flattenVisible: an iterative pre-order walk over an explicit stack producing the VisibleRow list - person, depth, hasChildren, isExpanded, setSize, posInSet and the direct report count - as the single source of what renders, what the ARIA attributes say and what the keyboard moves through. Invariants 27 to 40.'; tests: [\"rows come out in pre-order and a collapsed node's whole subtree is absent at every depth\", \"setSize and posInSet describe the row's siblings under the same parent\", 'isExpanded is false for every childless row whatever the expanded set contains', 'an expanded id naming no node or naming a childless node changes nothing', 'flattening an empty forest returns an empty row list', 'expanding a node and collapsing it again reproduces the original row list exactly'] -> [\"src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > rows come out in pre-order and a collapsed node's whole subtree is absent at every depth\", \"src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > setSize and posInSet describe the row's siblings under the same parent\", 'src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > isExpanded is false for every childless row whatever the expanded set contains', 'src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > an expanded id naming no node or naming a childless node changes nothing', 'src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > flattening an empty forest returns an empty row list', 'src/features/hierarchy/domain/flattenVisible.test.ts::flattenVisible > expanding a node and collapsing it again reproduces the original row list exactly']",
+    "2026-08-17T12:17:17Z step 6 -> red",
+    "2026-08-17T12:17:50Z step 6 -> green",
+    "2026-08-17T12:17:50Z step 6 -> done",
+    "2026-08-17T12:17:50Z evidence recorded: evidence/logs/step6-green.txt (d1e967dbc441) - green: all 6 flattenVisible tests pass"
   ],
   "milestones": [
     {
@@ -1110,6 +1115,11 @@
       "sha": "9c413bc7942f",
       "recorded": "2026-08-17T12:14:12Z",
       "note": "green: purity and linearity tests pass; na was recorded for red since the step 4 implementation already satisfied both"
+    },
+    "evidence/logs/step6-green.txt": {
+      "sha": "d1e967dbc441",
+      "recorded": "2026-08-17T12:17:50Z",
+      "note": "green: all 6 flattenVisible tests pass"
     }
   },
   "test_file_hashes": {
@@ -1130,6 +1140,12 @@
       "step": 5,
       "recorded": "2026-08-17T12:13:02Z",
       "log_index": 182
+    },
+    "src/features/hierarchy/domain/flattenVisible.test.ts": {
+      "sha": "2537032a3e16",
+      "step": 6,
+      "recorded": "2026-08-17T12:17:17Z",
+      "log_index": 187
     }
   }
 }
