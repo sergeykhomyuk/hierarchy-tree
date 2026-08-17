@@ -42,4 +42,34 @@ describe('ErrorState', () => {
 
     expect(onActivate).toHaveBeenCalledTimes(1);
   });
+
+  it('renders a second action and a glyph and can render unframed', () => {
+    const { rerender } = render(
+      <ErrorState
+        title="Something went wrong"
+        message="Try again later"
+        glyph={<span data-testid="glyph">!</span>}
+        action={{ label: 'Retry', onActivate: () => {} }}
+        secondaryAction={{ label: 'Back to login', onActivate: () => {} }}
+      />,
+    );
+
+    expect(screen.getByTestId('glyph')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Back to login' }),
+    ).toBeInTheDocument();
+
+    rerender(
+      <ErrorState
+        title="Something went wrong"
+        message="Try again later"
+        framed={false}
+      />,
+    );
+
+    expect(screen.getByRole('alert').className).not.toMatch(
+      /rounded-card|border-border-hairline/,
+    );
+  });
 });

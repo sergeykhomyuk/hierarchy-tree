@@ -6,6 +6,7 @@ type AvatarProps = {
   displayName: string;
   size: 'small' | 'medium';
   decorative: boolean;
+  onImageError?: () => void;
 };
 
 const SIZE_CLASS: Record<'small' | 'medium', string> = {
@@ -23,6 +24,7 @@ export const Avatar = memo(function Avatar({
   displayName,
   size,
   decorative,
+  onImageError,
 }: AvatarProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const showImage = imageSource !== undefined && !imageFailed;
@@ -36,7 +38,10 @@ export const Avatar = memo(function Avatar({
         loading="lazy"
         referrerPolicy="no-referrer"
         alt={decorative ? '' : displayName}
-        onError={() => setImageFailed(true)}
+        onError={() => {
+          setImageFailed(true);
+          onImageError?.();
+        }}
         className={`${SIZE_CLASS[size]} rounded-full object-cover`}
       />
     );

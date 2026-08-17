@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T14:07:40Z",
+  "updated": "2026-08-17T14:11:19Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 16
+      "steps_done": 17
     },
     "G3": {
       "status": "pending",
@@ -522,12 +522,12 @@
       "id": 17,
       "desc": "The UI kit widens generically: ErrorState gains an optional secondaryAction, an optional glyph and an optional framed defaulting to true so the page can compose it inside its own Card without nesting two frames; EmptyState gains a glyph and the same framed; Avatar gains an onImageError callback fired once per failed source. No user, session, tree node or hierarchy concept enters a kit signature. Invariants 190, 191.",
       "tests": [
-        "ErrorState renders a second action and a glyph and can render unframed",
-        "EmptyState renders a glyph and can render unframed",
-        "Avatar calls onImageError once when its source fails"
+        "src/shared/ui/ErrorState.test.tsx::ErrorState > renders a second action and a glyph and can render unframed",
+        "src/shared/ui/EmptyState.test.tsx::EmptyState > renders a glyph and can render unframed",
+        "src/shared/ui/Avatar.test.tsx::Avatar > calls onImageError once when its source fails"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T14:09:39Z evidence/logs/step17-red.txt: ErrorState/EmptyState/Avatar do not yet accept glyph, secondaryAction, framed or onImageError",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1108,7 +1108,12 @@
     "2026-08-17T14:07:36Z G4 finding Claude-3 dispositioned: fixed: shouldRevalidateExpansionOnly now compares JSON.stringify(getAll()) per parameter name instead of get(), correctly detecting a difference confined to a repeated key's later occurrence; regression test added",
     "2026-08-17T14:07:36Z G4 finding Claude-4 dispositioned: fixed: added a test using a null-correlationId spy tracker asserting beginInteraction() is called and its minted id is exactly what flows into the resulting HierarchyResult.Failure.correlationId",
     "2026-08-17T14:07:36Z G4 finding Claude-5 dispositioned: fixed: reportAnomalies now iterates Object.entries(anomalies) excluding skippedExpansionSegment instead of a hardcoded kind list, so a future ForestAnomalies field is reported automatically rather than needing a manual update",
-    "2026-08-17T14:07:40Z milestone 2 reviewed: Fresh loop-reviewer on the M2 diff (cfc3da2..HEAD): 3 non-blocking findings (Claude-3, Claude-4, Claude-5), all fixed. Review: evidence/reviews/m2-claude-review.md"
+    "2026-08-17T14:07:40Z milestone 2 reviewed: Fresh loop-reviewer on the M2 diff (cfc3da2..HEAD): 3 non-blocking findings (Claude-3, Claude-4, Claude-5), all fixed. Review: evidence/reviews/m2-claude-review.md",
+    "2026-08-17T14:09:27Z step 17 amended: desc: 'The UI kit widens generically: ErrorState gains an optional secondaryAction, an optional glyph and an optional framed defaulting to true so the page can compose it inside its own Card without nesting two frames; EmptyState gains a glyph and the same framed; Avatar gains an onImageError callback fired once per failed source. No user, session, tree node or hierarchy concept enters a kit signature. Invariants 190, 191.' -> 'The UI kit widens generically: ErrorState gains an optional secondaryAction, an optional glyph and an optional framed defaulting to true so the page can compose it inside its own Card without nesting two frames; EmptyState gains a glyph and the same framed; Avatar gains an onImageError callback fired once per failed source. No user, session, tree node or hierarchy concept enters a kit signature. Invariants 190, 191.'; tests: ['ErrorState renders a second action and a glyph and can render unframed', 'EmptyState renders a glyph and can render unframed', 'Avatar calls onImageError once when its source fails'] -> ['src/shared/ui/ErrorState.test.tsx::ErrorState > renders a second action and a glyph and can render unframed', 'src/shared/ui/EmptyState.test.tsx::EmptyState > renders a glyph and can render unframed', 'src/shared/ui/Avatar.test.tsx::Avatar > calls onImageError once when its source fails']",
+    "2026-08-17T14:09:39Z step 17 -> red",
+    "2026-08-17T14:11:19Z step 17 -> green",
+    "2026-08-17T14:11:19Z step 17 -> done",
+    "2026-08-17T14:11:19Z evidence recorded: evidence/logs/step17-green.txt (086c731af711) - green: all 15 kit tests pass (ErrorState, EmptyState, Avatar); full suite (501 tests) unaffected"
   ],
   "milestones": [
     {
@@ -1302,6 +1307,11 @@
       "sha": "6dd46d73e7ee",
       "recorded": "2026-08-17T14:04:36Z",
       "note": "M2 boundary review: fresh-context loop-reviewer on the M2 diff, 3 non-blocking findings"
+    },
+    "evidence/logs/step17-green.txt": {
+      "sha": "086c731af711",
+      "recorded": "2026-08-17T14:11:19Z",
+      "note": "green: all 15 kit tests pass (ErrorState, EmptyState, Avatar); full suite (501 tests) unaffected"
     }
   },
   "test_file_hashes": {
@@ -1400,6 +1410,24 @@
       "step": 16,
       "recorded": "2026-08-17T13:47:45Z",
       "log_index": 246
+    },
+    "src/shared/ui/ErrorState.test.tsx": {
+      "sha": "d98f76ec72f8",
+      "step": 17,
+      "recorded": "2026-08-17T14:09:39Z",
+      "log_index": 262
+    },
+    "src/shared/ui/EmptyState.test.tsx": {
+      "sha": "c4931af73b01",
+      "step": 17,
+      "recorded": "2026-08-17T14:09:39Z",
+      "log_index": 262
+    },
+    "src/shared/ui/Avatar.test.tsx": {
+      "sha": "48453ab1460c",
+      "step": 17,
+      "recorded": "2026-08-17T14:09:39Z",
+      "log_index": 262
     }
   }
 }

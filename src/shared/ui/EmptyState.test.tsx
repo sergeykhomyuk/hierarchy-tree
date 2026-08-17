@@ -36,4 +36,28 @@ describe('EmptyState', () => {
 
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
+
+  it('renders a glyph and can render unframed', () => {
+    const { container, rerender } = render(
+      <EmptyState
+        title="Nothing here yet"
+        message="Add your first item"
+        glyph={<span data-testid="glyph">○</span>}
+      />,
+    );
+
+    expect(screen.getByTestId('glyph')).toBeInTheDocument();
+
+    rerender(
+      <EmptyState
+        title="Nothing here yet"
+        message="Add your first item"
+        framed={false}
+      />,
+    );
+
+    expect(container.firstElementChild?.className).not.toMatch(
+      /rounded-card|border-border-hairline/,
+    );
+  });
 });

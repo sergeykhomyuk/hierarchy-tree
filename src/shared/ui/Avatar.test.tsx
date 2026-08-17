@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Avatar } from './Avatar';
 
@@ -77,5 +77,22 @@ describe('Avatar', () => {
     // eslint-disable-next-line testing-library/no-node-access -- the element under test has no accessible role by design.
     const image = container.firstElementChild;
     expect(image).toHaveAttribute('alt', '');
+  });
+
+  it('calls onImageError once when its source fails', () => {
+    const onImageError = vi.fn();
+    render(
+      <Avatar
+        imageSource="https://example.com/broken.jpg"
+        displayName="Ada Lovelace"
+        size="medium"
+        decorative={false}
+        onImageError={onImageError}
+      />,
+    );
+
+    fireEvent.error(screen.getByRole('img', { name: 'Ada Lovelace' }));
+
+    expect(onImageError).toHaveBeenCalledTimes(1);
   });
 });
