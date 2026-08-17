@@ -1,10 +1,15 @@
-import { memo, use } from 'react';
+import { memo, use, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
+import { ErrorState } from '@shared/ui';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyResult } from './data/fetchPeople';
 
+const LOGIN_PATH = '/login';
+
 export type HierarchyPageProps = {
   hierarchy: Promise<HierarchyResult>;
+  onRetry: () => void;
 };
 
 // Reads the loader promise with use() and switches on HierarchyResult.kind
@@ -14,15 +19,40 @@ export type HierarchyPageProps = {
 // <Suspense fallback={<HierarchySkeleton />}>.
 export const HierarchyPage = memo(function HierarchyPage({
   hierarchy,
+  onRetry,
 }: HierarchyPageProps) {
   const { t } = useTranslation('hierarchy');
+  const navigate = useNavigate();
+  const handleBackToLogin = useCallback(() => {
+    void navigate(LOGIN_PATH);
+  }, [navigate]);
   const result = use(hierarchy);
 
   switch (result.kind) {
     case HierarchyResultKind.Cancelled:
       return null;
     case HierarchyResultKind.Failure:
-      return null;
+      return (
+        <ErrorState
+          framed={false}
+          glyph={
+            <span
+              aria-hidden="true"
+              className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-danger-surface text-lg font-semibold text-danger"
+            >
+              !
+            </span>
+          }
+          title={t('page.errorHeading')}
+          message={t('page.errorBody')}
+          correlationId={result.correlationId}
+          action={{ label: t('page.retryLabel'), onActivate: onRetry }}
+          secondaryAction={{
+            label: t('page.backToLoginLabel'),
+            onActivate: handleBackToLogin,
+          }}
+        />
+      );
     case HierarchyResultKind.Empty:
       return null;
     case HierarchyResultKind.Data:

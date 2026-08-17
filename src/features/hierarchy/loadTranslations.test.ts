@@ -62,6 +62,10 @@ describe('hierarchy loadTranslations', () => {
         documentTitle: 'page.documentTitle',
         cardTitle: 'page.cardTitle',
         loadingLabel: 'page.loadingLabel',
+        errorHeading: 'page.errorHeading',
+        errorBody: 'page.errorBody',
+        retryLabel: 'page.retryLabel',
+        backToLoginLabel: 'page.backToLoginLabel',
       },
     });
 

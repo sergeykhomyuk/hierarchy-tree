@@ -7,6 +7,10 @@
   "page": {
     "documentTitle": "Hierarchy",
     "cardTitle": "All users",
-    "loadingLabel": "Loading hierarchy…"
+    "loadingLabel": "Loading hierarchy…",
+    "errorHeading": "Couldn't load the hierarchy",
+    "errorBody": "The request to the users database failed. Your session is still valid, so retrying is safe.",
+    "retryLabel": "Retry",
+    "backToLoginLabel": "Back to login"
   }
 }

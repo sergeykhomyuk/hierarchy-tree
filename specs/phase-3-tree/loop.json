@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T14:27:51Z",
+  "updated": "2026-08-17T14:38:04Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 19
+      "steps_done": 20
     },
     "G3": {
       "status": "pending",
@@ -563,8 +563,8 @@
         "the error state never reaches the route error boundary",
         "failing to load leaves the expanded parameter untouched"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T14:34:51Z evidence/logs/step20-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1124,7 +1124,12 @@
     "2026-08-17T14:27:36Z step 19 -> green",
     "2026-08-17T14:27:38Z step 19 -> done",
     "2026-08-17T14:27:40Z evidence recorded: evidence/logs/step19-green.txt (6fb9381767f3) - step19: HierarchySkeleton + HierarchyPage loading/data path, full hierarchy suite green (65/65)",
-    "2026-08-17T14:27:51Z evidence recorded: evidence/logs/step19-red.txt (a1af2007d23f) - step19: HierarchySkeleton/HierarchyPage red - confirmed via temporary removal of both implementation files, both test files fail with module-not-found"
+    "2026-08-17T14:27:51Z evidence recorded: evidence/logs/step19-red.txt (a1af2007d23f) - step19: HierarchySkeleton/HierarchyPage red - confirmed via temporary removal of both implementation files, both test files fail with module-not-found",
+    "2026-08-17T14:34:51Z step 20 -> red",
+    "2026-08-17T14:38:00Z step 20 -> green",
+    "2026-08-17T14:38:00Z step 20 -> done",
+    "2026-08-17T14:38:04Z evidence recorded: evidence/logs/step20-green.txt (d1a23f48ab31) - step20: error state wiring - full suite green (513/513)",
+    "2026-08-17T14:38:04Z evidence recorded: evidence/logs/step20-red.txt (50f84cc4cc10) - step20: error state red - 4/5 new tests genuinely fail against pre-step-20 HierarchyPage.tsx (Failure branch returning null); the 5th (expanded-param-untouched) is a valid pre-passing regression pin, not implementation-dependent"
   ],
   "milestones": [
     {
@@ -1338,6 +1343,16 @@
       "sha": "a1af2007d23f",
       "recorded": "2026-08-17T14:27:51Z",
       "note": "step19: HierarchySkeleton/HierarchyPage red - confirmed via temporary removal of both implementation files, both test files fail with module-not-found"
+    },
+    "evidence/logs/step20-green.txt": {
+      "sha": "d1a23f48ab31",
+      "recorded": "2026-08-17T14:38:03Z",
+      "note": "step20: error state wiring - full suite green (513/513)"
+    },
+    "evidence/logs/step20-red.txt": {
+      "sha": "50f84cc4cc10",
+      "recorded": "2026-08-17T14:38:04Z",
+      "note": "step20: error state red - 4/5 new tests genuinely fail against pre-step-20 HierarchyPage.tsx (Failure branch returning null); the 5th (expanded-param-untouched) is a valid pre-passing regression pin, not implementation-dependent"
     }
   },
   "test_file_hashes": {
