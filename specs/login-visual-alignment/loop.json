@@ -4,10 +4,10 @@
   "type": "fix",
   "size": "S",
   "status": "active",
-  "phase": "verify",
-  "phase_entered": "2026-08-17T10:25:13Z",
+  "phase": "prove",
+  "phase_entered": "2026-08-17T10:27:48Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T10:26:05Z",
+  "updated": "2026-08-17T10:28:27Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -26,7 +26,7 @@
     "spec": null,
     "plan": "PLAN.md",
     "design": null,
-    "proof": null,
+    "proof": "PROOF.md",
     "evidence": "evidence/"
   },
   "gates": {
@@ -47,8 +47,8 @@
       "note": "round 2: npm run verify + npm run e2e (41/41) both clean (evidence/g3-verify-round2.txt, evidence/g3-e2e-round2.txt); screenshot now pixel-exact match to mockup-1a (evidence/fixed2-1a-idle.png) - Codex-1 confirmed resolved by measurement"
     },
     "G4": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "security_pass": null,
       "findings": {
         "Claude-1": {
@@ -66,11 +66,13 @@
           "blocking": false,
           "disposition": "accepted: user chose to accept as-is - underlying behavior already covered by axe e2e scans + manual screenshot comparison; tightening every assertion is disproportionate for an S-size visual fix"
         }
-      }
+      },
+      "note": "reviews: evidence/reviews/g4-claude.md (fresh loop-reviewer subagent) + evidence/reviews/g4-codex.txt (Codex CLI, fresh thread) + evidence/reviews/g4-codex-confirm.md (Codex fix confirmation, same thread). Findings: Claude-1 fixed (mechanical, no re-confirmation needed per gates.md), Codex-1 fixed and confirmed RESOLVED by raiser, Codex-2 accepted as-is by user."
     },
     "G5": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md written, all 7 ACs mapped to passing tests + pixel-verified screenshots; evidence registry parity ok (17 registered); loop check clean"
     }
   },
   "retro": null,
@@ -156,7 +158,13 @@
     "2026-08-17T10:25:54Z evidence recorded: evidence/fixed2-1a-idle.png (e25b1de0e3ad) - round 2 screenshot: pixel-exact match to mockup-1a (404px card width, x=59-462 identical to mockup across 6 sampled rows)",
     "2026-08-17T10:26:02Z approved-change: src/features/auth/LoginPage.test.tsx - self-approved by implementer: extracted cardElement into a local variable to satisfy eslint's unused-disable-directive + no-node-access rules after prettier reformatted the chained optional-access expression; no assertion/name changes",
     "2026-08-17T10:26:02Z step 2 hash rebased (src/features/auth/LoginPage.test.tsx): approved-change logged above: local-variable extraction for lint compliance only, no assertion changes",
-    "2026-08-17T10:26:05Z G3 -> passed (round 2: npm run verify + npm run e2e (41/41) both clean (evidence/g3-verify-round2.txt, evidence/g3-e2e-round2.txt); screenshot now pixel-exact match to mockup-1a (evidence/fixed2-1a-idle.png) - Codex-1 confirmed resolved by measurement)"
+    "2026-08-17T10:26:05Z G3 -> passed (round 2: npm run verify + npm run e2e (41/41) both clean (evidence/g3-verify-round2.txt, evidence/g3-e2e-round2.txt); screenshot now pixel-exact match to mockup-1a (evidence/fixed2-1a-idle.png) - Codex-1 confirmed resolved by measurement)",
+    "2026-08-17T10:26:15Z phase -> review (reason: G3 re-passed after fixing Codex-1 (blocking) and Claude-1)",
+    "2026-08-17T10:27:36Z evidence recorded: evidence/reviews/g4-codex-confirm.md (e2d5c860455a) - Codex fix confirmation, same thread (codex exec resume --last), Codex-1 confirmed RESOLVED",
+    "2026-08-17T10:27:43Z G4 -> passed (reviews: evidence/reviews/g4-claude.md (fresh loop-reviewer subagent) + evidence/reviews/g4-codex.txt (Codex CLI, fresh thread) + evidence/reviews/g4-codex-confirm.md (Codex fix confirmation, same thread). Findings: Claude-1 fixed (mechanical, no re-confirmation needed per gates.md), Codex-1 fixed and confirmed RESOLVED by raiser, Codex-2 accepted as-is by user.)",
+    "2026-08-17T10:27:48Z phase -> prove (reason: G4 passed)",
+    "2026-08-17T10:28:24Z set proof = PROOF.md",
+    "2026-08-17T10:28:27Z G5 -> passed (PROOF.md written, all 7 ACs mapped to passing tests + pixel-verified screenshots; evidence registry parity ok (17 registered); loop check clean)"
   ],
   "evidence_hashes": {
     "evidence/step1-red.txt": {
@@ -238,6 +246,11 @@
       "sha": "e25b1de0e3ad",
       "recorded": "2026-08-17T10:25:53Z",
       "note": "round 2 screenshot: pixel-exact match to mockup-1a (404px card width, x=59-462 identical to mockup across 6 sampled rows)"
+    },
+    "evidence/reviews/g4-codex-confirm.md": {
+      "sha": "e2d5c860455a",
+      "recorded": "2026-08-17T10:27:36Z",
+      "note": "Codex fix confirmation, same thread (codex exec resume --last), Codex-1 confirmed RESOLVED"
     }
   },
   "test_file_hashes": {
