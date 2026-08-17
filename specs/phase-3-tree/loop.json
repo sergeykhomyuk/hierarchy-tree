@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T16:23:06Z",
+  "updated": "2026-08-17T16:42:46Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 25
+      "steps_done": 26
     },
     "G3": {
       "status": "pending",
@@ -639,8 +639,8 @@
         "collapsing a parent and re-expanding it restores exactly the expansion its descendants had",
         "a sequence of toggles intercepts no request and calls the forest builder once"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T16:35:10Z evidence/logs/step26-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1158,7 +1158,14 @@
     "2026-08-17T16:23:01Z step 25 -> done",
     "2026-08-17T16:23:06Z evidence recorded: evidence/logs/step25-green.txt (56b91d140ee7) - step25: photo failure fallback - full unit suite green (531/531)",
     "2026-08-17T16:23:06Z evidence recorded: evidence/logs/step25-e2e-green.txt (78e0dae3a75d) - step25: photo failure fallback - full e2e suite green (42/42)",
-    "2026-08-17T16:23:06Z evidence recorded: evidence/logs/step25-red.txt (bb5d2b0af61c) - step25: photo failure fallback red - all 3 new tests genuinely fail against pre-step-25 HierarchyTree.tsx/TreeRow.tsx (no onImageError wiring, no dedupe set)"
+    "2026-08-17T16:23:06Z evidence recorded: evidence/logs/step25-red.txt (bb5d2b0af61c) - step25: photo failure fallback red - all 3 new tests genuinely fail against pre-step-25 HierarchyTree.tsx/TreeRow.tsx (no onImageError wiring, no dedupe set)",
+    "2026-08-17T16:35:10Z step 26 -> red",
+    "2026-08-17T16:35:23Z step 26 -> green",
+    "2026-08-17T16:42:45Z evidence recorded: evidence/logs/step26-red.txt (32465ca55b70) - step 26 red: 3/5 new tests fail (no toggle button exists), 12 pre-existing pass",
+    "2026-08-17T16:42:45Z evidence recorded: evidence/logs/step26-green.txt (fde9f5ea83f3) - step 26 green: TreeRow.test.tsx + HierarchyTree.test.tsx, 15/15 pass",
+    "2026-08-17T16:42:45Z evidence recorded: evidence/logs/step26-full-suite.txt (7734024f73c0) - step 26: full vitest suite 536/536 pass, no regressions (531 baseline + 5 new)",
+    "2026-08-17T16:42:45Z evidence recorded: evidence/logs/step26-e2e.txt (14e2d5e9eb8a) - step 26: full playwright suite 42/42 pass, no regressions",
+    "2026-08-17T16:42:46Z step 26 -> done"
   ],
   "milestones": [
     {
@@ -1452,6 +1459,26 @@
       "sha": "bb5d2b0af61c",
       "recorded": "2026-08-17T16:23:06Z",
       "note": "step25: photo failure fallback red - all 3 new tests genuinely fail against pre-step-25 HierarchyTree.tsx/TreeRow.tsx (no onImageError wiring, no dedupe set)"
+    },
+    "evidence/logs/step26-red.txt": {
+      "sha": "32465ca55b70",
+      "recorded": "2026-08-17T16:42:45Z",
+      "note": "step 26 red: 3/5 new tests fail (no toggle button exists), 12 pre-existing pass"
+    },
+    "evidence/logs/step26-green.txt": {
+      "sha": "fde9f5ea83f3",
+      "recorded": "2026-08-17T16:42:45Z",
+      "note": "step 26 green: TreeRow.test.tsx + HierarchyTree.test.tsx, 15/15 pass"
+    },
+    "evidence/logs/step26-full-suite.txt": {
+      "sha": "7734024f73c0",
+      "recorded": "2026-08-17T16:42:45Z",
+      "note": "step 26: full vitest suite 536/536 pass, no regressions (531 baseline + 5 new)"
+    },
+    "evidence/logs/step26-e2e.txt": {
+      "sha": "14e2d5e9eb8a",
+      "recorded": "2026-08-17T16:42:45Z",
+      "note": "step 26: full playwright suite 42/42 pass, no regressions"
     }
   },
   "test_file_hashes": {

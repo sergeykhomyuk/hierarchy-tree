@@ -4,6 +4,7 @@ import { Avatar } from '@shared/ui';
 import { personDisplayName } from './domain/personDisplayName';
 import type { EmailAddress } from './domain/emailAddress';
 import type { PersonIdentifier } from './domain/personIdentifier';
+import { TreeToggle } from './TreeToggle';
 
 const INDENT_REM_PER_DEPTH = 2;
 
@@ -21,6 +22,7 @@ export type TreeRowProps = {
   posInSet: number;
   isSignedInUser: boolean;
   onPhotoError: (personId: PersonIdentifier) => void;
+  onToggle: (personId: PersonIdentifier) => void;
 };
 
 // Every prop here is a primitive - flattenVisible returns a fresh
@@ -44,6 +46,7 @@ export const TreeRow = memo(function TreeRow({
   posInSet,
   isSignedInUser,
   onPhotoError,
+  onToggle,
 }: TreeRowProps) {
   const { t } = useTranslation('hierarchy');
   const displayName = personDisplayName({ firstName, lastName, email });
@@ -53,6 +56,9 @@ export const TreeRow = memo(function TreeRow({
   const handleImageError = useCallback(() => {
     onPhotoError(personId);
   }, [onPhotoError, personId]);
+  const handleToggle = useCallback(() => {
+    onToggle(personId);
+  }, [onToggle, personId]);
 
   return (
     <div
@@ -71,12 +77,16 @@ export const TreeRow = memo(function TreeRow({
       className={`flex items-center gap-3 py-3${depth > 0 ? 'border-s border-border-hairline' : ''}`}
       style={{ paddingInlineStart: `${depth * INDENT_REM_PER_DEPTH}rem` }}
     >
-      <span
-        aria-hidden="true"
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
-      >
-        {hasChildren ? (isExpanded ? '−' : '+') : '−'}
-      </span>
+      {hasChildren ? (
+        <TreeToggle isExpanded={isExpanded} onToggle={handleToggle} />
+      ) : (
+        <span
+          aria-hidden="true"
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+      )}
       <Avatar
         {...(photo !== undefined ? { imageSource: photo } : {})}
         displayName={displayName}

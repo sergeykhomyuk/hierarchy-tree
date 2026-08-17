@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 // eslint-disable-next-line testing-library/no-manual-cleanup -- the manager/non-manager report-count test renders two rows in one test and needs each isolated from the last.
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import {
   createInternationalization,
@@ -45,6 +46,7 @@ const MANAGER_PROPS: TreeRowProps = {
   posInSet: 1,
   isSignedInUser: false,
   onPhotoError: vi.fn(),
+  onToggle: vi.fn(),
 };
 
 describe('TreeRow', () => {
@@ -141,5 +143,47 @@ describe('TreeRow', () => {
     // (invariant 91).
     rerender(<Harness root1Expanded={true} />);
     expect(displayNameSpy).toHaveBeenCalledTimes(3);
+  });
+
+  it('the inert glyph on a non-manager row is not focusable, not clickable and hidden from assistive technology', async () => {
+    const onToggle = vi.fn();
+    const user = userEvent.setup();
+    await renderRow({
+      ...MANAGER_PROPS,
+      hasChildren: false,
+      isExpanded: false,
+      reportCount: 0,
+      onToggle,
+    });
+
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    const glyph = screen.getByText('−');
+    expect(glyph).toHaveAttribute('aria-hidden', 'true');
+    expect(glyph.tagName).not.toBe('BUTTON');
+    await user.click(glyph);
+    expect(onToggle).not.toHaveBeenCalled();
+  });
+
+  it('the toggle control is not a tab stop of its own', async () => {
+    await renderRow(MANAGER_PROPS);
+
+    const toggle = screen.getByRole('button', { hidden: true });
+    expect(toggle).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('clicking a row outside the control toggles nothing and selects nothing', async () => {
+    const onToggle = vi.fn();
+    const user = userEvent.setup();
+    await renderRow({ ...MANAGER_PROPS, onToggle });
+
+    await user.click(screen.getByText('Ronnen Gurevitch'));
+
+    expect(onToggle).not.toHaveBeenCalled();
+    // No selection concept exists on this page - the row declares itself
+    // unselected regardless of what was clicked (invariant 108).
+    expect(screen.getByRole('treeitem')).toHaveAttribute(
+      'aria-selected',
+      'false',
+    );
   });
 });

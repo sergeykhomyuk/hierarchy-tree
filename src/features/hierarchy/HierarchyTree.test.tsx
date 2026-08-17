@@ -1,5 +1,7 @@
+import { useCallback, useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import {
   createInternationalization,
@@ -10,8 +12,78 @@ import { loadTranslations } from './loadTranslations';
 import { HierarchyTree } from './HierarchyTree';
 import type { HierarchyTreeProps } from './HierarchyTree';
 import { buildForest } from './domain/buildForest';
+import * as buildForestModule from './domain/buildForest';
 import { parsePersonIdentifier } from './domain/personIdentifier';
+import type { PersonIdentifier } from './domain/personIdentifier';
+import type { TreeNode } from './domain/treeNode';
 import { testPerson } from './testing/testPerson';
+
+// A stand-in for the state HierarchyPage owns in the meantime
+// (defaultExpansion until useExpansion lands at step 27) - HierarchyTree
+// itself is a fully controlled component, so exercising a real mouse
+// toggle end to end needs something above it holding the expandedIds
+// state, exactly like the real page will.
+function StatefulTreeHarness({
+  roots,
+  initialExpandedIds,
+  observability,
+}: {
+  roots: readonly TreeNode[];
+  initialExpandedIds: ReadonlySet<PersonIdentifier>;
+  observability: ObservabilityFacade;
+}) {
+  const [expandedIds, setExpandedIds] = useState(initialExpandedIds);
+  const handleToggle = useCallback((personId: PersonIdentifier) => {
+    setExpandedIds((current) => {
+      const next = new Set(current);
+      if (next.has(personId)) {
+        next.delete(personId);
+      } else {
+        next.add(personId);
+      }
+      return next;
+    });
+  }, []);
+
+  return (
+    <HierarchyTree
+      roots={roots}
+      expandedIds={expandedIds}
+      observability={observability}
+      onToggle={handleToggle}
+    />
+  );
+}
+
+async function renderStatefulTree(props: {
+  roots: readonly TreeNode[];
+  initialExpandedIds: ReadonlySet<PersonIdentifier>;
+}) {
+  const observability = createSpyObservability();
+  const i18n = await createInternationalization({
+    resources: { common: {} },
+    language: Locale.Test,
+    observability: { logger: { error: vi.fn() } },
+  });
+  await loadTranslations(i18n);
+  const view = render(
+    <I18nextProvider i18n={i18n}>
+      <StatefulTreeHarness
+        roots={props.roots}
+        initialExpandedIds={props.initialExpandedIds}
+        observability={observability}
+      />
+    </I18nextProvider>,
+  );
+  return { ...view, observability };
+}
+
+function rowToggle(rowName: string): HTMLElement {
+  return within(screen.getByRole('treeitem', { name: rowName })).getByRole(
+    'button',
+    { hidden: true },
+  );
+}
 
 function createSpyObservability(): ObservabilityFacade {
   return {
@@ -32,11 +104,13 @@ function brokenPhotoImage(container: HTMLElement): HTMLImageElement {
 }
 
 async function renderTree(
-  props: Omit<HierarchyTreeProps, 'observability'> & {
+  props: Omit<HierarchyTreeProps, 'observability' | 'onToggle'> & {
     observability?: ObservabilityFacade;
+    onToggle?: (personId: PersonIdentifier) => void;
   },
 ) {
   const observability = props.observability ?? createSpyObservability();
+  const onToggle = props.onToggle ?? vi.fn();
   const i18n = await createInternationalization({
     resources: { common: {} },
     language: Locale.Test,
@@ -45,10 +119,14 @@ async function renderTree(
   await loadTranslations(i18n);
   const view = render(
     <I18nextProvider i18n={i18n}>
-      <HierarchyTree {...props} observability={observability} />
+      <HierarchyTree
+        {...props}
+        observability={observability}
+        onToggle={onToggle}
+      />
     </I18nextProvider>,
   );
-  return { ...view, observability, i18n };
+  return { ...view, observability, onToggle, i18n };
 }
 
 describe('HierarchyTree', () => {
@@ -95,10 +173,11 @@ describe('HierarchyTree', () => {
         photo: photoUrl,
       }),
     ]);
-    const { rerender, container, observability, i18n } = await renderTree({
-      roots,
-      expandedIds: new Set([managerId]),
-    });
+    const { rerender, container, observability, onToggle, i18n } =
+      await renderTree({
+        roots,
+        expandedIds: new Set([managerId]),
+      });
 
     for (let cycle = 0; cycle < 3; cycle += 1) {
       fireEvent.error(brokenPhotoImage(container));
@@ -111,6 +190,7 @@ describe('HierarchyTree', () => {
             roots={roots}
             expandedIds={new Set()}
             observability={observability}
+            onToggle={onToggle}
           />
         </I18nextProvider>,
       );
@@ -120,6 +200,7 @@ describe('HierarchyTree', () => {
             roots={roots}
             expandedIds={new Set([managerId])}
             observability={observability}
+            onToggle={onToggle}
           />
         </I18nextProvider>,
       );
@@ -148,6 +229,7 @@ describe('HierarchyTree', () => {
       unmount,
       container: firstContainer,
       observability,
+      onToggle,
       i18n,
     } = await renderTree({
       roots: firstLoad.roots,
@@ -170,6 +252,7 @@ describe('HierarchyTree', () => {
           roots={secondLoad.roots}
           expandedIds={new Set()}
           observability={observability}
+          onToggle={onToggle}
         />
       </I18nextProvider>,
     );
@@ -198,5 +281,58 @@ describe('HierarchyTree', () => {
     const [, attributes] =
       vi.mocked(observability.logger.warn).mock.calls[0] ?? [];
     expect(JSON.stringify(attributes)).not.toContain(photoUrl);
+  });
+
+  it('collapsing a parent and re-expanding it restores exactly the expansion its descendants had', async () => {
+    const { roots } = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+      testPerson(3, { managerId: 2 }),
+    ]);
+    const rootId = parsePersonIdentifier(1);
+    const childId = parsePersonIdentifier(2);
+    const user = userEvent.setup();
+
+    await renderStatefulTree({
+      roots,
+      initialExpandedIds: new Set([rootId, childId]),
+    });
+    expect(screen.getAllByRole('treeitem')).toHaveLength(3);
+
+    // Collapsing the root hides its whole subtree, grandchild included,
+    // in one step (invariant 109) - without ever removing childId from
+    // the expansion set, only rootId.
+    await user.click(rowToggle('First1 Last1'));
+    expect(screen.getAllByRole('treeitem')).toHaveLength(1);
+
+    // Re-expanding restores the grandchild too - proof that the child's
+    // own expansion survived being hidden rather than being silently
+    // collapsed along with its parent (invariant 110).
+    await user.click(rowToggle('First1 Last1'));
+    expect(screen.getAllByRole('treeitem')).toHaveLength(3);
+  });
+
+  it('a sequence of toggles intercepts no request and calls the forest builder once', async () => {
+    const { roots } = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+    ]);
+    const buildForestSpy = vi.spyOn(buildForestModule, 'buildForest');
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    const rootId = parsePersonIdentifier(1);
+    const user = userEvent.setup();
+
+    await renderStatefulTree({ roots, initialExpandedIds: new Set([rootId]) });
+
+    const toggle = rowToggle('First1 Last1');
+    await user.click(toggle);
+    await user.click(toggle);
+    await user.click(toggle);
+
+    // buildForest runs once, in fetchPeople.ts, before any of this ever
+    // renders - toggling only recomputes flattenVisible's row list, never
+    // rebuilds the forest and never touches the network (invariant 112).
+    expect(buildForestSpy).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 });

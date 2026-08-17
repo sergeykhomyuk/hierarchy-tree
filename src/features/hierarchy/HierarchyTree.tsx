@@ -17,6 +17,7 @@ export type HierarchyTreeProps = {
   // (invariant 85).
   signedInUserId?: string | number;
   observability: ObservabilityFacade;
+  onToggle: (personId: PersonIdentifier) => void;
 };
 
 // The tree renders every visible row from the row model, in its order,
@@ -28,6 +29,7 @@ export const HierarchyTree = memo(function HierarchyTree({
   expandedIds,
   signedInUserId,
   observability,
+  onToggle,
 }: HierarchyTreeProps) {
   const rows = flattenVisible(roots, expandedIds);
 
@@ -74,6 +76,7 @@ export const HierarchyTree = memo(function HierarchyTree({
           posInSet={row.posInSet}
           isSignedInUser={row.person.id === signedInUserId}
           onPhotoError={handlePhotoError}
+          onToggle={onToggle}
         />
       ))}
     </div>
