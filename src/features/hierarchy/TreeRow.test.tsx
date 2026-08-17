@@ -201,4 +201,21 @@ describe('TreeRow', () => {
     await renderRow({ ...MANAGER_PROPS, reportCount: 2 });
     expect(screen.getByText(/2 page\.reports_other/)).toBeInTheDocument();
   });
+
+  it('a row at depth greater than zero carries the indent rail class', async () => {
+    await renderRow({ ...MANAGER_PROPS, depth: 0 });
+    expect(screen.getByRole('treeitem').className).not.toContain('border-s');
+
+    cleanup();
+
+    await renderRow({ ...MANAGER_PROPS, depth: 1 });
+    const row = screen.getByRole('treeitem');
+    // A template-literal bug once concatenated this into the malformed
+    // token "py-3border-s", matching neither class - split on whitespace
+    // so a regression that reintroduces missing whitespace fails here
+    // instead of passing a substring check.
+    expect(row.className.split(/\s+/)).toEqual(
+      expect.arrayContaining(['py-3', 'border-s', 'border-border-hairline']),
+    );
+  });
 });

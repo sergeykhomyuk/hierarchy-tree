@@ -75,7 +75,7 @@ export const TreeRow = memo(function TreeRow({
       // declares itself unselected rather than omitting a required
       // attribute.
       aria-selected="false"
-      className={`flex items-center gap-3 py-3${depth > 0 ? 'border-s border-border-hairline' : ''}`}
+      className={`flex items-center gap-3 py-3 ${depth > 0 ? 'border-s border-border-hairline' : ''}`}
       style={{ paddingInlineStart: `${depth * INDENT_REM_PER_DEPTH}rem` }}
     >
       {hasChildren ? (

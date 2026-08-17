@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T18:06:38Z",
+  "updated": "2026-08-17T20:30:40Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -268,7 +268,24 @@
     },
     "G3": {
       "status": "pending",
-      "attempts": 0
+      "attempts": 0,
+      "findings": {
+        "Gap-1": {
+          "desc": "invariant 90: TreeRow.tsx:78 template literal missing a space before ${...} - concatenates into malformed class py-3border-s for depth>0 rows, dropping both the vertical padding and the indent rail Tailwind classes. No test asserts the rail class.",
+          "blocking": false,
+          "disposition": "covered"
+        },
+        "Gap-2": {
+          "desc": "invariant 102: personDisplayName.ts joins first/last name with a hardcoded JS space, never through an i18next catalogue string - no locale can reorder the name parts as the invariant requires. Fixing this properly ripples into ~15-25 existing test assertions across TreeRow.test.tsx, HierarchyTree.test.tsx and e2e/hierarchy-layout.spec.ts that currently assert literal rendered names under the key-echo test locale, since createKeyEchoCatalogue discards interpolation placeholders along with template content.",
+          "blocking": false,
+          "disposition": null
+        },
+        "Gap-3": {
+          "desc": "invariant 180: no contrast-floor (axe or manual) check exists anywhere for the populated tree Data state in either light or dark theme. Coincides with the M4-deferred gap (role=tree has no focusable content until roving tabindex lands), but 180 itself (row hover, indent rail, toggle border, report-count text contrast) is separable from focus-order concerns and currently has zero evidence.",
+          "blocking": false,
+          "disposition": null
+        }
+      }
     },
     "G4": {
       "status": "pending",
@@ -1196,7 +1213,27 @@
     "2026-08-17T18:06:38Z evidence recorded: evidence/logs/step30-red.txt (6f96922fc04f) - step 30 red: 2/3 registered tests fail genuinely under reverted implementation (missing testids, unstretched height); 1/3 legitimately proves an already-existing property from step 26",
     "2026-08-17T18:06:38Z evidence recorded: evidence/logs/step30-full-suite.txt (9d92600bbafc) - step 30: full vitest suite 547/547 pass, no regressions",
     "2026-08-17T18:06:38Z evidence recorded: evidence/logs/step30-e2e.txt (f553ca83aacd) - step 30: full playwright suite 48/48 pass (48 baseline+new including hierarchy-layout.spec.ts's 6 tests); one flaky failure under 5-worker parallel load reproduced as passing on clean re-run",
-    "2026-08-17T18:06:38Z step 30 -> done"
+    "2026-08-17T18:06:38Z step 30 -> done",
+    "2026-08-17T19:57:02Z M3 verify: spawned agentic-loop:loop-verifier for the milestone 3 boundary check; it was cut off mid-run by the account's monthly API spend limit before producing a final verdict. Pausing per user's choice until the limit is raised or resets.",
+    "2026-08-17T19:57:02Z paused: Blocked on the account's monthly API spend limit hit while running the M3 loop-verifier subagent. Resume by re-invoking the M3 verify step once the limit is raised (claude.ai/settings/usage) or resets - all 5 M3 steps (26-30) are done and committed, nothing else is at risk.",
+    "2026-08-17T19:57:36Z resumed",
+    "2026-08-17T20:11:27Z G3 finding Gap-1 recorded: invariant 90: TreeRow.tsx:78 template literal missing a space before ${...} - concatenates into malformed class py-3border-s for depth>0 rows, dropping both the vertical padding and the indent rail Tailwind classes. No test asserts the rail class.",
+    "2026-08-17T20:11:27Z G3 finding Gap-2 recorded: invariant 102: personDisplayName.ts joins first/last name with a hardcoded JS space, never through an i18next catalogue string - no locale can reorder the name parts as the invariant requires. Fixing this properly ripples into ~15-25 existing test assertions across TreeRow.test.tsx, HierarchyTree.test.tsx and e2e/hierarchy-layout.spec.ts that currently assert literal rendered names under the key-echo test locale, since createKeyEchoCatalogue discards interpolation placeholders along with template content.",
+    "2026-08-17T20:11:27Z G3 finding Gap-3 recorded: invariant 180: no contrast-floor (axe or manual) check exists anywhere for the populated tree Data state in either light or dark theme. Coincides with the M4-deferred gap (role=tree has no focusable content until roving tabindex lands), but 180 itself (row hover, indent rail, toggle border, report-count text contrast) is separable from focus-order concerns and currently has zero evidence.",
+    "2026-08-17T20:29:38Z evidence recorded: evidence/logs/gap1-fix-suite.txt (50df7c95e854) - Gap-1 fix: full vitest suite 548/548 pass",
+    "2026-08-17T20:29:38Z evidence recorded: evidence/logs/gap1-fix-e2e.txt (728536f57180) - Gap-1 fix: full playwright suite 48/48 pass",
+    "2026-08-17T20:29:55Z Gap-1 fix: TreeRow.tsx:78 missing-space template-literal bug fixed; regression test added (whitespace-split class assertion); full vitest suite 548/548 and full playwright suite 48/48 both green. Evidence: evidence/logs/gap1-fix-suite.txt, evidence/logs/gap1-fix-e2e.txt",
+    "2026-08-17T20:29:55Z G3 finding Gap-1 dispositioned: covered",
+    "2026-08-17T20:30:39Z evidence recorded: evidence/milestones/m3-suite-g3verify-20260817T195951Z.txt (1c1d5c95e99e) - M3 G3 verify: npm run verify (typecheck/lint/format/coverage/build/verify:build/size), all green, 97%+ coverage",
+    "2026-08-17T20:30:39Z evidence recorded: evidence/milestones/m3-e2e-g3verify-20260817T195951Z.txt (1e1742b063f1) - M3 G3 verify: full npx playwright test --trace on, 48/48 pass",
+    "2026-08-17T20:30:39Z evidence recorded: evidence/screenshots/hierarchy-layout-data-20260817T195951Z.png (4e8f71199b11) - M3 G3 verify: Data state screenshot (pre Gap-1 fix, shows the missing indent rail)",
+    "2026-08-17T20:30:39Z evidence recorded: evidence/screenshots/hierarchy-layout-loading-20260817T195951Z.png (b0ae264d7396) - M3 G3 verify: loading state screenshot",
+    "2026-08-17T20:30:39Z evidence recorded: evidence/screenshots/hierarchy-layout-error-20260817T195951Z.png (e471e4622d52) - M3 G3 verify: error state screenshot",
+    "2026-08-17T20:30:39Z evidence recorded: evidence/screenshots/hierarchy-layout-empty-20260817T195951Z.png (c20644abf5f3) - M3 G3 verify: empty state screenshot",
+    "2026-08-17T20:30:39Z evidence recorded: evidence/screenshots/treerow-indent-rail-missing-crop-20260817T195951Z.png (3dc423a9cfc7) - Gap-1 evidence: cropped screenshot showing the missing indent rail before the fix",
+    "2026-08-17T20:30:39Z evidence recorded: evidence/traces/hierarchy-layout-bounding-box-stability-20260817T195951Z.zip (748618424952) - M3 G3 verify: Playwright trace for the bounding-box stability test",
+    "2026-08-17T20:30:39Z evidence recorded: evidence/traces/hierarchy-layout-responsive-one-line-20260817T195951Z.zip (1352473472e5) - M3 G3 verify: Playwright trace for the responsive one-line test",
+    "2026-08-17T20:30:40Z evidence recorded: evidence/traces/hierarchy-layout-scroll-position-stability-20260817T195951Z.zip (ee6ea69b3120) - M3 G3 verify: Playwright trace for the scroll-position stability test"
   ],
   "milestones": [
     {
@@ -1590,6 +1627,66 @@
       "sha": "f553ca83aacd",
       "recorded": "2026-08-17T18:06:38Z",
       "note": "step 30: full playwright suite 48/48 pass (48 baseline+new including hierarchy-layout.spec.ts's 6 tests); one flaky failure under 5-worker parallel load reproduced as passing on clean re-run"
+    },
+    "evidence/logs/gap1-fix-suite.txt": {
+      "sha": "50df7c95e854",
+      "recorded": "2026-08-17T20:29:38Z",
+      "note": "Gap-1 fix: full vitest suite 548/548 pass"
+    },
+    "evidence/logs/gap1-fix-e2e.txt": {
+      "sha": "728536f57180",
+      "recorded": "2026-08-17T20:29:38Z",
+      "note": "Gap-1 fix: full playwright suite 48/48 pass"
+    },
+    "evidence/milestones/m3-suite-g3verify-20260817T195951Z.txt": {
+      "sha": "1c1d5c95e99e",
+      "recorded": "2026-08-17T20:30:39Z",
+      "note": "M3 G3 verify: npm run verify (typecheck/lint/format/coverage/build/verify:build/size), all green, 97%+ coverage"
+    },
+    "evidence/milestones/m3-e2e-g3verify-20260817T195951Z.txt": {
+      "sha": "1e1742b063f1",
+      "recorded": "2026-08-17T20:30:39Z",
+      "note": "M3 G3 verify: full npx playwright test --trace on, 48/48 pass"
+    },
+    "evidence/screenshots/hierarchy-layout-data-20260817T195951Z.png": {
+      "sha": "4e8f71199b11",
+      "recorded": "2026-08-17T20:30:39Z",
+      "note": "M3 G3 verify: Data state screenshot (pre Gap-1 fix, shows the missing indent rail)"
+    },
+    "evidence/screenshots/hierarchy-layout-loading-20260817T195951Z.png": {
+      "sha": "b0ae264d7396",
+      "recorded": "2026-08-17T20:30:39Z",
+      "note": "M3 G3 verify: loading state screenshot"
+    },
+    "evidence/screenshots/hierarchy-layout-error-20260817T195951Z.png": {
+      "sha": "e471e4622d52",
+      "recorded": "2026-08-17T20:30:39Z",
+      "note": "M3 G3 verify: error state screenshot"
+    },
+    "evidence/screenshots/hierarchy-layout-empty-20260817T195951Z.png": {
+      "sha": "c20644abf5f3",
+      "recorded": "2026-08-17T20:30:39Z",
+      "note": "M3 G3 verify: empty state screenshot"
+    },
+    "evidence/screenshots/treerow-indent-rail-missing-crop-20260817T195951Z.png": {
+      "sha": "3dc423a9cfc7",
+      "recorded": "2026-08-17T20:30:39Z",
+      "note": "Gap-1 evidence: cropped screenshot showing the missing indent rail before the fix"
+    },
+    "evidence/traces/hierarchy-layout-bounding-box-stability-20260817T195951Z.zip": {
+      "sha": "748618424952",
+      "recorded": "2026-08-17T20:30:39Z",
+      "note": "M3 G3 verify: Playwright trace for the bounding-box stability test"
+    },
+    "evidence/traces/hierarchy-layout-responsive-one-line-20260817T195951Z.zip": {
+      "sha": "1352473472e5",
+      "recorded": "2026-08-17T20:30:39Z",
+      "note": "M3 G3 verify: Playwright trace for the responsive one-line test"
+    },
+    "evidence/traces/hierarchy-layout-scroll-position-stability-20260817T195951Z.zip": {
+      "sha": "ee6ea69b3120",
+      "recorded": "2026-08-17T20:30:40Z",
+      "note": "M3 G3 verify: Playwright trace for the scroll-position stability test"
     }
   },
   "test_file_hashes": {
