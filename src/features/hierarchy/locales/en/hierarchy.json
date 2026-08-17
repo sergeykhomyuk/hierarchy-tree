@@ -14,6 +14,9 @@
     "backToLoginLabel": "Back to login",
     "emptyHeading": "No users in the hierarchy yet",
     "emptyBody": "The tree builds itself from the manager id on each record. Users will appear here once they exist.",
-    "refreshLabel": "Refresh"
+    "refreshLabel": "Refresh",
+    "summaryPeopleLabel": "people",
+    "summaryManagersLabel": "managers",
+    "summaryRootsLabel": "roots"
   }
 }

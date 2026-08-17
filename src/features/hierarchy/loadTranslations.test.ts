@@ -69,6 +69,9 @@ describe('hierarchy loadTranslations', () => {
         emptyHeading: 'page.emptyHeading',
         emptyBody: 'page.emptyBody',
         refreshLabel: 'page.refreshLabel',
+        summaryPeopleLabel: 'page.summaryPeopleLabel',
+        summaryManagersLabel: 'page.summaryManagersLabel',
+        summaryRootsLabel: 'page.summaryRootsLabel',
       },
     });
 

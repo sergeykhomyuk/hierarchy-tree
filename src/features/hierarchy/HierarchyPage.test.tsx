@@ -15,6 +15,8 @@ import { HierarchySkeleton } from './HierarchySkeleton';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyFailureKind, HierarchyResult } from './data/fetchPeople';
 import { parsePeople } from './data/parsePeople';
+import { buildForest } from './domain/buildForest';
+import { testPerson } from './testing/testPerson';
 
 const EMPTY_ANOMALIES = {
   duplicateId: 0,
@@ -240,5 +242,59 @@ describe('HierarchyPage', () => {
     expect(
       screen.getByRole('button', { name: 'page.refreshLabel' }),
     ).toBeInTheDocument();
+  });
+
+  it('a payload of 33 records containing one duplicate id reads 32 people', async () => {
+    const people = [
+      ...Array.from({ length: 32 }, (_, index) => testPerson(index + 1)),
+      testPerson(1, { firstName: 'Duplicate' }),
+    ];
+    const { roots, anomalies, counts } = buildForest(people);
+    expect(counts.people).toBe(32);
+
+    await renderIsolated(
+      Promise.resolve({
+        kind: HierarchyResultKind.Data,
+        roots,
+        anomalies,
+        counts,
+        dropped: 0,
+      }),
+    );
+
+    expect(screen.getByText(/32 page\.summaryPeopleLabel/)).toBeInTheDocument();
+  });
+
+  it('collapsing a branch never changes the counts', async () => {
+    const people = [
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+      testPerson(3, { managerId: 2 }),
+      testPerson(4, { managerId: 1 }),
+      testPerson(5),
+    ];
+    const { roots, anomalies, counts } = buildForest(people);
+    expect(counts).toEqual({ people: 5, managers: 2, roots: 2 });
+
+    await renderIsolated(
+      Promise.resolve({
+        kind: HierarchyResultKind.Data,
+        roots,
+        anomalies,
+        counts,
+        dropped: 0,
+      }),
+    );
+
+    // HierarchySummary receives only `counts`, never `roots` - it has no
+    // expansion state to react to, so what it shows cannot change when a
+    // branch collapses (invariant 83). What's provable ahead of the
+    // toggle this step doesn't build yet: the summary renders exactly
+    // result.counts regardless of how nested the tree beneath it is.
+    expect(screen.getByText(/5 page\.summaryPeopleLabel/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/2 page\.summaryManagersLabel/),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/2 page\.summaryRootsLabel/)).toBeInTheDocument();
   });
 });

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { EmptyState, ErrorState } from '@shared/ui';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyResult } from './data/fetchPeople';
+import { HierarchySummary } from './HierarchySummary';
 
 const LOGIN_PATH = '/login';
 
@@ -73,9 +74,7 @@ export const HierarchyPage = memo(function HierarchyPage({
     case HierarchyResultKind.Data:
       return (
         <div>
-          <h1 className="text-lg font-semibold text-ink">
-            {t('page.cardTitle')}
-          </h1>
+          <HierarchySummary counts={result.counts} />
         </div>
       );
   }
