@@ -20,6 +20,7 @@ import {
   createSystemClock,
   createSystemRandomness,
   createTabStorage,
+  type Clock,
   type KeyValueStorage,
 } from '@platform/runtime';
 import {
@@ -37,6 +38,7 @@ export type Runtime = Readonly<{
   interactionTracker: InteractionTracker;
   tabStorage: KeyValueStorage;
   signedInUserStore: SignedInUserStore;
+  clock: Clock;
 }>;
 
 export async function createRuntime(
@@ -91,5 +93,6 @@ export async function createRuntime(
     interactionTracker,
     tabStorage,
     signedInUserStore,
+    clock,
   });
 }

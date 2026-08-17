@@ -87,6 +87,7 @@ export async function buildTestRuntime(
     interactionTracker,
     tabStorage,
     signedInUserStore,
+    clock,
   });
 }
 

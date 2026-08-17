@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T13:21:44Z",
+  "updated": "2026-08-17T13:27:16Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 14
+      "steps_done": 15
     },
     "G3": {
       "status": "pending",
@@ -478,13 +478,13 @@
       "id": 15,
       "desc": "The app-layer loader: createHierarchyLoader returning an object holding a Promise of HierarchyResult without awaiting it, reading the correlation id from the interaction tracker, and forwarding the loader request signal into HttpRequest.signal. createAuthenticatedLoader returns userId alongside signedInUser, and createRuntime exposes the clock it already builds. Invariants 41, 170, 173, plus the app-layer half of 190.",
       "tests": [
-        "the hierarchy loader returns an object holding a promise and does not await it",
-        "the loader forwards the request signal into the users request",
-        "the authenticated loader returns the signed-in userId alongside signedInUser",
-        "the runtime exposes the clock it builds"
+        "src/app/routing/createHierarchyLoader.test.ts::createHierarchyLoader > the hierarchy loader returns an object holding a promise and does not await it",
+        "src/app/routing/createHierarchyLoader.test.ts::createHierarchyLoader > the loader forwards the request signal into the users request",
+        "src/app/layout/AuthenticatedLayout.test.tsx::AuthenticatedLayout > the authenticated loader returns the signed-in userId alongside signedInUser",
+        "src/app/composition/createRuntime.test.ts::createRuntime > exposes the clock it builds"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T13:24:28Z evidence/logs/step15-red.txt: createHierarchyLoader.ts does not exist, AuthenticatedLoaderData has no userId, Runtime does not expose clock",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1069,7 +1069,12 @@
     "2026-08-17T13:20:06Z step 13 -> red",
     "2026-08-17T13:21:44Z step 13 -> green",
     "2026-08-17T13:21:44Z step 13 -> done",
-    "2026-08-17T13:21:44Z evidence recorded: evidence/logs/step13-green.txt (b907089a60b1) - green: all 9 fetchPeople tests pass (4 from step 12 plus 5 new telemetry tests); full suite (488 tests) unaffected"
+    "2026-08-17T13:21:44Z evidence recorded: evidence/logs/step13-green.txt (b907089a60b1) - green: all 9 fetchPeople tests pass (4 from step 12 plus 5 new telemetry tests); full suite (488 tests) unaffected",
+    "2026-08-17T13:24:17Z step 15 amended: desc: 'The app-layer loader: createHierarchyLoader returning an object holding a Promise of HierarchyResult without awaiting it, reading the correlation id from the interaction tracker, and forwarding the loader request signal into HttpRequest.signal. createAuthenticatedLoader returns userId alongside signedInUser, and createRuntime exposes the clock it already builds. Invariants 41, 170, 173, plus the app-layer half of 190.' -> 'The app-layer loader: createHierarchyLoader returning an object holding a Promise of HierarchyResult without awaiting it, reading the correlation id from the interaction tracker, and forwarding the loader request signal into HttpRequest.signal. createAuthenticatedLoader returns userId alongside signedInUser, and createRuntime exposes the clock it already builds. Invariants 41, 170, 173, plus the app-layer half of 190.'; tests: ['the hierarchy loader returns an object holding a promise and does not await it', 'the loader forwards the request signal into the users request', 'the authenticated loader returns the signed-in userId alongside signedInUser', 'the runtime exposes the clock it builds'] -> ['src/app/routing/createHierarchyLoader.test.ts::createHierarchyLoader > the hierarchy loader returns an object holding a promise and does not await it', 'src/app/routing/createHierarchyLoader.test.ts::createHierarchyLoader > the loader forwards the request signal into the users request', 'src/app/layout/AuthenticatedLayout.test.tsx::AuthenticatedLayout > the authenticated loader returns the signed-in userId alongside signedInUser', 'src/app/composition/createRuntime.test.ts::createRuntime > exposes the clock it builds']",
+    "2026-08-17T13:24:28Z step 15 -> red",
+    "2026-08-17T13:27:15Z step 15 -> green",
+    "2026-08-17T13:27:16Z step 15 -> done",
+    "2026-08-17T13:27:16Z evidence recorded: evidence/logs/step15-green.txt (8f06181d77a7) - green: all 4 step-15 tests pass; full suite (492 tests) unaffected"
   ],
   "milestones": [
     {
@@ -1238,6 +1243,11 @@
       "sha": "b907089a60b1",
       "recorded": "2026-08-17T13:21:44Z",
       "note": "green: all 9 fetchPeople tests pass (4 from step 12 plus 5 new telemetry tests); full suite (488 tests) unaffected"
+    },
+    "evidence/logs/step15-green.txt": {
+      "sha": "8f06181d77a7",
+      "recorded": "2026-08-17T13:27:16Z",
+      "note": "green: all 4 step-15 tests pass; full suite (492 tests) unaffected"
     }
   },
   "test_file_hashes": {
@@ -1306,6 +1316,24 @@
       "step": 14,
       "recorded": "2026-08-17T13:16:12Z",
       "log_index": 231
+    },
+    "src/app/routing/createHierarchyLoader.test.ts": {
+      "sha": "255a44769124",
+      "step": 15,
+      "recorded": "2026-08-17T13:24:28Z",
+      "log_index": 241
+    },
+    "src/app/layout/AuthenticatedLayout.test.tsx": {
+      "sha": "50dcf3f7c7b4",
+      "step": 15,
+      "recorded": "2026-08-17T13:24:28Z",
+      "log_index": 241
+    },
+    "src/app/composition/createRuntime.test.ts": {
+      "sha": "e0f109b46273",
+      "step": 15,
+      "recorded": "2026-08-17T13:24:28Z",
+      "log_index": 241
     }
   }
 }

@@ -94,4 +94,11 @@ describe('createRuntime', () => {
     expect(typeof runtime.tabStorage.remove).toBe('function');
     expect(typeof runtime.signedInUserStore.read).toBe('function');
   });
+
+  it('exposes the clock it builds', async () => {
+    const runtime = await createRuntime(TEST_CONFIGURATION);
+
+    expect(typeof runtime.clock.now).toBe('function');
+    expect(typeof runtime.clock.setTimer).toBe('function');
+  });
 });

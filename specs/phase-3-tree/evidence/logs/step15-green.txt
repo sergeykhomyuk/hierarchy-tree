@@ -1,0 +1,9 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+
+ Test Files  3 passed (3)
+      Tests  12 passed (12)
+   Start at  14:27:15
+   Duration  497ms (transform 299ms, setup 214ms, import 373ms, tests 12ms, environment 672ms)
+

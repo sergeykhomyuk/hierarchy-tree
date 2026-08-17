@@ -12,6 +12,7 @@ export type AuthenticatedLoaderDependencies = {
 
 export type AuthenticatedLoaderData = {
   signedInUser: Promise<SignedInUserView | null>;
+  userId: ReturnType<typeof requireSession>['userId'];
 };
 
 // Returns an OBJECT HOLDING the promise, never the bare promise: react-
@@ -32,6 +33,9 @@ export function createAuthenticatedLoader(
       tabStorage: dependencies.tabStorage,
       observability: dependencies.observability,
     });
-    return { signedInUser: dependencies.signedInUserStore.read(userId) };
+    return {
+      signedInUser: dependencies.signedInUserStore.read(userId),
+      userId,
+    };
   };
 }
