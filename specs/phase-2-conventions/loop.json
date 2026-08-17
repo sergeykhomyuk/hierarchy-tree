@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T10:52:30Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T10:54:20Z",
+  "updated": "2026-08-17T10:55:00Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 9,
-      "steps_done": 1
+      "steps_done": 2
     },
     "G3": {
       "status": "pending",
@@ -72,8 +72,8 @@
       "tests": [
         "src/features/auth/data/lookupUserIdentifier.test.ts::lookupUserIdentifier > issues exactly one request, to the secrets path"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - pure re-export addition + import path change, no behavior change",
+      "status": "done"
     },
     {
       "id": 3,
@@ -160,7 +160,11 @@
     "2026-08-17T10:52:42Z step 1 -> na",
     "2026-08-17T10:54:20Z evidence recorded: evidence/steps/step1-green.txt (feeb6c1f0151) - domain/index.ts barrel + 12 prod + 10 test import repoints; vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean",
     "2026-08-17T10:54:20Z step 1 -> green",
-    "2026-08-17T10:54:20Z step 1 -> done"
+    "2026-08-17T10:54:20Z step 1 -> done",
+    "2026-08-17T10:54:30Z step 2 -> na",
+    "2026-08-17T10:55:00Z evidence recorded: evidence/steps/step2-green.txt (b0d0ccb7e440) - data/index.ts barrel + 3 prod import repoints (root index.ts, useLoginSubmission.ts); vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean",
+    "2026-08-17T10:55:00Z step 2 -> green",
+    "2026-08-17T10:55:00Z step 2 -> done"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
@@ -174,6 +178,12 @@
       "step": 1,
       "recorded": "2026-08-17T10:52:42Z",
       "log_index": 15
+    },
+    "src/features/auth/data/lookupUserIdentifier.test.ts": {
+      "sha": "e1a6e7718498",
+      "step": 2,
+      "recorded": "2026-08-17T10:54:30Z",
+      "log_index": 19
     }
   },
   "evidence_hashes": {
@@ -181,6 +191,11 @@
       "sha": "feeb6c1f0151",
       "recorded": "2026-08-17T10:54:20Z",
       "note": "domain/index.ts barrel + 12 prod + 10 test import repoints; vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean"
+    },
+    "evidence/steps/step2-green.txt": {
+      "sha": "b0d0ccb7e440",
+      "recorded": "2026-08-17T10:55:00Z",
+      "note": "data/index.ts barrel + 3 prod import repoints (root index.ts, useLoginSubmission.ts); vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean"
     }
   }
 }

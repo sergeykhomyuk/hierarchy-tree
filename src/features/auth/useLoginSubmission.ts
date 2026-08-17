@@ -13,7 +13,7 @@ import {
 } from '@platform/observability';
 import type { KeyValueStorage } from '@platform/runtime';
 import { deriveSecret } from './domain';
-import { lookupUserIdentifier } from './data/lookupUserIdentifier';
+import { lookupUserIdentifier } from './data';
 import type { LoginResult } from './loginCardState';
 import { writeSession } from './session/writeSession';
 

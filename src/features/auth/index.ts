@@ -1,7 +1,9 @@
 export { loadTranslations } from './loadTranslations';
-export { createSignedInUserStore } from './data/createSignedInUserStore';
-export type { SignedInUserStore } from './data/createSignedInUserStore';
-export type { SignedInUserView } from './data/signedInUserView';
+export {
+  createSignedInUserStore,
+  type SignedInUserStore,
+  type SignedInUserView,
+} from './data';
 export { LoginPage } from './LoginPage';
 export type { LoginPageDependencies } from './LoginPage';
 export { resolveDestination } from './guard/resolveDestination';
