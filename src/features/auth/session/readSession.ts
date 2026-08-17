@@ -3,7 +3,7 @@ import type { ObservabilityFacade } from '@platform/observability';
 import { userIdentifier, type UserIdentifier } from '../domain';
 import { SESSION_SCHEMA_VERSION } from './sessionRecord';
 import { sessionRecordSchema } from './sessionRecordSchema';
-import { readShadow } from './sessionShadow';
+import { readShadow, SessionShadowStatus } from './sessionShadow';
 import { SESSION_STORAGE_KEY } from './sessionStorageKey';
 
 export const SessionStatus = {
@@ -25,10 +25,10 @@ export function readSession(
   observability: ObservabilityFacade,
 ): SessionView {
   const shadow = readShadow(storage);
-  if (shadow.status === 'set') {
+  if (shadow.status === SessionShadowStatus.Set) {
     return { status: SessionStatus.SignedIn, userId: shadow.record.userId };
   }
-  if (shadow.status === 'cleared') {
+  if (shadow.status === SessionShadowStatus.Cleared) {
     return { status: SessionStatus.SignedOut };
   }
 

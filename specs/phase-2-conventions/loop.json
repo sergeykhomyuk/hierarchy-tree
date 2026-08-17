@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T10:52:30Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:00:03Z",
+  "updated": "2026-08-17T11:01:03Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 9,
-      "steps_done": 6
+      "steps_done": 7
     },
     "G3": {
       "status": "pending",
@@ -119,8 +119,8 @@
       "tests": [
         "src/features/auth/session/readSession.test.ts::readSession > prefers the in-page shadow over a stale valid record left by a failed write"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
     },
     {
       "id": 8,
@@ -180,7 +180,11 @@
     "2026-08-17T10:58:45Z step 6 -> na",
     "2026-08-17T11:00:03Z evidence recorded: evidence/steps/step6-green.txt (a955a3d6419d) - SessionStatus as-const enum in session/readSession.ts; updated guard/requireSession.ts, guard/redirectSignedInVisitor.ts; full vitest suite green; tsc -b + lint clean",
     "2026-08-17T11:00:03Z step 6 -> green",
-    "2026-08-17T11:00:03Z step 6 -> done"
+    "2026-08-17T11:00:03Z step 6 -> done",
+    "2026-08-17T11:00:07Z step 7 -> na",
+    "2026-08-17T11:01:03Z evidence recorded: evidence/steps/step7-green.txt (94a814ab88d0) - SessionShadowStatus as-const enum in session/sessionShadow.ts; updated session/readSession.ts; full vitest suite green; tsc -b + lint clean",
+    "2026-08-17T11:01:03Z step 7 -> green",
+    "2026-08-17T11:01:03Z step 7 -> done"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
@@ -215,9 +219,9 @@
     },
     "src/features/auth/session/readSession.test.ts": {
       "sha": "81e29df071bb",
-      "step": 4,
-      "recorded": "2026-08-17T10:55:37Z",
-      "log_index": 27
+      "step": 7,
+      "recorded": "2026-08-17T11:00:07Z",
+      "log_index": 39
     },
     "src/features/auth/loginCardState.test.ts": {
       "sha": "ca33ad96c84a",
@@ -262,6 +266,11 @@
       "sha": "a955a3d6419d",
       "recorded": "2026-08-17T11:00:03Z",
       "note": "SessionStatus as-const enum in session/readSession.ts; updated guard/requireSession.ts, guard/redirectSignedInVisitor.ts; full vitest suite green; tsc -b + lint clean"
+    },
+    "evidence/steps/step7-green.txt": {
+      "sha": "94a814ab88d0",
+      "recorded": "2026-08-17T11:01:03Z",
+      "note": "SessionShadowStatus as-const enum in session/sessionShadow.ts; updated session/readSession.ts; full vitest suite green; tsc -b + lint clean"
     }
   }
 }
