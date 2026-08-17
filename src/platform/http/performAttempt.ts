@@ -1,4 +1,4 @@
-import type { HttpFailure } from './httpFailure';
+import { HttpFailureKind, type HttpFailure } from './httpFailure';
 import type { HttpRequest } from './httpRequest';
 import { statusDescription } from './statusDescription';
 import type { Transport } from './transport';
@@ -33,14 +33,17 @@ export async function performAttempt<Value>(
     response = await transport(webRequest);
   } catch {
     if (signal.aborted) return { kind: 'aborted' };
-    return { kind: 'failure', failure: { kind: 'network' } };
+    return {
+      kind: 'failure',
+      failure: { kind: HttpFailureKind.Network },
+    };
   }
 
   if (!response.ok) {
     return {
       kind: 'failure',
       failure: {
-        kind: 'http',
+        kind: HttpFailureKind.Http,
         status: response.status,
         statusDescription: statusDescription(response.status),
       },
@@ -60,6 +63,6 @@ export async function performAttempt<Value>(
     // parse failure would - unconditionally mapping this catch to
     // 'parse' misreported a cancellation/timeout as malformed JSON.
     if (signal.aborted) return { kind: 'aborted' };
-    return { kind: 'failure', failure: { kind: 'parse' } };
+    return { kind: 'failure', failure: { kind: HttpFailureKind.Parse } };
   }
 }

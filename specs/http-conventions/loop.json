@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "plan",
-  "phase_entered": "2026-08-17T11:21:11Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-17T11:21:40Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:21:34Z",
+  "updated": "2026-08-17T11:23:36Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 3,
-      "steps_done": 0
+      "steps_done": 1
     },
     "G3": {
       "status": "pending",
@@ -64,8 +64,8 @@
         "src/platform/http/shouldRetry.test.ts::shouldRetry > retries a GET network failure on the first attempt",
         "src/platform/http/performAttempt.test.ts::performAttempt > reports a network failure when the transport rejects without an abort"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
     },
     {
       "id": 2,
@@ -97,6 +97,38 @@
     "2026-08-17T11:21:11Z phase -> plan",
     "2026-08-17T11:21:34Z step 1 added: HttpFailureKind const-object enum in httpFailure.ts; update performAttempt.ts, createHttpClient.ts, shouldRetry.ts",
     "2026-08-17T11:21:34Z step 2 added: AttemptOutcomeKind const-object enum in performAttempt.ts; update createHttpClient.ts",
-    "2026-08-17T11:21:34Z step 3 added: HttpResultOutcome const-object enum in httpResult.ts; update createHttpClient.ts, features/auth fetchSignedInUser.ts + lookupUserIdentifier.ts"
-  ]
+    "2026-08-17T11:21:34Z step 3 added: HttpResultOutcome const-object enum in httpResult.ts; update createHttpClient.ts, features/auth fetchSignedInUser.ts + lookupUserIdentifier.ts",
+    "2026-08-17T11:21:40Z phase -> implement",
+    "2026-08-17T11:21:43Z step 1 -> na",
+    "2026-08-17T11:23:36Z evidence recorded: evidence/steps/step1-green.txt (f86da19a4510) - HttpFailureKind as-const enum in httpFailure.ts; updated performAttempt.ts, createHttpClient.ts, shouldRetry.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean",
+    "2026-08-17T11:23:36Z step 1 -> green",
+    "2026-08-17T11:23:36Z step 1 -> done"
+  ],
+  "test_file_hashes": {
+    "src/platform/http/httpFailure.test.ts": {
+      "sha": "07e203824217",
+      "step": 1,
+      "recorded": "2026-08-17T11:21:43Z",
+      "log_index": 9
+    },
+    "src/platform/http/shouldRetry.test.ts": {
+      "sha": "3104bddddb43",
+      "step": 1,
+      "recorded": "2026-08-17T11:21:43Z",
+      "log_index": 9
+    },
+    "src/platform/http/performAttempt.test.ts": {
+      "sha": "f95501d3a1d3",
+      "step": 1,
+      "recorded": "2026-08-17T11:21:43Z",
+      "log_index": 9
+    }
+  },
+  "evidence_hashes": {
+    "evidence/steps/step1-green.txt": {
+      "sha": "f86da19a4510",
+      "recorded": "2026-08-17T11:23:36Z",
+      "note": "HttpFailureKind as-const enum in httpFailure.ts; updated performAttempt.ts, createHttpClient.ts, shouldRetry.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean"
+    }
+  }
 }

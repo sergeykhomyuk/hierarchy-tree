@@ -6,6 +6,7 @@ import {
 } from '@platform/observability';
 import { buildUrl } from './buildUrl';
 import { createTraceparent } from './createTraceparent';
+import { HttpFailureKind } from './httpFailure';
 import { performAttempt } from './performAttempt';
 import { retryDelayMilliseconds } from './retryDelayMilliseconds';
 import { shouldRetry } from './shouldRetry';
@@ -65,7 +66,10 @@ export function createHttpClient(
       observability.logger.error('http.invalid_resource_path', {
         resourcePath: httpRequest.resourcePath,
       });
-      return { outcome: 'failure', failure: { kind: 'network' } };
+      return {
+        outcome: 'failure',
+        failure: { kind: HttpFailureKind.Network },
+      };
     }
 
     if (httpRequest.signal?.aborted) {
@@ -129,14 +133,14 @@ export function createHttpClient(
           });
           return {
             outcome: 'failure',
-            failure: { kind: 'timeout', timeoutMilliseconds },
+            failure: { kind: HttpFailureKind.Timeout, timeoutMilliseconds },
           };
         }
 
         const status =
           rawOutcome.kind === 'success'
             ? rawOutcome.status
-            : rawOutcome.failure.kind === 'http'
+            : rawOutcome.failure.kind === HttpFailureKind.Http
               ? rawOutcome.failure.status
               : undefined;
         observability.tracer.recordTiming({
@@ -172,7 +176,7 @@ export function createHttpClient(
             if (httpRequest.signal?.aborted) return { outcome: 'cancelled' };
             return {
               outcome: 'failure',
-              failure: { kind: 'timeout', timeoutMilliseconds },
+              failure: { kind: HttpFailureKind.Timeout, timeoutMilliseconds },
             };
           }
           attempt += 1;
