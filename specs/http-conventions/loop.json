@@ -3,11 +3,11 @@
   "title": "Extract enums in platform/http",
   "type": "refactor",
   "size": "S",
-  "status": "active",
-  "phase": "prove",
-  "phase_entered": "2026-08-17T11:35:43Z",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-17T11:36:25Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:36:02Z",
+  "updated": "2026-08-17T11:36:25Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -53,11 +53,15 @@
       "note": "Fresh-context Claude review (evidence/reviews/g4-claude-review.md): CLEAN, 0 findings - enum value fidelity, call-site repointing, the three deliberate exclusions (HttpRequest.method, statusDescription, timingRecord.ts) and the two features/auth cross-directory consumers all verified. Codex second opinion unavailable: the background job never completed after ~10 minutes and one resume attempt; logged per contract, user explicitly approved proceeding single-reviewer. No security_review flag on this loop (pure refactor, no auth-logic or input-handling change)."
     },
     "G5": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md written and registered; all 3 acceptance criteria mapped to their step evidence; verification summary cites npm run verify/e2e evidence; Claude G4 review (CLEAN) referenced, Codex unavailability logged and user-approved; loop check clean."
     }
   },
-  "retro": null,
+  "retro": {
+    "outcome": "What did the user correct? Nothing on scope or code - both AskUserQuestion checkpoints at triage were used to confirm scope up front (type/size, branch, cross-directory extension into features/auth), not to fix a wrong guess after the fact. The only mid-loop correction was operational: Codex's background review job never completed after ~10 minutes and a resume attempt, and the user told me to skip it and proceed rather than keep waiting - a reasonable call given Claude's review had already come back CLEAN with genuinely deep verification (enum fidelity, all call sites, all three deliberate exclusions). What did reviewers catch that an earlier phase should have? Nothing - Claude's review found zero findings, a real 'CLEAN' verdict backed by member-by-member enum checks and exclusion-boundary verification, not a rubber stamp. This is worth noting as a positive data point: a small, well-scoped, single-purpose refactor (3 enums, one repo-established pattern, explicit AskUserQuestion-confirmed exclusion list going in) produced a genuinely clean diff on the first pass. Where did this playbook not answer? Nothing new - the G4 Codex-unavailable fallback (log it, tell the user, get explicit approval to proceed single-reviewer) worked exactly as documented, including the awkward middle where a background job outlives its own wrapper subagent's patience. One operational note for future sessions, not a skill gap: when a background rescue job is taking unusually long, checking in with the user rather than waiting indefinitely was the right call - the existing iteration-cap language covers implementation cycles, not open-ended tool waits, and this loop found that boundary naturally without needing new guidance. Nothing durable enough to propose a skill diff for this run.",
+    "date": "2026-08-17T11:36:18Z"
+  },
   "plan_steps": [
     {
       "id": 1,
@@ -125,7 +129,12 @@
     "2026-08-17T11:35:30Z codex unavailable at G4: the codex-rescue background job (b2gngv4yf) never completed within the session - after ~10 minutes of waiting and one resume, the underlying rescue subagent was no longer listed among running agents with no findings returned. User explicitly approved proceeding single-reviewer ('check codex. if still running - skip it.').",
     "2026-08-17T11:35:35Z G4 -> passed (Fresh-context Claude review (evidence/reviews/g4-claude-review.md): CLEAN, 0 findings - enum value fidelity, call-site repointing, the three deliberate exclusions (HttpRequest.method, statusDescription, timingRecord.ts) and the two features/auth cross-directory consumers all verified. Codex second opinion unavailable: the background job never completed after ~10 minutes and one resume attempt; logged per contract, user explicitly approved proceeding single-reviewer. No security_review flag on this loop (pure refactor, no auth-logic or input-handling change).)",
     "2026-08-17T11:35:43Z phase -> prove",
-    "2026-08-17T11:36:02Z set proof = PROOF.md"
+    "2026-08-17T11:36:02Z set proof = PROOF.md",
+    "2026-08-17T11:36:08Z G5 -> passed (PROOF.md written and registered; all 3 acceptance criteria mapped to their step evidence; verification summary cites npm run verify/e2e evidence; Claude G4 review (CLEAN) referenced, Codex unavailability logged and user-approved; loop check clean.)",
+    "2026-08-17T11:36:18Z set retro = What did the user correct? Nothing on scope or code - both AskUserQuestion checkpoints at triage were used to confirm scope up front (type/size, branch, cross-directory extension into features/auth), not to fix a wrong guess after the fact. The only mid-loop correction was operational: Codex's background review job never completed after ~10 minutes and a resume attempt, and the user told me to skip it and proceed rather than keep waiting - a reasonable call given Claude's review had already come back CLEAN with genuinely deep verification (enum fidelity, all call sites, all three deliberate exclusions). What did reviewers catch that an earlier phase should have? Nothing - Claude's review found zero findings, a real 'CLEAN' verdict backed by member-by-member enum checks and exclusion-boundary verification, not a rubber stamp. This is worth noting as a positive data point: a small, well-scoped, single-purpose refactor (3 enums, one repo-established pattern, explicit AskUserQuestion-confirmed exclusion list going in) produced a genuinely clean diff on the first pass. Where did this playbook not answer? Nothing new - the G4 Codex-unavailable fallback (log it, tell the user, get explicit approval to proceed single-reviewer) worked exactly as documented, including the awkward middle where a background job outlives its own wrapper subagent's patience. One operational note for future sessions, not a skill gap: when a background rescue job is taking unusually long, checking in with the user rather than waiting indefinitely was the right call - the existing iteration-cap language covers implementation cycles, not open-ended tool waits, and this loop found that boundary naturally without needing new guidance. Nothing durable enough to propose a skill diff for this run.",
+    "2026-08-17T11:36:18Z phase -> retro",
+    "2026-08-17T11:36:25Z loop complete: 3 steps, 3 const-object enums extracted in src/platform/http (HttpFailureKind, AttemptOutcomeKind, HttpResultOutcome), 2 cross-directory features/auth call sites repointed, G4 fresh-context Claude review CLEAN, Codex unavailable and skipped per user approval, G5 proof registered. Ready for done.",
+    "2026-08-17T11:36:25Z phase -> done"
   ],
   "test_file_hashes": {
     "src/platform/http/httpFailure.test.ts": {
