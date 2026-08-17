@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "implement",
-  "phase_entered": "2026-08-17T11:21:40Z",
+  "phase": "review",
+  "phase_entered": "2026-08-17T11:29:20Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:28:11Z",
+  "updated": "2026-08-17T11:35:35Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -35,19 +35,22 @@
       "attempts": 0
     },
     "G2": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "steps_total": 3,
-      "steps_done": 3
+      "steps_done": 3,
+      "note": "All 3 refactor steps done: HttpFailureKind, AttemptOutcomeKind, HttpResultOutcome const-object enums extracted in platform/http, every raw literal call site repointed (including the two features/auth cross-directory consumers). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint + prettier clean at every step boundary."
     },
     "G3": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "npm run verify full green (evidence/g3-verify-full.txt) and npm run e2e 41/41 passing (evidence/g3-e2e-full.txt). All 3 acceptance criteria checked against the diff: AC1-AC3 (three const-object enums, all call sites repointed including the two features/auth cross-directory consumers, verified by grep - no raw literal remnants outside the enum declarations themselves and the intentionally out-of-scope timingRecord.ts). No design flag, no new user-facing surface - pure structural refactor."
     },
     "G4": {
-      "status": "pending",
-      "attempts": 0,
-      "security_pass": null
+      "status": "passed",
+      "attempts": 1,
+      "security_pass": null,
+      "note": "Fresh-context Claude review (evidence/reviews/g4-claude-review.md): CLEAN, 0 findings - enum value fidelity, call-site repointing, the three deliberate exclusions (HttpRequest.method, statusDescription, timingRecord.ts) and the two features/auth cross-directory consumers all verified. Codex second opinion unavailable: the background job never completed after ~10 minutes and one resume attempt; logged per contract, user explicitly approved proceeding single-reviewer. No security_review flag on this loop (pure refactor, no auth-logic or input-handling change)."
     },
     "G5": {
       "status": "pending",
@@ -110,7 +113,17 @@
     "2026-08-17T11:25:26Z step 3 -> na",
     "2026-08-17T11:28:11Z evidence recorded: evidence/steps/step3-green.txt (462d5d409e73) - HttpResultOutcome as-const enum in httpResult.ts; updated createHttpClient.ts, features/auth/data/fetchSignedInUser.ts + lookupUserIdentifier.ts; added to platform/http index.ts barrel (cross-directory consumer); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint + prettier clean",
     "2026-08-17T11:28:11Z step 3 -> green",
-    "2026-08-17T11:28:11Z step 3 -> done"
+    "2026-08-17T11:28:11Z step 3 -> done",
+    "2026-08-17T11:28:15Z G2 -> passed (All 3 refactor steps done: HttpFailureKind, AttemptOutcomeKind, HttpResultOutcome const-object enums extracted in platform/http, every raw literal call site repointed (including the two features/auth cross-directory consumers). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint + prettier clean at every step boundary.)",
+    "2026-08-17T11:28:15Z phase -> verify",
+    "2026-08-17T11:29:13Z evidence recorded: evidence/g3-verify-full.txt (2dce665ac524) - npm run verify (typecheck+lint+format:check+test:coverage+build+verify:build+size) full green",
+    "2026-08-17T11:29:13Z evidence recorded: evidence/g3-e2e-full.txt (c84ca08f2da0) - npm run e2e 41/41 passing, no regressions from the enum extraction",
+    "2026-08-17T11:29:13Z G3 -> passed (npm run verify full green (evidence/g3-verify-full.txt) and npm run e2e 41/41 passing (evidence/g3-e2e-full.txt). All 3 acceptance criteria checked against the diff: AC1-AC3 (three const-object enums, all call sites repointed including the two features/auth cross-directory consumers, verified by grep - no raw literal remnants outside the enum declarations themselves and the intentionally out-of-scope timingRecord.ts). No design flag, no new user-facing surface - pure structural refactor.)",
+    "2026-08-17T11:29:20Z phase -> review",
+    "2026-08-17T11:31:46Z evidence recorded: evidence/reviews/g4-claude-review.md (e641744b1d7b) - fresh-context Claude G4 review, CLEAN, 0 findings",
+    "2026-08-17T11:31:46Z evidence recorded: evidence/reviews/full-diff.txt (d3db2da8b236) - full diff (d7ef594..HEAD, platform/http + features/auth) given to both G4 reviewers",
+    "2026-08-17T11:35:30Z codex unavailable at G4: the codex-rescue background job (b2gngv4yf) never completed within the session - after ~10 minutes of waiting and one resume, the underlying rescue subagent was no longer listed among running agents with no findings returned. User explicitly approved proceeding single-reviewer ('check codex. if still running - skip it.').",
+    "2026-08-17T11:35:35Z G4 -> passed (Fresh-context Claude review (evidence/reviews/g4-claude-review.md): CLEAN, 0 findings - enum value fidelity, call-site repointing, the three deliberate exclusions (HttpRequest.method, statusDescription, timingRecord.ts) and the two features/auth cross-directory consumers all verified. Codex second opinion unavailable: the background job never completed after ~10 minutes and one resume attempt; logged per contract, user explicitly approved proceeding single-reviewer. No security_review flag on this loop (pure refactor, no auth-logic or input-handling change).)"
   ],
   "test_file_hashes": {
     "src/platform/http/httpFailure.test.ts": {
@@ -165,6 +178,26 @@
       "sha": "462d5d409e73",
       "recorded": "2026-08-17T11:28:11Z",
       "note": "HttpResultOutcome as-const enum in httpResult.ts; updated createHttpClient.ts, features/auth/data/fetchSignedInUser.ts + lookupUserIdentifier.ts; added to platform/http index.ts barrel (cross-directory consumer); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint + prettier clean"
+    },
+    "evidence/g3-verify-full.txt": {
+      "sha": "2dce665ac524",
+      "recorded": "2026-08-17T11:29:13Z",
+      "note": "npm run verify (typecheck+lint+format:check+test:coverage+build+verify:build+size) full green"
+    },
+    "evidence/g3-e2e-full.txt": {
+      "sha": "c84ca08f2da0",
+      "recorded": "2026-08-17T11:29:13Z",
+      "note": "npm run e2e 41/41 passing, no regressions from the enum extraction"
+    },
+    "evidence/reviews/g4-claude-review.md": {
+      "sha": "e641744b1d7b",
+      "recorded": "2026-08-17T11:31:46Z",
+      "note": "fresh-context Claude G4 review, CLEAN, 0 findings"
+    },
+    "evidence/reviews/full-diff.txt": {
+      "sha": "d3db2da8b236",
+      "recorded": "2026-08-17T11:31:46Z",
+      "note": "full diff (d7ef594..HEAD, platform/http + features/auth) given to both G4 reviewers"
     }
   }
 }
