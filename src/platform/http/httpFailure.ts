@@ -5,7 +5,8 @@ export const HttpFailureKind = {
   Parse: 'parse',
 } as const;
 
-export type HttpFailureKind = (typeof HttpFailureKind)[keyof typeof HttpFailureKind];
+export type HttpFailureKind =
+  (typeof HttpFailureKind)[keyof typeof HttpFailureKind];
 
 export type HttpFailure =
   | { kind: typeof HttpFailureKind.Network }

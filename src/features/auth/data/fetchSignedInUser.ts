@@ -1,4 +1,4 @@
-import type { HttpClient } from '@platform/http';
+import { HttpResultOutcome, type HttpClient } from '@platform/http';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { UserIdentifier } from '../domain';
 import { parseSignedInUsers } from './parseSignedInUsers';
@@ -23,9 +23,11 @@ export async function fetchSignedInUser(
     parse: (payload) => parseSignedInUsers(payload),
   });
 
-  if (result.outcome !== 'success') {
+  if (result.outcome !== HttpResultOutcome.Success) {
     const reason =
-      result.outcome === 'cancelled' ? 'cancelled' : result.failure.kind;
+      result.outcome === HttpResultOutcome.Cancelled
+        ? HttpResultOutcome.Cancelled
+        : result.failure.kind;
     observability.logger.warn('auth.signed_in_user_unresolved', { reason });
     return null;
   }

@@ -1,4 +1,4 @@
-import type { HttpClient } from '@platform/http';
+import { HttpResultOutcome, type HttpClient } from '@platform/http';
 import {
   userIdentifier,
   type DerivedSecret,
@@ -40,11 +40,11 @@ export async function lookupUserIdentifier(
     parse: (payload) => lookupResultSchema.parse(payload),
   });
 
-  if (result.outcome === 'cancelled') {
+  if (result.outcome === HttpResultOutcome.Cancelled) {
     return { kind: LookupOutcomeKind.Cancelled };
   }
 
-  if (result.outcome === 'failure') {
+  if (result.outcome === HttpResultOutcome.Failure) {
     return { kind: LookupOutcomeKind.ServiceProblem, correlationId };
   }
 

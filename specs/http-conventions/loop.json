@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:21:40Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:25:23Z",
+  "updated": "2026-08-17T11:28:11Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 3,
-      "steps_done": 2
+      "steps_done": 3
     },
     "G3": {
       "status": "pending",
@@ -85,8 +85,8 @@
         "src/features/auth/data/fetchSignedInUser.test.ts::fetchSignedInUser > resolves to null for every transport failure arm and warns once",
         "src/features/auth/data/lookupUserIdentifier.test.ts::lookupUserIdentifier > maps every transport failure arm to the service-problem outcome"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
     }
   ],
   "log": [
@@ -106,7 +106,11 @@
     "2026-08-17T11:23:40Z step 2 -> na",
     "2026-08-17T11:25:22Z evidence recorded: evidence/steps/step2-green.txt (6c0f7b141bc7) - AttemptOutcomeKind as-const enum in performAttempt.ts; updated createHttpClient.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean",
     "2026-08-17T11:25:22Z step 2 -> green",
-    "2026-08-17T11:25:23Z step 2 -> done"
+    "2026-08-17T11:25:23Z step 2 -> done",
+    "2026-08-17T11:25:26Z step 3 -> na",
+    "2026-08-17T11:28:11Z evidence recorded: evidence/steps/step3-green.txt (462d5d409e73) - HttpResultOutcome as-const enum in httpResult.ts; updated createHttpClient.ts, features/auth/data/fetchSignedInUser.ts + lookupUserIdentifier.ts; added to platform/http index.ts barrel (cross-directory consumer); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint + prettier clean",
+    "2026-08-17T11:28:11Z step 3 -> green",
+    "2026-08-17T11:28:11Z step 3 -> done"
   ],
   "test_file_hashes": {
     "src/platform/http/httpFailure.test.ts": {
@@ -129,9 +133,21 @@
     },
     "src/platform/http/createHttpClient.test.ts": {
       "sha": "1af39d7cbc4a",
-      "step": 2,
-      "recorded": "2026-08-17T11:23:40Z",
-      "log_index": 13
+      "step": 3,
+      "recorded": "2026-08-17T11:25:26Z",
+      "log_index": 17
+    },
+    "src/features/auth/data/fetchSignedInUser.test.ts": {
+      "sha": "c3ddf4201ac7",
+      "step": 3,
+      "recorded": "2026-08-17T11:25:26Z",
+      "log_index": 17
+    },
+    "src/features/auth/data/lookupUserIdentifier.test.ts": {
+      "sha": "e1a6e7718498",
+      "step": 3,
+      "recorded": "2026-08-17T11:25:26Z",
+      "log_index": 17
     }
   },
   "evidence_hashes": {
@@ -144,6 +160,11 @@
       "sha": "6c0f7b141bc7",
       "recorded": "2026-08-17T11:25:22Z",
       "note": "AttemptOutcomeKind as-const enum in performAttempt.ts; updated createHttpClient.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean"
+    },
+    "evidence/steps/step3-green.txt": {
+      "sha": "462d5d409e73",
+      "recorded": "2026-08-17T11:28:11Z",
+      "note": "HttpResultOutcome as-const enum in httpResult.ts; updated createHttpClient.ts, features/auth/data/fetchSignedInUser.ts + lookupUserIdentifier.ts; added to platform/http index.ts barrel (cross-directory consumer); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint + prettier clean"
     }
   }
 }

@@ -11,7 +11,7 @@ import { AttemptOutcomeKind, performAttempt } from './performAttempt';
 import { retryDelayMilliseconds } from './retryDelayMilliseconds';
 import { shouldRetry } from './shouldRetry';
 import type { HttpRequest } from './httpRequest';
-import type { HttpResult } from './httpResult';
+import { HttpResultOutcome, type HttpResult } from './httpResult';
 import type { Transport } from './transport';
 
 export type HttpClientDependencies = {
@@ -67,13 +67,13 @@ export function createHttpClient(
         resourcePath: httpRequest.resourcePath,
       });
       return {
-        outcome: 'failure',
+        outcome: HttpResultOutcome.Failure,
         failure: { kind: HttpFailureKind.Network },
       };
     }
 
     if (httpRequest.signal?.aborted) {
-      return { outcome: 'cancelled' };
+      return { outcome: HttpResultOutcome.Cancelled };
     }
 
     const requestId = createCorrelationId(randomness);
@@ -119,7 +119,7 @@ export function createHttpClient(
               attempt,
               requestId,
             });
-            return { outcome: 'cancelled' };
+            return { outcome: HttpResultOutcome.Cancelled };
           }
 
           observability.tracer.recordTiming({
@@ -132,7 +132,7 @@ export function createHttpClient(
             requestId,
           });
           return {
-            outcome: 'failure',
+            outcome: HttpResultOutcome.Failure,
             failure: { kind: HttpFailureKind.Timeout, timeoutMilliseconds },
           };
         }
@@ -156,7 +156,7 @@ export function createHttpClient(
 
         if (rawOutcome.kind === AttemptOutcomeKind.Success) {
           return {
-            outcome: 'success',
+            outcome: HttpResultOutcome.Success,
             value: rawOutcome.value,
             status: rawOutcome.status,
           };
@@ -173,9 +173,11 @@ export function createHttpClient(
           try {
             await clock.wait(delay, signal);
           } catch {
-            if (httpRequest.signal?.aborted) return { outcome: 'cancelled' };
+            if (httpRequest.signal?.aborted) {
+              return { outcome: HttpResultOutcome.Cancelled };
+            }
             return {
-              outcome: 'failure',
+              outcome: HttpResultOutcome.Failure,
               failure: { kind: HttpFailureKind.Timeout, timeoutMilliseconds },
             };
           }
@@ -183,7 +185,10 @@ export function createHttpClient(
           continue;
         }
 
-        return { outcome: 'failure', failure: rawOutcome.failure };
+        return {
+          outcome: HttpResultOutcome.Failure,
+          failure: rawOutcome.failure,
+        };
       }
     } finally {
       cancelDeadlineTimer();
