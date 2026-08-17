@@ -17,9 +17,13 @@ export function shouldRevalidateExpansionOnly({
     ...nextUrl.searchParams.keys(),
   ]);
 
+  // getAll() (via JSON.stringify for an unambiguous array comparison), not
+  // get(): a repeated key's later occurrences would otherwise be invisible
+  // to a comparison that only reads the first value.
   const changedParameterNames = [...parameterNames].filter(
     (name) =>
-      currentUrl.searchParams.get(name) !== nextUrl.searchParams.get(name),
+      JSON.stringify(currentUrl.searchParams.getAll(name)) !==
+      JSON.stringify(nextUrl.searchParams.getAll(name)),
   );
 
   const isExpansionOnly =

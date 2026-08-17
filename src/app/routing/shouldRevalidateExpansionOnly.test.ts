@@ -48,4 +48,16 @@ describe('shouldRevalidateExpansionOnly', () => {
 
     expect(result).toBe(true);
   });
+
+  it("detects a difference confined to a repeated search parameter's later occurrence", () => {
+    const result = shouldRevalidateExpansionOnly(
+      args({
+        currentUrl: new URL('https://example.test/?other=a&other=b'),
+        nextUrl: new URL('https://example.test/?other=a&other=c'),
+        defaultShouldRevalidate: true,
+      }),
+    );
+
+    expect(result).toBe(true);
+  });
 });

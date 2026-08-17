@@ -40,21 +40,17 @@ export type HierarchyResult =
     }
   | { readonly kind: typeof HierarchyResultKind.Cancelled };
 
-// Anomaly counts are reported by name, only when non-zero, so a shape
-// change in the shared database is visible rather than silently absorbed
-// (invariant 164) without spamming a report for every kind that didn't fire.
+// Iterates every ForestAnomalies field rather than a hardcoded list, so a
+// future anomaly kind is reported automatically instead of silently going
+// unreported until someone remembers to add it here (invariant 164).
+// skippedExpansionSegment belongs to expansionParameter.ts, not a load's
+// buildForest result, and is always 0 from this call path.
 function reportAnomalies(
   observability: ObservabilityFacade,
   anomalies: ForestAnomalies,
 ): void {
-  const kinds: readonly (keyof ForestAnomalies)[] = [
-    'duplicateId',
-    'danglingManager',
-    'selfManaged',
-    'cycleBroken',
-  ];
-  for (const kind of kinds) {
-    const count = anomalies[kind];
+  for (const [kind, count] of Object.entries(anomalies)) {
+    if (kind === 'skippedExpansionSegment') continue;
     if (count > 0) {
       observability.logger.warn('hierarchy.anomaly_detected', {
         kind,

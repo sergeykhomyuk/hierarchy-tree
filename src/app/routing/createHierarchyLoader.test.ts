@@ -95,4 +95,27 @@ describe('createHierarchyLoader', () => {
     controller.abort();
     expect(capturedSignal?.aborted).toBe(true);
   });
+
+  it('falls back to beginInteraction() when no interaction is tracked, and the minted id is what reaches the result', async () => {
+    const observability = createSpyObservability();
+    const transport: Transport = () =>
+      Promise.resolve(new Response(null, { status: 404 }));
+    const http = createTestClient(transport, observability);
+    const interactionTracker = createSpyInteractionTracker(null);
+    const loader = createHierarchyLoader({
+      http,
+      observability,
+      interactionTracker,
+    });
+
+    const result = await loader({
+      request: new Request('https://example.test/'),
+    } as LoaderFunctionArgs).hierarchy;
+
+    expect(interactionTracker.beginInteraction).toHaveBeenCalledTimes(1);
+    expect(result).toMatchObject({
+      kind: 'failure',
+      correlationId: 'b'.repeat(32),
+    });
+  });
 });

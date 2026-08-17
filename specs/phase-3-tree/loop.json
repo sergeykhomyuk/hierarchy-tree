@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T13:55:13Z",
+  "updated": "2026-08-17T14:07:40Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -286,6 +286,24 @@
           "blocking": false,
           "disposition": "accepted: flattenVisible is provably stateless (confirmed by code reading in the review), so the round-trip test structurally cannot miss a caching bug that cannot exist; user accepted as-is",
           "round": "milestone-1"
+        },
+        "Claude-3": {
+          "desc": "shouldRevalidateExpansionOnly compares URLSearchParams values via .get() (first occurrence only), so a change confined to a later occurrence of a repeated key goes undetected. Not currently exploitable (expanded is always a single comma-joined value, never a repeated key) but latent in a function written as a general comparator.",
+          "blocking": false,
+          "disposition": "fixed: shouldRevalidateExpansionOnly now compares JSON.stringify(getAll()) per parameter name instead of get(), correctly detecting a difference confined to a repeated key's later occurrence; regression test added",
+          "round": "milestone-2"
+        },
+        "Claude-4": {
+          "desc": "createHierarchyLoader's currentCorrelationId() ?? beginInteraction() fallback branch is never exercised by a test - both tests use a non-null correlation id. The coherence claim (that the id passed to fetchPeople and the id the HttpClient independently derives coincide) is asserted only by comments.",
+          "blocking": false,
+          "disposition": "fixed: added a test using a null-correlationId spy tracker asserting beginInteraction() is called and its minted id is exactly what flows into the resulting HierarchyResult.Failure.correlationId",
+          "round": "milestone-2"
+        },
+        "Claude-5": {
+          "desc": "reportAnomalies's hardcoded kind list (readonly (keyof ForestAnomalies)[]) is not type-checked for exhaustiveness - a sixth ForestAnomalies field with a nonzero value reachable from buildForest would silently go unreported, undercutting the comment's own stated intent.",
+          "blocking": false,
+          "disposition": "fixed: reportAnomalies now iterates Object.entries(anomalies) excluding skippedExpansionSegment instead of a hardcoded kind list, so a future ForestAnomalies field is reported automatically rather than needing a manual update",
+          "round": "milestone-2"
         }
       }
     },
@@ -1082,7 +1100,15 @@
     "2026-08-17T13:50:20Z evidence recorded: evidence/logs/step16-green.txt (115eb2338da6) - green: all 4 step-16 tests pass plus routeDefinitions regression; full suite (496 tests), build and verify:build unaffected",
     "2026-08-17T13:55:08Z evidence recorded: evidence/milestones/m2-suite.txt (a1e4c7a65496) - M2 boundary: npm run verify green (100% coverage on hierarchy data+domain layers)",
     "2026-08-17T13:55:09Z evidence recorded: evidence/milestones/m2-e2e.txt (6487567a527d) - M2 boundary: full 41-test e2e suite green, including two phase-2 tests updated for the hierarchy page's now-legitimate second /users.json request",
-    "2026-08-17T13:55:13Z milestone 2 boundary verified: npm run verify green (100% coverage on hierarchy data/domain); full 41-test e2e suite green after updating two phase-2 request-count assertions (header.spec.ts, login.spec.ts) that predated the hierarchy page's own /users.json fetch. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt"
+    "2026-08-17T13:55:13Z milestone 2 boundary verified: npm run verify green (100% coverage on hierarchy data/domain); full 41-test e2e suite green after updating two phase-2 request-count assertions (header.spec.ts, login.spec.ts) that predated the hierarchy page's own /users.json fetch. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt",
+    "2026-08-17T14:04:36Z evidence recorded: evidence/reviews/m2-claude-review.md (6dd46d73e7ee) - M2 boundary review: fresh-context loop-reviewer on the M2 diff, 3 non-blocking findings",
+    "2026-08-17T14:04:36Z G4 finding Claude-3 recorded [round: milestone-2]: shouldRevalidateExpansionOnly compares URLSearchParams values via .get() (first occurrence only), so a change confined to a later occurrence of a repeated key goes undetected. Not currently exploitable (expanded is always a single comma-joined value, never a repeated key) but latent in a function written as a general comparator.",
+    "2026-08-17T14:04:36Z G4 finding Claude-4 recorded [round: milestone-2]: createHierarchyLoader's currentCorrelationId() ?? beginInteraction() fallback branch is never exercised by a test - both tests use a non-null correlation id. The coherence claim (that the id passed to fetchPeople and the id the HttpClient independently derives coincide) is asserted only by comments.",
+    "2026-08-17T14:04:36Z G4 finding Claude-5 recorded [round: milestone-2]: reportAnomalies's hardcoded kind list (readonly (keyof ForestAnomalies)[]) is not type-checked for exhaustiveness - a sixth ForestAnomalies field with a nonzero value reachable from buildForest would silently go unreported, undercutting the comment's own stated intent.",
+    "2026-08-17T14:07:36Z G4 finding Claude-3 dispositioned: fixed: shouldRevalidateExpansionOnly now compares JSON.stringify(getAll()) per parameter name instead of get(), correctly detecting a difference confined to a repeated key's later occurrence; regression test added",
+    "2026-08-17T14:07:36Z G4 finding Claude-4 dispositioned: fixed: added a test using a null-correlationId spy tracker asserting beginInteraction() is called and its minted id is exactly what flows into the resulting HierarchyResult.Failure.correlationId",
+    "2026-08-17T14:07:36Z G4 finding Claude-5 dispositioned: fixed: reportAnomalies now iterates Object.entries(anomalies) excluding skippedExpansionSegment instead of a hardcoded kind list, so a future ForestAnomalies field is reported automatically rather than needing a manual update",
+    "2026-08-17T14:07:40Z milestone 2 reviewed: Fresh loop-reviewer on the M2 diff (cfc3da2..HEAD): 3 non-blocking findings (Claude-3, Claude-4, Claude-5), all fixed. Review: evidence/reviews/m2-claude-review.md"
   ],
   "milestones": [
     {
@@ -1095,7 +1121,7 @@
       "id": 2,
       "title": "The boundary, the repository and the loader",
       "verified": "2026-08-17T13:55:13Z npm run verify green (100% coverage on hierarchy data/domain); full 41-test e2e suite green after updating two phase-2 request-count assertions (header.spec.ts, login.spec.ts) that predated the hierarchy page's own /users.json fetch. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt",
-      "reviewed": null
+      "reviewed": "2026-08-17T14:07:40Z Fresh loop-reviewer on the M2 diff (cfc3da2..HEAD): 3 non-blocking findings (Claude-3, Claude-4, Claude-5), all fixed. Review: evidence/reviews/m2-claude-review.md"
     },
     {
       "id": 3,
@@ -1271,6 +1297,11 @@
       "sha": "6487567a527d",
       "recorded": "2026-08-17T13:55:09Z",
       "note": "M2 boundary: full 41-test e2e suite green, including two phase-2 tests updated for the hierarchy page's now-legitimate second /users.json request"
+    },
+    "evidence/reviews/m2-claude-review.md": {
+      "sha": "6dd46d73e7ee",
+      "recorded": "2026-08-17T14:04:36Z",
+      "note": "M2 boundary review: fresh-context loop-reviewer on the M2 diff, 3 non-blocking findings"
     }
   },
   "test_file_hashes": {
