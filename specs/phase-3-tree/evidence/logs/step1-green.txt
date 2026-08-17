@@ -1,0 +1,36 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-Peiyl7/banned.tmp.ts: identifier "make32" carries banned reference-system name "make32"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-alias-aZV544/src/shared/banned-alias.tmp.ts: exported identifier "sessionToken" carries the banned domain word "session"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-wJzbqw/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "manager"
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-wJzbqw/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "session"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-retired-h2Y7d3/still-banned.tmp.ts: identifier "make32" carries banned reference-system name "make32"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-secrets-OpN6HV/other.tmp.ts: string literal contains "/secrets"
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/physical-properties-Q9quqf/Banned.tmp.tsx: physical property/utility "ml-*" found - use the logical equivalent
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/raw-color-CgytMg/Banned.tmp.tsx: raw color value found - use a theme.css token instead
+assert-no-lorem-ipsum: filler text found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/lorem-ipsum-0X1dhZ/Banned.tmp.tsx: lorem ipsum filler text found
+assert-no-secrets: pass --source-only or --bundle-only
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-keyword-51dBif/banned.tmp.ts: matches secret keyword pattern /apiKey/i
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-entropy-vgHC2t/banned.tmp.ts: high-entropy literal found (9f8a7b6c5d4e...)
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-suppression-al6sIR/banned.tmp.ts: eslint-disable suppresses "no-restricted-" - suppression is not permitted for this rule
+assert-no-secrets --bundle-only: dist/ is missing - run npm run build first
+assert-no-secrets --source-only: secrets found:
+  - .github/workflows/ci.yml: matches secret keyword pattern /apiKey/i
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  12:57:55
+   Duration  663ms (transform 25ms, setup 37ms, import 6ms, tests 560ms, environment 0ms)
+

@@ -40,8 +40,8 @@ describe('assert-domain-vocabulary', () => {
       safeFile,
       'export function encodeURIComponentWrapper(value: string) { return encodeURIComponent(value); }\n',
     );
-    // "buildForest" is a banned whole name from invariant 129.
-    writeFileSync(bannedFile, 'export function buildForest() { return []; }\n');
+    // "make32" is a banned whole name (reference-system POC leftover).
+    writeFileSync(bannedFile, 'export function make32() { return 32; }\n');
 
     const scriptPath = 'scripts/assert-domain-vocabulary.mjs';
     const safeResult = runScript(scriptPath, [safeFile]);
@@ -56,7 +56,7 @@ describe('assert-domain-vocabulary', () => {
       bannedResult.status,
       'a whole banned identifier must be flagged',
     ).not.toBe(0);
-    expect(bannedResult.output).toContain('buildForest');
+    expect(bannedResult.output).toContain('make32');
   });
 
   it('checks the public name of an aliased export, not its local name', () => {
@@ -107,6 +107,44 @@ describe('assert-domain-vocabulary', () => {
       0,
     );
     expect(result.output).toContain('sessionManager');
+  });
+
+  it('the retired phase-3 tripwires no longer fire and every other banned word still does', () => {
+    const probeDir = mkdtempSync(join(tmpdir(), 'domain-vocabulary-retired-'));
+    const retiredFile = join(probeDir, 'retired.tmp.ts');
+    const stillBannedFile = join(probeDir, 'still-banned.tmp.ts');
+
+    // buildForest, flattenVisible and role="tree" are phase-1 anticipation
+    // tripwires retired now that phase 3 legitimately needs them.
+    writeFileSync(
+      retiredFile,
+      'export function buildForest() { return []; }\nexport function flattenVisible() { return []; }\nexport const RoleAttributeProbe = () => <div role="tree" />;\n',
+    );
+    // make32 stays banned - the retirement must not touch other names.
+    writeFileSync(
+      stillBannedFile,
+      'export function make32() { return 32; }\n',
+    );
+
+    const retiredResult = runScript('scripts/assert-domain-vocabulary.mjs', [
+      retiredFile,
+    ]);
+    const stillBannedResult = runScript(
+      'scripts/assert-domain-vocabulary.mjs',
+      [stillBannedFile],
+    );
+
+    rmSync(probeDir, { recursive: true, force: true });
+
+    expect(
+      retiredResult.status,
+      'buildForest, flattenVisible and role="tree" must no longer be flagged',
+    ).toBe(0);
+    expect(
+      stillBannedResult.status,
+      'make32 must still be flagged',
+    ).not.toBe(0);
+    expect(stillBannedResult.output).toContain('make32');
   });
 
   it('allows the /secrets literal only in the one file that builds the path', () => {

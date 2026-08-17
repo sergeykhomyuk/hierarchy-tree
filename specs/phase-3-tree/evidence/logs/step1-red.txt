@@ -1,0 +1,40 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-retired-U6iPlF/retired.tmp.ts: exported identifier "Tree" carries the banned domain word "tree"
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-retired-U6iPlF/retired.tmp.ts: identifier "buildForest" carries banned reference-system name "buildForest"
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-retired-U6iPlF/retired.tmp.ts: identifier "flattenVisible" carries banned reference-system name "flattenVisible"
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-retired-U6iPlF/retired.tmp.ts: role="tree" attribute found
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-retired-U6iPlF/still-banned.tmp.ts: identifier "make32" carries banned reference-system name "make32"
+ ❯ |tooling| scripts/guard-scripts.test.ts (15 tests | 1 failed | 14 skipped) 50ms
+     × the retired phase-3 tripwires no longer fire and every other banned word still does 50ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/guard-scripts.test.ts > assert-domain-vocabulary > the retired phase-3 tripwires no longer fire and every other banned word still does
+AssertionError: buildForest, flattenVisible and role="tree" must no longer be flagged: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ scripts/guard-scripts.test.ts:142:7
+    140|       retiredResult.status,
+    141|       'buildForest, flattenVisible and role="tree" must no longer be f…
+    142|     ).toBe(0);
+       |       ^
+    143|     expect(
+    144|       stillBannedResult.status,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  12:57:02
+   Duration  157ms (transform 27ms, setup 39ms, import 6ms, tests 50ms, environment 0ms)
+

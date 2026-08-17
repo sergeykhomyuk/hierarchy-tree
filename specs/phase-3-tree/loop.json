@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "plan",
-  "phase_entered": "2026-08-15T12:06:14Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-15T12:12:46Z",
+  "updated": "2026-08-17T11:58:12Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 0
+      "steps_done": 1
     },
     "G3": {
       "status": "pending",
@@ -288,8 +288,8 @@
       "tests": [
         "the retired phase-3 tripwires no longer fire and every other banned word still does"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T11:57:04Z evidence/logs/step1-red.txt: new test fails - buildForest, flattenVisible and role=tree still flagged by the un-retired tripwires",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -974,7 +974,13 @@
     "2026-08-15T12:12:23Z step 40 added (milestone 5): Built-output and budget assertions: the login route chunk imports no hierarchy module and no hierarchy catalogue, the tree route chunk stays inside the existing per-route size budget, and the app entry budget is unchanged by this phase. No virtualization, windowing or pagination ships; the row model is the seam a windowing layer would consume. Invariants 175, 176, 177, 178.",
     "2026-08-15T12:12:46Z step 41 added (milestone 5): Phase 2 untouched, asserted rather than claimed: its derivation, lookup, session, guard, header, sign-out and all five login states re-run through phase 2 own suite and e2e flows unchanged; the route set still slash, slash-login and the not-found wildcard; the layer boundaries holding with the hierarchy feature importing no other feature and nothing from app; the shared-surface diff matching invariant 190 enumerated list exactly, with anything beyond it raised as a finding; and nothing anticipating a later phase. Invariants 187, 188, 189, 190, 191, 192, 193, 196.",
     "2026-08-15T12:12:46Z step 42 added (milestone 5): The finished event set swept for privacy and the console swept for noise, both across M3 toggle event and M4 asterisk event rather than milestone by milestone: no telemetry event, log line or error report from this page carries a password, an email, a person name or a photo URL; the e2e suite asserts the buffer exact contents after a toggle sequence and after a retry rather than counting loosely; and the console stays free of errors and warnings on every flow this phase adds, failure paths included, in development and in the production build alike. Invariants 167, 169, 195.",
-    "2026-08-15T12:12:46Z step 43 added (milestone 5): Pipeline integrity re-checked against the finished chain - no check disabled, skipped or set to continue-on-error and no coverage threshold lowered, with the M1 tripwire retirement re-examined as the reviewed decision it is rather than an edit made to go green - and the one check no automated run makes: invariant 98 mixed-content block verified BY HAND against the deployed https origin, with the screenshot of that row rendering initials stored under evidence/ and cited from PROOF.md. Automating it would put a real account plaintext password into CI for a single assertion, which invariant 51 rules out; the user decision is recorded in invariant 98. npm run e2e:deployed still runs post-merge for the existing smoke coverage. Invariants 98, 194."
+    "2026-08-15T12:12:46Z step 43 added (milestone 5): Pipeline integrity re-checked against the finished chain - no check disabled, skipped or set to continue-on-error and no coverage threshold lowered, with the M1 tripwire retirement re-examined as the reviewed decision it is rather than an edit made to go green - and the one check no automated run makes: invariant 98 mixed-content block verified BY HAND against the deployed https origin, with the screenshot of that row rendering initials stored under evidence/ and cited from PROOF.md. Automating it would put a real account plaintext password into CI for a single assertion, which invariant 51 rules out; the user decision is recorded in invariant 98. npm run e2e:deployed still runs post-merge for the existing smoke coverage. Invariants 98, 194.",
+    "2026-08-17T11:55:57Z phase -> implement",
+    "2026-08-17T11:57:04Z step 1 -> red",
+    "2026-08-17T11:58:09Z step 1 -> green",
+    "2026-08-17T11:58:09Z step 1 -> done",
+    "2026-08-17T11:58:12Z evidence recorded: evidence/logs/step1-red.txt (01c39a5e129d) - red: new test fails, retired tripwires still fire",
+    "2026-08-17T11:58:12Z evidence recorded: evidence/logs/step1-green.txt (ed62b794821d) - green: all 15 guard-scripts tests pass after retiring tripwires"
   ],
   "milestones": [
     {
@@ -1053,6 +1059,17 @@
       "sha": "97b9711065e5",
       "recorded": "2026-08-15T11:58:05Z",
       "note": "Round-3 delta check: 1 of 4 correct, 3 blocking, first round with no new design defect; all fixed in round 4 bar the invariant-98 credential question, which went to the user"
+    },
+    "evidence/logs/step1-red.txt": {
+      "sha": "01c39a5e129d",
+      "recorded": "2026-08-17T11:58:12Z",
+      "note": "red: new test fails, retired tripwires still fire"
+    },
+    "evidence/logs/step1-green.txt": {
+      "sha": "ed62b794821d",
+      "recorded": "2026-08-17T11:58:12Z",
+      "note": "green: all 15 guard-scripts tests pass after retiring tripwires"
     }
-  }
+  },
+  "test_file_hashes": {}
 }
