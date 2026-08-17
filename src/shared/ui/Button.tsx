@@ -6,6 +6,7 @@ type ButtonProps = {
   type?: 'button' | 'submit';
   disabled?: boolean;
   busy?: boolean;
+  fullWidth?: boolean;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   children: ReactNode;
   ref?: Ref<HTMLButtonElement>;
@@ -37,6 +38,7 @@ export const Button = memo(function Button({
   type = 'button',
   disabled,
   busy,
+  fullWidth,
   onClick,
   children,
   ref,
@@ -63,7 +65,7 @@ export const Button = memo(function Button({
       aria-busy={busy ? 'true' : undefined}
       aria-disabled={busy ? 'true' : undefined}
       onClick={handleClick}
-      className={`duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 ${busy ? VARIANT_CLASS[variant].busy : VARIANT_CLASS[variant].default}`}
+      className={`duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 ${fullWidth ? 'w-full' : ''} ${busy ? VARIANT_CLASS[variant].busy : VARIANT_CLASS[variant].default}`}
     >
       {busy && (
         <span

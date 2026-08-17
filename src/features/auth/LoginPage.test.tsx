@@ -514,6 +514,7 @@ describe('LoginPage', () => {
       <LoginPage dependencies={createTestDependencies()} destination="/" />,
     );
 
+    // eslint-disable-next-line testing-library/no-node-access -- there is no RTL query for "the page's own centering wrapper and its classes".
     expect(container.firstElementChild).toHaveClass(
       'flex',
       'items-center',

@@ -4,10 +4,10 @@
   "type": "fix",
   "size": "S",
   "status": "active",
-  "phase": "plan",
-  "phase_entered": "2026-08-17T09:49:48Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-17T09:50:15Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T09:49:53Z",
+  "updated": "2026-08-17T09:53:40Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -35,10 +35,11 @@
       "attempts": 0
     },
     "G2": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "steps_total": 1,
-      "steps_done": 0
+      "steps_done": 1,
+      "note": "step 1 done: 8 red tests now green, 1 regression-guard test held throughout; full suite (npm test) 427/427 green (evidence/step1-green.txt); lint + typecheck clean"
     },
     "G3": {
       "status": "pending",
@@ -70,8 +71,8 @@
         "src/features/auth/LoginPage.test.tsx::LoginPage > gives the heading bold mockup-sized typography",
         "src/features/auth/LoginPage.test.tsx::LoginPage > renders the submit control at full width"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-17T09:50:15Z evidence/step1-red.txt: 8 of 9 registered tests fail for the right reason against unfixed code",
+      "status": "done"
     }
   ],
   "log": [
@@ -83,7 +84,16 @@
     "2026-08-17T09:49:48Z phase -> plan (reason: frame complete: repro red observed for all 8 gap tests, regression scope defined)",
     "2026-08-17T09:49:48Z frame: reproduced via live Playwright render of /login against specs/phase-2-login/mockups (1a-1d) + npx vitest red run (evidence/step1-red.txt) - card not centered/no canvas background, Field label inline not stacked, heading/subtext untyped by Tailwind preflight, submit button not full width, invalid input has no danger border, skip link permanently visible. Root cause: ApplicationLayout/LoginPage/Field's own layout markup never received Tailwind utility classes, while Card/Input/Button/ProductMark's own default styling already existed. --color-canvas-login and --radius-login-card tokens in theme.css were declared for this and are currently unused anywhere in src.",
     "2026-08-17T09:49:53Z evidence recorded: evidence/step1-red.txt (44df9180b047) - npx vitest red run for all 9 registered tests: 8 fail for the right reason (missing Tailwind classes), 33 pre-existing tests unaffected",
-    "2026-08-17T09:49:53Z evidence recorded: evidence/current-1a-idle.png (16f5baf9b340) - Playwright screenshot of live /login (idle state) pre-fix, compare against specs/phase-2-login/mockups/mockup-1a.png"
+    "2026-08-17T09:49:53Z evidence recorded: evidence/current-1a-idle.png (16f5baf9b340) - Playwright screenshot of live /login (idle state) pre-fix, compare against specs/phase-2-login/mockups/mockup-1a.png",
+    "2026-08-17T09:50:15Z phase -> implement (reason: plan committed, starting implementation)",
+    "2026-08-17T09:50:15Z step 1 -> red",
+    "2026-08-17T09:52:36Z evidence recorded: evidence/step1-green.txt (ce20f739bc83) - 41/41 green across the 5 touched test files after implementation",
+    "2026-08-17T09:52:37Z step 1 -> green",
+    "2026-08-17T09:53:34Z evidence recorded: evidence/fixed-1a-idle.png (a610e21116a3) - post-fix live /login idle state, matches specs/phase-2-login/mockups/mockup-1a.png",
+    "2026-08-17T09:53:34Z evidence recorded: evidence/fixed-1b-ready.png (7e13a57997fd) - post-fix live /login ready state (focused password), matches mockup-1b.png",
+    "2026-08-17T09:53:34Z evidence recorded: evidence/fixed-1d-nomatch.png (3e4dabf3f020) - post-fix live /login no-match error state with danger-bordered invalid fields, matches mockup-1d.png",
+    "2026-08-17T09:53:40Z step 1 -> done",
+    "2026-08-17T09:53:40Z G2 -> passed (step 1 done: 8 red tests now green, 1 regression-guard test held throughout; full suite (npm test) 427/427 green (evidence/step1-green.txt); lint + typecheck clean)"
   ],
   "evidence_hashes": {
     "evidence/step1-red.txt": {
@@ -95,6 +105,58 @@
       "sha": "16f5baf9b340",
       "recorded": "2026-08-17T09:49:53Z",
       "note": "Playwright screenshot of live /login (idle state) pre-fix, compare against specs/phase-2-login/mockups/mockup-1a.png"
+    },
+    "evidence/step1-green.txt": {
+      "sha": "ce20f739bc83",
+      "recorded": "2026-08-17T09:52:36Z",
+      "note": "41/41 green across the 5 touched test files after implementation"
+    },
+    "evidence/fixed-1a-idle.png": {
+      "sha": "a610e21116a3",
+      "recorded": "2026-08-17T09:53:34Z",
+      "note": "post-fix live /login idle state, matches specs/phase-2-login/mockups/mockup-1a.png"
+    },
+    "evidence/fixed-1b-ready.png": {
+      "sha": "7e13a57997fd",
+      "recorded": "2026-08-17T09:53:34Z",
+      "note": "post-fix live /login ready state (focused password), matches mockup-1b.png"
+    },
+    "evidence/fixed-1d-nomatch.png": {
+      "sha": "3e4dabf3f020",
+      "recorded": "2026-08-17T09:53:34Z",
+      "note": "post-fix live /login no-match error state with danger-bordered invalid fields, matches mockup-1d.png"
+    }
+  },
+  "test_file_hashes": {
+    "src/shared/ui/Button.test.tsx": {
+      "sha": "ab288ed5d552",
+      "step": 1,
+      "recorded": "2026-08-17T09:50:15Z",
+      "log_index": 10
+    },
+    "src/shared/ui/Field.test.tsx": {
+      "sha": "d69f5f415a8d",
+      "step": 1,
+      "recorded": "2026-08-17T09:50:15Z",
+      "log_index": 10
+    },
+    "src/shared/ui/Input.test.tsx": {
+      "sha": "28a751bab379",
+      "step": 1,
+      "recorded": "2026-08-17T09:50:15Z",
+      "log_index": 10
+    },
+    "src/app/layout/ApplicationLayout.test.tsx": {
+      "sha": "3e8812303555",
+      "step": 1,
+      "recorded": "2026-08-17T09:50:15Z",
+      "log_index": 10
+    },
+    "src/features/auth/LoginPage.test.tsx": {
+      "sha": "a58af24b3153",
+      "step": 1,
+      "recorded": "2026-08-17T09:50:15Z",
+      "log_index": 10
     }
   }
 }

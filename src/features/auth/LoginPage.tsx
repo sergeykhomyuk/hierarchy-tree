@@ -79,70 +79,89 @@ export const LoginPage = memo(function LoginPage({
     : { invalid: false, required: true };
 
   return (
-    <Card>
-      <form action={formAction} onSubmit={onSubmit}>
-        <ProductMark />
-        <h1>{t('login.heading')}</h1>
-        <p>{t('login.subtext')}</p>
-        {noMatch && (
-          <LoginAlert
-            id={ALERT_ID}
-            kind="noMatch"
-            message={t('login.noMatchMessage')}
-          />
-        )}
-        {cardState.kind === 'serviceProblem' && (
-          <LoginAlert
-            id={ALERT_ID}
-            kind="serviceProblem"
-            message={t('login.serviceProblemMessage')}
-            correlationId={cardState.correlationId}
-            correlationLabel={t('login.serviceProblemCorrelationLabel')}
-            retryLabel={t('login.retry')}
-            retryDisabled={!isReady}
-            onRetry={handleRetry}
-          />
-        )}
-        <Field id="login-email" label={t('login.emailLabel')} required>
-          <FieldContext.Provider value={fieldContextValue}>
-            <Input
-              id="login-email"
-              name="email"
-              type="text"
-              value={email}
-              onChange={handleEmailChange}
-              placeholder={t('login.emailPlaceholder')}
-              autoComplete="username"
-              readOnly={submitting}
-            />
-          </FieldContext.Provider>
-        </Field>
-        <Field id="login-password" label={t('login.passwordLabel')} required>
-          <FieldContext.Provider value={fieldContextValue}>
-            <Input
+    <div className="flex min-h-screen items-center justify-center bg-canvas-login p-4">
+      <div className="w-full max-w-sm">
+        <Card>
+          <form
+            action={formAction}
+            onSubmit={onSubmit}
+            className="flex flex-col gap-5"
+          >
+            <ProductMark />
+            <div className="flex flex-col gap-1">
+              <h1 className="text-2xl font-bold text-ink">
+                {t('login.heading')}
+              </h1>
+              <p className="text-sm text-ink-muted">{t('login.subtext')}</p>
+            </div>
+            {noMatch && (
+              <LoginAlert
+                id={ALERT_ID}
+                kind="noMatch"
+                message={t('login.noMatchMessage')}
+              />
+            )}
+            {cardState.kind === 'serviceProblem' && (
+              <LoginAlert
+                id={ALERT_ID}
+                kind="serviceProblem"
+                message={t('login.serviceProblemMessage')}
+                correlationId={cardState.correlationId}
+                correlationLabel={t('login.serviceProblemCorrelationLabel')}
+                retryLabel={t('login.retry')}
+                retryDisabled={!isReady}
+                onRetry={handleRetry}
+              />
+            )}
+            <Field id="login-email" label={t('login.emailLabel')} required>
+              <FieldContext.Provider value={fieldContextValue}>
+                <Input
+                  id="login-email"
+                  name="email"
+                  type="text"
+                  value={email}
+                  onChange={handleEmailChange}
+                  placeholder={t('login.emailPlaceholder')}
+                  autoComplete="username"
+                  readOnly={submitting}
+                />
+              </FieldContext.Provider>
+            </Field>
+            <Field
               id="login-password"
-              name="password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              autoComplete="current-password"
-              readOnly={submitting}
-            />
-          </FieldContext.Provider>
-        </Field>
-        <Button
-          ref={loginButtonRef}
-          variant="primary"
-          type="submit"
-          disabled={!isReady}
-          busy={submitting}
-        >
-          {submitting ? t('login.submitting') : t('login.submit')}
-        </Button>
-        <p>
-          {submitting ? t('login.footerNoteSubmitting') : t('login.footerNote')}
-        </p>
-      </form>
-    </Card>
+              label={t('login.passwordLabel')}
+              required
+            >
+              <FieldContext.Provider value={fieldContextValue}>
+                <Input
+                  id="login-password"
+                  name="password"
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  autoComplete="current-password"
+                  readOnly={submitting}
+                />
+              </FieldContext.Provider>
+            </Field>
+            <Button
+              ref={loginButtonRef}
+              variant="primary"
+              type="submit"
+              disabled={!isReady}
+              busy={submitting}
+              fullWidth
+            >
+              {submitting ? t('login.submitting') : t('login.submit')}
+            </Button>
+            <p className="text-center text-sm text-ink-muted">
+              {submitting
+                ? t('login.footerNoteSubmitting')
+                : t('login.footerNote')}
+            </p>
+          </form>
+        </Card>
+      </div>
+    </div>
   );
 });
