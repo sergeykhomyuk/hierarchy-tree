@@ -57,7 +57,6 @@ describe('createHierarchyLoader', () => {
       http,
       observability,
       interactionTracker: createSpyInteractionTracker('a'.repeat(32)),
-      randomness: createFakeRandomness(),
     });
 
     const result = loader({
@@ -79,7 +78,6 @@ describe('createHierarchyLoader', () => {
       http,
       observability,
       interactionTracker: createSpyInteractionTracker('a'.repeat(32)),
-      randomness: createFakeRandomness(),
     });
     const controller = new AbortController();
 

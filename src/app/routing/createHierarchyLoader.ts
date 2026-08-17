@@ -2,16 +2,13 @@ import type { LoaderFunctionArgs } from 'react-router';
 import { fetchPeople } from '@features/hierarchy';
 import type { HierarchyResult } from '@features/hierarchy';
 import type { HttpClient } from '@platform/http';
-import { createCorrelationId } from '@platform/observability';
 import type { ObservabilityFacade } from '@platform/observability';
-import type { Randomness } from '@platform/runtime';
 import type { InteractionTracker } from './createInteractionTracker';
 
 export type HierarchyLoaderDependencies = {
   http: HttpClient;
   observability: ObservabilityFacade;
   interactionTracker: InteractionTracker;
-  randomness: Randomness;
 };
 
 export type HierarchyLoaderData = {
@@ -30,11 +27,11 @@ export function createHierarchyLoader(
   }: LoaderFunctionArgs): HierarchyLoaderData {
     // The router's own attach() starts tracking before any navigation, so
     // this is null only in the pathological case where the loader runs
-    // with no tracked interaction at all - mirrored from createRuntime.ts's
-    // own http-client correlation id fallback.
+    // with no tracked interaction at all - beginInteraction() both mints an
+    // id and starts tracking, so the fallback leaves state consistent.
     const correlationId =
       dependencies.interactionTracker.currentCorrelationId() ??
-      createCorrelationId(dependencies.randomness);
+      dependencies.interactionTracker.beginInteraction();
 
     return {
       hierarchy: fetchPeople(
