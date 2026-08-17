@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(loop *)",
+      "Bash(npm run smoke:live)",
+      "Bash(npx tsx scripts/*)"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |platform| src/platform/observability/redact.test.ts (9 tests | 1 failed) 4ms
+     × replaces a secret-bearing path segment in a recorded resource path 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |platform| src/platform/observability/redact.test.ts > redact > replaces a secret-bearing path segment in a recorded resource path
+AssertionError: expected '/secrets/AB12CD34.json' to be '/secrets/[redacted].json' // Object.is equality
+
+Expected: "/secrets/[redacted].json"
+Received: "/secrets/AB12CD34.json"
+
+ ❯ src/platform/observability/redact.test.ts:77:46
+     75|
+     76|   it('replaces a secret-bearing path segment in a recorded resource pa…
+     77|     expect(redact('/secrets/AB12CD34.json')).toBe('/secrets/[redacted]…
+       |                                              ^
+     78|   });
+     79|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  21:53:08
+   Duration  96ms (transform 19ms, setup 31ms, import 4ms, tests 4ms, environment 0ms)
+

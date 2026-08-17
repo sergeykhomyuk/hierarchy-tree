@@ -1,0 +1,53 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/domain/deriveSecret.test.ts (0 test)
+ ❯ |ui| src/features/auth/domain/substitutionTableEntry.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/domain/deriveSecret.test.ts [ src/features/auth/domain/deriveSecret.test.ts ]
+Error: Failed to resolve import "./deriveSecret" from "src/features/auth/domain/deriveSecret.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/domain/deriveSecret.test.ts:3:29
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { SUBSTITUTION_TABLE } from "./substitutionTable";
+  3  |  import { deriveSecret } from "./deriveSecret";
+     |                                ^
+  4  |  // A local transcription of the brief's own `encode`, over the untrimmed
+  5  |  // inputs it actually receives - expectations come from evaluating the
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/features/auth/domain/substitutionTableEntry.test.ts [ src/features/auth/domain/substitutionTableEntry.test.ts ]
+Error: Failed to resolve import "./substitutionTableEntry" from "src/features/auth/domain/substitutionTableEntry.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/domain/substitutionTableEntry.test.ts:2:39
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { substitutionTableEntry } from "./substitutionTableEntry";
+     |                                          ^
+  3  |  describe("substitutionTableEntry", () => {
+  4  |  	it("returns the entry at a valid index", () => {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  21:28:10
+   Duration  592ms (transform 36ms, setup 210ms, import 0ms, tests 0ms, environment 761ms)
+

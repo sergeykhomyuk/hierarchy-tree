@@ -1,0 +1,14 @@
+
+> hierarchy-tree@0.0.0 smoke:live
+> vitest run --config vitest.live.config.ts
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  14:03:20
+   Duration  1.20s (transform 57ms, setup 0ms, import 96ms, tests 1.04s, environment 0ms)
+
+EXIT:0

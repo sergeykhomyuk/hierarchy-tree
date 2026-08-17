@@ -1,0 +1,26 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/composition/createRuntime.test.ts (7 tests | 1 failed) 6ms
+     × exposes tab storage and the signed-in user store 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/composition/createRuntime.test.ts > createRuntime > exposes tab storage and the signed-in user store
+TypeError: Cannot read properties of undefined (reading 'read')
+ ❯ src/app/composition/createRuntime.test.ts:92:38
+     90|     const runtime = await createRuntime(TEST_CONFIGURATION);
+     91|
+     92|     expect(typeof runtime.tabStorage.read).toBe('function');
+       |                                      ^
+     93|     expect(typeof runtime.tabStorage.write).toBe('function');
+     94|     expect(typeof runtime.tabStorage.remove).toBe('function');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  22:05:23
+   Duration  603ms (transform 85ms, setup 97ms, import 107ms, tests 6ms, environment 331ms)
+

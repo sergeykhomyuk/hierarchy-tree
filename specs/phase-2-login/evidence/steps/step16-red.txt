@@ -1,0 +1,75 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/shared/ui/Input.test.tsx (2 tests | 2 failed) 15ms
+     × renders read-only without leaving the accessibility tree 13ms
+     × renders a placeholder that is not the field's accessible name 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/shared/ui/Input.test.tsx > Input > renders read-only without leaving the accessibility tree
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"readonly"[32m[39m[2m) // element.hasAttribute("readonly")[22m
+
+Expected the element to have attribute:
+[32m  readonly[39m
+Received:
+[31m  null[39m
+ ❯ src/shared/ui/Input.test.tsx:22:19
+     20|
+     21|     const input = screen.getByLabelText('Email');
+     22|     expect(input).toHaveAttribute('readonly');
+       |                   ^
+     23|     expect(input).not.toHaveAttribute('aria-hidden');
+     24|     expect(input).toBeVisible();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/shared/ui/Input.test.tsx > Input > renders a placeholder that is not the field's accessible name
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"placeholder"[32m[39m[2m, [22m[32m[32m"you@foo.com"[32m[39m[2m) // element.getAttribute("placeholder") === "you@foo.com"[22m
+
+Expected the element to have attribute:
+[32m  placeholder="you@foo.com"[39m
+Received:
+[31m  null[39m
+ ❯ src/shared/ui/Input.test.tsx:42:19
+     40|
+     41|     const input = screen.getByLabelText('Email');
+     42|     expect(input).toHaveAttribute('placeholder', 'you@foo.com');
+       |                   ^
+     43|     expect(input).toHaveAccessibleName('Email');
+     44|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  23:35:13
+   Duration  512ms (transform 25ms, setup 92ms, import 8ms, tests 15ms, environment 332ms)
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/shared/ui/Button.test.tsx (8 tests | 1 failed) 78ms
+     × renders a spinner and the pressed fill while busy 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/shared/ui/Button.test.tsx > Button > renders a spinner and the pressed fill while busy
+AssertionError: expected null not to be null
+ ❯ src/shared/ui/Button.test.tsx:106:25
+    104|     const button = screen.getByRole('button', { name: 'Save' });
+    105|     const spinner = container.querySelector('[aria-hidden="true"]');
+    106|     expect(spinner).not.toBeNull();
+       |                         ^
+    107|     expect(button.className).toContain('bg-primary-pressed');
+    108|     expect(button.className).not.toContain('hover:bg-primary-pressed');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  23:35:36
+   Duration  588ms (transform 26ms, setup 88ms, import 24ms, tests 78ms, environment 333ms)
+

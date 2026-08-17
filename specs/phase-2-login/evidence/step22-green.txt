@@ -1,0 +1,11 @@
+
+Running 6 tests using 1 worker
+
+  ✓  1 [chromium] › e2e/login.spec.ts:21:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page (378ms)
+  ✓  2 [chromium] › e2e/login.spec.ts:44:3 › the login card › shows the no-match alert for a null lookup and stays on /login (169ms)
+  ✓  3 [chromium] › e2e/login.spec.ts:60:3 › the login card › shows the service-problem alert and retries successfully (479ms)
+  ✓  4 [chromium] › e2e/login.spec.ts:97:3 › the login card › issues exactly one request while authenticating, and none on the users path (155ms)
+  ✓  5 [chromium] › e2e/login.spec.ts:128:3 › the login card › leaves no credential material in the telemetry buffer or storage (167ms)
+  ✓  6 [chromium] › e2e/login.spec.ts:162:3 › the login card › passes an accessibility scan in each of its five states (1.1s)
+
+  6 passed (3.7s)

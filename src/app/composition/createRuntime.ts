@@ -12,11 +12,20 @@ import {
 } from '@platform/http';
 import {
   createInternationalization,
-  createKeyEchoCatalogue,
   detectLocale,
   Locale,
+  resolveLocaleCatalogue,
 } from '@platform/internationalization';
-import { createSystemClock, createSystemRandomness } from '@platform/runtime';
+import {
+  createSystemClock,
+  createSystemRandomness,
+  createTabStorage,
+  type KeyValueStorage,
+} from '@platform/runtime';
+import {
+  createSignedInUserStore,
+  type SignedInUserStore,
+} from '@features/auth';
 import { createInteractionTracker, type InteractionTracker } from '../routing';
 import commonCatalogue from '../locales/en/common.json';
 
@@ -26,6 +35,8 @@ export type Runtime = Readonly<{
   http: HttpClient;
   i18n: i18n;
   interactionTracker: InteractionTracker;
+  tabStorage: KeyValueStorage;
+  signedInUserStore: SignedInUserStore;
 }>;
 
 export async function createRuntime(
@@ -59,14 +70,18 @@ export async function createRuntime(
   const language = detectLocale(navigator.languages);
   const i18n = await createInternationalization({
     resources: {
-      common:
-        language === Locale.Test
-          ? createKeyEchoCatalogue(commonCatalogue)
-          : commonCatalogue,
+      common: resolveLocaleCatalogue(language, {
+        [Locale.English]: commonCatalogue,
+      }),
     },
     language,
     observability,
   });
+
+  const tabStorage = createTabStorage();
+  // Built once per page (invariant 97b), with no reader until the header
+  // lands (M4) - its lifetime is the page's, so a reload re-requests.
+  const signedInUserStore = createSignedInUserStore({ http, observability });
 
   return Object.freeze({
     configuration,
@@ -74,5 +89,7 @@ export async function createRuntime(
     http,
     i18n,
     interactionTracker,
+    tabStorage,
+    signedInUserStore,
   });
 }

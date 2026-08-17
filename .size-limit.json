@@ -14,6 +14,13 @@
     "running": false
   },
   {
+    "name": "route: authenticated",
+    "path": "dist/assets/AuthenticatedRoute-*.js",
+    "limit": "30 kB",
+    "gzip": true,
+    "running": false
+  },
+  {
     "name": "route: home",
     "path": "dist/assets/HomeRoute-*.js",
     "limit": "30 kB",

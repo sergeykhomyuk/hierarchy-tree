@@ -1,0 +1,53 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/data/userResourcePath.test.ts (0 test)
+ ❯ |ui| src/features/auth/data/secretResourcePath.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/data/secretResourcePath.test.ts [ src/features/auth/data/secretResourcePath.test.ts ]
+Error: Failed to resolve import "./secretResourcePath" from "src/features/auth/data/secretResourcePath.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/secretResourcePath.test.ts:3:35
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { secretResourcePath } from "./secretResourcePath";
+     |                                      ^
+  3  |  describe("secretResourcePath", () => {
+  4  |  	it("builds the secrets path for a derived secret", () => {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/features/auth/data/userResourcePath.test.ts [ src/features/auth/data/userResourcePath.test.ts ]
+Error: Failed to resolve import "./userResourcePath" from "src/features/auth/data/userResourcePath.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/userResourcePath.test.ts:3:33
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { userIdentifier } from "../domain/userIdentifier";
+  3  |  import { userResourcePath } from "./userResourcePath";
+     |                                    ^
+  4  |  describe("userResourcePath", () => {
+  5  |  	it("percent-encodes the identifier into the path segment", () => {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  21:46:53
+   Duration  563ms (transform 34ms, setup 193ms, import 0ms, tests 0ms, environment 725ms)
+

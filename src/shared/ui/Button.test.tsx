@@ -94,6 +94,37 @@ describe('Button', () => {
     expect(handleClick).not.toHaveBeenCalled();
   });
 
+  it('renders a spinner and the pressed fill while busy', () => {
+    render(
+      <Button variant="primary" busy onClick={vi.fn()}>
+        Save
+      </Button>,
+    );
+
+    const button = screen.getByRole('button', { name: 'Save' });
+    // eslint-disable-next-line testing-library/no-node-access -- the decorative spinner is aria-hidden and has no accessible role to query by.
+    expect(button.firstElementChild).toHaveAttribute('aria-hidden', 'true');
+    expect(button.className).toContain('bg-primary-pressed');
+    expect(button.className).not.toContain('hover:bg-primary-pressed');
+  });
+
+  it('forwards a ref to the underlying button element', () => {
+    let element: HTMLButtonElement | null = null;
+    render(
+      <Button
+        variant="primary"
+        onClick={vi.fn()}
+        ref={(node) => {
+          element = node;
+        }}
+      >
+        Save
+      </Button>,
+    );
+
+    expect(element).toBe(screen.getByRole('button', { name: 'Save' }));
+  });
+
   it('renders the secondary variant', () => {
     render(
       <Button variant="secondary" onClick={vi.fn()}>
@@ -102,5 +133,27 @@ describe('Button', () => {
     );
 
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+  });
+
+  it('renders at full width when fullWidth is set', () => {
+    render(
+      <Button variant="primary" fullWidth onClick={vi.fn()}>
+        Save
+      </Button>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass('w-full');
+  });
+
+  it('does not stretch to full width by default', () => {
+    render(
+      <Button variant="primary" onClick={vi.fn()}>
+        Save
+      </Button>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Save' })).not.toHaveClass(
+      'w-full',
+    );
   });
 });

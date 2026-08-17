@@ -1,10 +1,10 @@
-import type { HttpFailure } from './httpFailure';
+import { HttpFailureKind, type HttpFailure } from './httpFailure';
 import type { HttpRequest } from './httpRequest';
 
 const MAXIMUM_RETRY_ATTEMPTS = 1;
 const RETRYABLE_FAILURE_KINDS = new Set<HttpFailure['kind']>([
-  'network',
-  'timeout',
+  HttpFailureKind.Network,
+  HttpFailureKind.Timeout,
 ]);
 
 export function shouldRetry(
@@ -14,6 +14,6 @@ export function shouldRetry(
 ): boolean {
   if (attempt >= MAXIMUM_RETRY_ATTEMPTS) return false;
   if (method !== 'GET') return false;
-  if (failure.kind === 'http') return failure.status >= 500;
+  if (failure.kind === HttpFailureKind.Http) return failure.status >= 500;
   return RETRYABLE_FAILURE_KINDS.has(failure.kind);
 }

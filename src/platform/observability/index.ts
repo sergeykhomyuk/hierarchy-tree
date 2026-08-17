@@ -12,3 +12,4 @@ export type { TelemetryRecord } from './telemetryRecord';
 export type { AnalyticsEventName, AnalyticsPayloads } from './analyticsEvents';
 export { reportWebVitals } from './reportWebVitals';
 export { WebVitalMetricName } from './webVitalMetricName';
+export { SignInOutcome } from './signInOutcome';

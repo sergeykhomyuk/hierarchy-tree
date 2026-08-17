@@ -33,14 +33,20 @@ export const Field = memo(function Field({
   );
 
   return (
-    <div>
-      <label htmlFor={id}>{label}</label>
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-sm font-medium text-ink">
+        {label}
+      </label>
       <FieldContext.Provider value={contextValue}>
         {children}
       </FieldContext.Provider>
-      {hint !== undefined && <p id={hintId}>{hint}</p>}
+      {hint !== undefined && (
+        <p id={hintId} className="text-sm text-ink-muted">
+          {hint}
+        </p>
+      )}
       {error !== undefined && (
-        <p id={errorId} role="alert">
+        <p id={errorId} role="alert" className="text-sm text-danger">
           {error}
         </p>
       )}

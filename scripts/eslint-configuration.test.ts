@@ -97,6 +97,38 @@ describe('eslint configuration', () => {
     }
   });
 
+  it('permits sessionStorage only in createTabStorage', async () => {
+    const config = await readEslintConfig();
+    const globalsRules = collectRules(config, 'no-restricted-globals');
+
+    const tabStorageRule = globalsRules.find((rule) =>
+      (rule.files ?? []).includes('src/platform/runtime/createTabStorage.ts'),
+    );
+    expect(
+      tabStorageRule,
+      'createTabStorage.ts must have its own no-restricted-globals override',
+    ).toBeDefined();
+
+    const tabStorageNames = (
+      Array.isArray(tabStorageRule?.value) ? tabStorageRule.value.slice(1) : []
+    ).map((entry) =>
+      typeof entry === 'string' ? entry : (entry as { name?: string }).name,
+    );
+    expect(tabStorageNames).not.toContain('sessionStorage');
+
+    // Every other no-restricted-globals entry (the blanket
+    // src/**/*.{ts,tsx} block) still bans it.
+    const otherRulesBanningSessionStorage = globalsRules.filter((rule) => {
+      if (rule === tabStorageRule) return false;
+      const names = (Array.isArray(rule.value) ? rule.value.slice(1) : []).map(
+        (entry) =>
+          typeof entry === 'string' ? entry : (entry as { name?: string }).name,
+      );
+      return names.includes('sessionStorage');
+    });
+    expect(otherRulesBanningSessionStorage.length).toBeGreaterThan(0);
+  });
+
   it('the network ban covers every enumerated identifier in bare and member forms', async () => {
     const config = await readEslintConfig();
     const bareNetworkGlobals = [
@@ -259,7 +291,53 @@ describe('demonstrable negatives', () => {
     );
 
     expect(output).toContain('no-restricted-imports');
-    expect(output).toContain('invariant 97');
+    expect(output).toContain('src/features/auth/guard');
+  });
+
+  it('a redirect import is permitted inside src/features/auth/guard but redirectDocument is not', () => {
+    const permittedOutput = lintOutputFor(
+      'src/features/auth/guard/redirectPermittedProbe.ts',
+      "import { redirect } from 'react-router';\nexport const _probe = redirect;\n",
+    );
+    expect(permittedOutput).not.toContain('no-restricted-imports');
+
+    const bannedOutput = lintOutputFor(
+      'src/features/auth/guard/redirectDocumentBannedProbe.ts',
+      "import { redirectDocument } from 'react-router';\nexport const _probe = redirectDocument;\n",
+    );
+    expect(bannedOutput).toContain('no-restricted-imports');
+    expect(bannedOutput).toContain('full document load');
+  });
+});
+
+describe('the redirect sinks-ban narrowing', () => {
+  it('the sinks pattern is present in all three no-restricted-imports blocks', async () => {
+    const config = await readEslintConfig();
+    const restrictedImportRows = config.filter(
+      (entry) => entry.rules?.['no-restricted-imports'] !== undefined,
+    );
+
+    const redirectRows = restrictedImportRows.filter((entry) => {
+      const value = entry.rules?.['no-restricted-imports'];
+      const options = Array.isArray(value) ? value[1] : undefined;
+      const paths = (
+        options as { paths?: Array<{ name?: string }> } | undefined
+      )?.paths;
+      return paths?.some((path) => path.name === 'react-router');
+    });
+
+    expect(redirectRows.length).toBe(3);
+    for (const row of redirectRows) {
+      const value = row.rules?.['no-restricted-imports'];
+      const options = Array.isArray(value) ? value[1] : undefined;
+      const patterns = (
+        options as { patterns?: Array<{ message?: string }> } | undefined
+      )?.patterns;
+      expect(
+        patterns?.some((pattern) => pattern.message?.includes('createSink.ts')),
+        `block for ${JSON.stringify(row.files)} is missing the sinks pattern`,
+      ).toBe(true);
+    }
   });
 });
 

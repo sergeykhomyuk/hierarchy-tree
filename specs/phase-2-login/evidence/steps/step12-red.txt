@@ -1,0 +1,54 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/data/createSignedInUserStore.test.ts (0 test)
+ ❯ |ui| src/features/auth/data/fetchSignedInUser.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/data/createSignedInUserStore.test.ts [ src/features/auth/data/createSignedInUserStore.test.ts ]
+Error: Failed to resolve import "./createSignedInUserStore" from "src/features/auth/data/createSignedInUserStore.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/createSignedInUserStore.test.ts:7:40
+  3  |  import { createHttpClient } from "@platform/http";
+  4  |  import { userIdentifier } from "../domain/userIdentifier";
+  5  |  import { createSignedInUserStore } from "./createSignedInUserStore";
+     |                                           ^
+  6  |  function createSpyObservability() {
+  7  |  	return {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/features/auth/data/fetchSignedInUser.test.ts [ src/features/auth/data/fetchSignedInUser.test.ts ]
+Error: Failed to resolve import "./fetchSignedInUser" from "src/features/auth/data/fetchSignedInUser.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/fetchSignedInUser.test.ts:7:34
+  3  |  import { createHttpClient } from "@platform/http";
+  4  |  import { userIdentifier } from "../domain/userIdentifier";
+  5  |  import { fetchSignedInUser } from "./fetchSignedInUser";
+     |                                     ^
+  6  |  function createSpyObservability() {
+  7  |  	return {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  1 passed (1)
+   Start at  22:03:24
+   Duration  726ms (transform 89ms, setup 344ms, import 65ms, tests 2ms, environment 1.39s)
+

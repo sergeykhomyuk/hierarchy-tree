@@ -1,0 +1,33 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/data/lookupUserIdentifier.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/data/lookupUserIdentifier.test.ts [ src/features/auth/data/lookupUserIdentifier.test.ts ]
+Error: Failed to resolve import "./lookupUserIdentifier" from "src/features/auth/data/lookupUserIdentifier.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/lookupUserIdentifier.test.ts:7:37
+  2  |  import { createFakeClock, createFakeRandomness } from "@shared/testing";
+  3  |  import { createHttpClient } from "@platform/http";
+  4  |  import { lookupUserIdentifier } from "./lookupUserIdentifier";
+     |                                        ^
+  5  |  const SECRET = "AB".repeat(32);
+  6  |  const CORRELATION_ID = "c".repeat(32);
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  21:51:04
+   Duration  551ms (transform 20ms, setup 90ms, import 0ms, tests 0ms, environment 362ms)
+

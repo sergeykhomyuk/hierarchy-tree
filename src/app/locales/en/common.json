@@ -2,6 +2,13 @@
   "layout": {
     "skipLink": "Skip to main content"
   },
+  "header": {
+    "eyebrow": "Directory",
+    "pageTitle": "Hierarchy Tree",
+    "logout": "Log out",
+    "signedInFallback": "Signed in",
+    "nameLoading": "Loading your name"
+  },
   "notFound": {
     "title": "Page not found",
     "linkHome": "Back to home"

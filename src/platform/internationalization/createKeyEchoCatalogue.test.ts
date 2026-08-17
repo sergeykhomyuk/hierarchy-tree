@@ -71,4 +71,26 @@ describe('createKeyEchoCatalogue', () => {
 
     expect(FIXTURE_CATALOGUE).toEqual(snapshot);
   });
+
+  it('returns an empty catalogue for an empty catalogue', () => {
+    expect(createKeyEchoCatalogue({})).toEqual({});
+  });
+
+  it('echoes a root-level leaf with no enclosing namespace', () => {
+    // createLoadTranslations feeds this shape directly (a flat
+    // { key: value } catalogue, not one nested under a namespace).
+    expect(createKeyEchoCatalogue({ greeting: 'hello' })).toEqual({
+      greeting: 'greeting',
+    });
+  });
+
+  it('echoes a leaf nested deeper than the real catalogues go', () => {
+    // Real catalogues are exactly two levels deep (namespace -> leaf); this
+    // proves the recursion itself, not just this codebase's current data.
+    const deeplyNested = { a: { b: { c: { d: 'leaf' } } } };
+
+    expect(createKeyEchoCatalogue(deeplyNested)).toEqual({
+      a: { b: { c: { d: 'a.b.c.d' } } },
+    });
+  });
 });

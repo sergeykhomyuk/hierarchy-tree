@@ -190,7 +190,7 @@ describe('vitest configuration', () => {
     expect(thresholds?.functions).toBe(85);
   });
 
-  it('the features domain 100 percent threshold is configured and inert while no such directory exists', async () => {
+  it('the features domain 100 percent threshold is configured and armed now that phase 2 created one', async () => {
     const vitestConfig = (await import('../vitest.config.ts')).default;
     const thresholds = vitestConfig.test?.coverage?.thresholds as
       | Record<
@@ -212,8 +212,11 @@ describe('vitest configuration', () => {
       statements: 100,
     });
 
+    // Phase 1 asserted the glob matched nothing yet; phase 2's
+    // src/features/auth/domain/ (deriveSecret and friends) is what the
+    // threshold was configured in advance to arm (TECH.md section 2).
     const matches = globSync('src/features/*/domain');
-    expect(matches, 'the domain glob should match nothing yet').toHaveLength(0);
+    expect(matches).toContain('src/features/auth/domain');
   });
 
   it('every Vitest project loads the setup file that makes a real fetch throw', async () => {

@@ -1,0 +1,761 @@
+diff --git a/src/features/auth/LoginAlert.tsx b/src/features/auth/LoginAlert.tsx
+index 9ed83c8..2b6de63 100644
+--- a/src/features/auth/LoginAlert.tsx
++++ b/src/features/auth/LoginAlert.tsx
+@@ -1,11 +1,12 @@
+ import { memo } from 'react';
+ import { Button } from '@shared/ui';
++import { LoginCardStateKind } from './loginCardState';
+ 
+ type LoginAlertProps =
+-  | { id: string; kind: 'noMatch'; message: string }
++  | { id: string; kind: typeof LoginCardStateKind.NoMatch; message: string }
+   | {
+       id: string;
+-      kind: 'serviceProblem';
++      kind: typeof LoginCardStateKind.ServiceProblem;
+       message: string;
+       correlationId: string;
+       correlationLabel: string;
+@@ -29,7 +30,7 @@ export const LoginAlert = memo(function LoginAlert(props: LoginAlertProps) {
+       className="rounded-card border border-border-hairline bg-danger-surface p-3 text-danger"
+     >
+       <p>{props.message}</p>
+-      {props.kind === 'serviceProblem' && (
++      {props.kind === LoginCardStateKind.ServiceProblem && (
+         <>
+           <p>
+             {props.correlationLabel}: {props.correlationId}
+diff --git a/src/features/auth/LoginPage.tsx b/src/features/auth/LoginPage.tsx
+index daee645..311c339 100644
+--- a/src/features/auth/LoginPage.tsx
++++ b/src/features/auth/LoginPage.tsx
+@@ -8,7 +8,7 @@ import { Button, Card, Field, FieldContext, Input } from '@shared/ui';
+ import type { FieldContextValue } from '@shared/ui';
+ import { useDocumentTitle } from '@shared/hooks';
+ import { LoginAlert } from './LoginAlert';
+-import { loginCardState } from './loginCardState';
++import { LoginCardStateKind, loginCardState } from './loginCardState';
+ import { ProductMark } from './ProductMark';
+ import { useLoginSubmission } from './useLoginSubmission';
+ 
+@@ -44,8 +44,8 @@ export const LoginPage = memo(function LoginPage({
+ 
+   const isReady = email.trim() !== '' && password !== '';
+   const cardState = loginCardState(result, isPending, isReady);
+-  const submitting = cardState.kind === 'submitting';
+-  const noMatch = cardState.kind === 'noMatch';
++  const submitting = cardState.kind === LoginCardStateKind.Submitting;
++  const noMatch = cardState.kind === LoginCardStateKind.NoMatch;
+   const loginButtonRef = useRef<HTMLButtonElement>(null);
+ 
+   // Retrying unmounts the alert holding the focused retry control - which
+@@ -97,14 +97,14 @@ export const LoginPage = memo(function LoginPage({
+             {noMatch && (
+               <LoginAlert
+                 id={ALERT_ID}
+-                kind="noMatch"
++                kind={LoginCardStateKind.NoMatch}
+                 message={t('login.noMatchMessage')}
+               />
+             )}
+-            {cardState.kind === 'serviceProblem' && (
++            {cardState.kind === LoginCardStateKind.ServiceProblem && (
+               <LoginAlert
+                 id={ALERT_ID}
+-                kind="serviceProblem"
++                kind={LoginCardStateKind.ServiceProblem}
+                 message={t('login.serviceProblemMessage')}
+                 correlationId={cardState.correlationId}
+                 correlationLabel={t('login.serviceProblemCorrelationLabel')}
+diff --git a/src/features/auth/data/createSignedInUserStore.test.ts b/src/features/auth/data/createSignedInUserStore.test.ts
+index dccff69..53d6360 100644
+--- a/src/features/auth/data/createSignedInUserStore.test.ts
++++ b/src/features/auth/data/createSignedInUserStore.test.ts
+@@ -3,7 +3,7 @@ import { createFakeClock, createFakeRandomness } from '@shared/testing';
+ import { createHttpClient } from '@platform/http';
+ import type { HttpClientDependencies, Transport } from '@platform/http';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import { userIdentifier } from '../domain/userIdentifier';
++import { userIdentifier } from '../domain';
+ import { createSignedInUserStore } from './createSignedInUserStore';
+ 
+ function createSpyObservability(): ObservabilityFacade {
+diff --git a/src/features/auth/data/createSignedInUserStore.ts b/src/features/auth/data/createSignedInUserStore.ts
+index 5594d9f..bd08e88 100644
+--- a/src/features/auth/data/createSignedInUserStore.ts
++++ b/src/features/auth/data/createSignedInUserStore.ts
+@@ -1,6 +1,6 @@
+ import type { HttpClient } from '@platform/http';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import type { UserIdentifier } from '../domain/userIdentifier';
++import type { UserIdentifier } from '../domain';
+ import { fetchSignedInUser } from './fetchSignedInUser';
+ import type { SignedInUserView } from './signedInUserView';
+ 
+diff --git a/src/features/auth/data/fetchSignedInUser.test.ts b/src/features/auth/data/fetchSignedInUser.test.ts
+index 3d416e6..cab697d 100644
+--- a/src/features/auth/data/fetchSignedInUser.test.ts
++++ b/src/features/auth/data/fetchSignedInUser.test.ts
+@@ -3,7 +3,7 @@ import { createFakeClock, createFakeRandomness } from '@shared/testing';
+ import { createHttpClient } from '@platform/http';
+ import type { HttpClientDependencies, Transport } from '@platform/http';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import { userIdentifier } from '../domain/userIdentifier';
++import { userIdentifier } from '../domain';
+ import { fetchSignedInUser } from './fetchSignedInUser';
+ 
+ function createSpyObservability(): ObservabilityFacade {
+diff --git a/src/features/auth/data/fetchSignedInUser.ts b/src/features/auth/data/fetchSignedInUser.ts
+index ff8b366..12873fd 100644
+--- a/src/features/auth/data/fetchSignedInUser.ts
++++ b/src/features/auth/data/fetchSignedInUser.ts
+@@ -1,6 +1,6 @@
+ import type { HttpClient } from '@platform/http';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import type { UserIdentifier } from '../domain/userIdentifier';
++import type { UserIdentifier } from '../domain';
+ import { parseSignedInUsers } from './parseSignedInUsers';
+ import type { SignedInUserView } from './signedInUserView';
+ import { USERS_COLLECTION_RESOURCE_PATH } from './usersCollectionResourcePath';
+diff --git a/src/features/auth/data/index.ts b/src/features/auth/data/index.ts
+new file mode 100644
+index 0000000..f38f287
+--- /dev/null
++++ b/src/features/auth/data/index.ts
+@@ -0,0 +1,7 @@
++export { createSignedInUserStore } from './createSignedInUserStore';
++export type { SignedInUserStore } from './createSignedInUserStore';
++export type { SignedInUserView } from './signedInUserView';
++export {
++  lookupUserIdentifier,
++  LookupOutcomeKind,
++} from './lookupUserIdentifier';
+diff --git a/src/features/auth/data/lookupResultSchema.ts b/src/features/auth/data/lookupResultSchema.ts
+index 79cf0c0..df37d17 100644
+--- a/src/features/auth/data/lookupResultSchema.ts
++++ b/src/features/auth/data/lookupResultSchema.ts
+@@ -1,5 +1,5 @@
+ import { z } from 'zod';
+-import { USER_IDENTIFIER_PATTERN } from '../domain/userIdentifier';
++import { USER_IDENTIFIER_PATTERN } from '../domain';
+ 
+ // null means no match; a charset-restricted string or a plain integer
+ // means a hit. Anything else - an object, an array, a boolean, an empty
+diff --git a/src/features/auth/data/lookupUserIdentifier.test.ts b/src/features/auth/data/lookupUserIdentifier.test.ts
+index bc336b3..f69a6e5 100644
+--- a/src/features/auth/data/lookupUserIdentifier.test.ts
++++ b/src/features/auth/data/lookupUserIdentifier.test.ts
+@@ -3,7 +3,7 @@ import { createFakeClock, createFakeRandomness } from '@shared/testing';
+ import { createHttpClient } from '@platform/http';
+ import type { HttpClientDependencies, Transport } from '@platform/http';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import type { DerivedSecret } from '../domain/derivedSecret';
++import type { DerivedSecret } from '../domain';
+ import { lookupUserIdentifier } from './lookupUserIdentifier';
+ 
+ const SECRET = 'AB'.repeat(32) as DerivedSecret;
+diff --git a/src/features/auth/data/lookupUserIdentifier.ts b/src/features/auth/data/lookupUserIdentifier.ts
+index b6eceb9..876b946 100644
+--- a/src/features/auth/data/lookupUserIdentifier.ts
++++ b/src/features/auth/data/lookupUserIdentifier.ts
+@@ -1,14 +1,27 @@
+ import type { HttpClient } from '@platform/http';
+-import type { DerivedSecret } from '../domain/derivedSecret';
+-import { userIdentifier, type UserIdentifier } from '../domain/userIdentifier';
++import {
++  userIdentifier,
++  type DerivedSecret,
++  type UserIdentifier,
++} from '../domain';
+ import { lookupResultSchema } from './lookupResultSchema';
+ import { secretResourcePath } from './secretResourcePath';
+ 
++export const LookupOutcomeKind = {
++  SignedIn: 'signedIn',
++  NoMatch: 'noMatch',
++  ServiceProblem: 'serviceProblem',
++  Cancelled: 'cancelled',
++} as const;
++
++export type LookupOutcomeKind =
++  (typeof LookupOutcomeKind)[keyof typeof LookupOutcomeKind];
++
+ export type LookupOutcome =
+-  | { kind: 'signedIn'; userId: UserIdentifier }
+-  | { kind: 'noMatch' }
+-  | { kind: 'serviceProblem'; correlationId: string }
+-  | { kind: 'cancelled' };
++  | { kind: typeof LookupOutcomeKind.SignedIn; userId: UserIdentifier }
++  | { kind: typeof LookupOutcomeKind.NoMatch }
++  | { kind: typeof LookupOutcomeKind.ServiceProblem; correlationId: string }
++  | { kind: typeof LookupOutcomeKind.Cancelled };
+ 
+ // The one lookup request (invariants 13-22): a GET with no query string, no
+ // body, and every failure arm - network, timeout, an HTTP status, a
+@@ -28,16 +41,19 @@ export async function lookupUserIdentifier(
+   });
+ 
+   if (result.outcome === 'cancelled') {
+-    return { kind: 'cancelled' };
++    return { kind: LookupOutcomeKind.Cancelled };
+   }
+ 
+   if (result.outcome === 'failure') {
+-    return { kind: 'serviceProblem', correlationId };
++    return { kind: LookupOutcomeKind.ServiceProblem, correlationId };
+   }
+ 
+   if (result.value === null) {
+-    return { kind: 'noMatch' };
++    return { kind: LookupOutcomeKind.NoMatch };
+   }
+ 
+-  return { kind: 'signedIn', userId: userIdentifier(result.value) };
++  return {
++    kind: LookupOutcomeKind.SignedIn,
++    userId: userIdentifier(result.value),
++  };
+ }
+diff --git a/src/features/auth/data/secretResourcePath.test.ts b/src/features/auth/data/secretResourcePath.test.ts
+index df5065f..dc0e186 100644
+--- a/src/features/auth/data/secretResourcePath.test.ts
++++ b/src/features/auth/data/secretResourcePath.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, expect, it } from 'vitest';
+-import type { DerivedSecret } from '../domain/derivedSecret';
++import type { DerivedSecret } from '../domain';
+ import { secretResourcePath } from './secretResourcePath';
+ 
+ describe('secretResourcePath', () => {
+diff --git a/src/features/auth/data/secretResourcePath.ts b/src/features/auth/data/secretResourcePath.ts
+index a012725..e85bf54 100644
+--- a/src/features/auth/data/secretResourcePath.ts
++++ b/src/features/auth/data/secretResourcePath.ts
+@@ -1,5 +1,5 @@
+ import type { ResourcePath } from '@platform/http';
+-import type { DerivedSecret } from '../domain/derivedSecret';
++import type { DerivedSecret } from '../domain';
+ 
+ export function secretResourcePath(secret: DerivedSecret): ResourcePath {
+   return `/secrets/${secret}.json`;
+diff --git a/src/features/auth/domain/index.ts b/src/features/auth/domain/index.ts
+new file mode 100644
+index 0000000..e5b9c7c
+--- /dev/null
++++ b/src/features/auth/domain/index.ts
+@@ -0,0 +1,4 @@
++export { deriveSecret } from './deriveSecret';
++export type { DerivedSecret } from './derivedSecret';
++export { userIdentifier, USER_IDENTIFIER_PATTERN } from './userIdentifier';
++export type { UserIdentifier } from './userIdentifier';
+diff --git a/src/features/auth/guard/index.ts b/src/features/auth/guard/index.ts
+new file mode 100644
+index 0000000..8ee2438
+--- /dev/null
++++ b/src/features/auth/guard/index.ts
+@@ -0,0 +1,4 @@
++export { resolveDestination } from './resolveDestination';
++export { requireSession } from './requireSession';
++export { redirectSignedInVisitor } from './redirectSignedInVisitor';
++export { withSessionGuard, isSessionGuarded } from './withSessionGuard';
+diff --git a/src/features/auth/guard/redirectSignedInVisitor.test.ts b/src/features/auth/guard/redirectSignedInVisitor.test.ts
+index f39d0aa..509ab41 100644
+--- a/src/features/auth/guard/redirectSignedInVisitor.test.ts
++++ b/src/features/auth/guard/redirectSignedInVisitor.test.ts
+@@ -1,8 +1,8 @@
+ import { afterEach, describe, expect, it, vi } from 'vitest';
+ import type { ObservabilityFacade } from '@platform/observability';
+ import type { KeyValueStorage } from '@platform/runtime';
+-import { userIdentifier } from '../domain/userIdentifier';
+-import { writeSession } from '../session/writeSession';
++import { userIdentifier } from '../domain';
++import { writeSession } from '../session';
+ import { redirectSignedInVisitor } from './redirectSignedInVisitor';
+ 
+ function createSpyObservability(): ObservabilityFacade {
+diff --git a/src/features/auth/guard/redirectSignedInVisitor.ts b/src/features/auth/guard/redirectSignedInVisitor.ts
+index 9e02567..fb156b1 100644
+--- a/src/features/auth/guard/redirectSignedInVisitor.ts
++++ b/src/features/auth/guard/redirectSignedInVisitor.ts
+@@ -1,5 +1,5 @@
+ import { redirect, replace } from 'react-router';
+-import { readSession } from '../session/readSession';
++import { readSession, SessionStatus } from '../session';
+ import type { GuardContext } from './guardContext';
+ import { resolveDestination } from './resolveDestination';
+ 
+@@ -15,7 +15,7 @@ export function redirectSignedInVisitor({
+   observability,
+ }: GuardContext): null {
+   const session = readSession(tabStorage, observability);
+-  if (session.status !== 'signedIn') {
++  if (session.status !== SessionStatus.SignedIn) {
+     return null;
+   }
+ 
+diff --git a/src/features/auth/guard/requireSession.ts b/src/features/auth/guard/requireSession.ts
+index 129a727..07ff0d1 100644
+--- a/src/features/auth/guard/requireSession.ts
++++ b/src/features/auth/guard/requireSession.ts
+@@ -1,6 +1,6 @@
+ import { redirect, replace } from 'react-router';
+-import { readSession } from '../session/readSession';
+-import type { UserIdentifier } from '../domain/userIdentifier';
++import { readSession, SessionStatus } from '../session';
++import type { UserIdentifier } from '../domain';
+ import type { GuardContext } from './guardContext';
+ 
+ const LOGIN_PATH = '/login';
+@@ -17,7 +17,7 @@ export function requireSession({
+   observability,
+ }: GuardContext): { userId: UserIdentifier } {
+   const session = readSession(tabStorage, observability);
+-  if (session.status === 'signedIn') {
++  if (session.status === SessionStatus.SignedIn) {
+     return { userId: session.userId };
+   }
+ 
+diff --git a/src/features/auth/guard/withSessionGuard.test.ts b/src/features/auth/guard/withSessionGuard.test.ts
+index b6ba322..dfe8490 100644
+--- a/src/features/auth/guard/withSessionGuard.test.ts
++++ b/src/features/auth/guard/withSessionGuard.test.ts
+@@ -1,8 +1,8 @@
+ import { describe, expect, it, vi } from 'vitest';
+ import type { ObservabilityFacade } from '@platform/observability';
+ import type { KeyValueStorage } from '@platform/runtime';
+-import { userIdentifier } from '../domain/userIdentifier';
+-import { writeSession } from '../session/writeSession';
++import { userIdentifier } from '../domain';
++import { writeSession } from '../session';
+ import { isSessionGuarded, withSessionGuard } from './withSessionGuard';
+ 
+ function createSpyObservability(): ObservabilityFacade {
+diff --git a/src/features/auth/index.ts b/src/features/auth/index.ts
+index cd82116..97bc4c0 100644
+--- a/src/features/auth/index.ts
++++ b/src/features/auth/index.ts
+@@ -1,18 +1,22 @@
+ export { loadTranslations } from './loadTranslations';
+-export { createSignedInUserStore } from './data/createSignedInUserStore';
+-export type { SignedInUserStore } from './data/createSignedInUserStore';
+-export type { SignedInUserView } from './data/signedInUserView';
++export {
++  createSignedInUserStore,
++  type SignedInUserStore,
++  type SignedInUserView,
++} from './data';
+ export { LoginPage } from './LoginPage';
+ export type { LoginPageDependencies } from './LoginPage';
+-export { resolveDestination } from './guard/resolveDestination';
+-export { requireSession } from './guard/requireSession';
+-export { redirectSignedInVisitor } from './guard/redirectSignedInVisitor';
+ // isSessionGuarded is not part of TECH.md's stated barrel list - added
+ // alongside withSessionGuard (a deliberate, logged deviation, the same
+ // treatment resolveDestination got at step 22) because
+ // routeDefinitions.test.ts's structural check (invariant 146) needs to
+ // ask whether a given loader was produced by withSessionGuard, and
+ // app cannot deep-import past this feature's public entry.
+-export { withSessionGuard, isSessionGuarded } from './guard/withSessionGuard';
+-export { clearSession } from './session/clearSession';
+-export { readSession } from './session/readSession';
++export {
++  resolveDestination,
++  requireSession,
++  redirectSignedInVisitor,
++  withSessionGuard,
++  isSessionGuarded,
++} from './guard';
++export { clearSession, readSession } from './session';
+diff --git a/src/features/auth/loginCardState.ts b/src/features/auth/loginCardState.ts
+index 15d24ee..eef00d3 100644
+--- a/src/features/auth/loginCardState.ts
++++ b/src/features/auth/loginCardState.ts
+@@ -1,14 +1,37 @@
++export const LoginResultOutcome = {
++  Untouched: 'untouched',
++  NoMatch: 'noMatch',
++  ServiceProblem: 'serviceProblem',
++} as const;
++
++export type LoginResultOutcome =
++  (typeof LoginResultOutcome)[keyof typeof LoginResultOutcome];
++
+ export type LoginResult =
+-  | { outcome: 'untouched' }
+-  | { outcome: 'noMatch' }
+-  | { outcome: 'serviceProblem'; correlationId: string };
++  | { outcome: typeof LoginResultOutcome.Untouched }
++  | { outcome: typeof LoginResultOutcome.NoMatch }
++  | {
++      outcome: typeof LoginResultOutcome.ServiceProblem;
++      correlationId: string;
++    };
++
++export const LoginCardStateKind = {
++  Idle: 'idle',
++  Ready: 'ready',
++  Submitting: 'submitting',
++  NoMatch: 'noMatch',
++  ServiceProblem: 'serviceProblem',
++} as const;
++
++export type LoginCardStateKind =
++  (typeof LoginCardStateKind)[keyof typeof LoginCardStateKind];
+ 
+ export type LoginCardState =
+-  | { kind: 'idle' }
+-  | { kind: 'ready' }
+-  | { kind: 'submitting' }
+-  | { kind: 'noMatch' }
+-  | { kind: 'serviceProblem'; correlationId: string };
++  | { kind: typeof LoginCardStateKind.Idle }
++  | { kind: typeof LoginCardStateKind.Ready }
++  | { kind: typeof LoginCardStateKind.Submitting }
++  | { kind: typeof LoginCardStateKind.NoMatch }
++  | { kind: typeof LoginCardStateKind.ServiceProblem; correlationId: string };
+ 
+ // The five presented states as one derived value rather than ad-hoc
+ // booleans (invariant 29). isPending wins over a settled result: while
+@@ -19,10 +42,17 @@ export function loginCardState(
+   isPending: boolean,
+   isReady: boolean,
+ ): LoginCardState {
+-  if (isPending) return { kind: 'submitting' };
+-  if (result.outcome === 'noMatch') return { kind: 'noMatch' };
+-  if (result.outcome === 'serviceProblem') {
+-    return { kind: 'serviceProblem', correlationId: result.correlationId };
++  if (isPending) return { kind: LoginCardStateKind.Submitting };
++  if (result.outcome === LoginResultOutcome.NoMatch) {
++    return { kind: LoginCardStateKind.NoMatch };
++  }
++  if (result.outcome === LoginResultOutcome.ServiceProblem) {
++    return {
++      kind: LoginCardStateKind.ServiceProblem,
++      correlationId: result.correlationId,
++    };
+   }
+-  return isReady ? { kind: 'ready' } : { kind: 'idle' };
++  return isReady
++    ? { kind: LoginCardStateKind.Ready }
++    : { kind: LoginCardStateKind.Idle };
+ }
+diff --git a/src/features/auth/session/clearSession.test.ts b/src/features/auth/session/clearSession.test.ts
+index b203f77..abb82ec 100644
+--- a/src/features/auth/session/clearSession.test.ts
++++ b/src/features/auth/session/clearSession.test.ts
+@@ -1,7 +1,7 @@
+ import { describe, expect, it, vi } from 'vitest';
+ import type { KeyValueStorage } from '@platform/runtime';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import { userIdentifier } from '../domain/userIdentifier';
++import { userIdentifier } from '../domain';
+ import { clearSession } from './clearSession';
+ import { readSession } from './readSession';
+ import { writeSession } from './writeSession';
+diff --git a/src/features/auth/session/index.ts b/src/features/auth/session/index.ts
+new file mode 100644
+index 0000000..9e68b02
+--- /dev/null
++++ b/src/features/auth/session/index.ts
+@@ -0,0 +1,3 @@
++export { clearSession } from './clearSession';
++export { readSession, SessionStatus } from './readSession';
++export { writeSession } from './writeSession';
+diff --git a/src/features/auth/session/readSession.test.ts b/src/features/auth/session/readSession.test.ts
+index e70cc38..7c5082f 100644
+--- a/src/features/auth/session/readSession.test.ts
++++ b/src/features/auth/session/readSession.test.ts
+@@ -1,7 +1,7 @@
+ import { describe, expect, it, vi } from 'vitest';
+ import type { KeyValueStorage } from '@platform/runtime';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import { userIdentifier } from '../domain/userIdentifier';
++import { userIdentifier } from '../domain';
+ import { readSession } from './readSession';
+ import { writeSession } from './writeSession';
+ import { SESSION_SCHEMA_VERSION } from './sessionRecord';
+diff --git a/src/features/auth/session/readSession.ts b/src/features/auth/session/readSession.ts
+index a036b5b..aef22bf 100644
+--- a/src/features/auth/session/readSession.ts
++++ b/src/features/auth/session/readSession.ts
+@@ -1,13 +1,30 @@
+ import type { KeyValueStorage } from '@platform/runtime';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import { userIdentifier, type UserIdentifier } from '../domain/userIdentifier';
++import { userIdentifier, type UserIdentifier } from '../domain';
+ import { SESSION_SCHEMA_VERSION } from './sessionRecord';
+ import { sessionRecordSchema } from './sessionRecordSchema';
+-import { readShadow } from './sessionShadow';
++import { readShadow, SessionShadowStatus } from './sessionShadow';
+ import { SESSION_STORAGE_KEY } from './sessionStorageKey';
+ 
++export const SessionStatus = {
++  SignedIn: 'signedIn',
++  SignedOut: 'signedOut',
++} as const;
++
++export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus];
++
+ export type SessionView =
+-  { status: 'signedIn'; userId: UserIdentifier } | { status: 'signedOut' };
++  | { status: typeof SessionStatus.SignedIn; userId: UserIdentifier }
++  | { status: typeof SessionStatus.SignedOut };
++
++export const SessionUnreadableReason = {
++  InvalidJson: 'invalid_json',
++  InvalidShape: 'invalid_shape',
++  WrongVersion: 'wrong_version',
++} as const;
++
++export type SessionUnreadableReason =
++  (typeof SessionUnreadableReason)[keyof typeof SessionUnreadableReason];
+ 
+ // The shadow decides first (invariants 79, 79a); storage is consulted
+ // only when the shadow is unset, which is always true on a fresh page
+@@ -17,42 +34,57 @@ export function readSession(
+   observability: ObservabilityFacade,
+ ): SessionView {
+   const shadow = readShadow(storage);
+-  if (shadow.status === 'set') {
+-    return { status: 'signedIn', userId: shadow.record.userId };
++  if (shadow.status === SessionShadowStatus.Set) {
++    return { status: SessionStatus.SignedIn, userId: shadow.record.userId };
+   }
+-  if (shadow.status === 'cleared') {
+-    return { status: 'signedOut' };
++  if (shadow.status === SessionShadowStatus.Cleared) {
++    return { status: SessionStatus.SignedOut };
+   }
+ 
+   const raw = storage.read(SESSION_STORAGE_KEY);
+   if (raw === null) {
+-    return { status: 'signedOut' };
++    return { status: SessionStatus.SignedOut };
+   }
+ 
+   let parsedJson: unknown;
+   try {
+     parsedJson = JSON.parse(raw);
+   } catch {
+-    return signedOutUnreadable(storage, observability, 'invalid_json');
++    return signedOutUnreadable(
++      storage,
++      observability,
++      SessionUnreadableReason.InvalidJson,
++    );
+   }
+ 
+   const parsed = sessionRecordSchema.safeParse(parsedJson);
+   if (!parsed.success) {
+-    return signedOutUnreadable(storage, observability, 'invalid_shape');
++    return signedOutUnreadable(
++      storage,
++      observability,
++      SessionUnreadableReason.InvalidShape,
++    );
+   }
+   if (parsed.data.version !== SESSION_SCHEMA_VERSION) {
+-    return signedOutUnreadable(storage, observability, 'wrong_version');
++    return signedOutUnreadable(
++      storage,
++      observability,
++      SessionUnreadableReason.WrongVersion,
++    );
+   }
+ 
+-  return { status: 'signedIn', userId: userIdentifier(parsed.data.userId) };
++  return {
++    status: SessionStatus.SignedIn,
++    userId: userIdentifier(parsed.data.userId),
++  };
+ }
+ 
+ function signedOutUnreadable(
+   storage: KeyValueStorage,
+   observability: ObservabilityFacade,
+-  reason: 'invalid_json' | 'invalid_shape' | 'wrong_version',
++  reason: SessionUnreadableReason,
+ ): SessionView {
+   observability.logger.warn('auth.session_unreadable', { reason });
+   storage.remove(SESSION_STORAGE_KEY);
+-  return { status: 'signedOut' };
++  return { status: SessionStatus.SignedOut };
+ }
+diff --git a/src/features/auth/session/sessionRecord.test.ts b/src/features/auth/session/sessionRecord.test.ts
+index 6b2784d..8e1f9d9 100644
+--- a/src/features/auth/session/sessionRecord.test.ts
++++ b/src/features/auth/session/sessionRecord.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, expect, it } from 'vitest';
+-import { userIdentifier } from '../domain/userIdentifier';
++import { userIdentifier } from '../domain';
+ import { SESSION_SCHEMA_VERSION, type SessionRecord } from './sessionRecord';
+ 
+ describe('the session record', () => {
+diff --git a/src/features/auth/session/sessionRecord.ts b/src/features/auth/session/sessionRecord.ts
+index 0213f5f..813b614 100644
+--- a/src/features/auth/session/sessionRecord.ts
++++ b/src/features/auth/session/sessionRecord.ts
+@@ -1,4 +1,4 @@
+-import type { UserIdentifier } from '../domain/userIdentifier';
++import type { UserIdentifier } from '../domain';
+ 
+ export const SESSION_SCHEMA_VERSION = 1;
+ 
+diff --git a/src/features/auth/session/sessionRecordSchema.ts b/src/features/auth/session/sessionRecordSchema.ts
+index 606d24c..754a672 100644
+--- a/src/features/auth/session/sessionRecordSchema.ts
++++ b/src/features/auth/session/sessionRecordSchema.ts
+@@ -1,5 +1,5 @@
+ import { z } from 'zod';
+-import { USER_IDENTIFIER_PATTERN } from '../domain/userIdentifier';
++import { USER_IDENTIFIER_PATTERN } from '../domain';
+ 
+ // Reuses userIdentifier's own charset pattern (section 3), so a
+ // hand-edited or downgraded storage record carrying a hostile id is
+diff --git a/src/features/auth/session/sessionShadow.ts b/src/features/auth/session/sessionShadow.ts
+index 325fe3e..88cdacf 100644
+--- a/src/features/auth/session/sessionShadow.ts
++++ b/src/features/auth/session/sessionShadow.ts
+@@ -1,6 +1,15 @@
+ import type { KeyValueStorage } from '@platform/runtime';
+ import type { SessionRecord } from './sessionRecord';
+ 
++export const SessionShadowStatus = {
++  Unset: 'unset',
++  Set: 'set',
++  Cleared: 'cleared',
++} as const;
++
++export type SessionShadowStatus =
++  (typeof SessionShadowStatus)[keyof typeof SessionShadowStatus];
++
+ // The in-page belief, authoritative over storage rather than a fallback
+ // (invariants 79, 79a): a failed write over an older valid record must not
+ // authenticate the previous user, and a failed removal must not let a
+@@ -8,23 +17,23 @@ import type { SessionRecord } from './sessionRecord';
+ // trick loadTranslations.ts uses - so it is per-runtime and every test
+ // building its own runtime is isolated with no reset hook.
+ export type SessionShadow =
+-  | { status: 'unset' }
+-  | { status: 'set'; record: SessionRecord }
+-  | { status: 'cleared' };
++  | { status: typeof SessionShadowStatus.Unset }
++  | { status: typeof SessionShadowStatus.Set; record: SessionRecord }
++  | { status: typeof SessionShadowStatus.Cleared };
+ 
+ const shadows = new WeakMap<KeyValueStorage, SessionShadow>();
+ 
+ export function readShadow(storage: KeyValueStorage): SessionShadow {
+-  return shadows.get(storage) ?? { status: 'unset' };
++  return shadows.get(storage) ?? { status: SessionShadowStatus.Unset };
+ }
+ 
+ export function setShadow(
+   storage: KeyValueStorage,
+   record: SessionRecord,
+ ): void {
+-  shadows.set(storage, { status: 'set', record });
++  shadows.set(storage, { status: SessionShadowStatus.Set, record });
+ }
+ 
+ export function clearShadow(storage: KeyValueStorage): void {
+-  shadows.set(storage, { status: 'cleared' });
++  shadows.set(storage, { status: SessionShadowStatus.Cleared });
+ }
+diff --git a/src/features/auth/session/writeSession.test.ts b/src/features/auth/session/writeSession.test.ts
+index 9b714cb..24b35ad 100644
+--- a/src/features/auth/session/writeSession.test.ts
++++ b/src/features/auth/session/writeSession.test.ts
+@@ -1,7 +1,7 @@
+ import { describe, expect, it, vi } from 'vitest';
+ import type { KeyValueStorage } from '@platform/runtime';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import { userIdentifier } from '../domain/userIdentifier';
++import { userIdentifier } from '../domain';
+ import { readSession } from './readSession';
+ import { writeSession } from './writeSession';
+ 
+diff --git a/src/features/auth/session/writeSession.ts b/src/features/auth/session/writeSession.ts
+index 8385f50..5a1651d 100644
+--- a/src/features/auth/session/writeSession.ts
++++ b/src/features/auth/session/writeSession.ts
+@@ -1,6 +1,6 @@
+ import type { KeyValueStorage } from '@platform/runtime';
+ import type { ObservabilityFacade } from '@platform/observability';
+-import type { UserIdentifier } from '../domain/userIdentifier';
++import type { UserIdentifier } from '../domain';
+ import { SESSION_SCHEMA_VERSION, type SessionRecord } from './sessionRecord';
+ import { setShadow } from './sessionShadow';
+ import { SESSION_STORAGE_KEY } from './sessionStorageKey';
+diff --git a/src/features/auth/useLoginSubmission.ts b/src/features/auth/useLoginSubmission.ts
+index f9bac3f..e212a01 100644
+--- a/src/features/auth/useLoginSubmission.ts
++++ b/src/features/auth/useLoginSubmission.ts
+@@ -12,10 +12,10 @@ import {
+   type ObservabilityFacade,
+ } from '@platform/observability';
+ import type { KeyValueStorage } from '@platform/runtime';
+-import { deriveSecret } from './domain/deriveSecret';
+-import { lookupUserIdentifier } from './data/lookupUserIdentifier';
+-import type { LoginResult } from './loginCardState';
+-import { writeSession } from './session/writeSession';
++import { deriveSecret } from './domain';
++import { lookupUserIdentifier, LookupOutcomeKind } from './data';
++import { LoginResultOutcome, type LoginResult } from './loginCardState';
++import { writeSession } from './session';
+ 
+ export type UseLoginSubmissionDependencies = {
+   http: HttpClient;
+@@ -33,7 +33,7 @@ export type UseLoginSubmissionResult = {
+   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+ };
+ 
+-const UNTOUCHED: LoginResult = { outcome: 'untouched' };
++const UNTOUCHED: LoginResult = { outcome: LoginResultOutcome.Untouched };
+ 
+ // Wraps useActionState: the single in-flight guard is the form's own
+ // onSubmit calling preventDefault while pending, which stops React from
+@@ -93,12 +93,12 @@ export function useLoginSubmission(
+       );
+       controllerRef.current = null;
+ 
+-      if (outcome.kind === 'cancelled') {
++      if (outcome.kind === LookupOutcomeKind.Cancelled) {
+         dependencies.endInteraction();
+         return previousResult;
+       }
+ 
+-      if (outcome.kind === 'signedIn') {
++      if (outcome.kind === LookupOutcomeKind.SignedIn) {
+         writeSession(
+           dependencies.tabStorage,
+           dependencies.observability,
+@@ -112,7 +112,7 @@ export function useLoginSubmission(
+         return UNTOUCHED;
+       }
+ 
+-      if (outcome.kind === 'noMatch') {
++      if (outcome.kind === LookupOutcomeKind.NoMatch) {
+         dependencies.observability.logger.info('auth.sign_in_no_match', {
+           correlationId,
+         });
+@@ -121,7 +121,7 @@ export function useLoginSubmission(
+           outcome: SignInOutcome.NoMatch,
+         });
+         dependencies.endInteraction();
+-        return { outcome: 'noMatch' };
++        return { outcome: LoginResultOutcome.NoMatch };
+       }
+ 
+       dependencies.observability.logger.error('auth.sign_in_service_problem', {
+@@ -132,7 +132,7 @@ export function useLoginSubmission(
+         outcome: SignInOutcome.ServiceProblem,
+       });
+       dependencies.endInteraction();
+-      return { outcome: 'serviceProblem', correlationId };
++      return { outcome: LoginResultOutcome.ServiceProblem, correlationId };
+     },
+     UNTOUCHED,
+   );

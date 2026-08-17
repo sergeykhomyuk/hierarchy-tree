@@ -1,0 +1,508 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/LoginPage.test.tsx (12 tests | 3 failed) 3943ms
+     × shows the service-problem alert with its correlation id and marks neither field invalid 1074ms
+     × re-derives from the current field values when retry is activated 1072ms
+     × hands focus to the busy Login control when the retry control unmounts 1091ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/LoginPage.test.tsx > LoginPage > shows the service-problem alert with its correlation id and marks neither field invalid
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+    [36m>[39m
+      [36m<form[39m
+        [33maction[39m=[32m"javascript:throw new Error('A React form was unexpectedly submitted. If you called form.submit() manually, consider using form.requestSubmit() instead. If you\\'re trying to use event.stopPropagation() in a submit event handler, consider also calling event.preventDefault().')"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-2"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"inline-block h-8 w-8 rounded-control bg-primary"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"font-semibold text-ink"[39m
+          [36m>[39m
+            [0mlogin.wordmark[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<h1>[39m
+          [0mlogin.heading[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mlogin.subtext[0m
+        [36m</p>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-email"[39m
+          [36m>[39m
+            [0mlogin.emailLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"username"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-email"[39m
+            [33mname[39m=[32m"email"[39m
+            [33mplaceholder[39m=[32m"login.emailPlaceholder"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"person@example.com"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-password"[39m
+          [36m>[39m
+            [0mlogin.passwordLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"current-password"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-password"[39m
+            [33mname[39m=[32m"password"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"hunter2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 bg-primary text-on-primary hover:bg-primary-pressed"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [0mlogin.submit[0m
+        [36m</button>[39m
+        [36m<p>[39m
+          [0mlogin.footerNote[0m
+        [36m</p>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+    [36m>[39m
+      [36m<form[39m
+        [33maction[39m=[32m"javascript:throw new Error('A React form was unexpectedly submitted. If you called form.submit() manually, consider using form.requestSubmit() instead. If you\\'re trying to use event.stopPropagation() in a submit event handler, consider also calling event.preventDefault().')"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-2"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"inline-block h-8 w-8 rounded-control bg-primary"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"font-semibold text-ink"[39m
+          [36m>[39m
+            [0mlogin.wordmark[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<h1>[39m
+          [0mlogin.heading[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mlogin.subtext[0m
+        [36m</p>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-email"[39m
+          [36m>[39m
+            [0mlogin.emailLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"username"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-email"[39m
+            [33mname[39m=[32m"email"[39m
+            [33mplaceholder[39m=[32m"login.emailPlaceholder"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"person@example.com"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-password"[39m
+          [36m>[39m
+            [0mlogin.passwordLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"current-password"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-password"[39m
+            [33mname[39m=[32m"password"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"hunter2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 bg-primary text-on-primary hover:bg-primary-pressed"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [0mlogin.submit[0m
+        [36m</button>[39m
+        [36m<p>[39m
+          [0mlogin.footerNote[0m
+        [36m</p>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/features/auth/LoginPage.test.tsx:273:32
+    271|     await user.click(screen.getByRole('button', { name: 'login.submit'…
+    272|
+    273|     const alert = await screen.findByRole('alert');
+       |                                ^
+    274|     expect(alert).toHaveTextContent('login.serviceProblemMessage');
+    275|     expect(alert).toHaveTextContent('b'.repeat(32));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |ui| src/features/auth/LoginPage.test.tsx > LoginPage > re-derives from the current field values when retry is activated
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+    [36m>[39m
+      [36m<form[39m
+        [33maction[39m=[32m"javascript:throw new Error('A React form was unexpectedly submitted. If you called form.submit() manually, consider using form.requestSubmit() instead. If you\\'re trying to use event.stopPropagation() in a submit event handler, consider also calling event.preventDefault().')"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-2"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"inline-block h-8 w-8 rounded-control bg-primary"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"font-semibold text-ink"[39m
+          [36m>[39m
+            [0mlogin.wordmark[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<h1>[39m
+          [0mlogin.heading[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mlogin.subtext[0m
+        [36m</p>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-email"[39m
+          [36m>[39m
+            [0mlogin.emailLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"username"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-email"[39m
+            [33mname[39m=[32m"email"[39m
+            [33mplaceholder[39m=[32m"login.emailPlaceholder"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"person@example.com"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-password"[39m
+          [36m>[39m
+            [0mlogin.passwordLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"current-password"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-password"[39m
+            [33mname[39m=[32m"password"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"hunter2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 bg-primary text-on-primary hover:bg-primary-pressed"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [0mlogin.submit[0m
+        [36m</button>[39m
+        [36m<p>[39m
+          [0mlogin.footerNote[0m
+        [36m</p>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+    [36m>[39m
+      [36m<form[39m
+        [33maction[39m=[32m"javascript:throw new Error('A React form was unexpectedly submitted. If you called form.submit() manually, consider using form.requestSubmit() instead. If you\\'re trying to use event.stopPropagation() in a submit event handler, consider also calling event.preventDefault().')"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-2"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"inline-block h-8 w-8 rounded-control bg-primary"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"font-semibold text-ink"[39m
+          [36m>[39m
+            [0mlogin.wordmark[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<h1>[39m
+          [0mlogin.heading[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mlogin.subtext[0m
+        [36m</p>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-email"[39m
+          [36m>[39m
+            [0mlogin.emailLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"username"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-email"[39m
+            [33mname[39m=[32m"email"[39m
+            [33mplaceholder[39m=[32m"login.emailPlaceholder"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"person@example.com"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-password"[39m
+          [36m>[39m
+            [0mlogin.passwordLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"current-password"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-password"[39m
+            [33mname[39m=[32m"password"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"hunter2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 bg-primary text-on-primary hover:bg-primary-pressed"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [0mlogin.submit[0m
+        [36m</button>[39m
+        [36m<p>[39m
+          [0mlogin.footerNote[0m
+        [36m</p>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/features/auth/LoginPage.test.tsx:300:18
+    298|     await user.type(password, 'hunter2');
+    299|     await user.click(screen.getByRole('button', { name: 'login.submit'…
+    300|     await screen.findByRole('alert');
+       |                  ^
+    301|
+    302|     await user.clear(password);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |ui| src/features/auth/LoginPage.test.tsx > LoginPage > hands focus to the busy Login control when the retry control unmounts
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+    [36m>[39m
+      [36m<form[39m
+        [33maction[39m=[32m"javascript:throw new Error('A React form was unexpectedly submitted. If you called form.submit() manually, consider using form.requestSubmit() instead. If you\\'re trying to use event.stopPropagation() in a submit event handler, consider also calling event.preventDefault().')"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-2"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"inline-block h-8 w-8 rounded-control bg-primary"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"font-semibold text-ink"[39m
+          [36m>[39m
+            [0mlogin.wordmark[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<h1>[39m
+          [0mlogin.heading[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mlogin.subtext[0m
+        [36m</p>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-email"[39m
+          [36m>[39m
+            [0mlogin.emailLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"username"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-email"[39m
+            [33mname[39m=[32m"email"[39m
+            [33mplaceholder[39m=[32m"login.emailPlaceholder"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"person@example.com"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-password"[39m
+          [36m>[39m
+            [0mlogin.passwordLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"current-password"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-password"[39m
+            [33mname[39m=[32m"password"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"hunter2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 bg-primary text-on-primary hover:bg-primary-pressed"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [0mlogin.submit[0m
+        [36m</button>[39m
+        [36m<p>[39m
+          [0mlogin.footerNote[0m
+        [36m</p>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+    [36m>[39m
+      [36m<form[39m
+        [33maction[39m=[32m"javascript:throw new Error('A React form was unexpectedly submitted. If you called form.submit() manually, consider using form.requestSubmit() instead. If you\\'re trying to use event.stopPropagation() in a submit event handler, consider also calling event.preventDefault().')"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-2"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"inline-block h-8 w-8 rounded-control bg-primary"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"font-semibold text-ink"[39m
+          [36m>[39m
+            [0mlogin.wordmark[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<h1>[39m
+          [0mlogin.heading[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mlogin.subtext[0m
+        [36m</p>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-email"[39m
+          [36m>[39m
+            [0mlogin.emailLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"username"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-email"[39m
+            [33mname[39m=[32m"email"[39m
+            [33mplaceholder[39m=[32m"login.emailPlaceholder"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"person@example.com"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"login-password"[39m
+          [36m>[39m
+            [0mlogin.passwordLabel[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"current-password"[39m
+            [33mclass[39m=[32m"rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder"[39m
+            [33mid[39m=[32m"login-password"[39m
+            [33mname[39m=[32m"password"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"hunter2"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 bg-primary text-on-primary hover:bg-primary-pressed"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [0mlogin.submit[0m
+        [36m</button>[39m
+        [36m<p>[39m
+          [0mlogin.footerNote[0m
+        [36m</p>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/features/auth/LoginPage.test.tsx:337:18
+    335|     await user.type(password, 'hunter2');
+    336|     await user.click(screen.getByRole('button', { name: 'login.submit'…
+    337|     await screen.findByRole('alert');
+       |                  ^
+    338|
+    339|     await user.click(screen.getByRole('button', { name: 'login.retry' …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 9 passed (12)
+   Start at  06:58:03
+   Duration  4.70s (transform 124ms, setup 108ms, import 160ms, tests 3.94s, environment 386ms)
+

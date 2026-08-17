@@ -1,0 +1,393 @@
+{
+  "task": "phase-2-conventions",
+  "title": "Align features/auth with coding conventions",
+  "type": "refactor",
+  "size": "S",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-17T11:16:43Z",
+  "created": "2026-08-17",
+  "updated": "2026-08-17T11:16:43Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "S",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": "PROOF.md",
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "skipped",
+      "attempts": 0
+    },
+    "G2": {
+      "status": "passed",
+      "attempts": 1,
+      "steps_total": 9,
+      "steps_done": 9,
+      "note": "All 9 refactor steps done: domain/data/guard/session index.ts barrels added and every cross-subdirectory deep import repointed through them (steps 1-4); six discriminant unions extracted to as-const object enums - LoginCardStateKind, LoginResultOutcome, SessionStatus, SessionShadowStatus, LookupOutcomeKind, SessionUnreadableReason (steps 5-9). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint clean at every step boundary."
+    },
+    "G3": {
+      "status": "passed",
+      "attempts": 1,
+      "note": "npm run verify full green (typecheck/lint/format:check/test:coverage 96%/build/verify:build/size, evidence/g3-verify-full.txt) and npm run e2e 41/41 passing (evidence/g3-e2e-full.txt), zero new console errors (development-console.spec.ts unchanged and passing). All 6 acceptance criteria checked against the diff: AC1 (four barrels, zero deep cross-subdirectory imports remaining, verified by grep), AC2-AC6 (six const-object enums, all call sites repointed, verified by grep for remaining raw literals - none found outside the enum declarations themselves). No design flag, no new user-facing surface - pure structural refactor."
+    },
+    "G4": {
+      "status": "passed",
+      "attempts": 1,
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "New const-enums (LoginResultOutcome, LoginCardStateKind, SessionStatus, SessionUnreadableReason, SessionShadowStatus, LookupOutcomeKind) were inlined into existing multi-export files instead of getting their own dedicated file per typescript-coding's one-symbol-per-file rule and the repo's own SignInOutcome precedent. Pre-existing multi-export files made worse, not introduced from clean. No runtime/compile effect.",
+          "blocking": false,
+          "disposition": "accepted: user's decision - each enum stays colocated with the type/function that uses it as a discriminant (tightly-coupled state-machine modules, not standalone shared taxonomies like SignInOutcome); splitting into 5 more single-purpose files would fragment small, closely-related declarations for no readability gain"
+        },
+        "Codex-1": {
+          "desc": "SessionUnreadableReason exported despite AC6's single-file scope promise - nothing outside readSession.ts consumed it, expanding module surface unnecessarily.",
+          "blocking": true,
+          "disposition": "fixed: removed export from SessionUnreadableReason's const and type declarations in readSession.ts - nothing outside the file consumed it, and it was never re-exported from session/index.ts; tsc/lint/vitest reconfirmed green"
+        },
+        "Codex-2": {
+          "desc": "9 step evidence .txt logs have a trailing blank line git diff --check flags; committed patch fails git whitespace validation, no runtime effect.",
+          "blocking": false,
+          "disposition": "accepted: user's decision - trailing newline in captured command-output evidence logs, no effect on content/correctness; loop convention treats registered evidence as immutable, so recapturing under new filenames for a whitespace nit is not worth the churn"
+        }
+      },
+      "note": "Fresh-context Claude review (evidence/reviews/g4-claude-review.md, 1 non-blocking) and Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking) on the full diff (d31a2b5..HEAD, src/features/auth). Codex-1 (blocking: SessionUnreadableReason exported despite AC6's single-file scope) fixed - export removed, verified green (tsc/lint/vitest), Codex confirmed RESOLVED in the same thread. Claude-1 (one-symbol-per-file for the 6 new enums) and Codex-2 (evidence-file trailing newline) both accepted by user's explicit decision. No security_review flag on this loop (pure refactor, no auth-logic change, no new input-handling surface)."
+    },
+    "G5": {
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md written and registered; all 6 acceptance criteria mapped to their step evidence; verification summary cites npm run verify/e2e evidence (both pre and post the G4 fix); both G4 reviews (Claude fresh-context + Codex) referenced with outcomes; known-limitations section covers the 2 accepted findings. loop check clean."
+    }
+  },
+  "retro": {
+    "outcome": "What did the user correct? Nothing during implementation - both AskUserQuestion checkpoints (initial enum scope, then the 6-candidate list) were used to CONFIRM scope before writing code, not to fix a wrong guess after the fact. What did reviewers catch that an earlier phase should have? Codex-1 (blocking): SessionUnreadableReason was exported despite my own PLAN.md AC6 explicitly promising single-file scope - I exported it reflexively to match the other five enums' pattern without checking whether anything outside the file actually consumed it. Lesson: when a plan explicitly scopes a symbol to single-file use, grep for external consumers BEFORE deciding export vs file-private, don't default to exporting just because sibling symbols in the same step batch are exported. Where did this playbook not answer? Mid-review scope disagreement: Claude's non-blocking finding (one-symbol-per-file for the six new enums) directly contradicted the loop's own stated convention precedent (SignInOutcome), and the right call depended on a judgment - tightly-coupled discriminant vs standalone taxonomy - that isn't mechanically decidable from the rule text alone. The s-path's 'present ALL findings to the user for accept/fix' already covers this correctly (asked, got accept), so no gap here - just noting the pattern (a real repo rule the diff arguably violates, but only by one plausible reading of what counts as tight coupling) is worth flagging as a judgment call rather than a rule-following exercise, not folding it into a rigid checklist. Nothing durable enough to propose a skill diff for this run.",
+    "date": "2026-08-17T11:16:40Z"
+  },
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "domain/index.ts barrel; repoint data/guard/session/root imports through it",
+      "tests": [
+        "src/features/auth/domain/deriveSecret.test.ts::deriveSecret > matches the brief's own encode, position by position, for a hand-worked input",
+        "src/features/auth/domain/userIdentifier.test.ts::userIdentifier > accepts a finite integer and a conservative string alike"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - pure re-export addition + import path change, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 2,
+      "desc": "data/index.ts barrel; repoint root index.ts and useLoginSubmission.ts through it",
+      "tests": [
+        "src/features/auth/data/lookupUserIdentifier.test.ts::lookupUserIdentifier > issues exactly one request, to the secrets path"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - pure re-export addition + import path change, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 3,
+      "desc": "guard/index.ts barrel; repoint root index.ts through it",
+      "tests": [
+        "src/features/auth/guard/requireSession.test.ts::requireSession > redirects a visitor with no session to the login route carrying from",
+        "src/features/auth/guard/redirectSignedInVisitor.test.ts::redirectSignedInVisitor > sends a signed-in visitor to the from target or the hierarchy route"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - pure re-export addition + import path change, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 4,
+      "desc": "session/index.ts barrel; repoint root index.ts, guard/, useLoginSubmission.ts through it",
+      "tests": [
+        "src/features/auth/session/readSession.test.ts::readSession > returns the signed-in view for a well-formed record"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - pure re-export addition + import path change, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 5,
+      "desc": "LoginCardStateKind + LoginResultOutcome const-object enums in loginCardState.ts",
+      "tests": [
+        "src/features/auth/loginCardState.test.ts::loginCardState > derives idle, ready, submitting, no-match and service-problem from the result and pending flags",
+        "src/features/auth/LoginPage.test.tsx::LoginPage > renders both fields read-only with their values while submitting"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 6,
+      "desc": "SessionStatus const-object enum in session/readSession.ts",
+      "tests": [
+        "src/features/auth/guard/requireSession.test.ts::requireSession > replaces the current entry on a direct load and pushes on an in-app navigation"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 7,
+      "desc": "SessionShadowStatus const-object enum in session/sessionShadow.ts",
+      "tests": [
+        "src/features/auth/session/readSession.test.ts::readSession > prefers the in-page shadow over a stale valid record left by a failed write"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 8,
+      "desc": "LookupOutcomeKind const-object enum in data/lookupUserIdentifier.ts",
+      "tests": [
+        "src/features/auth/useLoginSubmission.test.tsx::useLoginSubmission > derives once and requests once when submitted twice in flight"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 9,
+      "desc": "SessionUnreadableReason const-object enum in session/readSession.ts",
+      "tests": [
+        "src/features/auth/session/readSession.test.ts::readSession > treats an unparseable, id-less or wrong-version record as no session and removes it"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
+    }
+  ],
+  "log": [
+    "2026-08-17T10:42:08Z init: type=refactor size=S flags=[]",
+    "2026-08-17T10:42:11Z triage: refactor/S, mirrors phase-1-conventions precedent (mechanical alignment to typescript-coding/react-coding conventions, no behavior change, G1 skipped, characterization tests + green suite at each boundary). Scope: src/features/auth (61 files) - missing index.ts barrels, hardcoded string literals that should be enums/const-objects, general TS/React convention alignment. User explicitly requested working on top of the current branch (loop/feature/phase-2-login) rather than cutting a new branch, since this must land before that phase-2-login work merges.",
+    "2026-08-17T10:51:02Z phase -> frame",
+    "2026-08-17T10:52:03Z frame: behavior-preservation contract - pure structural refactor (barrel imports + literal-union to const-object-enum), no runtime behavior change. Coverage audit: features/auth already at 100% statement/function, 93-98% branch coverage on every touched file; existing suite (deriveSecret/userIdentifier/lookupUserIdentifier/loginCardState/LoginPage/useLoginSubmission/readSession/sessionRecord/requireSession/redirectSignedInVisitor tests) exercises every changed line already, so no new characterization tests needed - each step is G2 case (c), guarded by pre-existing tests. Scope confirmed with user via AskUserQuestion: (1) missing index.ts barrels in domain/data/guard/session, (2) six const-object enums (LoginCardStateKind, LoginResultOutcome, SessionStatus, SessionShadowStatus, LookupOutcomeKind, SessionUnreadableReason); explicitly out of scope: analytics/log event-name strings, since wrapping only auth's would be inconsistent with the rest of the app's identical unwrapped pattern (app.route_viewed, app.web_vital, app.error_boundary_shown).",
+    "2026-08-17T10:52:03Z phase -> plan",
+    "2026-08-17T10:52:13Z step 1 added: domain/index.ts barrel; repoint data/guard/session/root imports through it",
+    "2026-08-17T10:52:13Z step 2 added: data/index.ts barrel; repoint root index.ts and useLoginSubmission.ts through it",
+    "2026-08-17T10:52:13Z step 3 added: guard/index.ts barrel; repoint root index.ts through it",
+    "2026-08-17T10:52:13Z step 4 added: session/index.ts barrel; repoint root index.ts, guard/, useLoginSubmission.ts through it",
+    "2026-08-17T10:52:14Z step 5 added: LoginCardStateKind + LoginResultOutcome const-object enums in loginCardState.ts",
+    "2026-08-17T10:52:14Z step 6 added: SessionStatus const-object enum in session/readSession.ts",
+    "2026-08-17T10:52:14Z step 7 added: SessionShadowStatus const-object enum in session/sessionShadow.ts",
+    "2026-08-17T10:52:14Z step 8 added: LookupOutcomeKind const-object enum in data/lookupUserIdentifier.ts",
+    "2026-08-17T10:52:14Z step 9 added: SessionUnreadableReason const-object enum in session/readSession.ts",
+    "2026-08-17T10:52:30Z phase -> implement",
+    "2026-08-17T10:52:42Z step 1 -> na",
+    "2026-08-17T10:54:20Z evidence recorded: evidence/steps/step1-green.txt (feeb6c1f0151) - domain/index.ts barrel + 12 prod + 10 test import repoints; vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean",
+    "2026-08-17T10:54:20Z step 1 -> green",
+    "2026-08-17T10:54:20Z step 1 -> done",
+    "2026-08-17T10:54:30Z step 2 -> na",
+    "2026-08-17T10:55:00Z evidence recorded: evidence/steps/step2-green.txt (b0d0ccb7e440) - data/index.ts barrel + 3 prod import repoints (root index.ts, useLoginSubmission.ts); vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean",
+    "2026-08-17T10:55:00Z step 2 -> green",
+    "2026-08-17T10:55:00Z step 2 -> done",
+    "2026-08-17T10:55:04Z step 3 -> na",
+    "2026-08-17T10:55:33Z evidence recorded: evidence/steps/step3-green.txt (28a523a9dda0) - guard/index.ts barrel + root index.ts repoint; vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean",
+    "2026-08-17T10:55:33Z step 3 -> green",
+    "2026-08-17T10:55:33Z step 3 -> done",
+    "2026-08-17T10:55:37Z step 4 -> na",
+    "2026-08-17T10:56:38Z evidence recorded: evidence/steps/step4-green.txt (3f024c98cad9) - session/index.ts barrel + 5 prod + 2 test import repoints (root index.ts, guard/, useLoginSubmission.ts); vitest features/auth 25/25 files, 82/82 tests green; tsc -b + lint clean",
+    "2026-08-17T10:56:38Z step 4 -> green",
+    "2026-08-17T10:56:38Z step 4 -> done",
+    "2026-08-17T10:56:53Z step 5 -> na",
+    "2026-08-17T10:58:37Z evidence recorded: evidence/steps/step5-green.txt (fe62384e17b0) - LoginCardStateKind + LoginResultOutcome as-const enums in loginCardState.ts; updated useLoginSubmission.ts, LoginPage.tsx, LoginAlert.tsx (props type + comparisons); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean",
+    "2026-08-17T10:58:37Z step 5 -> green",
+    "2026-08-17T10:58:37Z step 5 -> done",
+    "2026-08-17T10:58:45Z step 6 -> na",
+    "2026-08-17T11:00:03Z evidence recorded: evidence/steps/step6-green.txt (a955a3d6419d) - SessionStatus as-const enum in session/readSession.ts; updated guard/requireSession.ts, guard/redirectSignedInVisitor.ts; full vitest suite green; tsc -b + lint clean",
+    "2026-08-17T11:00:03Z step 6 -> green",
+    "2026-08-17T11:00:03Z step 6 -> done",
+    "2026-08-17T11:00:07Z step 7 -> na",
+    "2026-08-17T11:01:03Z evidence recorded: evidence/steps/step7-green.txt (94a814ab88d0) - SessionShadowStatus as-const enum in session/sessionShadow.ts; updated session/readSession.ts; full vitest suite green; tsc -b + lint clean",
+    "2026-08-17T11:01:03Z step 7 -> green",
+    "2026-08-17T11:01:03Z step 7 -> done",
+    "2026-08-17T11:01:06Z step 8 -> na",
+    "2026-08-17T11:02:15Z evidence recorded: evidence/steps/step8-green.txt (bead52136d56) - LookupOutcomeKind as-const enum in data/lookupUserIdentifier.ts; updated useLoginSubmission.ts; full vitest suite green; tsc -b + lint clean",
+    "2026-08-17T11:02:15Z step 8 -> green",
+    "2026-08-17T11:02:15Z step 8 -> done",
+    "2026-08-17T11:02:18Z step 9 -> na",
+    "2026-08-17T11:03:26Z evidence recorded: evidence/steps/step9-green.txt (974387cc2eee) - SessionUnreadableReason as-const enum in session/readSession.ts; full vitest suite green; tsc -b + lint clean",
+    "2026-08-17T11:03:27Z step 9 -> green",
+    "2026-08-17T11:03:27Z step 9 -> done",
+    "2026-08-17T11:03:31Z G2 -> passed (All 9 refactor steps done: domain/data/guard/session index.ts barrels added and every cross-subdirectory deep import repointed through them (steps 1-4); six discriminant unions extracted to as-const object enums - LoginCardStateKind, LoginResultOutcome, SessionStatus, SessionShadowStatus, LookupOutcomeKind, SessionUnreadableReason (steps 5-9). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint clean at every step boundary.)",
+    "2026-08-17T11:03:34Z phase -> verify",
+    "2026-08-17T11:04:36Z evidence recorded: evidence/g3-verify-full.txt (e8264ff5320a) - npm run verify (typecheck+lint+format:check+test:coverage+build+verify:build+size) full green after prettier fix",
+    "2026-08-17T11:04:37Z evidence recorded: evidence/g3-e2e-full.txt (c20f894e0a85) - npm run e2e 41/41 passing, no regressions from the barrel/enum refactor",
+    "2026-08-17T11:04:53Z approved-change: src/features/auth/guard/redirectSignedInVisitor.test.ts - user authorized this refactor's full scope via AskUserQuestion (barrels + six enums); the file's only edits since step 3's na registration were import-path repoints (../session/writeSession -> ../session in step 4, ../domain/userIdentifier -> ../domain earlier), never an assertion or test-title change. Verified by diff: test bodies byte-identical.",
+    "2026-08-17T11:04:53Z step 3 hash rebased (src/features/auth/guard/redirectSignedInVisitor.test.ts): import-path-only edit (barrel repoint in step 4), assertions unchanged - see approved-change log entry above",
+    "2026-08-17T11:05:07Z G3 -> passed (npm run verify full green (typecheck/lint/format:check/test:coverage 96%/build/verify:build/size, evidence/g3-verify-full.txt) and npm run e2e 41/41 passing (evidence/g3-e2e-full.txt), zero new console errors (development-console.spec.ts unchanged and passing). All 6 acceptance criteria checked against the diff: AC1 (four barrels, zero deep cross-subdirectory imports remaining, verified by grep), AC2-AC6 (six const-object enums, all call sites repointed, verified by grep for remaining raw literals - none found outside the enum declarations themselves). No design flag, no new user-facing surface - pure structural refactor.)",
+    "2026-08-17T11:05:13Z phase -> review",
+    "2026-08-17T11:08:46Z evidence recorded: evidence/reviews/g4-claude-review.md (edc148f8680d) - fresh-context Claude G4 review, 1 non-blocking finding (one-symbol-per-file)",
+    "2026-08-17T11:08:46Z G4 finding Claude-1 recorded: New const-enums (LoginResultOutcome, LoginCardStateKind, SessionStatus, SessionUnreadableReason, SessionShadowStatus, LookupOutcomeKind) were inlined into existing multi-export files instead of getting their own dedicated file per typescript-coding's one-symbol-per-file rule and the repo's own SignInOutcome precedent. Pre-existing multi-export files made worse, not introduced from clean. No runtime/compile effect.",
+    "2026-08-17T11:13:44Z evidence recorded: evidence/reviews/g4-codex-review.md (3b2eb833e90f) - Codex G4 second opinion, 2 findings (1 blocking: SessionUnreadableReason export scope)",
+    "2026-08-17T11:13:44Z G4 finding Codex-1 recorded (blocking): SessionUnreadableReason exported despite AC6's single-file scope promise - nothing outside readSession.ts consumed it, expanding module surface unnecessarily.",
+    "2026-08-17T11:13:44Z G4 finding Codex-2 recorded: 9 step evidence .txt logs have a trailing blank line git diff --check flags; committed patch fails git whitespace validation, no runtime effect.",
+    "2026-08-17T11:13:49Z G4 finding Codex-1 dispositioned: fixed: removed export from SessionUnreadableReason's const and type declarations in readSession.ts - nothing outside the file consumed it, and it was never re-exported from session/index.ts; tsc/lint/vitest reconfirmed green",
+    "2026-08-17T11:13:49Z G4 finding Codex-2 dispositioned: accepted: user's decision - trailing newline in captured command-output evidence logs, no effect on content/correctness; loop convention treats registered evidence as immutable, so recapturing under new filenames for a whitespace nit is not worth the churn",
+    "2026-08-17T11:13:50Z G4 finding Claude-1 dispositioned: accepted: user's decision - each enum stays colocated with the type/function that uses it as a discriminant (tightly-coupled state-machine modules, not standalone shared taxonomies like SignInOutcome); splitting into 5 more single-purpose files would fragment small, closely-related declarations for no readability gain",
+    "2026-08-17T11:14:29Z G4 -> passed (Fresh-context Claude review (evidence/reviews/g4-claude-review.md, 1 non-blocking) and Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking) on the full diff (d31a2b5..HEAD, src/features/auth). Codex-1 (blocking: SessionUnreadableReason exported despite AC6's single-file scope) fixed - export removed, verified green (tsc/lint/vitest), Codex confirmed RESOLVED in the same thread. Claude-1 (one-symbol-per-file for the 6 new enums) and Codex-2 (evidence-file trailing newline) both accepted by user's explicit decision. No security_review flag on this loop (pure refactor, no auth-logic change, no new input-handling surface).)",
+    "2026-08-17T11:14:49Z evidence recorded: evidence/reviews/g4-codex-fix-confirmation.md (0565de13494d) - Codex-1 fix confirmation, same thread, RESOLVED",
+    "2026-08-17T11:14:55Z evidence recorded: evidence/reviews/full-diff.txt (619bb6945cae) - full diff (d31a2b5..HEAD, src/features/auth) given to both G4 reviewers",
+    "2026-08-17T11:15:47Z evidence recorded: evidence/g4-final-verify.txt (52f3787bbfb9) - post-G4-fix npm run verify full green (typecheck/lint/format:check/test:coverage/build/verify:build/size)",
+    "2026-08-17T11:15:47Z evidence recorded: evidence/g4-final-e2e.txt (8f601f25e1bd) - post-G4-fix npm run e2e 41/41 passing",
+    "2026-08-17T11:15:51Z phase -> prove",
+    "2026-08-17T11:16:24Z set proof = PROOF.md",
+    "2026-08-17T11:16:30Z G5 -> passed (PROOF.md written and registered; all 6 acceptance criteria mapped to their step evidence; verification summary cites npm run verify/e2e evidence (both pre and post the G4 fix); both G4 reviews (Claude fresh-context + Codex) referenced with outcomes; known-limitations section covers the 2 accepted findings. loop check clean.)",
+    "2026-08-17T11:16:40Z set retro = What did the user correct? Nothing during implementation - both AskUserQuestion checkpoints (initial enum scope, then the 6-candidate list) were used to CONFIRM scope before writing code, not to fix a wrong guess after the fact. What did reviewers catch that an earlier phase should have? Codex-1 (blocking): SessionUnreadableReason was exported despite my own PLAN.md AC6 explicitly promising single-file scope - I exported it reflexively to match the other five enums' pattern without checking whether anything outside the file actually consumed it. Lesson: when a plan explicitly scopes a symbol to single-file use, grep for external consumers BEFORE deciding export vs file-private, don't default to exporting just because sibling symbols in the same step batch are exported. Where did this playbook not answer? Mid-review scope disagreement: Claude's non-blocking finding (one-symbol-per-file for the six new enums) directly contradicted the loop's own stated convention precedent (SignInOutcome), and the right call depended on a judgment - tightly-coupled discriminant vs standalone taxonomy - that isn't mechanically decidable from the rule text alone. The s-path's 'present ALL findings to the user for accept/fix' already covers this correctly (asked, got accept), so no gap here - just noting the pattern (a real repo rule the diff arguably violates, but only by one plausible reading of what counts as tight coupling) is worth flagging as a judgment call rather than a rule-following exercise, not folding it into a rigid checklist. Nothing durable enough to propose a skill diff for this run.",
+    "2026-08-17T11:16:40Z phase -> retro",
+    "2026-08-17T11:16:43Z loop complete: 9 steps, 4 barrels + 6 const-object enums in src/features/auth, G4 dual review (Claude + Codex) with 1 blocking finding fixed and confirmed, G5 proof registered. Ready for done.",
+    "2026-08-17T11:16:43Z phase -> done"
+  ],
+  "test_file_hashes": {
+    "src/features/auth/domain/deriveSecret.test.ts": {
+      "sha": "73811a1b89e1",
+      "step": 1,
+      "recorded": "2026-08-17T10:52:42Z",
+      "log_index": 15
+    },
+    "src/features/auth/domain/userIdentifier.test.ts": {
+      "sha": "29a1ffc1207d",
+      "step": 1,
+      "recorded": "2026-08-17T10:52:42Z",
+      "log_index": 15
+    },
+    "src/features/auth/data/lookupUserIdentifier.test.ts": {
+      "sha": "e1a6e7718498",
+      "step": 2,
+      "recorded": "2026-08-17T10:54:30Z",
+      "log_index": 19
+    },
+    "src/features/auth/guard/requireSession.test.ts": {
+      "sha": "4eb815d8503e",
+      "step": 6,
+      "recorded": "2026-08-17T10:58:45Z",
+      "log_index": 35
+    },
+    "src/features/auth/guard/redirectSignedInVisitor.test.ts": {
+      "sha": "d650b16abcd7",
+      "step": 3,
+      "recorded": "2026-08-17T11:04:53Z",
+      "log_index": 56,
+      "rebased": "import-path-only edit (barrel repoint in step 4), assertions unchanged - see approved-change log entry above"
+    },
+    "src/features/auth/session/readSession.test.ts": {
+      "sha": "81e29df071bb",
+      "step": 9,
+      "recorded": "2026-08-17T11:02:18Z",
+      "log_index": 47
+    },
+    "src/features/auth/loginCardState.test.ts": {
+      "sha": "ca33ad96c84a",
+      "step": 5,
+      "recorded": "2026-08-17T10:56:53Z",
+      "log_index": 31
+    },
+    "src/features/auth/LoginPage.test.tsx": {
+      "sha": "32bd7daad60f",
+      "step": 5,
+      "recorded": "2026-08-17T10:56:53Z",
+      "log_index": 31
+    },
+    "src/features/auth/useLoginSubmission.test.tsx": {
+      "sha": "122d2f5acf82",
+      "step": 8,
+      "recorded": "2026-08-17T11:01:06Z",
+      "log_index": 43
+    }
+  },
+  "evidence_hashes": {
+    "evidence/steps/step1-green.txt": {
+      "sha": "feeb6c1f0151",
+      "recorded": "2026-08-17T10:54:20Z",
+      "note": "domain/index.ts barrel + 12 prod + 10 test import repoints; vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean"
+    },
+    "evidence/steps/step2-green.txt": {
+      "sha": "b0d0ccb7e440",
+      "recorded": "2026-08-17T10:55:00Z",
+      "note": "data/index.ts barrel + 3 prod import repoints (root index.ts, useLoginSubmission.ts); vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean"
+    },
+    "evidence/steps/step3-green.txt": {
+      "sha": "28a523a9dda0",
+      "recorded": "2026-08-17T10:55:33Z",
+      "note": "guard/index.ts barrel + root index.ts repoint; vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean"
+    },
+    "evidence/steps/step4-green.txt": {
+      "sha": "3f024c98cad9",
+      "recorded": "2026-08-17T10:56:38Z",
+      "note": "session/index.ts barrel + 5 prod + 2 test import repoints (root index.ts, guard/, useLoginSubmission.ts); vitest features/auth 25/25 files, 82/82 tests green; tsc -b + lint clean"
+    },
+    "evidence/steps/step5-green.txt": {
+      "sha": "fe62384e17b0",
+      "recorded": "2026-08-17T10:58:37Z",
+      "note": "LoginCardStateKind + LoginResultOutcome as-const enums in loginCardState.ts; updated useLoginSubmission.ts, LoginPage.tsx, LoginAlert.tsx (props type + comparisons); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean"
+    },
+    "evidence/steps/step6-green.txt": {
+      "sha": "a955a3d6419d",
+      "recorded": "2026-08-17T11:00:03Z",
+      "note": "SessionStatus as-const enum in session/readSession.ts; updated guard/requireSession.ts, guard/redirectSignedInVisitor.ts; full vitest suite green; tsc -b + lint clean"
+    },
+    "evidence/steps/step7-green.txt": {
+      "sha": "94a814ab88d0",
+      "recorded": "2026-08-17T11:01:03Z",
+      "note": "SessionShadowStatus as-const enum in session/sessionShadow.ts; updated session/readSession.ts; full vitest suite green; tsc -b + lint clean"
+    },
+    "evidence/steps/step8-green.txt": {
+      "sha": "bead52136d56",
+      "recorded": "2026-08-17T11:02:15Z",
+      "note": "LookupOutcomeKind as-const enum in data/lookupUserIdentifier.ts; updated useLoginSubmission.ts; full vitest suite green; tsc -b + lint clean"
+    },
+    "evidence/steps/step9-green.txt": {
+      "sha": "974387cc2eee",
+      "recorded": "2026-08-17T11:03:26Z",
+      "note": "SessionUnreadableReason as-const enum in session/readSession.ts; full vitest suite green; tsc -b + lint clean"
+    },
+    "evidence/g3-verify-full.txt": {
+      "sha": "e8264ff5320a",
+      "recorded": "2026-08-17T11:04:36Z",
+      "note": "npm run verify (typecheck+lint+format:check+test:coverage+build+verify:build+size) full green after prettier fix"
+    },
+    "evidence/g3-e2e-full.txt": {
+      "sha": "c20f894e0a85",
+      "recorded": "2026-08-17T11:04:37Z",
+      "note": "npm run e2e 41/41 passing, no regressions from the barrel/enum refactor"
+    },
+    "evidence/reviews/g4-claude-review.md": {
+      "sha": "edc148f8680d",
+      "recorded": "2026-08-17T11:08:46Z",
+      "note": "fresh-context Claude G4 review, 1 non-blocking finding (one-symbol-per-file)"
+    },
+    "evidence/reviews/g4-codex-review.md": {
+      "sha": "3b2eb833e90f",
+      "recorded": "2026-08-17T11:13:44Z",
+      "note": "Codex G4 second opinion, 2 findings (1 blocking: SessionUnreadableReason export scope)"
+    },
+    "evidence/reviews/g4-codex-fix-confirmation.md": {
+      "sha": "0565de13494d",
+      "recorded": "2026-08-17T11:14:49Z",
+      "note": "Codex-1 fix confirmation, same thread, RESOLVED"
+    },
+    "evidence/reviews/full-diff.txt": {
+      "sha": "619bb6945cae",
+      "recorded": "2026-08-17T11:14:55Z",
+      "note": "full diff (d31a2b5..HEAD, src/features/auth) given to both G4 reviewers"
+    },
+    "evidence/g4-final-verify.txt": {
+      "sha": "52f3787bbfb9",
+      "recorded": "2026-08-17T11:15:47Z",
+      "note": "post-G4-fix npm run verify full green (typecheck/lint/format:check/test:coverage/build/verify:build/size)"
+    },
+    "evidence/g4-final-e2e.txt": {
+      "sha": "8f601f25e1bd",
+      "recorded": "2026-08-17T11:15:47Z",
+      "note": "post-G4-fix npm run e2e 41/41 passing"
+    }
+  }
+}

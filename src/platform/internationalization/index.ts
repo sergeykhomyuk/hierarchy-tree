@@ -4,6 +4,8 @@ export { localeDirection } from './localeDirection';
 export { Locale } from './locale';
 export { detectLocale } from './detectLocale';
 export { createKeyEchoCatalogue } from './createKeyEchoCatalogue';
+export { createLoadTranslations } from './createLoadTranslations';
+export { resolveLocaleCatalogue } from './resolveLocaleCatalogue';
 export { formatMissingKey } from './formatMissingKey';
 export { createMissingKeyHandler, missingKeyReports } from './reportMissingKey';
 export type { MissingKeyEntry } from './reportMissingKey';

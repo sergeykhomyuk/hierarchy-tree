@@ -1,0 +1,161 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/shared/ui/Input.test.tsx (4 tests | 2 failed) 57ms
+     × fills the width of its container 6ms
+     × shows a danger border when the field context marks it invalid 1ms
+ ❯ |ui| src/shared/ui/Field.test.tsx (6 tests | 1 failed) 77ms
+     × stacks the label above its control with a small gap 2ms
+ ❯ |ui| src/shared/ui/Button.test.tsx (11 tests | 1 failed) 106ms
+     × renders at full width when fullWidth is set 3ms
+ ❯ |ui| src/app/layout/ApplicationLayout.test.tsx (3 tests | 1 failed) 62ms
+     × visually hides the skip link until it is focused 4ms
+ ❯ |ui| src/features/auth/LoginPage.test.tsx (17 tests | 3 failed) 1472ms
+     × centers the card on the login canvas background 6ms
+     × gives the heading bold mockup-sized typography 5ms
+     × renders the submit control at full width 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/layout/ApplicationLayout.test.tsx > ApplicationLayout > visually hides the skip link until it is focused
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"sr-only focus:not-sr-only"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  sr-only focus:not-sr-only[39m
+Received:
+[31m[39m
+ ❯ src/app/layout/ApplicationLayout.test.tsx:43:22
+     41|     const skipLink = screen.getByRole('link', { name: 'layout.skipLink…
+     42|
+     43|     expect(skipLink).toHaveClass('sr-only', 'focus:not-sr-only');
+       |                      ^
+     44|   });
+     45| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  |ui| src/shared/ui/Button.test.tsx > Button > renders at full width when fullWidth is set
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"w-full"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  w-full[39m
+Received:
+[31m  duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 bg-primary text-on-primary hover:bg-primary-pressed[39m
+ ❯ src/shared/ui/Button.test.tsx:145:58
+    143|     );
+    144|
+    145|     expect(screen.getByRole('button', { name: 'Save' })).toHaveClass(
+       |                                                          ^
+    146|       'w-full',
+    147|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  |ui| src/shared/ui/Field.test.tsx > Field > stacks the label above its control with a small gap
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"flex flex-col"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  flex flex-col[39m
+Received:
+[31m[39m
+ ❯ src/shared/ui/Field.test.tsx:83:41
+     81|     );
+     82|
+     83|     expect(container.firstElementChild).toHaveClass('flex', 'flex-col'…
+       |                                         ^
+     84|     expect(screen.getByText('Email')).toHaveClass('text-sm', 'font-med…
+     85|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  |ui| src/shared/ui/Input.test.tsx > Input > fills the width of its container
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"w-full"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  w-full[39m
+Received:
+[31m  rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder[39m
+ ❯ src/shared/ui/Input.test.tsx:52:41
+     50|     );
+     51|
+     52|     expect(screen.getByRole('textbox')).toHaveClass('w-full');
+       |                                         ^
+     53|   });
+     54|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  |ui| src/shared/ui/Input.test.tsx > Input > shows a danger border when the field context marks it invalid
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"border-danger"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  border-danger[39m
+Received:
+[31m  rounded-control border border-border-field bg-surface px-3 py-2 text-ink placeholder:text-ink-placeholder[39m
+ ❯ src/shared/ui/Input.test.tsx:70:19
+     68|     // eslint-disable-next-line testing-library/no-node-access -- a pa…
+     69|     const input = document.getElementById('password');
+     70|     expect(input).toHaveClass('border-danger');
+       |                   ^
+     71|     expect(input).not.toHaveClass('border-border-field');
+     72|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  |ui| src/features/auth/LoginPage.test.tsx > LoginPage > centers the card on the login canvas background
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"flex items-center justify-center bg-canvas-login"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  flex items-center justify-center bg-canvas-login[39m
+Received:
+[31m  rounded-card border border-border-hairline bg-surface p-6[39m
+ ❯ src/features/auth/LoginPage.test.tsx:517:41
+    515|     );
+    516|
+    517|     expect(container.firstElementChild).toHaveClass(
+       |                                         ^
+    518|       'flex',
+    519|       'items-center',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  |ui| src/features/auth/LoginPage.test.tsx > LoginPage > gives the heading bold mockup-sized typography
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"text-2xl font-bold"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  text-2xl font-bold[39m
+Received:
+[31m[39m
+ ❯ src/features/auth/LoginPage.test.tsx:530:55
+    528|     );
+    529|
+    530|     expect(screen.getByRole('heading', { level: 1 })).toHaveClass(
+       |                                                       ^
+    531|       'text-2xl',
+    532|       'font-bold',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  |ui| src/features/auth/LoginPage.test.tsx > LoginPage > renders the submit control at full width
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"w-full"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  w-full[39m
+Received:
+[31m  duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 bg-primary text-on-primary hover:bg-primary-pressed[39m
+ ❯ src/features/auth/LoginPage.test.tsx:543:7
+    541|     expect(
+    542|       screen.getByRole('button', { name: 'login.submit' }),
+    543|     ).toHaveClass('w-full');
+       |       ^
+    544|   });
+    545| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  5 failed (5)
+      Tests  8 failed | 33 passed (41)
+   Start at  10:48:43
+   Duration  2.40s (transform 548ms, setup 745ms, import 604ms, tests 1.77s, environment 2.39s)
+

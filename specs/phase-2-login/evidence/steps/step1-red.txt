@@ -1,0 +1,331 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/domain/substitutionTableChecksum.test.ts (1 test | 1 failed) 3ms
+     × matches the recorded FNV-1a constant for the brief's table 3ms
+ ❯ |ui| src/features/auth/domain/substitutionTable.test.ts (2 tests | 2 failed) 5ms
+     × has exactly 256 entries, every one an integer in 0-255 3ms
+     × matches the literal extracted from the brief, entry for entry 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/domain/substitutionTable.test.ts > the substitution table > has exactly 256 entries, every one an integer in 0-255
+AssertionError: expected [] to have a length of 256 but got +0
+
+- Expected
++ Received
+
+- 256
++ 0
+
+ ❯ src/features/auth/domain/substitutionTable.test.ts:20:32
+     18| describe('the substitution table', () => {
+     19|   it('has exactly 256 entries, every one an integer in 0-255', () => {
+     20|     expect(SUBSTITUTION_TABLE).toHaveLength(256);
+       |                                ^
+     21|     for (const entry of SUBSTITUTION_TABLE) {
+     22|       expect(Number.isInteger(entry)).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |ui| src/features/auth/domain/substitutionTable.test.ts > the substitution table > matches the literal extracted from the brief, entry for entry
+AssertionError: expected [] to deeply equal [ 156, 33, 64, 174, 120, 204, …(250) ]
+
+- Expected
++ Received
+
+- [
+-   156,
+-   33,
+-   64,
+-   174,
+-   120,
+-   204,
+-   69,
+-   242,
+-   177,
+-   98,
+-   16,
+-   244,
+-   75,
+-   5,
+-   21,
+-   7,
+-   145,
+-   39,
+-   156,
+-   119,
+-   246,
+-   63,
+-   43,
+-   201,
+-   91,
+-   164,
+-   171,
+-   244,
+-   198,
+-   100,
+-   252,
+-   91,
+-   92,
+-   193,
+-   95,
+-   70,
+-   131,
+-   18,
+-   69,
+-   131,
+-   88,
+-   40,
+-   241,
+-   203,
+-   190,
+-   210,
+-   154,
+-   138,
+-   4,
+-   5,
+-   212,
+-   34,
+-   25,
+-   151,
+-   150,
+-   253,
+-   135,
+-   59,
+-   144,
+-   152,
+-   202,
+-   190,
+-   196,
+-   29,
+-   23,
+-   165,
+-   234,
+-   254,
+-   6,
+-   245,
+-   142,
+-   18,
+-   234,
+-   49,
+-   63,
+-   31,
+-   33,
+-   152,
+-   73,
+-   6,
+-   212,
+-   119,
+-   245,
+-   182,
+-   248,
+-   40,
+-   167,
+-   206,
+-   230,
+-   204,
+-   245,
+-   48,
+-   200,
+-   169,
+-   186,
+-   110,
+-   124,
+-   105,
+-   22,
+-   7,
+-   128,
+-   56,
+-   85,
+-   12,
+-   48,
+-   130,
+-   207,
+-   114,
+-   168,
+-   216,
+-   104,
+-   20,
+-   28,
+-   183,
+-   78,
+-   194,
+-   131,
+-   33,
+-   245,
+-   47,
+-   203,
+-   214,
+-   109,
+-   27,
+-   8,
+-   214,
+-   195,
+-   249,
+-   152,
+-   240,
+-   51,
+-   142,
+-   123,
+-   250,
+-   208,
+-   160,
+-   51,
+-   207,
+-   6,
+-   67,
+-   63,
+-   111,
+-   75,
+-   198,
+-   63,
+-   50,
+-   181,
+-   137,
+-   163,
+-   43,
+-   160,
+-   141,
+-   19,
+-   188,
+-   37,
+-   50,
+-   105,
+-   20,
+-   252,
+-   93,
+-   134,
+-   39,
+-   130,
+-   234,
+-   109,
+-   223,
+-   161,
+-   74,
+-   175,
+-   44,
+-   35,
+-   62,
+-   201,
+-   159,
+-   3,
+-   170,
+-   224,
+-   28,
+-   113,
+-   184,
+-   243,
+-   116,
+-   166,
+-   132,
+-   77,
+-   93,
+-   130,
+-   101,
+-   198,
+-   173,
+-   143,
+-   8,
+-   131,
+-   180,
+-   130,
+-   61,
+-   242,
+-   43,
+-   39,
+-   105,
+-   44,
+-   239,
+-   157,
+-   181,
+-   86,
+-   150,
+-   180,
+-   100,
+-   172,
+-   134,
+-   53,
+-   76,
+-   220,
+-   18,
+-   210,
+-   150,
+-   99,
+-   234,
+-   57,
+-   252,
+-   242,
+-   40,
+-   205,
+-   185,
+-   53,
+-   162,
+-   160,
+-   211,
+-   134,
+-   91,
+-   44,
+-   65,
+-   160,
+-   30,
+-   9,
+-   28,
+-   192,
+-   239,
+-   255,
+-   92,
+-   108,
+-   226,
+-   242,
+-   67,
+-   0,
+-   201,
+-   158,
+-   39,
+-   128,
+-   97,
+-   215,
+-   65,
+-   221,
+-   197,
+-   22,
+-   231,
+- ]
++ []
+
+ ❯ src/features/auth/domain/substitutionTable.test.ts:29:32
+     27|
+     28|   it("matches the literal extracted from the brief, entry for entry", …
+     29|     expect(SUBSTITUTION_TABLE).toEqual(readBriefTable());
+       |                                ^
+     30|   });
+     31| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |ui| src/features/auth/domain/substitutionTableChecksum.test.ts > substitutionTableChecksum > matches the recorded FNV-1a constant for the brief's table
+AssertionError: expected +0 to be 87102471 // Object.is equality
+
+- Expected
++ Received
+
+- 87102471
++ 0
+
+ ❯ src/features/auth/domain/substitutionTableChecksum.test.ts:9:59
+      7| describe('substitutionTableChecksum', () => {
+      8|   it("matches the recorded FNV-1a constant for the brief's table", () …
+      9|     expect(substitutionTableChecksum(SUBSTITUTION_TABLE)).toBe(
+       |                                                           ^
+     10|       RECORDED_CHECKSUM,
+     11|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed (3)
+   Start at  21:19:02
+   Duration  694ms (transform 53ms, setup 240ms, import 9ms, tests 8ms, environment 942ms)
+

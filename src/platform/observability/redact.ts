@@ -8,7 +8,7 @@ export function redact<Value>(value: Value): Value {
 
 function redactValue(value: unknown, seen: WeakSet<object>): unknown {
   if (typeof value === 'string') {
-    return redactUrlSearchParameters(value);
+    return redactResourcePathSegment(redactUrlSearchParameters(value));
   }
 
   if (Array.isArray(value)) {
@@ -38,6 +38,31 @@ function redactValue(value: unknown, seen: WeakSet<object>): unknown {
   }
 
   return value;
+}
+
+// A resource path can carry a sensitive value as a path SEGMENT (e.g. a
+// derived secret ahead of its .json extension), which
+// redactUrlSearchParameters does not touch - it only rewrites query
+// parameters and only for a string that parses as an absolute URL. This
+// scrubs the segment immediately following one that matches the
+// redaction pattern, preserving any extension.
+function redactResourcePathSegment(value: string): string {
+  if (!value.startsWith('/')) return value;
+
+  const segments = value.split('/');
+  let redacted = false;
+  for (let index = 1; index < segments.length; index += 1) {
+    const previousSegment = segments[index - 1] ?? '';
+    const segment = segments[index] ?? '';
+    if (segment.length > 0 && REDACTED_KEY_PATTERN.test(previousSegment)) {
+      const dotIndex = segment.lastIndexOf('.');
+      const extension = dotIndex > 0 ? segment.slice(dotIndex) : '';
+      segments[index] = `${REDACTED_PLACEHOLDER}${extension}`;
+      redacted = true;
+    }
+  }
+
+  return redacted ? segments.join('/') : value;
 }
 
 function redactUrlSearchParameters(value: string): string {

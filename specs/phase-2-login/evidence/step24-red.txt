@@ -1,0 +1,53 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/guard/redirectSignedInVisitor.test.ts (0 test)
+ ❯ |ui| src/features/auth/guard/requireSession.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/guard/redirectSignedInVisitor.test.ts [ src/features/auth/guard/redirectSignedInVisitor.test.ts ]
+Error: Failed to resolve import "./redirectSignedInVisitor" from "src/features/auth/guard/redirectSignedInVisitor.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/guard/redirectSignedInVisitor.test.ts:6:40
+  2  |  import { userIdentifier } from "../domain/userIdentifier";
+  3  |  import { writeSession } from "../session/writeSession";
+  4  |  import { redirectSignedInVisitor } from "./redirectSignedInVisitor";
+     |                                           ^
+  5  |  function createSpyObservability() {
+  6  |  	return {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/features/auth/guard/requireSession.test.ts [ src/features/auth/guard/requireSession.test.ts ]
+Error: Failed to resolve import "./requireSession" from "src/features/auth/guard/requireSession.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/guard/requireSession.test.ts:4:31
+  1  |  import { afterEach, describe, expect, it, vi } from "vitest";
+  2  |  import { requireSession } from "./requireSession";
+     |                                  ^
+  3  |  function createSpyObservability() {
+  4  |  	return {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  09:06:32
+   Duration  653ms (transform 42ms, setup 223ms, import 0ms, tests 0ms, environment 862ms)
+

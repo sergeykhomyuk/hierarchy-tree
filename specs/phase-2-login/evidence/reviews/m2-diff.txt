@@ -1,0 +1,2184 @@
+diff --git a/.claude/settings.json b/.claude/settings.json
+new file mode 100644
+index 0000000..3982c63
+--- /dev/null
++++ b/.claude/settings.json
+@@ -0,0 +1,9 @@
++{
++  "permissions": {
++    "allow": [
++      "Bash(loop *)",
++      "Bash(npm run smoke:live)",
++      "Bash(npx tsx scripts/*)"
++    ]
++  }
++}
+diff --git a/e2e/accessibility.spec.ts b/e2e/accessibility.spec.ts
+index c4b6b38..3c41c20 100644
+--- a/e2e/accessibility.spec.ts
++++ b/e2e/accessibility.spec.ts
+@@ -4,7 +4,6 @@ import { installRouteMocks } from './support/routeMocks';
+ 
+ const ROUTES = [
+   { path: '/', heading: 'home.title' },
+-  { path: '/login', heading: 'login.title' },
+   { path: '/does-not-exist', heading: 'notFound.title' },
+ ];
+ 
+@@ -21,4 +20,15 @@ test.describe('accessibility', () => {
+       expect(results.violations).toEqual([]);
+     });
+   }
++
++  test('has no violations on /login', async ({ page, baseURL }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await page.goto('/login');
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'login.heading',
++    );
++
++    const results = await createAxeBuilder(page).analyze();
++    expect(results.violations).toEqual([]);
++  });
+ });
+diff --git a/e2e/error-boundary.spec.ts b/e2e/error-boundary.spec.ts
+index 5c37eec..c4bf730 100644
+--- a/e2e/error-boundary.spec.ts
++++ b/e2e/error-boundary.spec.ts
+@@ -51,7 +51,7 @@ test('a forced route chunk failure renders the boundary with a correlation id an
+   await page.keyboard.press('Enter');
+ 
+   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+-    'login.title',
++    'login.heading',
+   );
+   await expect(alert).toBeHidden();
+ 
+diff --git a/e2e/login.spec.ts b/e2e/login.spec.ts
+new file mode 100644
+index 0000000..5823d37
+--- /dev/null
++++ b/e2e/login.spec.ts
+@@ -0,0 +1,234 @@
++import type { Page } from '@playwright/test';
++import { expect, test } from '@playwright/test';
++import { deriveSecret } from '../src/features/auth/domain/deriveSecret';
++import { createAxeBuilder } from './support/axeBuilder';
++import { installApiMocks } from './support/apiMocks';
++import { installRouteMocks } from './support/routeMocks';
++import './support/telemetryWindow';
++
++const EMAIL = 'e2e-user@example.com';
++const PASSWORD = 'e2e-password-123';
++const WRONG_PASSWORD = 'wrong-password';
++const USER_ID = 'e2e-user-1';
++const MATCHING_SECRET = deriveSecret(EMAIL, PASSWORD);
++
++async function assertAccessible(page: Page): Promise<void> {
++  const results = await createAxeBuilder(page).analyze();
++  expect(results.violations).toEqual([]);
++}
++
++test.describe('the login card', () => {
++  test('signs in with a real-shaped credential and lands on the hierarchy page', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await installApiMocks(page, {
++      secret: (secret) => ({
++        status: 200,
++        body: secret === MATCHING_SECRET ? USER_ID : null,
++      }),
++    });
++
++    await page.goto('/login');
++    await page.getByLabel('login.emailLabel').fill(EMAIL);
++    await page.getByLabel('login.passwordLabel').fill(PASSWORD);
++    await page.getByRole('button', { name: 'login.submit' }).click();
++
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'home.title',
++    );
++    expect(new URL(page.url()).pathname).toBe('/');
++  });
++
++  test('shows the no-match alert for a null lookup and stays on /login', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await installApiMocks(page, {
++      secret: () => ({ status: 200, body: null }),
++    });
++
++    await page.goto('/login');
++    await page.getByLabel('login.emailLabel').fill(EMAIL);
++    await page.getByLabel('login.passwordLabel').fill(WRONG_PASSWORD);
++    await page.getByRole('button', { name: 'login.submit' }).click();
++
++    await expect(page.getByRole('alert')).toHaveText('login.noMatchMessage');
++    expect(new URL(page.url()).pathname).toBe('/login');
++  });
++
++  test('shows the service-problem alert and retries successfully', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    // The http client retries once on its own for a 5xx GET (shouldRetry),
++    // invisibly to the visitor, so both the initial click's attempts must
++    // fail before the manual Retry control appears; only the third call -
++    // the one that control triggers - succeeds.
++    let secretCallCount = 0;
++    await installApiMocks(page, {
++      secret: (secret) => {
++        secretCallCount += 1;
++        if (secretCallCount <= 2) {
++          return { status: 500, body: null };
++        }
++        return {
++          status: 200,
++          body: secret === MATCHING_SECRET ? USER_ID : null,
++        };
++      },
++    });
++
++    await page.goto('/login');
++    await page.getByLabel('login.emailLabel').fill(EMAIL);
++    await page.getByLabel('login.passwordLabel').fill(PASSWORD);
++    await page.getByRole('button', { name: 'login.submit' }).click();
++
++    await expect(page.getByRole('alert')).toContainText(
++      'login.serviceProblemMessage',
++    );
++
++    await page.getByRole('button', { name: 'login.retry' }).click();
++
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'home.title',
++    );
++    expect(secretCallCount).toBe(3);
++  });
++
++  test('issues exactly one request while authenticating, and none on the users path', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    let secretRequestCount = 0;
++    let userRequestCount = 0;
++    await installApiMocks(page, {
++      secret: (secret) => {
++        secretRequestCount += 1;
++        return {
++          status: 200,
++          body: secret === MATCHING_SECRET ? USER_ID : null,
++        };
++      },
++      user: () => {
++        userRequestCount += 1;
++        return { status: 200, body: null };
++      },
++    });
++
++    await page.goto('/login');
++    await page.getByLabel('login.emailLabel').fill(EMAIL);
++    await page.getByLabel('login.passwordLabel').fill(PASSWORD);
++    await page.getByRole('button', { name: 'login.submit' }).click();
++
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'home.title',
++    );
++
++    expect(secretRequestCount).toBe(1);
++    expect(userRequestCount).toBe(0);
++  });
++
++  test('leaves no credential material in the telemetry buffer or storage', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++    await installApiMocks(page, {
++      secret: (secret) => ({
++        status: 200,
++        body: secret === MATCHING_SECRET ? USER_ID : null,
++      }),
++    });
++
++    await page.goto('/login');
++    await page.getByLabel('login.emailLabel').fill(EMAIL);
++    await page.getByLabel('login.passwordLabel').fill(PASSWORD);
++    await page.getByRole('button', { name: 'login.submit' }).click();
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'home.title',
++    );
++
++    const records = await page.evaluate(
++      () => window.__hierarchyTreeTelemetry?.read() ?? [],
++    );
++    const serializedRecords = JSON.stringify(records);
++    expect(serializedRecords).not.toContain(PASSWORD);
++    expect(serializedRecords.toUpperCase()).not.toContain(MATCHING_SECRET);
++
++    const storageDump = await page.evaluate(() =>
++      JSON.stringify(window.sessionStorage),
++    );
++    expect(storageDump).not.toContain(PASSWORD);
++    expect(storageDump.toUpperCase()).not.toContain(MATCHING_SECRET);
++  });
++
++  test('passes an accessibility scan in each of its five states', async ({
++    page,
++    baseURL,
++  }) => {
++    await installRouteMocks(page, baseURL ?? '');
++
++    let mode: 'noMatch' | 'serviceProblem' | 'hang' = 'noMatch';
++    await installApiMocks(page, {
++      secret: () => {
++        if (mode === 'hang') {
++          return new Promise<never>(() => {});
++        }
++        if (mode === 'serviceProblem') {
++          return { status: 500, body: null };
++        }
++        return { status: 200, body: null };
++      },
++    });
++
++    const email = page.getByLabel('login.emailLabel');
++    const password = page.getByLabel('login.passwordLabel');
++    const submitButton = page.getByRole('button', { name: 'login.submit' });
++
++    // idle
++    await page.goto('/login');
++    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
++      'login.heading',
++    );
++    await assertAccessible(page);
++
++    // ready
++    await email.fill(EMAIL);
++    await password.fill(PASSWORD);
++    await expect(submitButton).toBeEnabled();
++    await assertAccessible(page);
++
++    // submitting - the route never resolves, so the card stays busy for
++    // the rest of this state's assertions; the next state's page.goto
++    // discards the still-pending request rather than waiting it out.
++    mode = 'hang';
++    await submitButton.click();
++    await expect(
++      page.getByRole('button', { name: 'login.submitting' }),
++    ).toBeVisible();
++    await assertAccessible(page);
++
++    // noMatch
++    mode = 'noMatch';
++    await page.goto('/login');
++    await email.fill(EMAIL);
++    await password.fill(WRONG_PASSWORD);
++    await submitButton.click();
++    await expect(page.getByRole('alert')).toBeVisible();
++    await assertAccessible(page);
++
++    // serviceProblem - resubmitted with the same (still-filled) fields,
++    // matching the retry path's own re-derive-in-place behaviour.
++    mode = 'serviceProblem';
++    await submitButton.click();
++    await expect(page.getByRole('alert')).toContainText(
++      'login.serviceProblemMessage',
++    );
++    await assertAccessible(page);
++  });
++});
+diff --git a/e2e/placeholder-routes.spec.ts b/e2e/placeholder-routes.spec.ts
+index 00c993a..4e0378c 100644
+--- a/e2e/placeholder-routes.spec.ts
++++ b/e2e/placeholder-routes.spec.ts
+@@ -29,7 +29,7 @@ test.describe('placeholder routes', () => {
+     expect(records).toEqual([]);
+   });
+ 
+-  test('the login route renders the generic auth placeholder', async ({
++  test('the login route renders the sign-in card', async ({
+     page,
+     baseURL,
+   }) => {
+@@ -39,9 +39,11 @@ test.describe('placeholder routes', () => {
+     await page.goto('/login');
+ 
+     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+-      'login.title',
++      'login.heading',
+     );
+     await expect(page).toHaveTitle('login.documentTitle');
++    await expect(page.getByLabel('login.emailLabel')).toBeVisible();
++    await expect(page.getByLabel('login.passwordLabel')).toBeVisible();
+ 
+     expect(records).toEqual([]);
+   });
+diff --git a/e2e/right-to-left.spec.ts b/e2e/right-to-left.spec.ts
+index 033bbf9..3095b48 100644
+--- a/e2e/right-to-left.spec.ts
++++ b/e2e/right-to-left.spec.ts
+@@ -33,7 +33,7 @@ import { installRouteMocks } from './support/routeMocks';
+ // resolves relative to it), across every route this phase ships.
+ const ROUTES = [
+   { path: '/', heading: 'home.title' },
+-  { path: '/login', heading: 'login.title' },
++  { path: '/login', heading: 'login.heading' },
+ ];
+ 
+ test.describe('right-to-left', () => {
+diff --git a/e2e/support/apiMocks.ts b/e2e/support/apiMocks.ts
+new file mode 100644
+index 0000000..13a1310
+--- /dev/null
++++ b/e2e/support/apiMocks.ts
+@@ -0,0 +1,65 @@
++import type { Page, Route } from '@playwright/test';
++
++// Mirrors configurationSchema.ts's VITE_API_BASE_URL default - the value
++// baked into the preview build these e2e specs run against, since no
++// .env overrides it. A different origin from the app's own baseURL, so
++// routeMocks.ts's off-origin block would abort every request here unless
++// this installs its own route on top of it (Playwright resolves routes in
++// the reverse of their registration order, so calling this AFTER
++// installRouteMocks lets these two paths win over the catch-all abort).
++const API_ORIGIN = 'https://gongfetest.firebaseio.com';
++
++export type ApiMockResponse = { status: number; body: unknown } | 'abort';
++
++export type ApiMockHandlers = {
++  secret: (secret: string) => ApiMockResponse | Promise<ApiMockResponse>;
++  user?: (userId: string) => ApiMockResponse | Promise<ApiMockResponse>;
++};
++
++function pathSegment(url: string): string {
++  const segments = new URL(url).pathname.split('/');
++  const lastSegment = segments[segments.length - 1];
++  if (lastSegment === undefined) {
++    throw new Error(`unexpected empty path in mocked request: ${url}`);
++  }
++  return decodeURIComponent(lastSegment.replace(/\.json$/, ''));
++}
++
++async function fulfillOrAbort(
++  route: Route,
++  response: ApiMockResponse,
++): Promise<void> {
++  if (response === 'abort') {
++    await route.abort();
++    return;
++  }
++  await route.fulfill({
++    status: response.status,
++    contentType: 'application/json',
++    body: JSON.stringify(response.body),
++  });
++}
++
++export async function installApiMocks(
++  page: Page,
++  handlers: ApiMockHandlers,
++): Promise<void> {
++  await page.route(`${API_ORIGIN}/secrets/*.json`, async (route) => {
++    const response = await handlers.secret(pathSegment(route.request().url()));
++    await fulfillOrAbort(route, response);
++  });
++
++  await page.route(`${API_ORIGIN}/users/*.json`, async (route) => {
++    const handleUser = handlers.user;
++    if (!handleUser) {
++      await route.fulfill({
++        status: 200,
++        contentType: 'application/json',
++        body: 'null',
++      });
++      return;
++    }
++    const response = await handleUser(pathSegment(route.request().url()));
++    await fulfillOrAbort(route, response);
++  });
++}
+diff --git a/e2e/telemetry-buffer.spec.ts b/e2e/telemetry-buffer.spec.ts
+index 7366232..b3b4c36 100644
+--- a/e2e/telemetry-buffer.spec.ts
++++ b/e2e/telemetry-buffer.spec.ts
+@@ -38,7 +38,7 @@ test('local and session storage are empty after visiting both routes', async ({
+   );
+   await page.goto('/login');
+   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+-    'login.title',
++    'login.heading',
+   );
+ 
+   const storageLengths = await page.evaluate(() => ({
+diff --git a/scripts/assert-domain-vocabulary.mjs b/scripts/assert-domain-vocabulary.mjs
+index df91965..00883a5 100644
+--- a/scripts/assert-domain-vocabulary.mjs
++++ b/scripts/assert-domain-vocabulary.mjs
+@@ -167,7 +167,8 @@ function checkWholeScopeVocabulary() {
+       }
+     }
+ 
+-    const wholeScopeAllowlist = WHOLE_SCOPE_FILE_ALLOWLIST[filePath] ?? new Set();
++    const wholeScopeAllowlist =
++      WHOLE_SCOPE_FILE_ALLOWLIST[filePath] ?? new Set();
+     if (source.includes('/secrets') && !wholeScopeAllowlist.has('/secrets')) {
+       violations.push(`${filePath}: string literal contains "/secrets"`);
+     }
+diff --git a/src/app/features.test.tsx b/src/app/features.test.tsx
+index 27eeaa6..5e1c601 100644
+--- a/src/app/features.test.tsx
++++ b/src/app/features.test.tsx
+@@ -2,10 +2,6 @@ import { render, screen } from '@testing-library/react';
+ import { describe, expect, it } from 'vitest';
+ import { createMemoryRouter, RouterProvider } from 'react-router';
+ import '@shared/testing/toHaveNoAxeViolations';
+-import {
+-  AuthPlaceholderPage,
+-  loadTranslations as loadAuthTranslations,
+-} from '@features/auth';
+ import {
+   HierarchyPlaceholderPage,
+   loadTranslations as loadHierarchyTranslations,
+@@ -14,48 +10,31 @@ import { ApplicationRoot } from './ApplicationRoot';
+ import { ApplicationLayout } from './layout/ApplicationLayout';
+ import { buildTestRuntime } from './testing/renderRoute';
+ 
+-const PLACEHOLDERS = [
+-  {
+-    feature: 'auth',
+-    Component: AuthPlaceholderPage,
+-    loadTranslations: loadAuthTranslations,
+-  },
+-  {
+-    feature: 'hierarchy',
+-    Component: HierarchyPlaceholderPage,
+-    loadTranslations: loadHierarchyTranslations,
+-  },
+-] as const;
+-
+ describe('feature slices', () => {
+-  it('both feature entries exist and export their documented names', () => {
+-    expect(AuthPlaceholderPage).toBeDefined();
++  it('the hierarchy placeholder exists and exports its documented name', () => {
+     expect(HierarchyPlaceholderPage).toBeDefined();
+   });
+ 
+-  it.each(PLACEHOLDERS)(
+-    'each placeholder exposes one h1 inside a main landmark and passes axe',
+-    async ({ Component, loadTranslations }) => {
+-      const runtime = await buildTestRuntime();
+-      await loadTranslations(runtime.i18n);
+-      const router = createMemoryRouter([
+-        {
+-          path: '/',
+-          element: <ApplicationLayout />,
+-          children: [{ index: true, element: <Component /> }],
+-        },
+-      ]);
++  it('the hierarchy placeholder exposes one h1 inside a main landmark and passes axe', async () => {
++    const runtime = await buildTestRuntime();
++    await loadHierarchyTranslations(runtime.i18n);
++    const router = createMemoryRouter([
++      {
++        path: '/',
++        element: <ApplicationLayout />,
++        children: [{ index: true, element: <HierarchyPlaceholderPage /> }],
++      },
++    ]);
+ 
+-      const { container } = render(
+-        <ApplicationRoot runtime={runtime}>
+-          <RouterProvider router={router} />
+-        </ApplicationRoot>,
+-      );
++    const { container } = render(
++      <ApplicationRoot runtime={runtime}>
++        <RouterProvider router={router} />
++      </ApplicationRoot>,
++    );
+ 
+-      const headings = screen.getAllByRole('heading', { level: 1 });
+-      expect(headings).toHaveLength(1);
+-      expect(screen.getByRole('main')).toContainElement(headings[0] ?? null);
+-      await expect(container).toHaveNoAxeViolations();
+-    },
+-  );
++    const headings = screen.getAllByRole('heading', { level: 1 });
++    expect(headings).toHaveLength(1);
++    expect(screen.getByRole('main')).toContainElement(headings[0] ?? null);
++    await expect(container).toHaveNoAxeViolations();
++  });
+ });
+diff --git a/src/app/routing/createInteractionTracker.ts b/src/app/routing/createInteractionTracker.ts
+index 63076cb..b713afc 100644
+--- a/src/app/routing/createInteractionTracker.ts
++++ b/src/app/routing/createInteractionTracker.ts
+@@ -14,6 +14,13 @@ export type Router = {
+ export type InteractionTracker = {
+   attach: (router: Router) => () => void;
+   currentCorrelationId: () => string | null;
++  // A submission is an interaction but not a navigation, so the
++  // router-driven tracker does not open one for it - the login form opens
++  // its own via this, sharing the same private slot currentCorrelationId()
++  // reads (so the id on the http client's timing record, the analytics
++  // events and the correlation id rendered to the user are all literally
++  // the same string).
++  beginInteraction: () => string;
+   // Primitive-throw dedup for reportRootError.ts (invariant 92): a WeakSet
+   // covers object errors, but WeakSet.add rejects primitives outright, so
+   // they need this string-keyed sibling instead. Scoped to the current
+@@ -29,10 +36,11 @@ export function createInteractionTracker(
+   let tracking = false;
+   let reportedPrimitives = new Set<string>();
+ 
+-  function startInteraction(): void {
++  function startInteraction(): string {
+     tracking = true;
+     correlationId = observability.tracer.startInteraction();
+     reportedPrimitives = new Set();
++    return correlationId;
+   }
+ 
+   function settle(state: RouterState): void {
+@@ -68,6 +76,7 @@ export function createInteractionTracker(
+   return {
+     attach,
+     currentCorrelationId: () => correlationId,
++    beginInteraction: startInteraction,
+     shouldReportPrimitive,
+   };
+ }
+diff --git a/src/app/routing/routes/LoginRoute.tsx b/src/app/routing/routes/LoginRoute.tsx
+index bcaed25..2f2093b 100644
+--- a/src/app/routing/routes/LoginRoute.tsx
++++ b/src/app/routing/routes/LoginRoute.tsx
+@@ -1,4 +1,40 @@
+-export {
+-  AuthPlaceholderPage as LoginRoute,
++import { memo, useCallback } from 'react';
++import { useNavigate, useSearchParams } from 'react-router';
++import {
++  LoginPage,
+   loadTranslations,
++  resolveDestination,
+ } from '@features/auth';
++import { useRuntime } from '../../composition';
++
++export const LoginRoute = memo(function LoginRoute() {
++  const runtime = useRuntime();
++  const routerNavigate = useNavigate();
++  const [searchParams] = useSearchParams();
++  const destination = resolveDestination(searchParams.get('from'));
++
++  // react-router's navigate() returns void | Promise<void>; LoginPage's
++  // dependency wants a plain void callback, so this discards whichever
++  // one comes back rather than passing the union through.
++  const navigate = useCallback(
++    (nextDestination: string, options: { replace: boolean }) => {
++      void routerNavigate(nextDestination, options);
++    },
++    [routerNavigate],
++  );
++
++  return (
++    <LoginPage
++      dependencies={{
++        http: runtime.http,
++        observability: runtime.observability,
++        tabStorage: runtime.tabStorage,
++        beginInteraction: runtime.interactionTracker.beginInteraction,
++        navigate,
++      }}
++      destination={destination}
++    />
++  );
++});
++
++export { loadTranslations };
+diff --git a/src/app/testing/kitStates.tsx b/src/app/testing/kitStates.tsx
+index 40242ef..bd6ebdf 100644
+--- a/src/app/testing/kitStates.tsx
++++ b/src/app/testing/kitStates.tsx
+@@ -147,6 +147,40 @@ export const kitStates: readonly KitState[] = [
+       </label>
+     ),
+   },
++  {
++    component: 'Input',
++    state: 'read-only',
++    render: () => (
++      <label htmlFor="kit-input-readonly">
++        Kit label
++        <Input
++          id="kit-input-readonly"
++          name="kit-input-readonly"
++          type="text"
++          value="Kit value"
++          onChange={noop}
++          readOnly
++        />
++      </label>
++    ),
++  },
++  {
++    component: 'Input',
++    state: 'with placeholder',
++    render: () => (
++      <label htmlFor="kit-input-placeholder">
++        Kit label
++        <Input
++          id="kit-input-placeholder"
++          name="kit-input-placeholder"
++          type="text"
++          value=""
++          onChange={noop}
++          placeholder="Kit placeholder"
++        />
++      </label>
++    ),
++  },
+   {
+     component: 'Card',
+     state: 'comfortable',
+diff --git a/src/features/auth/AuthPlaceholderPage.tsx b/src/features/auth/AuthPlaceholderPage.tsx
+deleted file mode 100644
+index 0776ab2..0000000
+--- a/src/features/auth/AuthPlaceholderPage.tsx
++++ /dev/null
+@@ -1,18 +0,0 @@
+-import { memo } from 'react';
+-import { useTranslation } from 'react-i18next';
+-import { Card } from '@shared/ui';
+-import { useDocumentTitle } from '@shared/hooks';
+-
+-const AuthPlaceholderPage = memo(function AuthPlaceholderPage() {
+-  const { t } = useTranslation('auth');
+-  useDocumentTitle(t('login.documentTitle'));
+-
+-  return (
+-    <Card>
+-      <h1>{t('login.title')}</h1>
+-      <p>{t('login.message')}</p>
+-    </Card>
+-  );
+-});
+-
+-export { AuthPlaceholderPage };
+diff --git a/src/features/auth/LoginAlert.tsx b/src/features/auth/LoginAlert.tsx
+new file mode 100644
+index 0000000..660ba88
+--- /dev/null
++++ b/src/features/auth/LoginAlert.tsx
+@@ -0,0 +1,41 @@
++import { memo } from 'react';
++import { Button } from '@shared/ui';
++
++type LoginAlertProps =
++  | { id: string; kind: 'noMatch'; message: string }
++  | {
++      id: string;
++      kind: 'serviceProblem';
++      message: string;
++      correlationId: string;
++      correlationLabel: string;
++      retryLabel: string;
++      onRetry: () => void;
++    };
++
++// The card-level summary alert for both the no-match and service-problem
++// states (invariants 51, 52, 109): no field-level message is ever
++// rendered, so both fields point their aria-describedby at this one
++// element instead. Retry sits inside the alert, ahead of both fields in
++// document order (invariant 105).
++export const LoginAlert = memo(function LoginAlert(props: LoginAlertProps) {
++  return (
++    <div
++      id={props.id}
++      role="alert"
++      className="rounded-card border border-border-hairline bg-danger-surface p-3 text-danger"
++    >
++      <p>{props.message}</p>
++      {props.kind === 'serviceProblem' && (
++        <>
++          <p>
++            {props.correlationLabel}: {props.correlationId}
++          </p>
++          <Button variant="secondary" type="submit" onClick={props.onRetry}>
++            {props.retryLabel}
++          </Button>
++        </>
++      )}
++    </div>
++  );
++});
+diff --git a/src/features/auth/LoginPage.test.tsx b/src/features/auth/LoginPage.test.tsx
+new file mode 100644
+index 0000000..66fb815
+--- /dev/null
++++ b/src/features/auth/LoginPage.test.tsx
+@@ -0,0 +1,349 @@
++import type { ReactElement } from 'react';
++import { describe, expect, it, vi } from 'vitest';
++import { render, screen } from '@testing-library/react';
++import userEvent from '@testing-library/user-event';
++import { I18nextProvider } from 'react-i18next';
++import {
++  createInternationalization,
++  Locale,
++} from '@platform/internationalization';
++import { createFakeClock, createFakeRandomness } from '@shared/testing';
++import { createHttpClient } from '@platform/http';
++import type { Transport } from '@platform/http';
++import type { ObservabilityFacade } from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++import { loadTranslations } from './loadTranslations';
++import { LoginPage } from './LoginPage';
++import type { LoginPageDependencies } from './LoginPage';
++
++async function renderLoginPage(element: ReactElement): Promise<void> {
++  const i18n = await createInternationalization({
++    resources: { common: {} },
++    language: Locale.Test,
++    observability: { logger: { error: vi.fn() } },
++  });
++  await loadTranslations(i18n);
++  render(<I18nextProvider i18n={i18n}>{element}</I18nextProvider>);
++}
++
++function createSpyObservability(): ObservabilityFacade {
++  return {
++    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
++    tracer: {
++      recordTiming: vi.fn(),
++      startInteraction: vi.fn(() => 'a'.repeat(32)),
++    },
++    analytics: { track: vi.fn() },
++  };
++}
++
++function createMapStorage(): KeyValueStorage {
++  const map = new Map<string, string>();
++  return {
++    read: (key) => map.get(key) ?? null,
++    write: (key, value) => {
++      map.set(key, value);
++      return true;
++    },
++    remove: (key) => {
++      map.delete(key);
++    },
++  };
++}
++
++function createTestDependencies(
++  transport: Transport = () =>
++    Promise.resolve(new Response('null', { status: 200 })),
++): LoginPageDependencies {
++  const observability = createSpyObservability();
++  const http = createHttpClient({
++    transport,
++    clock: createFakeClock(),
++    randomness: createFakeRandomness(),
++    observability,
++    configuration: {
++      apiBaseUrl: 'https://api.example.com',
++      requestTimeoutMilliseconds: 8000,
++    },
++    correlationId: () => 'c'.repeat(32),
++  });
++  return {
++    http,
++    observability,
++    tabStorage: createMapStorage(),
++    beginInteraction: () => 'b'.repeat(32),
++    navigate: vi.fn(),
++  };
++}
++
++describe('LoginPage', () => {
++  it('renders the empty card with the Login control absent from the tab order', async () => {
++    await renderLoginPage(
++      <LoginPage dependencies={createTestDependencies()} destination="/" />,
++    );
++
++    const button = screen.getByRole('button', { name: 'login.submit' });
++    expect(button).toBeDisabled();
++  });
++
++  it('enables the control once both fields are non-empty and disables it again when one empties', async () => {
++    const user = userEvent.setup();
++    await renderLoginPage(
++      <LoginPage dependencies={createTestDependencies()} destination="/" />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++    const button = screen.getByRole('button', { name: 'login.submit' });
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'hunter2');
++    expect(button).toBeEnabled();
++
++    await user.clear(password);
++    expect(button).toBeDisabled();
++  });
++
++  it('leaves the control inert for a whitespace-only email', async () => {
++    const user = userEvent.setup();
++    await renderLoginPage(
++      <LoginPage dependencies={createTestDependencies()} destination="/" />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++    const button = screen.getByRole('button', { name: 'login.submit' });
++
++    await user.type(email, '   ');
++    await user.type(password, 'hunter2');
++
++    expect(button).toBeDisabled();
++  });
++
++  it('renders both fields read-only with their values while submitting', async () => {
++    let resolveTransport: ((response: Response) => void) | undefined;
++    const transport: Transport = () =>
++      new Promise((resolve) => {
++        resolveTransport = resolve;
++      });
++    const user = userEvent.setup();
++    await renderLoginPage(
++      <LoginPage
++        dependencies={createTestDependencies(transport)}
++        destination="/"
++      />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++    const button = screen.getByRole('button', { name: 'login.submit' });
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'hunter2');
++    await user.click(button);
++
++    expect(email).toHaveAttribute('readonly');
++    expect(password).toHaveAttribute('readonly');
++    expect(email).toHaveValue('person@example.com');
++    expect(password).toHaveValue('hunter2');
++
++    resolveTransport?.(new Response('null', { status: 200 }));
++  });
++
++  it('submits on Enter pressed inside either field', async () => {
++    let transportCalls = 0;
++    const transport: Transport = () => {
++      transportCalls += 1;
++      return Promise.resolve(new Response('null', { status: 200 }));
++    };
++    const user = userEvent.setup();
++    await renderLoginPage(
++      <LoginPage
++        dependencies={createTestDependencies(transport)}
++        destination="/"
++      />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'hunter2');
++    await user.type(password, '{Enter}');
++
++    expect(transportCalls).toBe(1);
++  });
++
++  it('shows the summary alert and marks both fields invalid on a null lookup', async () => {
++    const user = userEvent.setup();
++    await renderLoginPage(
++      <LoginPage dependencies={createTestDependencies()} destination="/" />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'wrong-password');
++    await user.click(screen.getByRole('button', { name: 'login.submit' }));
++
++    const alert = await screen.findByRole('alert');
++    expect(alert).toHaveTextContent('login.noMatchMessage');
++    expect(email).toHaveAttribute('aria-invalid', 'true');
++    expect(password).toHaveAttribute('aria-invalid', 'true');
++  });
++
++  it('renders no field-level message under either field', async () => {
++    const user = userEvent.setup();
++    await renderLoginPage(
++      <LoginPage dependencies={createTestDependencies()} destination="/" />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'wrong-password');
++    await user.click(screen.getByRole('button', { name: 'login.submit' }));
++
++    await screen.findByRole('alert');
++    // Exactly one alert on the page - the card-level summary - never a
++    // second, per-field one.
++    expect(screen.getAllByRole('alert')).toHaveLength(1);
++  });
++
++  it('preserves both typed values, password included, after a failed attempt', async () => {
++    const user = userEvent.setup();
++    await renderLoginPage(
++      <LoginPage dependencies={createTestDependencies()} destination="/" />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'wrong-password');
++    await user.click(screen.getByRole('button', { name: 'login.submit' }));
++
++    await screen.findByRole('alert');
++    expect(email).toHaveValue('person@example.com');
++    expect(password).toHaveValue('wrong-password');
++  });
++
++  it('moves focus nowhere when the alert appears', async () => {
++    const user = userEvent.setup();
++    await renderLoginPage(
++      <LoginPage dependencies={createTestDependencies()} destination="/" />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++    const button = screen.getByRole('button', { name: 'login.submit' });
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'wrong-password');
++    button.focus();
++    await user.click(button);
++
++    await screen.findByRole('alert');
++    // Nothing about the no-match transition unmounts the control the
++    // visitor already had focused - unlike the retry path (step 21),
++    // which must hand focus off explicitly because its own control is
++    // removed from the DOM.
++    expect(button).toHaveFocus();
++  });
++
++  it('shows the service-problem alert with its correlation id and marks neither field invalid', async () => {
++    const user = userEvent.setup();
++    const transport: Transport = () =>
++      Promise.resolve(new Response(null, { status: 404 }));
++    await renderLoginPage(
++      <LoginPage
++        dependencies={createTestDependencies(transport)}
++        destination="/"
++      />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'hunter2');
++    await user.click(screen.getByRole('button', { name: 'login.submit' }));
++
++    const alert = await screen.findByRole('alert');
++    expect(alert).toHaveTextContent('login.serviceProblemMessage');
++    expect(alert).toHaveTextContent('b'.repeat(32));
++    expect(email).not.toHaveAttribute('aria-invalid');
++    expect(password).not.toHaveAttribute('aria-invalid');
++  });
++
++  it('re-derives from the current field values when retry is activated', async () => {
++    const user = userEvent.setup();
++    const requestedPaths: string[] = [];
++    const transport: Transport = (request) => {
++      requestedPaths.push(new URL(request.url).pathname);
++      return Promise.resolve(new Response(null, { status: 404 }));
++    };
++    await renderLoginPage(
++      <LoginPage
++        dependencies={createTestDependencies(transport)}
++        destination="/"
++      />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'hunter2');
++    await user.click(screen.getByRole('button', { name: 'login.submit' }));
++    await screen.findByRole('alert');
++
++    await user.clear(password);
++    await user.type(password, 'a-different-password');
++    await user.click(screen.getByRole('button', { name: 'login.retry' }));
++    await screen.findByRole('alert');
++
++    expect(requestedPaths).toHaveLength(2);
++    expect(requestedPaths[0]).not.toBe(requestedPaths[1]);
++  });
++
++  it('hands focus to the busy Login control when the retry control unmounts', async () => {
++    let resolveTransport: ((response: Response) => void) | undefined;
++    let callCount = 0;
++    const transport: Transport = () => {
++      callCount += 1;
++      if (callCount === 1) {
++        return Promise.resolve(new Response(null, { status: 404 }));
++      }
++      return new Promise((resolve) => {
++        resolveTransport = resolve;
++      });
++    };
++    const user = userEvent.setup();
++    await renderLoginPage(
++      <LoginPage
++        dependencies={createTestDependencies(transport)}
++        destination="/"
++      />,
++    );
++
++    const email = screen.getByLabelText('login.emailLabel');
++    const password = screen.getByLabelText('login.passwordLabel');
++
++    await user.type(email, 'person@example.com');
++    await user.type(password, 'hunter2');
++    await user.click(screen.getByRole('button', { name: 'login.submit' }));
++    await screen.findByRole('alert');
++
++    await user.click(screen.getByRole('button', { name: 'login.retry' }));
++
++    const loginButton = screen.getByRole('button', {
++      name: 'login.submitting',
++    });
++    expect(loginButton).toHaveFocus();
++
++    resolveTransport?.(new Response(null, { status: 404 }));
++  });
++});
+diff --git a/src/features/auth/LoginPage.tsx b/src/features/auth/LoginPage.tsx
+new file mode 100644
+index 0000000..befceca
+--- /dev/null
++++ b/src/features/auth/LoginPage.tsx
+@@ -0,0 +1,146 @@
++import { memo, useCallback, useRef, useState } from 'react';
++import type { ChangeEvent } from 'react';
++import { useTranslation } from 'react-i18next';
++import type { HttpClient } from '@platform/http';
++import type { ObservabilityFacade } from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++import { Button, Card, Field, FieldContext, Input } from '@shared/ui';
++import type { FieldContextValue } from '@shared/ui';
++import { useDocumentTitle } from '@shared/hooks';
++import { LoginAlert } from './LoginAlert';
++import { loginCardState } from './loginCardState';
++import { ProductMark } from './ProductMark';
++import { useLoginSubmission } from './useLoginSubmission';
++
++const ALERT_ID = 'login-alert';
++
++export type LoginPageDependencies = {
++  http: HttpClient;
++  observability: ObservabilityFacade;
++  tabStorage: KeyValueStorage;
++  beginInteraction: () => string;
++  navigate: (destination: string, options: { replace: boolean }) => void;
++};
++
++type LoginPageProps = {
++  dependencies: LoginPageDependencies;
++  destination: string;
++};
++
++export const LoginPage = memo(function LoginPage({
++  dependencies,
++  destination,
++}: LoginPageProps) {
++  const { t } = useTranslation('auth');
++  useDocumentTitle(t('login.documentTitle'));
++
++  const [email, setEmail] = useState('');
++  const [password, setPassword] = useState('');
++  const { result, isPending, formAction, onSubmit } = useLoginSubmission(
++    dependencies,
++    destination,
++  );
++
++  const isReady = email.trim() !== '' && password !== '';
++  const cardState = loginCardState(result, isPending, isReady);
++  const submitting = cardState.kind === 'submitting';
++  const noMatch = cardState.kind === 'noMatch';
++  const loginButtonRef = useRef<HTMLButtonElement>(null);
++
++  // Retrying unmounts the alert holding the focused retry control - which
++  // would otherwise drop focus to document.body (invariant 110). Moving
++  // focus here, inside the same click handler that starts the retry's
++  // dispatch, relocates it to the still-mounted (busy) Login control
++  // before react ever removes the retry button from the DOM.
++  const handleRetry = useCallback(() => {
++    loginButtonRef.current?.focus();
++  }, []);
++
++  const handleEmailChange = useCallback(
++    (event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value),
++    [],
++  );
++  const handlePasswordChange = useCallback(
++    (event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value),
++    [],
++  );
++
++  // No field-level message in the no-match state (invariants 51, 52,
++  // 109): both fields are marked invalid and described by the one
++  // card-level alert instead - the derivation collapses email and
++  // password into a single secret, so no per-field attribution is
++  // possible. The provider always wraps the input (only its value
++  // changes) rather than being conditionally present, so react never
++  // swaps the element type at this position and remounts the input -
++  // which would silently drop focus if it ever held it.
++  const fieldContextValue: FieldContextValue = noMatch
++    ? { invalid: true, required: true, describedBy: ALERT_ID }
++    : { invalid: false, required: true };
++
++  return (
++    <Card>
++      <form action={formAction} onSubmit={onSubmit}>
++        <ProductMark />
++        <h1>{t('login.heading')}</h1>
++        <p>{t('login.subtext')}</p>
++        {noMatch && (
++          <LoginAlert
++            id={ALERT_ID}
++            kind="noMatch"
++            message={t('login.noMatchMessage')}
++          />
++        )}
++        {cardState.kind === 'serviceProblem' && (
++          <LoginAlert
++            id={ALERT_ID}
++            kind="serviceProblem"
++            message={t('login.serviceProblemMessage')}
++            correlationId={cardState.correlationId}
++            correlationLabel={t('login.serviceProblemCorrelationLabel')}
++            retryLabel={t('login.retry')}
++            onRetry={handleRetry}
++          />
++        )}
++        <Field id="login-email" label={t('login.emailLabel')} required>
++          <FieldContext.Provider value={fieldContextValue}>
++            <Input
++              id="login-email"
++              name="email"
++              type="text"
++              value={email}
++              onChange={handleEmailChange}
++              placeholder={t('login.emailPlaceholder')}
++              autoComplete="username"
++              readOnly={submitting}
++            />
++          </FieldContext.Provider>
++        </Field>
++        <Field id="login-password" label={t('login.passwordLabel')} required>
++          <FieldContext.Provider value={fieldContextValue}>
++            <Input
++              id="login-password"
++              name="password"
++              type="password"
++              value={password}
++              onChange={handlePasswordChange}
++              autoComplete="current-password"
++              readOnly={submitting}
++            />
++          </FieldContext.Provider>
++        </Field>
++        <Button
++          ref={loginButtonRef}
++          variant="primary"
++          type="submit"
++          disabled={!isReady}
++          busy={submitting}
++        >
++          {submitting ? t('login.submitting') : t('login.submit')}
++        </Button>
++        <p>
++          {submitting ? t('login.footerNoteSubmitting') : t('login.footerNote')}
++        </p>
++      </form>
++    </Card>
++  );
++});
+diff --git a/src/features/auth/ProductMark.tsx b/src/features/auth/ProductMark.tsx
+new file mode 100644
+index 0000000..dd04581
+--- /dev/null
++++ b/src/features/auth/ProductMark.tsx
+@@ -0,0 +1,16 @@
++import { memo } from 'react';
++import { useTranslation } from 'react-i18next';
++
++export const ProductMark = memo(function ProductMark() {
++  const { t } = useTranslation('auth');
++
++  return (
++    <div className="flex items-center gap-2">
++      <span
++        aria-hidden="true"
++        className="inline-block h-8 w-8 rounded-control bg-primary"
++      />
++      <span className="font-semibold text-ink">{t('login.wordmark')}</span>
++    </div>
++  );
++});
+diff --git a/src/features/auth/data/fetchSignedInUser.ts b/src/features/auth/data/fetchSignedInUser.ts
+index 3d52541..3cf4c8d 100644
+--- a/src/features/auth/data/fetchSignedInUser.ts
++++ b/src/features/auth/data/fetchSignedInUser.ts
+@@ -22,7 +22,8 @@ export async function fetchSignedInUser(
+   });
+ 
+   if (result.outcome !== 'success') {
+-    const reason = result.outcome === 'cancelled' ? 'cancelled' : result.failure.kind;
++    const reason =
++      result.outcome === 'cancelled' ? 'cancelled' : result.failure.kind;
+     observability.logger.warn('auth.signed_in_user_unresolved', { reason });
+     return null;
+   }
+diff --git a/src/features/auth/data/lookupUserIdentifier.test.ts b/src/features/auth/data/lookupUserIdentifier.test.ts
+index a9e6932..bc336b3 100644
+--- a/src/features/auth/data/lookupUserIdentifier.test.ts
++++ b/src/features/auth/data/lookupUserIdentifier.test.ts
+@@ -20,9 +20,10 @@ function createSpyObservability(): ObservabilityFacade {
+   };
+ }
+ 
+-function createTestClient(
+-  overrides: Partial<HttpClientDependencies> = {},
+-): { client: ReturnType<typeof createHttpClient>; observability: ObservabilityFacade } {
++function createTestClient(overrides: Partial<HttpClientDependencies> = {}): {
++  client: ReturnType<typeof createHttpClient>;
++  observability: ObservabilityFacade;
++} {
+   const observability = overrides.observability ?? createSpyObservability();
+   const client = createHttpClient({
+     transport:
+diff --git a/src/features/auth/domain/deriveSecret.test.ts b/src/features/auth/domain/deriveSecret.test.ts
+index c783534..0fa9283 100644
+--- a/src/features/auth/domain/deriveSecret.test.ts
++++ b/src/features/auth/domain/deriveSecret.test.ts
+@@ -37,14 +37,18 @@ describe('deriveSecret', () => {
+     const email = 'person@example.com';
+     const password = 'correct horse battery';
+ 
+-    expect(deriveSecret(email, password)).toBe(referenceEncode(email, password));
++    expect(deriveSecret(email, password)).toBe(
++      referenceEncode(email, password),
++    );
+   });
+ 
+-  it('preserves the brief\'s high-surrogate-only defect for a non-BMP character', () => {
++  it("preserves the brief's high-surrogate-only defect for a non-BMP character", () => {
+     const email = '😀mathematician@example.com';
+     const password = 'p😀ssword';
+ 
+-    expect(deriveSecret(email, password)).toBe(referenceEncode(email, password));
++    expect(deriveSecret(email, password)).toBe(
++      referenceEncode(email, password),
++    );
+   });
+ 
+   it('drives the tail positions from the other input alone when the normalised array is short', () => {
+@@ -65,7 +69,7 @@ describe('deriveSecret', () => {
+     expect(secret.slice(32)).toBe(tailPairHex.repeat(16));
+   });
+ 
+-  it('trims the email and therefore differs from the brief\'s encode on boundary whitespace', () => {
++  it("trims the email and therefore differs from the brief's encode on boundary whitespace", () => {
+     const email = '  person@example.com  ';
+     const password = 'correct horse battery';
+ 
+@@ -79,7 +83,9 @@ describe('deriveSecret', () => {
+     const email = 'person@example.com';
+     const password = ' ';
+ 
+-    expect(deriveSecret(email, password)).toBe(referenceEncode(email, password));
++    expect(deriveSecret(email, password)).toBe(
++      referenceEncode(email, password),
++    );
+   });
+ 
+   it('rejects an empty email or password instead of looping', () => {
+diff --git a/src/features/auth/domain/substitutionTable.test.ts b/src/features/auth/domain/substitutionTable.test.ts
+index b8546fc..7e712b0 100644
+--- a/src/features/auth/domain/substitutionTable.test.ts
++++ b/src/features/auth/domain/substitutionTable.test.ts
+@@ -26,7 +26,7 @@ describe('the substitution table', () => {
+     }
+   });
+ 
+-  it("matches the literal extracted from the brief, entry for entry", () => {
++  it('matches the literal extracted from the brief, entry for entry', () => {
+     expect(SUBSTITUTION_TABLE).toEqual(readBriefTable());
+   });
+ });
+diff --git a/src/features/auth/domain/substitutionTable.ts b/src/features/auth/domain/substitutionTable.ts
+index 1e848dd..611e2dd 100644
+--- a/src/features/auth/domain/substitutionTable.ts
++++ b/src/features/auth/domain/substitutionTable.ts
+@@ -1,19 +1,19 @@
+ // Transcribed verbatim from the brief's literal (docs/task.md).
+ export const SUBSTITUTION_TABLE: readonly number[] = [
+-  156, 33, 64, 174, 120, 204, 69, 242, 177, 98, 16, 244, 75, 5, 21, 7, 145,
+-  39, 156, 119, 246, 63, 43, 201, 91, 164, 171, 244, 198, 100, 252, 91, 92,
+-  193, 95, 70, 131, 18, 69, 131, 88, 40, 241, 203, 190, 210, 154, 138, 4, 5,
+-  212, 34, 25, 151, 150, 253, 135, 59, 144, 152, 202, 190, 196, 29, 23, 165,
+-  234, 254, 6, 245, 142, 18, 234, 49, 63, 31, 33, 152, 73, 6, 212, 119, 245,
+-  182, 248, 40, 167, 206, 230, 204, 245, 48, 200, 169, 186, 110, 124, 105,
+-  22, 7, 128, 56, 85, 12, 48, 130, 207, 114, 168, 216, 104, 20, 28, 183, 78,
+-  194, 131, 33, 245, 47, 203, 214, 109, 27, 8, 214, 195, 249, 152, 240, 51,
+-  142, 123, 250, 208, 160, 51, 207, 6, 67, 63, 111, 75, 198, 63, 50, 181,
+-  137, 163, 43, 160, 141, 19, 188, 37, 50, 105, 20, 252, 93, 134, 39, 130,
+-  234, 109, 223, 161, 74, 175, 44, 35, 62, 201, 159, 3, 170, 224, 28, 113,
+-  184, 243, 116, 166, 132, 77, 93, 130, 101, 198, 173, 143, 8, 131, 180,
+-  130, 61, 242, 43, 39, 105, 44, 239, 157, 181, 86, 150, 180, 100, 172, 134,
+-  53, 76, 220, 18, 210, 150, 99, 234, 57, 252, 242, 40, 205, 185, 53, 162,
+-  160, 211, 134, 91, 44, 65, 160, 30, 9, 28, 192, 239, 255, 92, 108, 226,
+-  242, 67, 0, 201, 158, 39, 128, 97, 215, 65, 221, 197, 22, 231,
++  156, 33, 64, 174, 120, 204, 69, 242, 177, 98, 16, 244, 75, 5, 21, 7, 145, 39,
++  156, 119, 246, 63, 43, 201, 91, 164, 171, 244, 198, 100, 252, 91, 92, 193, 95,
++  70, 131, 18, 69, 131, 88, 40, 241, 203, 190, 210, 154, 138, 4, 5, 212, 34, 25,
++  151, 150, 253, 135, 59, 144, 152, 202, 190, 196, 29, 23, 165, 234, 254, 6,
++  245, 142, 18, 234, 49, 63, 31, 33, 152, 73, 6, 212, 119, 245, 182, 248, 40,
++  167, 206, 230, 204, 245, 48, 200, 169, 186, 110, 124, 105, 22, 7, 128, 56, 85,
++  12, 48, 130, 207, 114, 168, 216, 104, 20, 28, 183, 78, 194, 131, 33, 245, 47,
++  203, 214, 109, 27, 8, 214, 195, 249, 152, 240, 51, 142, 123, 250, 208, 160,
++  51, 207, 6, 67, 63, 111, 75, 198, 63, 50, 181, 137, 163, 43, 160, 141, 19,
++  188, 37, 50, 105, 20, 252, 93, 134, 39, 130, 234, 109, 223, 161, 74, 175, 44,
++  35, 62, 201, 159, 3, 170, 224, 28, 113, 184, 243, 116, 166, 132, 77, 93, 130,
++  101, 198, 173, 143, 8, 131, 180, 130, 61, 242, 43, 39, 105, 44, 239, 157, 181,
++  86, 150, 180, 100, 172, 134, 53, 76, 220, 18, 210, 150, 99, 234, 57, 252, 242,
++  40, 205, 185, 53, 162, 160, 211, 134, 91, 44, 65, 160, 30, 9, 28, 192, 239,
++  255, 92, 108, 226, 242, 67, 0, 201, 158, 39, 128, 97, 215, 65, 221, 197, 22,
++  231,
+ ];
+diff --git a/src/features/auth/guard/resolveDestination.test.ts b/src/features/auth/guard/resolveDestination.test.ts
+index 6b29d45..ce293b8 100644
+--- a/src/features/auth/guard/resolveDestination.test.ts
++++ b/src/features/auth/guard/resolveDestination.test.ts
+@@ -3,9 +3,7 @@ import { resolveDestination } from './resolveDestination';
+ 
+ describe('resolveDestination', () => {
+   it('returns the from target when it is a same-origin path', () => {
+-    expect(resolveDestination('/hierarchy/users/5')).toBe(
+-      '/hierarchy/users/5',
+-    );
++    expect(resolveDestination('/hierarchy/users/5')).toBe('/hierarchy/users/5');
+   });
+ 
+   it('falls back to the hierarchy route for a protocol-relative, scheme-carrying or backslash-escaped value', () => {
+diff --git a/src/features/auth/index.ts b/src/features/auth/index.ts
+index bcd585e..c72712d 100644
+--- a/src/features/auth/index.ts
++++ b/src/features/auth/index.ts
+@@ -1,4 +1,6 @@
+-export { AuthPlaceholderPage } from './AuthPlaceholderPage';
+ export { loadTranslations } from './loadTranslations';
+ export { createSignedInUserStore } from './data/createSignedInUserStore';
+ export type { SignedInUserStore } from './data/createSignedInUserStore';
++export { LoginPage } from './LoginPage';
++export type { LoginPageDependencies } from './LoginPage';
++export { resolveDestination } from './guard/resolveDestination';
+diff --git a/src/features/auth/loadTranslations.test.ts b/src/features/auth/loadTranslations.test.ts
+index cc07889..0aef570 100644
+--- a/src/features/auth/loadTranslations.test.ts
++++ b/src/features/auth/loadTranslations.test.ts
+@@ -55,8 +55,20 @@ describe('auth loadTranslations', () => {
+     expect(testInstance.getResourceBundle(Locale.Test, 'auth')).toEqual({
+       login: {
+         documentTitle: 'login.documentTitle',
+-        title: 'login.title',
+-        message: 'login.message',
++        wordmark: 'login.wordmark',
++        heading: 'login.heading',
++        subtext: 'login.subtext',
++        emailLabel: 'login.emailLabel',
++        emailPlaceholder: 'login.emailPlaceholder',
++        passwordLabel: 'login.passwordLabel',
++        footerNote: 'login.footerNote',
++        footerNoteSubmitting: 'login.footerNoteSubmitting',
++        submit: 'login.submit',
++        submitting: 'login.submitting',
++        noMatchMessage: 'login.noMatchMessage',
++        serviceProblemMessage: 'login.serviceProblemMessage',
++        serviceProblemCorrelationLabel: 'login.serviceProblemCorrelationLabel',
++        retry: 'login.retry',
+       },
+     });
+ 
+@@ -71,4 +83,30 @@ describe('auth loadTranslations', () => {
+     // mutate it.
+     expect(authCatalogue).toEqual(englishSnapshot);
+   });
++
++  it('registers every key the login card renders', () => {
++    // TECH.md section 8's enumerated list - every one is a surface
++    // invariant 116 requires to come from a catalogue.
++    const expectedKeys = [
++      'documentTitle',
++      'wordmark',
++      'heading',
++      'subtext',
++      'emailLabel',
++      'emailPlaceholder',
++      'passwordLabel',
++      'footerNote',
++      'footerNoteSubmitting',
++      'submit',
++      'submitting',
++      'noMatchMessage',
++      'serviceProblemMessage',
++      'serviceProblemCorrelationLabel',
++      'retry',
++    ];
++
++    expect(Object.keys(authCatalogue.login).sort()).toEqual(
++      [...expectedKeys].sort(),
++    );
++  });
+ });
+diff --git a/src/features/auth/locales/en/auth.json b/src/features/auth/locales/en/auth.json
+index 8002cbd..0eafa82 100644
+--- a/src/features/auth/locales/en/auth.json
++++ b/src/features/auth/locales/en/auth.json
+@@ -1,7 +1,19 @@
+ {
+   "login": {
+     "documentTitle": "Sign in",
+-    "title": "Sign in isn't built yet",
+-    "message": "This screen is a placeholder for phase 2's real sign-in experience."
++    "wordmark": "Hierarchy",
++    "heading": "Please login",
++    "subtext": "Use the email address on your user record.",
++    "emailLabel": "Email address",
++    "emailPlaceholder": "you@foo.com",
++    "passwordLabel": "Password",
++    "footerNote": "Trouble signing in? Contact your workspace admin.",
++    "footerNoteSubmitting": "Looking up your user record.",
++    "submit": "Login",
++    "submitting": "Signing in…",
++    "noMatchMessage": "No user matches that email and password. Check both and try again.",
++    "serviceProblemMessage": "We couldn't reach the sign-in service. You can try again.",
++    "serviceProblemCorrelationLabel": "Reference",
++    "retry": "Retry"
+   }
+ }
+diff --git a/src/features/auth/loginCardState.test.ts b/src/features/auth/loginCardState.test.ts
+new file mode 100644
+index 0000000..72ffb11
+--- /dev/null
++++ b/src/features/auth/loginCardState.test.ts
+@@ -0,0 +1,41 @@
++import { describe, expect, it } from 'vitest';
++import { loginCardState } from './loginCardState';
++
++describe('loginCardState', () => {
++  it('derives idle, ready, submitting, no-match and service-problem from the result and pending flags', () => {
++    expect(loginCardState({ outcome: 'untouched' }, false, false)).toEqual({
++      kind: 'idle',
++    });
++    expect(loginCardState({ outcome: 'untouched' }, false, true)).toEqual({
++      kind: 'ready',
++    });
++    expect(loginCardState({ outcome: 'untouched' }, true, false)).toEqual({
++      kind: 'submitting',
++    });
++    expect(loginCardState({ outcome: 'untouched' }, true, true)).toEqual({
++      kind: 'submitting',
++    });
++    expect(loginCardState({ outcome: 'noMatch' }, false, false)).toEqual({
++      kind: 'noMatch',
++    });
++    expect(loginCardState({ outcome: 'noMatch' }, false, true)).toEqual({
++      kind: 'noMatch',
++    });
++    expect(
++      loginCardState(
++        { outcome: 'serviceProblem', correlationId: 'c'.repeat(32) },
++        false,
++        false,
++      ),
++    ).toEqual({ kind: 'serviceProblem', correlationId: 'c'.repeat(32) });
++    // isPending wins over a settled result: a retry's dispatch is
++    // submitting before the previous alert is cleared from view.
++    expect(
++      loginCardState(
++        { outcome: 'serviceProblem', correlationId: 'c'.repeat(32) },
++        true,
++        true,
++      ),
++    ).toEqual({ kind: 'submitting' });
++  });
++});
+diff --git a/src/features/auth/loginCardState.ts b/src/features/auth/loginCardState.ts
+new file mode 100644
+index 0000000..15d24ee
+--- /dev/null
++++ b/src/features/auth/loginCardState.ts
+@@ -0,0 +1,28 @@
++export type LoginResult =
++  | { outcome: 'untouched' }
++  | { outcome: 'noMatch' }
++  | { outcome: 'serviceProblem'; correlationId: string };
++
++export type LoginCardState =
++  | { kind: 'idle' }
++  | { kind: 'ready' }
++  | { kind: 'submitting' }
++  | { kind: 'noMatch' }
++  | { kind: 'serviceProblem'; correlationId: string };
++
++// The five presented states as one derived value rather than ad-hoc
++// booleans (invariant 29). isPending wins over a settled result: while
++// an attempt is in flight - including a retry re-derivation - the card is
++// submitting regardless of what the previous result was.
++export function loginCardState(
++  result: LoginResult,
++  isPending: boolean,
++  isReady: boolean,
++): LoginCardState {
++  if (isPending) return { kind: 'submitting' };
++  if (result.outcome === 'noMatch') return { kind: 'noMatch' };
++  if (result.outcome === 'serviceProblem') {
++    return { kind: 'serviceProblem', correlationId: result.correlationId };
++  }
++  return isReady ? { kind: 'ready' } : { kind: 'idle' };
++}
+diff --git a/src/features/auth/session/readSession.ts b/src/features/auth/session/readSession.ts
+index 885a3d9..a036b5b 100644
+--- a/src/features/auth/session/readSession.ts
++++ b/src/features/auth/session/readSession.ts
+@@ -7,8 +7,7 @@ import { readShadow } from './sessionShadow';
+ import { SESSION_STORAGE_KEY } from './sessionStorageKey';
+ 
+ export type SessionView =
+-  | { status: 'signedIn'; userId: UserIdentifier }
+-  | { status: 'signedOut' };
++  { status: 'signedIn'; userId: UserIdentifier } | { status: 'signedOut' };
+ 
+ // The shadow decides first (invariants 79, 79a); storage is consulted
+ // only when the shadow is unset, which is always true on a fresh page
+diff --git a/src/features/auth/session/writeSession.ts b/src/features/auth/session/writeSession.ts
+index cef605a..8385f50 100644
+--- a/src/features/auth/session/writeSession.ts
++++ b/src/features/auth/session/writeSession.ts
+@@ -15,10 +15,7 @@ export function writeSession(
+   const record: SessionRecord = { version: SESSION_SCHEMA_VERSION, userId };
+   setShadow(storage, record);
+ 
+-  const persisted = storage.write(
+-    SESSION_STORAGE_KEY,
+-    JSON.stringify(record),
+-  );
++  const persisted = storage.write(SESSION_STORAGE_KEY, JSON.stringify(record));
+   if (!persisted) {
+     observability.logger.warn('auth.session_persist_failed', {});
+   }
+diff --git a/src/features/auth/useLoginSubmission.test.tsx b/src/features/auth/useLoginSubmission.test.tsx
+new file mode 100644
+index 0000000..4bf5a8c
+--- /dev/null
++++ b/src/features/auth/useLoginSubmission.test.tsx
+@@ -0,0 +1,159 @@
++import { describe, expect, it, vi } from 'vitest';
++import { fireEvent, render, screen } from '@testing-library/react';
++import { createFakeClock, createFakeRandomness } from '@shared/testing';
++import { createHttpClient } from '@platform/http';
++import type { Transport } from '@platform/http';
++import type { ObservabilityFacade } from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++import { useLoginSubmission } from './useLoginSubmission';
++import type { UseLoginSubmissionDependencies } from './useLoginSubmission';
++
++function createSpyObservability(): ObservabilityFacade {
++  return {
++    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
++    tracer: {
++      recordTiming: vi.fn(),
++      startInteraction: vi.fn(() => 'a'.repeat(32)),
++    },
++    analytics: { track: vi.fn() },
++  };
++}
++
++function createMapStorage(): KeyValueStorage {
++  const map = new Map<string, string>();
++  return {
++    read: (key) => map.get(key) ?? null,
++    write: (key, value) => {
++      map.set(key, value);
++      return true;
++    },
++    remove: (key) => {
++      map.delete(key);
++    },
++  };
++}
++
++function createTestDependencies(
++  transport: Transport,
++  overrides: Partial<UseLoginSubmissionDependencies> = {},
++): UseLoginSubmissionDependencies {
++  const observability = overrides.observability ?? createSpyObservability();
++  const http = createHttpClient({
++    transport,
++    clock: createFakeClock(),
++    randomness: createFakeRandomness(),
++    observability,
++    configuration: {
++      apiBaseUrl: 'https://api.example.com',
++      requestTimeoutMilliseconds: 8000,
++    },
++    correlationId: () => 'c'.repeat(32),
++  });
++  let interactionCount = 0;
++  return {
++    http,
++    observability,
++    tabStorage: overrides.tabStorage ?? createMapStorage(),
++    beginInteraction:
++      overrides.beginInteraction ??
++      (() => {
++        interactionCount += 1;
++        return `interaction-${interactionCount}`.padEnd(32, '0');
++      }),
++    navigate: overrides.navigate ?? vi.fn(),
++  };
++}
++
++function TestForm({
++  dependencies,
++}: {
++  dependencies: UseLoginSubmissionDependencies;
++}) {
++  const { result, isPending, formAction, onSubmit } = useLoginSubmission(
++    dependencies,
++    '/',
++  );
++
++  return (
++    <form data-testid="login-form" action={formAction} onSubmit={onSubmit}>
++      <input name="email" defaultValue="person@example.com" />
++      <input name="password" defaultValue="hunter2" />
++      <button type="submit">Login</button>
++      <p data-testid="pending">{String(isPending)}</p>
++      <p data-testid="outcome">{result.outcome}</p>
++    </form>
++  );
++}
++
++describe('useLoginSubmission', () => {
++  it('derives once and requests once when submitted twice in flight', async () => {
++    let transportCalls = 0;
++    let resolveTransport: ((response: Response) => void) | undefined;
++    const transport: Transport = () => {
++      transportCalls += 1;
++      return new Promise((resolve) => {
++        resolveTransport = resolve;
++      });
++    };
++    const observability = createSpyObservability();
++    const dependencies = createTestDependencies(transport, { observability });
++
++    render(<TestForm dependencies={dependencies} />);
++    const form = screen.getByTestId('login-form');
++
++    fireEvent.submit(form);
++    await Promise.resolve();
++    fireEvent.submit(form);
++    await Promise.resolve();
++
++    resolveTransport?.(new Response('null', { status: 200 }));
++    await screen.findByText('noMatch', { selector: '[data-testid="outcome"]' });
++
++    expect(transportCalls).toBe(1);
++    const startedCalls = (
++      observability.analytics.track as ReturnType<typeof vi.fn>
++    ).mock.calls.filter(([name]) => name === 'auth.sign_in_started');
++    expect(startedCalls).toHaveLength(1);
++  });
++
++  it('clears a previous alert as the next attempt starts', async () => {
++    const transport: Transport = () =>
++      Promise.resolve(new Response('null', { status: 200 }));
++    const dependencies = createTestDependencies(transport);
++
++    render(<TestForm dependencies={dependencies} />);
++    const form = screen.getByTestId('login-form');
++
++    fireEvent.submit(form);
++    await screen.findByText('noMatch', { selector: '[data-testid="outcome"]' });
++
++    fireEvent.submit(form);
++
++    // The instant the next attempt starts, isPending flips true and
++    // loginCardState's isPending-first rule takes over regardless of the
++    // stale result - the previous alert is not what a consumer reads.
++    expect(screen.getByTestId('pending').textContent).toBe('true');
++  });
++
++  it('aborts in flight without a state update when the page unmounts', async () => {
++    let abortedSignal: AbortSignal | undefined;
++    const transport: Transport = (request) => {
++      abortedSignal = request.signal;
++      return new Promise((_resolve, reject) => {
++        request.signal.addEventListener('abort', () => {
++          reject(new DOMException('aborted', 'AbortError'));
++        });
++      });
++    };
++    const dependencies = createTestDependencies(transport);
++
++    const { unmount } = render(<TestForm dependencies={dependencies} />);
++    const form = screen.getByTestId('login-form');
++
++    fireEvent.submit(form);
++    await Promise.resolve();
++
++    expect(() => unmount()).not.toThrow();
++    expect(abortedSignal?.aborted).toBe(true);
++  });
++});
+diff --git a/src/features/auth/useLoginSubmission.ts b/src/features/auth/useLoginSubmission.ts
+new file mode 100644
+index 0000000..4831d4d
+--- /dev/null
++++ b/src/features/auth/useLoginSubmission.ts
+@@ -0,0 +1,122 @@
++import { useActionState, useCallback, useEffect, useRef } from 'react';
++import type { FormEvent } from 'react';
++import type { HttpClient } from '@platform/http';
++import {
++  SignInOutcome,
++  type ObservabilityFacade,
++} from '@platform/observability';
++import type { KeyValueStorage } from '@platform/runtime';
++import { deriveSecret } from './domain/deriveSecret';
++import { lookupUserIdentifier } from './data/lookupUserIdentifier';
++import type { LoginResult } from './loginCardState';
++import { writeSession } from './session/writeSession';
++
++export type UseLoginSubmissionDependencies = {
++  http: HttpClient;
++  observability: ObservabilityFacade;
++  tabStorage: KeyValueStorage;
++  beginInteraction: () => string;
++  navigate: (destination: string, options: { replace: boolean }) => void;
++};
++
++export type UseLoginSubmissionResult = {
++  result: LoginResult;
++  isPending: boolean;
++  formAction: (formData: FormData) => void;
++  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
++};
++
++const UNTOUCHED: LoginResult = { outcome: 'untouched' };
++
++// Wraps useActionState: the single in-flight guard is the form's own
++// onSubmit calling preventDefault while pending, which stops React from
++// ever queuing a second dispatch - a ref checked inside the action is a
++// no-op, because a queued action runs only after the first resolves and
++// clears the ref first (invariant 43).
++export function useLoginSubmission(
++  dependencies: UseLoginSubmissionDependencies,
++  destination: string,
++): UseLoginSubmissionResult {
++  const controllerRef = useRef<AbortController | null>(null);
++
++  useEffect(() => {
++    return () => {
++      controllerRef.current?.abort();
++    };
++  }, []);
++
++  const [result, dispatch, isPending] = useActionState<LoginResult, FormData>(
++    async (previousResult, formData) => {
++      const rawEmail = formData.get('email');
++      const rawPassword = formData.get('password');
++      const email = typeof rawEmail === 'string' ? rawEmail : '';
++      const password = typeof rawPassword === 'string' ? rawPassword : '';
++      const correlationId = dependencies.beginInteraction();
++      dependencies.observability.analytics.track('auth.sign_in_started', {
++        correlationId,
++      });
++
++      const controller = new AbortController();
++      controllerRef.current = controller;
++
++      const secret = deriveSecret(email, password);
++      const outcome = await lookupUserIdentifier(
++        dependencies.http,
++        secret,
++        correlationId,
++        controller.signal,
++      );
++      controllerRef.current = null;
++
++      if (outcome.kind === 'cancelled') {
++        return previousResult;
++      }
++
++      if (outcome.kind === 'signedIn') {
++        writeSession(
++          dependencies.tabStorage,
++          dependencies.observability,
++          outcome.userId,
++        );
++        dependencies.observability.analytics.track('auth.sign_in_settled', {
++          correlationId,
++          outcome: SignInOutcome.SignedIn,
++        });
++        dependencies.navigate(destination, { replace: true });
++        return UNTOUCHED;
++      }
++
++      if (outcome.kind === 'noMatch') {
++        dependencies.observability.logger.info('auth.sign_in_no_match', {
++          correlationId,
++        });
++        dependencies.observability.analytics.track('auth.sign_in_settled', {
++          correlationId,
++          outcome: SignInOutcome.NoMatch,
++        });
++        return { outcome: 'noMatch' };
++      }
++
++      dependencies.observability.logger.error('auth.sign_in_service_problem', {
++        correlationId,
++      });
++      dependencies.observability.analytics.track('auth.sign_in_settled', {
++        correlationId,
++        outcome: SignInOutcome.ServiceProblem,
++      });
++      return { outcome: 'serviceProblem', correlationId };
++    },
++    UNTOUCHED,
++  );
++
++  const onSubmit = useCallback(
++    (event: FormEvent<HTMLFormElement>) => {
++      if (isPending) {
++        event.preventDefault();
++      }
++    },
++    [isPending],
++  );
++
++  return { result, isPending, formAction: dispatch, onSubmit };
++}
+diff --git a/src/platform/observability/analyticsEvents.test.ts b/src/platform/observability/analyticsEvents.test.ts
+new file mode 100644
+index 0000000..6578926
+--- /dev/null
++++ b/src/platform/observability/analyticsEvents.test.ts
+@@ -0,0 +1,28 @@
++import { describe, expect, it } from 'vitest';
++import type { AnalyticsPayloads } from './analyticsEvents';
++import { SignInOutcome } from './signInOutcome';
++
++describe('the analytics catalogue', () => {
++  it('carries the three sign-in events with their payloads', () => {
++    const started: AnalyticsPayloads['auth.sign_in_started'] = {
++      correlationId: 'c'.repeat(32),
++    };
++    const settled: AnalyticsPayloads['auth.sign_in_settled'] = {
++      correlationId: 'c'.repeat(32),
++      outcome: SignInOutcome.SignedIn,
++    };
++    const signedOut: AnalyticsPayloads['auth.signed_out'] = {
++      correlationId: 'c'.repeat(32),
++    };
++
++    expect(started.correlationId).toHaveLength(32);
++    expect(settled.outcome).toBe(SignInOutcome.SignedIn);
++    expect(signedOut.correlationId).toHaveLength(32);
++    // No payload carries anything beyond a correlation id and, for the
++    // settled event, its three-value outcome - never a user id, an
++    // email or anything derived from a credential (invariants 125, 126).
++    expect(Object.keys(started).sort()).toEqual(['correlationId']);
++    expect(Object.keys(settled).sort()).toEqual(['correlationId', 'outcome']);
++    expect(Object.keys(signedOut).sort()).toEqual(['correlationId']);
++  });
++});
+diff --git a/src/platform/observability/analyticsEvents.ts b/src/platform/observability/analyticsEvents.ts
+index e8f4fcd..6d00eb4 100644
+--- a/src/platform/observability/analyticsEvents.ts
++++ b/src/platform/observability/analyticsEvents.ts
+@@ -1,9 +1,13 @@
++import type { SignInOutcome } from './signInOutcome';
+ import type { WebVitalMetricName } from './webVitalMetricName';
+ 
+ export type AnalyticsPayloads = {
+   'app.route_viewed': { routeId: string };
+   'app.error_boundary_shown': { correlationId: string };
+   'app.web_vital': { metric: WebVitalMetricName; value: number };
++  'auth.sign_in_started': { correlationId: string };
++  'auth.sign_in_settled': { correlationId: string; outcome: SignInOutcome };
++  'auth.signed_out': { correlationId: string };
+ };
+ 
+ export type AnalyticsEventName = keyof AnalyticsPayloads;
+diff --git a/src/platform/observability/index.ts b/src/platform/observability/index.ts
+index 47ce71e..9f3ab12 100644
+--- a/src/platform/observability/index.ts
++++ b/src/platform/observability/index.ts
+@@ -12,3 +12,4 @@ export type { TelemetryRecord } from './telemetryRecord';
+ export type { AnalyticsEventName, AnalyticsPayloads } from './analyticsEvents';
+ export { reportWebVitals } from './reportWebVitals';
+ export { WebVitalMetricName } from './webVitalMetricName';
++export { SignInOutcome } from './signInOutcome';
+diff --git a/src/platform/observability/signInOutcome.ts b/src/platform/observability/signInOutcome.ts
+new file mode 100644
+index 0000000..47a5f42
+--- /dev/null
++++ b/src/platform/observability/signInOutcome.ts
+@@ -0,0 +1,7 @@
++export const SignInOutcome = {
++  SignedIn: 'signedIn',
++  NoMatch: 'noMatch',
++  ServiceProblem: 'serviceProblem',
++} as const;
++
++export type SignInOutcome = (typeof SignInOutcome)[keyof typeof SignInOutcome];
+diff --git a/src/shared/theme/contrastPairs.ts b/src/shared/theme/contrastPairs.ts
+index 027b254..154151b 100644
+--- a/src/shared/theme/contrastPairs.ts
++++ b/src/shared/theme/contrastPairs.ts
+@@ -12,4 +12,12 @@ export const contrastPairs: readonly ContrastPair[] = [
+   { foreground: 'focus-ring', background: 'surface', minimumRatio: 3 },
+   { foreground: 'border-field', background: 'surface', minimumRatio: 3 },
+   { foreground: 'danger', background: 'danger-surface', minimumRatio: 4.5 },
++  // Button's busy fill (invariant 41): unconditional rather than a hover
++  // state, so it needs its own registered pair.
++  {
++    foreground: 'on-primary',
++    background: 'primary-pressed',
++    minimumRatio: 4.5,
++  },
++  { foreground: 'ink', background: 'surface-hover', minimumRatio: 4.5 },
+ ];
+diff --git a/src/shared/ui/Button.test.tsx b/src/shared/ui/Button.test.tsx
+index 8a13940..7c3f81b 100644
+--- a/src/shared/ui/Button.test.tsx
++++ b/src/shared/ui/Button.test.tsx
+@@ -94,6 +94,37 @@ describe('Button', () => {
+     expect(handleClick).not.toHaveBeenCalled();
+   });
+ 
++  it('renders a spinner and the pressed fill while busy', () => {
++    render(
++      <Button variant="primary" busy onClick={vi.fn()}>
++        Save
++      </Button>,
++    );
++
++    const button = screen.getByRole('button', { name: 'Save' });
++    // eslint-disable-next-line testing-library/no-node-access -- the decorative spinner is aria-hidden and has no accessible role to query by.
++    expect(button.firstElementChild).toHaveAttribute('aria-hidden', 'true');
++    expect(button.className).toContain('bg-primary-pressed');
++    expect(button.className).not.toContain('hover:bg-primary-pressed');
++  });
++
++  it('forwards a ref to the underlying button element', () => {
++    let element: HTMLButtonElement | null = null;
++    render(
++      <Button
++        variant="primary"
++        onClick={vi.fn()}
++        ref={(node) => {
++          element = node;
++        }}
++      >
++        Save
++      </Button>,
++    );
++
++    expect(element).toBe(screen.getByRole('button', { name: 'Save' }));
++  });
++
+   it('renders the secondary variant', () => {
+     render(
+       <Button variant="secondary" onClick={vi.fn()}>
+diff --git a/src/shared/ui/Button.tsx b/src/shared/ui/Button.tsx
+index 6568491..b23ba31 100644
+--- a/src/shared/ui/Button.tsx
++++ b/src/shared/ui/Button.tsx
+@@ -1,5 +1,5 @@
+ import { memo, useCallback } from 'react';
+-import type { MouseEvent, ReactNode } from 'react';
++import type { MouseEvent, ReactNode, Ref } from 'react';
+ 
+ type ButtonProps = {
+   variant: 'primary' | 'secondary';
+@@ -8,12 +8,28 @@ type ButtonProps = {
+   busy?: boolean;
+   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+   children: ReactNode;
++  ref?: Ref<HTMLButtonElement>;
+ };
+ 
+-const VARIANT_CLASS: Record<'primary' | 'secondary', string> = {
+-  primary: 'bg-primary text-on-primary hover:bg-primary-pressed',
+-  secondary:
+-    'border border-border-control bg-surface text-ink hover:bg-surface-hover',
++// hover:bg-primary-pressed only paints the pressed fill on a hovered
++// pointer, so an un-hovered busy button would otherwise show the
++// un-pressed variant. A separate busy class (rather than combining
++// bg-primary with a plain bg-primary-pressed alongside it) avoids two
++// same-specificity background utilities whose winner would depend on
++// Tailwind's generated stylesheet order rather than the props.
++const VARIANT_CLASS: Record<
++  'primary' | 'secondary',
++  { default: string; busy: string }
++> = {
++  primary: {
++    default: 'bg-primary text-on-primary hover:bg-primary-pressed',
++    busy: 'bg-primary-pressed text-on-primary',
++  },
++  secondary: {
++    default:
++      'border border-border-control bg-surface text-ink hover:bg-surface-hover',
++    busy: 'border border-border-control bg-surface-hover text-ink',
++  },
+ };
+ 
+ export const Button = memo(function Button({
+@@ -23,6 +39,7 @@ export const Button = memo(function Button({
+   busy,
+   onClick,
+   children,
++  ref,
+ }: ButtonProps) {
+   const handleClick = useCallback(
+     (event: MouseEvent<HTMLButtonElement>) => {
+@@ -40,13 +57,20 @@ export const Button = memo(function Button({
+ 
+   return (
+     <button
++      ref={ref}
+       type={type}
+       disabled={disabled}
+       aria-busy={busy ? 'true' : undefined}
+       aria-disabled={busy ? 'true' : undefined}
+       onClick={handleClick}
+-      className={`duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 ${VARIANT_CLASS[variant]}`}
++      className={`duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 ${busy ? VARIANT_CLASS[variant].busy : VARIANT_CLASS[variant].default}`}
+     >
++      {busy && (
++        <span
++          aria-hidden="true"
++          className="me-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent align-[-2px]"
++        />
++      )}
+       {children}
+     </button>
+   );
+diff --git a/src/shared/ui/Input.test.tsx b/src/shared/ui/Input.test.tsx
+new file mode 100644
+index 0000000..d9eda45
+--- /dev/null
++++ b/src/shared/ui/Input.test.tsx
+@@ -0,0 +1,45 @@
++import { describe, expect, it, vi } from 'vitest';
++import { render, screen } from '@testing-library/react';
++import { Field } from './Field';
++import { Input } from './Input';
++
++describe('Input', () => {
++  it('renders read-only without leaving the accessibility tree', () => {
++    render(
++      <Field id="email" label="Email">
++        <Input
++          id="email"
++          name="email"
++          type="text"
++          value="person@example.com"
++          onChange={vi.fn()}
++          readOnly
++        />
++      </Field>,
++    );
++
++    const input = screen.getByLabelText('Email');
++    expect(input).toHaveAttribute('readonly');
++    expect(input).not.toHaveAttribute('aria-hidden');
++    expect(input).toBeVisible();
++  });
++
++  it("renders a placeholder that is not the field's accessible name", () => {
++    render(
++      <Field id="email" label="Email">
++        <Input
++          id="email"
++          name="email"
++          type="text"
++          value=""
++          onChange={vi.fn()}
++          placeholder="you@foo.com"
++        />
++      </Field>,
++    );
++
++    const input = screen.getByLabelText('Email');
++    expect(input).toHaveAttribute('placeholder', 'you@foo.com');
++    expect(input).toHaveAccessibleName('Email');
++  });
++});
+diff --git a/src/shared/ui/Input.tsx b/src/shared/ui/Input.tsx
+index 5081a1a..4b31111 100644
+--- a/src/shared/ui/Input.tsx
++++ b/src/shared/ui/Input.tsx
+@@ -9,6 +9,8 @@ type InputProps = {
+   value: string;
+   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+   autoComplete?: string;
++  readOnly?: boolean;
++  placeholder?: string;
+ };
+ 
+ export const Input = memo(function Input({
+@@ -18,6 +20,8 @@ export const Input = memo(function Input({
+   value,
+   onChange,
+   autoComplete,
++  readOnly,
++  placeholder,
+ }: InputProps) {
+   const { describedBy, invalid, required } = useContext(FieldContext);
+ 
+@@ -29,6 +33,8 @@ export const Input = memo(function Input({
+       value={value}
+       onChange={onChange}
+       autoComplete={autoComplete}
++      readOnly={readOnly}
++      placeholder={placeholder}
+       aria-describedby={describedBy}
+       aria-invalid={invalid || undefined}
+       required={required}

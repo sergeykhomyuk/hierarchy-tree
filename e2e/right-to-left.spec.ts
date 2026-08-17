@@ -1,8 +1,10 @@
+import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import { createAxeBuilder } from './support/axeBuilder';
 import { recordConsole } from './support/consoleRecorder';
 import { forceDirection } from './support/forceDirection';
 import { installRouteMocks } from './support/routeMocks';
+import { installSignInApiMock, signIn } from './support/signIn';
 
 // English is the only shipped PRODUCT locale (invariant 65) - a
 // non-product-facing `test` locale (Locale.Test, tag 'zxx') exists for
@@ -31,9 +33,24 @@ import { installRouteMocks } from './support/routeMocks';
 // `dir` attribute actually cascades into computed CSS `direction`
 // (invariant 68's structural precondition - every logical property
 // resolves relative to it), across every route this phase ships.
+// / is a guarded route since M3 - reaching it under test needs a session
+// first, unlike /login which stays a plain unauthenticated visit.
 const ROUTES = [
-  { path: '/', heading: 'home.title' },
-  { path: '/login', heading: 'login.title' },
+  {
+    path: '/',
+    heading: 'home.title',
+    visit: async (page: Page) => {
+      await installSignInApiMock(page);
+      await signIn(page);
+    },
+  },
+  {
+    path: '/login',
+    heading: 'login.heading',
+    visit: async (page: Page) => {
+      await page.goto('/login');
+    },
+  },
 ];
 
 test.describe('right-to-left', () => {
@@ -45,7 +62,7 @@ test.describe('right-to-left', () => {
       await installRouteMocks(page, baseURL ?? '');
       const { records } = recordConsole(page);
 
-      await page.goto(route.path);
+      await route.visit(page);
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(
         route.heading,
       );

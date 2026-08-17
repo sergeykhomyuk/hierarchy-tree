@@ -1,0 +1,33 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/useLoginSubmission.test.tsx (6 tests | 1 failed) 37ms
+     × aborts in flight and resets to untouched when a persisted page is restored 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/useLoginSubmission.test.tsx > useLoginSubmission > aborts in flight and resets to untouched when a persisted page is restored
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/auth/useLoginSubmission.test.tsx:196:36
+    194|     );
+    195|
+    196|     expect(abortedSignal?.aborted).toBe(true);
+       |                                    ^
+    197|     await waitFor(() =>
+    198|       expect(screen.getByTestId('pending').textContent).toBe('false'),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  09:37:34
+   Duration  729ms (transform 78ms, setup 106ms, import 91ms, tests 37ms, environment 427ms)
+

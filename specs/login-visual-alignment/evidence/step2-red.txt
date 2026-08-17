@@ -1,0 +1,50 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/shared/ui/Card.test.tsx (4 tests | 1 failed) 14ms
+     × uses the login card radius when radius is set to login 2ms
+ ❯ |ui| src/features/auth/LoginPage.test.tsx (18 tests | 1 failed) 1435ms
+     × sizes the card to the mockup width and uses the login card radius 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/shared/ui/Card.test.tsx > Card > uses the login card radius when radius is set to login
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"rounded-login-card"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  rounded-login-card[39m
+Received:
+[31m  rounded-card border border-border-hairline bg-surface p-6[39m
+ ❯ src/shared/ui/Card.test.tsx:47:41
+     45|
+     46|     // eslint-disable-next-line testing-library/no-node-access -- ther…
+     47|     expect(container.firstElementChild).toHaveClass('rounded-login-car…
+       |                                         ^
+     48|     // eslint-disable-next-line testing-library/no-node-access -- see …
+     49|     expect(container.firstElementChild).not.toHaveClass('rounded-card'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/features/auth/LoginPage.test.tsx > LoginPage > sizes the card to the mockup width and uses the login card radius
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"max-w-[406px]"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  max-w-[406px][39m
+Received:
+[31m  w-full max-w-sm[39m
+ ❯ src/features/auth/LoginPage.test.tsx:553:60
+    551|
+    552|     // eslint-disable-next-line testing-library/no-node-access -- ther…
+    553|     expect(container.firstElementChild?.firstElementChild).toHaveClass(
+       |                                                            ^
+    554|       'max-w-[406px]',
+    555|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 20 passed (22)
+   Start at  11:06:00
+   Duration  2.13s (transform 138ms, setup 208ms, import 145ms, tests 1.45s, environment 777ms)
+

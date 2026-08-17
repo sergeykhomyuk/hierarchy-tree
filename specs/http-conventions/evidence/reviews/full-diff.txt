@@ -1,0 +1,325 @@
+diff --git a/src/features/auth/data/fetchSignedInUser.ts b/src/features/auth/data/fetchSignedInUser.ts
+index 12873fd..bf98669 100644
+--- a/src/features/auth/data/fetchSignedInUser.ts
++++ b/src/features/auth/data/fetchSignedInUser.ts
+@@ -1,4 +1,4 @@
+-import type { HttpClient } from '@platform/http';
++import { HttpResultOutcome, type HttpClient } from '@platform/http';
+ import type { ObservabilityFacade } from '@platform/observability';
+ import type { UserIdentifier } from '../domain';
+ import { parseSignedInUsers } from './parseSignedInUsers';
+@@ -23,9 +23,11 @@ export async function fetchSignedInUser(
+     parse: (payload) => parseSignedInUsers(payload),
+   });
+ 
+-  if (result.outcome !== 'success') {
++  if (result.outcome !== HttpResultOutcome.Success) {
+     const reason =
+-      result.outcome === 'cancelled' ? 'cancelled' : result.failure.kind;
++      result.outcome === HttpResultOutcome.Cancelled
++        ? HttpResultOutcome.Cancelled
++        : result.failure.kind;
+     observability.logger.warn('auth.signed_in_user_unresolved', { reason });
+     return null;
+   }
+diff --git a/src/features/auth/data/lookupUserIdentifier.ts b/src/features/auth/data/lookupUserIdentifier.ts
+index 876b946..7aeabfa 100644
+--- a/src/features/auth/data/lookupUserIdentifier.ts
++++ b/src/features/auth/data/lookupUserIdentifier.ts
+@@ -1,4 +1,4 @@
+-import type { HttpClient } from '@platform/http';
++import { HttpResultOutcome, type HttpClient } from '@platform/http';
+ import {
+   userIdentifier,
+   type DerivedSecret,
+@@ -40,11 +40,11 @@ export async function lookupUserIdentifier(
+     parse: (payload) => lookupResultSchema.parse(payload),
+   });
+ 
+-  if (result.outcome === 'cancelled') {
++  if (result.outcome === HttpResultOutcome.Cancelled) {
+     return { kind: LookupOutcomeKind.Cancelled };
+   }
+ 
+-  if (result.outcome === 'failure') {
++  if (result.outcome === HttpResultOutcome.Failure) {
+     return { kind: LookupOutcomeKind.ServiceProblem, correlationId };
+   }
+ 
+diff --git a/src/platform/http/createHttpClient.ts b/src/platform/http/createHttpClient.ts
+index fe2e371..11b381a 100644
+--- a/src/platform/http/createHttpClient.ts
++++ b/src/platform/http/createHttpClient.ts
+@@ -6,11 +6,12 @@ import {
+ } from '@platform/observability';
+ import { buildUrl } from './buildUrl';
+ import { createTraceparent } from './createTraceparent';
+-import { performAttempt } from './performAttempt';
++import { HttpFailureKind } from './httpFailure';
++import { AttemptOutcomeKind, performAttempt } from './performAttempt';
+ import { retryDelayMilliseconds } from './retryDelayMilliseconds';
+ import { shouldRetry } from './shouldRetry';
+ import type { HttpRequest } from './httpRequest';
+-import type { HttpResult } from './httpResult';
++import { HttpResultOutcome, type HttpResult } from './httpResult';
+ import type { Transport } from './transport';
+ 
+ export type HttpClientDependencies = {
+@@ -65,11 +66,14 @@ export function createHttpClient(
+       observability.logger.error('http.invalid_resource_path', {
+         resourcePath: httpRequest.resourcePath,
+       });
+-      return { outcome: 'failure', failure: { kind: 'network' } };
++      return {
++        outcome: HttpResultOutcome.Failure,
++        failure: { kind: HttpFailureKind.Network },
++      };
+     }
+ 
+     if (httpRequest.signal?.aborted) {
+-      return { outcome: 'cancelled' };
++      return { outcome: HttpResultOutcome.Cancelled };
+     }
+ 
+     const requestId = createCorrelationId(randomness);
+@@ -100,7 +104,7 @@ export function createHttpClient(
+         );
+         const durationMilliseconds = clock.now() - attemptStartedAt;
+ 
+-        if (rawOutcome.kind === 'aborted') {
++        if (rawOutcome.kind === AttemptOutcomeKind.Aborted) {
+           if (httpRequest.signal?.aborted) {
+             observability.logger.debug('http.request_cancelled', {
+               resourcePath: httpRequest.resourcePath,
+@@ -115,7 +119,7 @@ export function createHttpClient(
+               attempt,
+               requestId,
+             });
+-            return { outcome: 'cancelled' };
++            return { outcome: HttpResultOutcome.Cancelled };
+           }
+ 
+           observability.tracer.recordTiming({
+@@ -128,15 +132,15 @@ export function createHttpClient(
+             requestId,
+           });
+           return {
+-            outcome: 'failure',
+-            failure: { kind: 'timeout', timeoutMilliseconds },
++            outcome: HttpResultOutcome.Failure,
++            failure: { kind: HttpFailureKind.Timeout, timeoutMilliseconds },
+           };
+         }
+ 
+         const status =
+-          rawOutcome.kind === 'success'
++          rawOutcome.kind === AttemptOutcomeKind.Success
+             ? rawOutcome.status
+-            : rawOutcome.failure.kind === 'http'
++            : rawOutcome.failure.kind === HttpFailureKind.Http
+               ? rawOutcome.failure.status
+               : undefined;
+         observability.tracer.recordTiming({
+@@ -150,9 +154,9 @@ export function createHttpClient(
+           ...(status !== undefined ? { status } : {}),
+         });
+ 
+-        if (rawOutcome.kind === 'success') {
++        if (rawOutcome.kind === AttemptOutcomeKind.Success) {
+           return {
+-            outcome: 'success',
++            outcome: HttpResultOutcome.Success,
+             value: rawOutcome.value,
+             status: rawOutcome.status,
+           };
+@@ -169,17 +173,22 @@ export function createHttpClient(
+           try {
+             await clock.wait(delay, signal);
+           } catch {
+-            if (httpRequest.signal?.aborted) return { outcome: 'cancelled' };
++            if (httpRequest.signal?.aborted) {
++              return { outcome: HttpResultOutcome.Cancelled };
++            }
+             return {
+-              outcome: 'failure',
+-              failure: { kind: 'timeout', timeoutMilliseconds },
++              outcome: HttpResultOutcome.Failure,
++              failure: { kind: HttpFailureKind.Timeout, timeoutMilliseconds },
+             };
+           }
+           attempt += 1;
+           continue;
+         }
+ 
+-        return { outcome: 'failure', failure: rawOutcome.failure };
++        return {
++          outcome: HttpResultOutcome.Failure,
++          failure: rawOutcome.failure,
++        };
+       }
+     } finally {
+       cancelDeadlineTimer();
+diff --git a/src/platform/http/httpFailure.ts b/src/platform/http/httpFailure.ts
+index 8271690..8adb361 100644
+--- a/src/platform/http/httpFailure.ts
++++ b/src/platform/http/httpFailure.ts
+@@ -1,5 +1,19 @@
++export const HttpFailureKind = {
++  Network: 'network',
++  Timeout: 'timeout',
++  Http: 'http',
++  Parse: 'parse',
++} as const;
++
++export type HttpFailureKind =
++  (typeof HttpFailureKind)[keyof typeof HttpFailureKind];
++
+ export type HttpFailure =
+-  | { kind: 'network' }
+-  | { kind: 'timeout'; timeoutMilliseconds: number }
+-  | { kind: 'http'; status: number; statusDescription: string }
+-  | { kind: 'parse' };
++  | { kind: typeof HttpFailureKind.Network }
++  | { kind: typeof HttpFailureKind.Timeout; timeoutMilliseconds: number }
++  | {
++      kind: typeof HttpFailureKind.Http;
++      status: number;
++      statusDescription: string;
++    }
++  | { kind: typeof HttpFailureKind.Parse };
+diff --git a/src/platform/http/httpResult.ts b/src/platform/http/httpResult.ts
+index 3de478c..279f615 100644
+--- a/src/platform/http/httpResult.ts
++++ b/src/platform/http/httpResult.ts
+@@ -1,6 +1,15 @@
+ import type { HttpFailure } from './httpFailure';
+ 
++export const HttpResultOutcome = {
++  Success: 'success',
++  Failure: 'failure',
++  Cancelled: 'cancelled',
++} as const;
++
++export type HttpResultOutcome =
++  (typeof HttpResultOutcome)[keyof typeof HttpResultOutcome];
++
+ export type HttpResult<Value> =
+-  | { outcome: 'success'; value: Value; status: number }
+-  | { outcome: 'failure'; failure: HttpFailure }
+-  | { outcome: 'cancelled' };
++  | { outcome: typeof HttpResultOutcome.Success; value: Value; status: number }
++  | { outcome: typeof HttpResultOutcome.Failure; failure: HttpFailure }
++  | { outcome: typeof HttpResultOutcome.Cancelled };
+diff --git a/src/platform/http/index.ts b/src/platform/http/index.ts
+index 041a769..4280ead 100644
+--- a/src/platform/http/index.ts
++++ b/src/platform/http/index.ts
+@@ -3,6 +3,6 @@ export type { HttpClient, HttpClientDependencies } from './createHttpClient';
+ export { createFetchTransport } from './createFetchTransport';
+ export type { Transport } from './transport';
+ export type { HttpRequest } from './httpRequest';
+-export type { HttpResult } from './httpResult';
++export { HttpResultOutcome, type HttpResult } from './httpResult';
+ export type { HttpFailure } from './httpFailure';
+ export type { ResourcePath } from './resourcePath';
+diff --git a/src/platform/http/performAttempt.ts b/src/platform/http/performAttempt.ts
+index 35aca13..7e27fbf 100644
+--- a/src/platform/http/performAttempt.ts
++++ b/src/platform/http/performAttempt.ts
+@@ -1,12 +1,21 @@
+-import type { HttpFailure } from './httpFailure';
++import { HttpFailureKind, type HttpFailure } from './httpFailure';
+ import type { HttpRequest } from './httpRequest';
+ import { statusDescription } from './statusDescription';
+ import type { Transport } from './transport';
+ 
++export const AttemptOutcomeKind = {
++  Success: 'success',
++  Failure: 'failure',
++  Aborted: 'aborted',
++} as const;
++
++export type AttemptOutcomeKind =
++  (typeof AttemptOutcomeKind)[keyof typeof AttemptOutcomeKind];
++
+ export type AttemptOutcome<Value> =
+-  | { kind: 'success'; value: Value; status: number }
+-  | { kind: 'failure'; failure: HttpFailure }
+-  | { kind: 'aborted' };
++  | { kind: typeof AttemptOutcomeKind.Success; value: Value; status: number }
++  | { kind: typeof AttemptOutcomeKind.Failure; failure: HttpFailure }
++  | { kind: typeof AttemptOutcomeKind.Aborted };
+ 
+ export async function performAttempt<Value>(
+   httpRequest: HttpRequest<Value>,
+@@ -32,15 +41,18 @@ export async function performAttempt<Value>(
+   try {
+     response = await transport(webRequest);
+   } catch {
+-    if (signal.aborted) return { kind: 'aborted' };
+-    return { kind: 'failure', failure: { kind: 'network' } };
++    if (signal.aborted) return { kind: AttemptOutcomeKind.Aborted };
++    return {
++      kind: AttemptOutcomeKind.Failure,
++      failure: { kind: HttpFailureKind.Network },
++    };
+   }
+ 
+   if (!response.ok) {
+     return {
+-      kind: 'failure',
++      kind: AttemptOutcomeKind.Failure,
+       failure: {
+-        kind: 'http',
++        kind: HttpFailureKind.Http,
+         status: response.status,
+         statusDescription: statusDescription(response.status),
+       },
+@@ -50,7 +62,7 @@ export async function performAttempt<Value>(
+   try {
+     const payload: unknown = await response.json();
+     return {
+-      kind: 'success',
++      kind: AttemptOutcomeKind.Success,
+       value: httpRequest.parse(payload),
+       status: response.status,
+     };
+@@ -59,7 +71,10 @@ export async function performAttempt<Value>(
+     // being read, which rejects response.json() the same way a genuine
+     // parse failure would - unconditionally mapping this catch to
+     // 'parse' misreported a cancellation/timeout as malformed JSON.
+-    if (signal.aborted) return { kind: 'aborted' };
+-    return { kind: 'failure', failure: { kind: 'parse' } };
++    if (signal.aborted) return { kind: AttemptOutcomeKind.Aborted };
++    return {
++      kind: AttemptOutcomeKind.Failure,
++      failure: { kind: HttpFailureKind.Parse },
++    };
+   }
+ }
+diff --git a/src/platform/http/shouldRetry.ts b/src/platform/http/shouldRetry.ts
+index a2a8fba..c9c13d8 100644
+--- a/src/platform/http/shouldRetry.ts
++++ b/src/platform/http/shouldRetry.ts
+@@ -1,10 +1,10 @@
+-import type { HttpFailure } from './httpFailure';
++import { HttpFailureKind, type HttpFailure } from './httpFailure';
+ import type { HttpRequest } from './httpRequest';
+ 
+ const MAXIMUM_RETRY_ATTEMPTS = 1;
+ const RETRYABLE_FAILURE_KINDS = new Set<HttpFailure['kind']>([
+-  'network',
+-  'timeout',
++  HttpFailureKind.Network,
++  HttpFailureKind.Timeout,
+ ]);
+ 
+ export function shouldRetry(
+@@ -14,6 +14,6 @@ export function shouldRetry(
+ ): boolean {
+   if (attempt >= MAXIMUM_RETRY_ATTEMPTS) return false;
+   if (method !== 'GET') return false;
+-  if (failure.kind === 'http') return failure.status >= 500;
++  if (failure.kind === HttpFailureKind.Http) return failure.status >= 500;
+   return RETRYABLE_FAILURE_KINDS.has(failure.kind);
+ }

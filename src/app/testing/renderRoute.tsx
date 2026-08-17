@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import type { Configuration } from '@platform/configuration';
+import type { KeyValueStorage } from '@platform/runtime';
 import { createObservability } from '@platform/observability';
 import {
   createInternationalization,
@@ -8,6 +9,7 @@ import {
   Locale,
 } from '@platform/internationalization';
 import { createHttpClient } from '@platform/http';
+import { createSignedInUserStore } from '@features/auth';
 import {
   createFakeClock,
   createFakeRandomness,
@@ -17,6 +19,20 @@ import { ApplicationRoot } from '../ApplicationRoot';
 import { createInteractionTracker } from '../routing';
 import type { Runtime } from '../composition';
 import commonCatalogue from '../locales/en/common.json';
+
+function createFakeTabStorage(): KeyValueStorage {
+  const map = new Map<string, string>();
+  return {
+    read: (key) => map.get(key) ?? null,
+    write: (key, value) => {
+      map.set(key, value);
+      return true;
+    },
+    remove: (key) => {
+      map.delete(key);
+    },
+  };
+}
 
 const TEST_CONFIGURATION: Configuration = Object.freeze({
   apiBaseUrl: 'https://example.test',
@@ -60,6 +76,8 @@ export async function buildTestRuntime(
     language: Locale.Test,
     observability,
   });
+  const tabStorage = createFakeTabStorage();
+  const signedInUserStore = createSignedInUserStore({ http, observability });
 
   return Object.freeze({
     configuration,
@@ -67,6 +85,8 @@ export async function buildTestRuntime(
     http,
     i18n,
     interactionTracker,
+    tabStorage,
+    signedInUserStore,
   });
 }
 

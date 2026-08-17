@@ -1,33 +1,56 @@
 import { createElement } from 'react';
-import type { i18n } from 'i18next';
-import type { RouteObject } from 'react-router';
+import type { LoaderFunctionArgs, RouteObject } from 'react-router';
+import { redirectSignedInVisitor } from '@features/auth';
+import type { Runtime } from '../composition';
 import { ApplicationLayout } from '../layout/ApplicationLayout';
 import { RouteErrorBoundary } from '../error-boundary/RouteErrorBoundary';
 
 // Each lazy() awaits its feature's own loadTranslations(instance) before
 // resolving, so a route never renders before its namespace is registered
-// (invariant 62). No loader, no guard, no redirect - this phase's routes
-// resolve to a component and nothing else (invariant 97).
-export function routeDefinitions(
-  instance: i18n,
-  developmentRoutes: boolean,
-): RouteObject[] {
+// (invariant 62). The authenticated layout is pathless (invariant 136):
+// the route SET stays `/`, `login` and `*` (plus `__kit` in development) -
+// a guard adds a wrapper, not a new path.
+export function routeDefinitions(runtime: Runtime): RouteObject[] {
+  const { i18n, configuration, tabStorage, observability, signedInUserStore } =
+    runtime;
+
   const children: RouteObject[] = [
     {
-      index: true,
+      id: 'authenticated',
       lazy: async () => {
-        const { HomeRoute, loadTranslations } =
-          await import('./routes/HomeRoute');
-        await loadTranslations(instance);
-        return { Component: HomeRoute };
+        const { AuthenticatedLayout, createAuthenticatedLoader } =
+          await import('./routes/AuthenticatedRoute');
+        return {
+          Component: AuthenticatedLayout,
+          loader: createAuthenticatedLoader({
+            tabStorage,
+            observability,
+            signedInUserStore,
+          }),
+        };
       },
+      children: [
+        {
+          index: true,
+          lazy: async () => {
+            const { HomeRoute, loadTranslations } =
+              await import('./routes/HomeRoute');
+            await loadTranslations(i18n);
+            return { Component: HomeRoute };
+          },
+        },
+      ],
     },
     {
       path: 'login',
+      // Cannot be lazy: it must run before the login chunk is fetched, or
+      // a signed-in visitor would pay for a chunk they never see.
+      loader: ({ request }: LoaderFunctionArgs) =>
+        redirectSignedInVisitor({ request, tabStorage, observability }),
       lazy: async () => {
         const { LoginRoute, loadTranslations } =
           await import('./routes/LoginRoute');
-        await loadTranslations(instance);
+        await loadTranslations(i18n);
         return { Component: LoginRoute };
       },
     },
@@ -41,7 +64,7 @@ export function routeDefinitions(
   // the runtime flag (what the configuration schema and e2e suite
   // express). Registered before the wildcard, which would otherwise match
   // `/__kit` first and render not-found instead.
-  if (import.meta.env.DEV && developmentRoutes) {
+  if (import.meta.env.DEV && configuration.developmentRoutes) {
     children.push({
       path: '__kit',
       lazy: async () => {

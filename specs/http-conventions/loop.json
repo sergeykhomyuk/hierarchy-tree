@@ -1,0 +1,214 @@
+{
+  "task": "http-conventions",
+  "title": "Extract enums in platform/http",
+  "type": "refactor",
+  "size": "S",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-17T11:36:25Z",
+  "created": "2026-08-17",
+  "updated": "2026-08-17T11:36:25Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "S",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": "PROOF.md",
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "skipped",
+      "attempts": 0
+    },
+    "G2": {
+      "status": "passed",
+      "attempts": 1,
+      "steps_total": 3,
+      "steps_done": 3,
+      "note": "All 3 refactor steps done: HttpFailureKind, AttemptOutcomeKind, HttpResultOutcome const-object enums extracted in platform/http, every raw literal call site repointed (including the two features/auth cross-directory consumers). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint + prettier clean at every step boundary."
+    },
+    "G3": {
+      "status": "passed",
+      "attempts": 1,
+      "note": "npm run verify full green (evidence/g3-verify-full.txt) and npm run e2e 41/41 passing (evidence/g3-e2e-full.txt). All 3 acceptance criteria checked against the diff: AC1-AC3 (three const-object enums, all call sites repointed including the two features/auth cross-directory consumers, verified by grep - no raw literal remnants outside the enum declarations themselves and the intentionally out-of-scope timingRecord.ts). No design flag, no new user-facing surface - pure structural refactor."
+    },
+    "G4": {
+      "status": "passed",
+      "attempts": 1,
+      "security_pass": null,
+      "note": "Fresh-context Claude review (evidence/reviews/g4-claude-review.md): CLEAN, 0 findings - enum value fidelity, call-site repointing, the three deliberate exclusions (HttpRequest.method, statusDescription, timingRecord.ts) and the two features/auth cross-directory consumers all verified. Codex second opinion unavailable: the background job never completed after ~10 minutes and one resume attempt; logged per contract, user explicitly approved proceeding single-reviewer. No security_review flag on this loop (pure refactor, no auth-logic or input-handling change)."
+    },
+    "G5": {
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md written and registered; all 3 acceptance criteria mapped to their step evidence; verification summary cites npm run verify/e2e evidence; Claude G4 review (CLEAN) referenced, Codex unavailability logged and user-approved; loop check clean."
+    }
+  },
+  "retro": {
+    "outcome": "What did the user correct? Nothing on scope or code - both AskUserQuestion checkpoints at triage were used to confirm scope up front (type/size, branch, cross-directory extension into features/auth), not to fix a wrong guess after the fact. The only mid-loop correction was operational: Codex's background review job never completed after ~10 minutes and a resume attempt, and the user told me to skip it and proceed rather than keep waiting - a reasonable call given Claude's review had already come back CLEAN with genuinely deep verification (enum fidelity, all call sites, all three deliberate exclusions). What did reviewers catch that an earlier phase should have? Nothing - Claude's review found zero findings, a real 'CLEAN' verdict backed by member-by-member enum checks and exclusion-boundary verification, not a rubber stamp. This is worth noting as a positive data point: a small, well-scoped, single-purpose refactor (3 enums, one repo-established pattern, explicit AskUserQuestion-confirmed exclusion list going in) produced a genuinely clean diff on the first pass. Where did this playbook not answer? Nothing new - the G4 Codex-unavailable fallback (log it, tell the user, get explicit approval to proceed single-reviewer) worked exactly as documented, including the awkward middle where a background job outlives its own wrapper subagent's patience. One operational note for future sessions, not a skill gap: when a background rescue job is taking unusually long, checking in with the user rather than waiting indefinitely was the right call - the existing iteration-cap language covers implementation cycles, not open-ended tool waits, and this loop found that boundary naturally without needing new guidance. Nothing durable enough to propose a skill diff for this run.",
+    "date": "2026-08-17T11:36:18Z"
+  },
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "HttpFailureKind const-object enum in httpFailure.ts; update performAttempt.ts, createHttpClient.ts, shouldRetry.ts",
+      "tests": [
+        "src/platform/http/httpFailure.test.ts::HttpFailure > the failure union is exhaustive without a default branch",
+        "src/platform/http/shouldRetry.test.ts::shouldRetry > retries a GET network failure on the first attempt",
+        "src/platform/http/performAttempt.test.ts::performAttempt > reports a network failure when the transport rejects without an abort"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 2,
+      "desc": "AttemptOutcomeKind const-object enum in performAttempt.ts; update createHttpClient.ts",
+      "tests": [
+        "src/platform/http/performAttempt.test.ts::performAttempt > reports aborted (not network failure) when the transport rejects on an aborted signal",
+        "src/platform/http/createHttpClient.test.ts::createHttpClient > a caller abort yields cancelled without retrying or reporting an error"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
+    },
+    {
+      "id": 3,
+      "desc": "HttpResultOutcome const-object enum in httpResult.ts; update createHttpClient.ts, features/auth fetchSignedInUser.ts + lookupUserIdentifier.ts",
+      "tests": [
+        "src/platform/http/createHttpClient.test.ts::createHttpClient > returns success with the parsed value and status",
+        "src/features/auth/data/fetchSignedInUser.test.ts::fetchSignedInUser > resolves to null for every transport failure arm and warns once",
+        "src/features/auth/data/lookupUserIdentifier.test.ts::lookupUserIdentifier > maps every transport failure arm to the service-problem outcome"
+      ],
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
+    }
+  ],
+  "log": [
+    "2026-08-17T11:20:53Z init: type=refactor size=S flags=[]",
+    "2026-08-17T11:20:53Z triage: refactor/S, mirrors phase-1-conventions/phase-2-conventions precedent. Scope: src/platform/http (3 discriminant unions: HttpResultOutcome, HttpFailureKind, AttemptOutcomeKind); HTTP methods excluded per phase-1-conventions' documented decision (mirrors an external platform API 1:1). Cross-directory extension confirmed with user: features/auth/data/fetchSignedInUser.ts and lookupUserIdentifier.ts also hardcode HttpResultOutcome's literal values and are in scope. User explicitly requested landing on the current branch (loop/feature/phase-2-login) rather than a fresh one, same as the prior two convention loops.",
+    "2026-08-17T11:20:58Z phase -> frame",
+    "2026-08-17T11:21:11Z frame: behavior-preservation contract - pure structural refactor (literal-union to const-object-enum), no runtime behavior change. Coverage audit: platform/http already at 96.73% statement / 95.83% branch coverage; existing suite (httpFailure/performAttempt/createHttpClient/shouldRetry/fetchSignedInUser/lookupUserIdentifier tests) exercises every changed line already, so no new characterization tests needed - each step is G2 case (c), guarded by pre-existing tests. HTTP method literals ('GET'/'POST'/...) excluded - mirrors an external platform API 1:1, matches phase-1-conventions' documented decision. statusDescription()'s return strings ('server error'/'client error'/'error') excluded - free-text labels never compared/branched on, not a discriminant.",
+    "2026-08-17T11:21:11Z phase -> plan",
+    "2026-08-17T11:21:34Z step 1 added: HttpFailureKind const-object enum in httpFailure.ts; update performAttempt.ts, createHttpClient.ts, shouldRetry.ts",
+    "2026-08-17T11:21:34Z step 2 added: AttemptOutcomeKind const-object enum in performAttempt.ts; update createHttpClient.ts",
+    "2026-08-17T11:21:34Z step 3 added: HttpResultOutcome const-object enum in httpResult.ts; update createHttpClient.ts, features/auth fetchSignedInUser.ts + lookupUserIdentifier.ts",
+    "2026-08-17T11:21:40Z phase -> implement",
+    "2026-08-17T11:21:43Z step 1 -> na",
+    "2026-08-17T11:23:36Z evidence recorded: evidence/steps/step1-green.txt (f86da19a4510) - HttpFailureKind as-const enum in httpFailure.ts; updated performAttempt.ts, createHttpClient.ts, shouldRetry.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean",
+    "2026-08-17T11:23:36Z step 1 -> green",
+    "2026-08-17T11:23:36Z step 1 -> done",
+    "2026-08-17T11:23:40Z step 2 -> na",
+    "2026-08-17T11:25:22Z evidence recorded: evidence/steps/step2-green.txt (6c0f7b141bc7) - AttemptOutcomeKind as-const enum in performAttempt.ts; updated createHttpClient.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean",
+    "2026-08-17T11:25:22Z step 2 -> green",
+    "2026-08-17T11:25:23Z step 2 -> done",
+    "2026-08-17T11:25:26Z step 3 -> na",
+    "2026-08-17T11:28:11Z evidence recorded: evidence/steps/step3-green.txt (462d5d409e73) - HttpResultOutcome as-const enum in httpResult.ts; updated createHttpClient.ts, features/auth/data/fetchSignedInUser.ts + lookupUserIdentifier.ts; added to platform/http index.ts barrel (cross-directory consumer); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint + prettier clean",
+    "2026-08-17T11:28:11Z step 3 -> green",
+    "2026-08-17T11:28:11Z step 3 -> done",
+    "2026-08-17T11:28:15Z G2 -> passed (All 3 refactor steps done: HttpFailureKind, AttemptOutcomeKind, HttpResultOutcome const-object enums extracted in platform/http, every raw literal call site repointed (including the two features/auth cross-directory consumers). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint + prettier clean at every step boundary.)",
+    "2026-08-17T11:28:15Z phase -> verify",
+    "2026-08-17T11:29:13Z evidence recorded: evidence/g3-verify-full.txt (2dce665ac524) - npm run verify (typecheck+lint+format:check+test:coverage+build+verify:build+size) full green",
+    "2026-08-17T11:29:13Z evidence recorded: evidence/g3-e2e-full.txt (c84ca08f2da0) - npm run e2e 41/41 passing, no regressions from the enum extraction",
+    "2026-08-17T11:29:13Z G3 -> passed (npm run verify full green (evidence/g3-verify-full.txt) and npm run e2e 41/41 passing (evidence/g3-e2e-full.txt). All 3 acceptance criteria checked against the diff: AC1-AC3 (three const-object enums, all call sites repointed including the two features/auth cross-directory consumers, verified by grep - no raw literal remnants outside the enum declarations themselves and the intentionally out-of-scope timingRecord.ts). No design flag, no new user-facing surface - pure structural refactor.)",
+    "2026-08-17T11:29:20Z phase -> review",
+    "2026-08-17T11:31:46Z evidence recorded: evidence/reviews/g4-claude-review.md (e641744b1d7b) - fresh-context Claude G4 review, CLEAN, 0 findings",
+    "2026-08-17T11:31:46Z evidence recorded: evidence/reviews/full-diff.txt (d3db2da8b236) - full diff (d7ef594..HEAD, platform/http + features/auth) given to both G4 reviewers",
+    "2026-08-17T11:35:30Z codex unavailable at G4: the codex-rescue background job (b2gngv4yf) never completed within the session - after ~10 minutes of waiting and one resume, the underlying rescue subagent was no longer listed among running agents with no findings returned. User explicitly approved proceeding single-reviewer ('check codex. if still running - skip it.').",
+    "2026-08-17T11:35:35Z G4 -> passed (Fresh-context Claude review (evidence/reviews/g4-claude-review.md): CLEAN, 0 findings - enum value fidelity, call-site repointing, the three deliberate exclusions (HttpRequest.method, statusDescription, timingRecord.ts) and the two features/auth cross-directory consumers all verified. Codex second opinion unavailable: the background job never completed after ~10 minutes and one resume attempt; logged per contract, user explicitly approved proceeding single-reviewer. No security_review flag on this loop (pure refactor, no auth-logic or input-handling change).)",
+    "2026-08-17T11:35:43Z phase -> prove",
+    "2026-08-17T11:36:02Z set proof = PROOF.md",
+    "2026-08-17T11:36:08Z G5 -> passed (PROOF.md written and registered; all 3 acceptance criteria mapped to their step evidence; verification summary cites npm run verify/e2e evidence; Claude G4 review (CLEAN) referenced, Codex unavailability logged and user-approved; loop check clean.)",
+    "2026-08-17T11:36:18Z set retro = What did the user correct? Nothing on scope or code - both AskUserQuestion checkpoints at triage were used to confirm scope up front (type/size, branch, cross-directory extension into features/auth), not to fix a wrong guess after the fact. The only mid-loop correction was operational: Codex's background review job never completed after ~10 minutes and a resume attempt, and the user told me to skip it and proceed rather than keep waiting - a reasonable call given Claude's review had already come back CLEAN with genuinely deep verification (enum fidelity, all call sites, all three deliberate exclusions). What did reviewers catch that an earlier phase should have? Nothing - Claude's review found zero findings, a real 'CLEAN' verdict backed by member-by-member enum checks and exclusion-boundary verification, not a rubber stamp. This is worth noting as a positive data point: a small, well-scoped, single-purpose refactor (3 enums, one repo-established pattern, explicit AskUserQuestion-confirmed exclusion list going in) produced a genuinely clean diff on the first pass. Where did this playbook not answer? Nothing new - the G4 Codex-unavailable fallback (log it, tell the user, get explicit approval to proceed single-reviewer) worked exactly as documented, including the awkward middle where a background job outlives its own wrapper subagent's patience. One operational note for future sessions, not a skill gap: when a background rescue job is taking unusually long, checking in with the user rather than waiting indefinitely was the right call - the existing iteration-cap language covers implementation cycles, not open-ended tool waits, and this loop found that boundary naturally without needing new guidance. Nothing durable enough to propose a skill diff for this run.",
+    "2026-08-17T11:36:18Z phase -> retro",
+    "2026-08-17T11:36:25Z loop complete: 3 steps, 3 const-object enums extracted in src/platform/http (HttpFailureKind, AttemptOutcomeKind, HttpResultOutcome), 2 cross-directory features/auth call sites repointed, G4 fresh-context Claude review CLEAN, Codex unavailable and skipped per user approval, G5 proof registered. Ready for done.",
+    "2026-08-17T11:36:25Z phase -> done"
+  ],
+  "test_file_hashes": {
+    "src/platform/http/httpFailure.test.ts": {
+      "sha": "07e203824217",
+      "step": 1,
+      "recorded": "2026-08-17T11:21:43Z",
+      "log_index": 9
+    },
+    "src/platform/http/shouldRetry.test.ts": {
+      "sha": "3104bddddb43",
+      "step": 1,
+      "recorded": "2026-08-17T11:21:43Z",
+      "log_index": 9
+    },
+    "src/platform/http/performAttempt.test.ts": {
+      "sha": "f95501d3a1d3",
+      "step": 2,
+      "recorded": "2026-08-17T11:23:40Z",
+      "log_index": 13
+    },
+    "src/platform/http/createHttpClient.test.ts": {
+      "sha": "1af39d7cbc4a",
+      "step": 3,
+      "recorded": "2026-08-17T11:25:26Z",
+      "log_index": 17
+    },
+    "src/features/auth/data/fetchSignedInUser.test.ts": {
+      "sha": "c3ddf4201ac7",
+      "step": 3,
+      "recorded": "2026-08-17T11:25:26Z",
+      "log_index": 17
+    },
+    "src/features/auth/data/lookupUserIdentifier.test.ts": {
+      "sha": "e1a6e7718498",
+      "step": 3,
+      "recorded": "2026-08-17T11:25:26Z",
+      "log_index": 17
+    }
+  },
+  "evidence_hashes": {
+    "evidence/steps/step1-green.txt": {
+      "sha": "f86da19a4510",
+      "recorded": "2026-08-17T11:23:36Z",
+      "note": "HttpFailureKind as-const enum in httpFailure.ts; updated performAttempt.ts, createHttpClient.ts, shouldRetry.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean"
+    },
+    "evidence/steps/step2-green.txt": {
+      "sha": "6c0f7b141bc7",
+      "recorded": "2026-08-17T11:25:22Z",
+      "note": "AttemptOutcomeKind as-const enum in performAttempt.ts; updated createHttpClient.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean"
+    },
+    "evidence/steps/step3-green.txt": {
+      "sha": "462d5d409e73",
+      "recorded": "2026-08-17T11:28:11Z",
+      "note": "HttpResultOutcome as-const enum in httpResult.ts; updated createHttpClient.ts, features/auth/data/fetchSignedInUser.ts + lookupUserIdentifier.ts; added to platform/http index.ts barrel (cross-directory consumer); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint + prettier clean"
+    },
+    "evidence/g3-verify-full.txt": {
+      "sha": "2dce665ac524",
+      "recorded": "2026-08-17T11:29:13Z",
+      "note": "npm run verify (typecheck+lint+format:check+test:coverage+build+verify:build+size) full green"
+    },
+    "evidence/g3-e2e-full.txt": {
+      "sha": "c84ca08f2da0",
+      "recorded": "2026-08-17T11:29:13Z",
+      "note": "npm run e2e 41/41 passing, no regressions from the enum extraction"
+    },
+    "evidence/reviews/g4-claude-review.md": {
+      "sha": "e641744b1d7b",
+      "recorded": "2026-08-17T11:31:46Z",
+      "note": "fresh-context Claude G4 review, CLEAN, 0 findings"
+    },
+    "evidence/reviews/full-diff.txt": {
+      "sha": "d3db2da8b236",
+      "recorded": "2026-08-17T11:31:46Z",
+      "note": "full diff (d7ef594..HEAD, platform/http + features/auth) given to both G4 reviewers"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+
+Running 5 tests using 1 worker
+
+  ✓  1 [chromium] › e2e/header.spec.ts:56:3 › the signed-in header › shows the skeleton, then the resolved name and initials (989ms)
+  ✓  2 [chromium] › e2e/header.spec.ts:87:3 › the signed-in header › renders the neutral presentation and the page beneath when the name cannot resolve (996ms)
+  ✓  3 [chromium] › e2e/header.spec.ts:127:3 › the signed-in header › requests the user record once across two authenticated navigations (973ms)
+  ✓  4 [chromium] › e2e/header.spec.ts:168:3 › the signed-in header › signs in and out entirely from the keyboard (297ms)
+  ✓  5 [chromium] › e2e/header.spec.ts:219:3 › the signed-in header › does not return to an authenticated view with Back after signing out (310ms)
+
+  5 passed (4.6s)
