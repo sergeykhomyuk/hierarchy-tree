@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T12:17:50Z",
+  "updated": "2026-08-17T12:19:03Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 6
+      "steps_done": 7
     },
     "G3": {
       "status": "pending",
@@ -361,11 +361,11 @@
       "id": 7,
       "desc": "defaultExpansion: every root plus every root's direct children that have children of their own, and nothing deeper, computed from the forest rather than hardcoded. Invariants 87, 88 (pure half; rendered at M3).",
       "tests": [
-        "the default expansion is every root plus every root's child that has children",
-        "the default expansion rule holds for three roots and for thirty"
+        "src/features/hierarchy/domain/defaultExpansion.test.ts::defaultExpansion > the default expansion is every root plus every root's child that has children",
+        "src/features/hierarchy/domain/defaultExpansion.test.ts::defaultExpansion > the default expansion rule holds for three roots and for thirty"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T12:18:32Z evidence/logs/step7-red.txt: defaultExpansion.ts does not exist yet",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -1006,7 +1006,12 @@
     "2026-08-17T12:17:17Z step 6 -> red",
     "2026-08-17T12:17:50Z step 6 -> green",
     "2026-08-17T12:17:50Z step 6 -> done",
-    "2026-08-17T12:17:50Z evidence recorded: evidence/logs/step6-green.txt (d1e967dbc441) - green: all 6 flattenVisible tests pass"
+    "2026-08-17T12:17:50Z evidence recorded: evidence/logs/step6-green.txt (d1e967dbc441) - green: all 6 flattenVisible tests pass",
+    "2026-08-17T12:18:25Z step 7 amended: desc: \"defaultExpansion: every root plus every root's direct children that have children of their own, and nothing deeper, computed from the forest rather than hardcoded. Invariants 87, 88 (pure half; rendered at M3).\" -> \"defaultExpansion: every root plus every root's direct children that have children of their own, and nothing deeper, computed from the forest rather than hardcoded. Invariants 87, 88 (pure half; rendered at M3).\"; tests: [\"the default expansion is every root plus every root's child that has children\", 'the default expansion rule holds for three roots and for thirty'] -> [\"src/features/hierarchy/domain/defaultExpansion.test.ts::defaultExpansion > the default expansion is every root plus every root's child that has children\", 'src/features/hierarchy/domain/defaultExpansion.test.ts::defaultExpansion > the default expansion rule holds for three roots and for thirty']",
+    "2026-08-17T12:18:32Z step 7 -> red",
+    "2026-08-17T12:19:03Z step 7 -> green",
+    "2026-08-17T12:19:03Z step 7 -> done",
+    "2026-08-17T12:19:03Z evidence recorded: evidence/logs/step7-green.txt (2cc43f92aafa) - green: defaultExpansion tests pass for the small and 30-person fixtures"
   ],
   "milestones": [
     {
@@ -1120,6 +1125,11 @@
       "sha": "d1e967dbc441",
       "recorded": "2026-08-17T12:17:50Z",
       "note": "green: all 6 flattenVisible tests pass"
+    },
+    "evidence/logs/step7-green.txt": {
+      "sha": "2cc43f92aafa",
+      "recorded": "2026-08-17T12:19:03Z",
+      "note": "green: defaultExpansion tests pass for the small and 30-person fixtures"
     }
   },
   "test_file_hashes": {
@@ -1146,6 +1156,12 @@
       "step": 6,
       "recorded": "2026-08-17T12:17:17Z",
       "log_index": 187
+    },
+    "src/features/hierarchy/domain/defaultExpansion.test.ts": {
+      "sha": "5e4298485dd4",
+      "step": 7,
+      "recorded": "2026-08-17T12:18:32Z",
+      "log_index": 192
     }
   }
 }
