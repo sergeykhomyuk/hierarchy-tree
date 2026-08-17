@@ -1,12 +1,14 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '@shared/ui';
 import { personDisplayName } from './domain/personDisplayName';
 import type { EmailAddress } from './domain/emailAddress';
+import type { PersonIdentifier } from './domain/personIdentifier';
 
 const INDENT_REM_PER_DEPTH = 2;
 
 export type TreeRowProps = {
+  personId: PersonIdentifier;
   firstName: string;
   lastName: string;
   email: EmailAddress;
@@ -18,6 +20,7 @@ export type TreeRowProps = {
   setSize: number;
   posInSet: number;
   isSignedInUser: boolean;
+  onPhotoError: (personId: PersonIdentifier) => void;
 };
 
 // Every prop here is a primitive - flattenVisible returns a fresh
@@ -28,6 +31,7 @@ export type TreeRowProps = {
 // otherwise takes its name from everything inside it, the email, the
 // report count and the toggle glyph included (invariant 94).
 export const TreeRow = memo(function TreeRow({
+  personId,
   firstName,
   lastName,
   email,
@@ -39,12 +43,16 @@ export const TreeRow = memo(function TreeRow({
   setSize,
   posInSet,
   isSignedInUser,
+  onPhotoError,
 }: TreeRowProps) {
   const { t } = useTranslation('hierarchy');
   const displayName = personDisplayName({ firstName, lastName, email });
   const accessibleName = isSignedInUser
     ? `${displayName}, ${t('page.youMarkerLabel')}`
     : displayName;
+  const handleImageError = useCallback(() => {
+    onPhotoError(personId);
+  }, [onPhotoError, personId]);
 
   return (
     <div
@@ -74,6 +82,7 @@ export const TreeRow = memo(function TreeRow({
         displayName={displayName}
         size="medium"
         decorative
+        onImageError={handleImageError}
       />
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-2 truncate font-semibold text-ink">

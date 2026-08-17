@@ -4,7 +4,12 @@ import type { Person } from '../domain/person';
 
 export function testPerson(
   id: number,
-  overrides: { managerId?: number; firstName?: string; lastName?: string } = {},
+  overrides: {
+    managerId?: number;
+    firstName?: string;
+    lastName?: string;
+    photo?: string;
+  } = {},
 ): Person {
   return {
     id: parsePersonIdentifier(id),
@@ -14,5 +19,6 @@ export function testPerson(
     ...(overrides.managerId !== undefined
       ? { managerId: parsePersonIdentifier(overrides.managerId) }
       : {}),
+    ...(overrides.photo !== undefined ? { photo: overrides.photo } : {}),
   };
 }

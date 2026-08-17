@@ -1,6 +1,7 @@
 import { memo, use, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import type { ObservabilityFacade } from '@platform/observability';
 import { EmptyState, ErrorState } from '@shared/ui';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyResult } from './data/fetchPeople';
@@ -10,6 +11,10 @@ import { HierarchyTree } from './HierarchyTree';
 
 const LOGIN_PATH = '/login';
 
+export type HierarchyPageDependencies = {
+  observability: ObservabilityFacade;
+};
+
 export type HierarchyPageProps = {
   hierarchy: Promise<HierarchyResult>;
   onRetry: () => void;
@@ -17,6 +22,7 @@ export type HierarchyPageProps = {
   // A plain string|number, not auth's own UserIdentifier - see
   // HierarchyTree.tsx's own note on the same choice.
   userId?: string | number;
+  dependencies: HierarchyPageDependencies;
 };
 
 // Reads the loader promise with use() and switches on HierarchyResult.kind
@@ -29,6 +35,7 @@ export const HierarchyPage = memo(function HierarchyPage({
   onRetry,
   onRefresh,
   userId,
+  dependencies,
 }: HierarchyPageProps) {
   const { t } = useTranslation('hierarchy');
   const navigate = useNavigate();
@@ -84,6 +91,7 @@ export const HierarchyPage = memo(function HierarchyPage({
           <HierarchyTree
             roots={result.roots}
             expandedIds={defaultExpansion(result.roots)}
+            observability={dependencies.observability}
             {...(userId !== undefined ? { signedInUserId: userId } : {})}
           />
         </div>

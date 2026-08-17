@@ -1,4 +1,4 @@
-import { memo, Suspense, useCallback, useEffect } from 'react';
+import { memo, Suspense, useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useLoaderData,
@@ -57,12 +57,21 @@ export const HomeRoute = memo(function HomeRoute() {
     };
   }, [revalidator.state, runtime.interactionTracker]);
 
+  // Stable across re-renders so it does not defeat HierarchyPage's own
+  // memo comparison every time HomeRoute re-renders for an unrelated
+  // reason.
+  const dependencies = useMemo(
+    () => ({ observability: runtime.observability }),
+    [runtime.observability],
+  );
+
   return (
     <Suspense fallback={<HierarchySkeleton />}>
       <HierarchyPage
         hierarchy={hierarchy}
         onRetry={handleReload}
         onRefresh={handleReload}
+        dependencies={dependencies}
         {...(authenticatedData?.userId !== undefined
           ? { userId: authenticatedData.userId }
           : {})}

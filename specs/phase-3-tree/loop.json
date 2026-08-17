@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T16:11:44Z",
+  "updated": "2026-08-17T16:23:06Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 24
+      "steps_done": 25
     },
     "G3": {
       "status": "pending",
@@ -625,8 +625,8 @@
         "a second resolved payload reports the same still-broken photo again",
         "the photo-failure report carries no photo URL"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T16:21:06Z evidence/logs/step25-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1152,7 +1152,13 @@
     "2026-08-17T16:11:40Z step 24 -> done",
     "2026-08-17T16:11:44Z evidence recorded: evidence/logs/step24-green.txt (0f2cb5f591f0) - step24: HierarchyTree/TreeRow - full unit suite green (528/528)",
     "2026-08-17T16:11:44Z evidence recorded: evidence/logs/step24-e2e-green.txt (628ca5cc221f) - step24: HierarchyTree/TreeRow - full e2e suite green (42/42)",
-    "2026-08-17T16:11:44Z evidence recorded: evidence/logs/step24-red.txt (43d823dbdc86) - step24: HierarchyTree/TreeRow red - both new test files fail to resolve against pre-step-24 state (TreeRow.tsx and HierarchyTree.tsx did not exist)"
+    "2026-08-17T16:11:44Z evidence recorded: evidence/logs/step24-red.txt (43d823dbdc86) - step24: HierarchyTree/TreeRow red - both new test files fail to resolve against pre-step-24 state (TreeRow.tsx and HierarchyTree.tsx did not exist)",
+    "2026-08-17T16:21:06Z step 25 -> red",
+    "2026-08-17T16:23:01Z step 25 -> green",
+    "2026-08-17T16:23:01Z step 25 -> done",
+    "2026-08-17T16:23:06Z evidence recorded: evidence/logs/step25-green.txt (56b91d140ee7) - step25: photo failure fallback - full unit suite green (531/531)",
+    "2026-08-17T16:23:06Z evidence recorded: evidence/logs/step25-e2e-green.txt (78e0dae3a75d) - step25: photo failure fallback - full e2e suite green (42/42)",
+    "2026-08-17T16:23:06Z evidence recorded: evidence/logs/step25-red.txt (bb5d2b0af61c) - step25: photo failure fallback red - all 3 new tests genuinely fail against pre-step-25 HierarchyTree.tsx/TreeRow.tsx (no onImageError wiring, no dedupe set)"
   ],
   "milestones": [
     {
@@ -1431,6 +1437,21 @@
       "sha": "43d823dbdc86",
       "recorded": "2026-08-17T16:11:44Z",
       "note": "step24: HierarchyTree/TreeRow red - both new test files fail to resolve against pre-step-24 state (TreeRow.tsx and HierarchyTree.tsx did not exist)"
+    },
+    "evidence/logs/step25-green.txt": {
+      "sha": "56b91d140ee7",
+      "recorded": "2026-08-17T16:23:06Z",
+      "note": "step25: photo failure fallback - full unit suite green (531/531)"
+    },
+    "evidence/logs/step25-e2e-green.txt": {
+      "sha": "78e0dae3a75d",
+      "recorded": "2026-08-17T16:23:06Z",
+      "note": "step25: photo failure fallback - full e2e suite green (42/42)"
+    },
+    "evidence/logs/step25-red.txt": {
+      "sha": "bb5d2b0af61c",
+      "recorded": "2026-08-17T16:23:06Z",
+      "note": "step25: photo failure fallback red - all 3 new tests genuinely fail against pre-step-25 HierarchyTree.tsx/TreeRow.tsx (no onImageError wiring, no dedupe set)"
     }
   },
   "test_file_hashes": {

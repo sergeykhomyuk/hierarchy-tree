@@ -1,4 +1,5 @@
-import { memo } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
+import type { ObservabilityFacade } from '@platform/observability';
 import { flattenVisible } from './domain/flattenVisible';
 import type { PersonIdentifier } from './domain/personIdentifier';
 import type { TreeNode } from './domain/treeNode';
@@ -15,6 +16,7 @@ export type HierarchyTreeProps = {
   // no-match behavior as an id belonging to nobody, not an error
   // (invariant 85).
   signedInUserId?: string | number;
+  observability: ObservabilityFacade;
 };
 
 // The tree renders every visible row from the row model, in its order,
@@ -25,14 +27,39 @@ export const HierarchyTree = memo(function HierarchyTree({
   roots,
   expandedIds,
   signedInUserId,
+  observability,
 }: HierarchyTreeProps) {
   const rows = flattenVisible(roots, expandedIds);
+
+  // Held here rather than by a row: collapsing and re-expanding a branch
+  // remounts its rows, and a fresh mount must not produce a second report
+  // for a person already reported this load (invariant 97). roots is a
+  // freshly built structure every time a new payload resolves - buildForest
+  // never reuses the previous call's objects - so resetting on its
+  // identity is exactly "resets when a new payload resolves", without this
+  // component needing the raw loader promise to know that happened.
+  const reportedPhotoFailures = useRef<Set<PersonIdentifier>>(new Set());
+  useEffect(() => {
+    reportedPhotoFailures.current = new Set();
+  }, [roots]);
+
+  const handlePhotoError = useCallback(
+    (personId: PersonIdentifier) => {
+      if (reportedPhotoFailures.current.has(personId)) return;
+      reportedPhotoFailures.current.add(personId);
+      // personId only - never the photo URL, a third-party address tied
+      // to a named person (invariant 166).
+      observability.logger.warn('hierarchy.photo_failed', { personId });
+    },
+    [observability],
+  );
 
   return (
     <div role="tree">
       {rows.map((row) => (
         <TreeRow
           key={row.person.id}
+          personId={row.person.id}
           firstName={row.person.firstName}
           lastName={row.person.lastName}
           email={row.person.email}
@@ -46,6 +73,7 @@ export const HierarchyTree = memo(function HierarchyTree({
           setSize={row.setSize}
           posInSet={row.posInSet}
           isSignedInUser={row.person.id === signedInUserId}
+          onPhotoError={handlePhotoError}
         />
       ))}
     </div>

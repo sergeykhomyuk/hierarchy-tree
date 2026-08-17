@@ -9,6 +9,7 @@ import {
   createInternationalization,
   Locale,
 } from '@platform/internationalization';
+import type { ObservabilityFacade } from '@platform/observability';
 import { loadTranslations } from './loadTranslations';
 import { HierarchyPage } from './HierarchyPage';
 import { HierarchySkeleton } from './HierarchySkeleton';
@@ -29,6 +30,17 @@ const EMPTY_ANOMALIES = {
 function LocationSearchProbe() {
   const location = useLocation();
   return <span data-testid="location-search">{location.search}</span>;
+}
+
+function createSpyObservability(): ObservabilityFacade {
+  return {
+    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    tracer: {
+      recordTiming: vi.fn(),
+      startInteraction: vi.fn(() => 'a'.repeat(32)),
+    },
+    analytics: { track: vi.fn() },
+  };
 }
 
 type RenderIsolatedOptions = {
@@ -71,6 +83,7 @@ async function renderIsolated(
                       hierarchy={hierarchy}
                       onRetry={onRetry}
                       onRefresh={onRefresh}
+                      dependencies={{ observability: createSpyObservability() }}
                     />
                   </Suspense>
                 </>

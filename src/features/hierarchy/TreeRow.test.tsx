@@ -10,6 +10,7 @@ import { loadTranslations } from './loadTranslations';
 import { TreeRow } from './TreeRow';
 import type { TreeRowProps } from './TreeRow';
 import { parseEmailAddress } from './domain/emailAddress';
+import { parsePersonIdentifier } from './domain/personIdentifier';
 import * as personDisplayNameModule from './domain/personDisplayName';
 
 async function createTestI18n() {
@@ -32,6 +33,7 @@ async function renderRow(props: TreeRowProps) {
 }
 
 const MANAGER_PROPS: TreeRowProps = {
+  personId: parsePersonIdentifier(1),
   firstName: 'Ronnen',
   lastName: 'Gurevitch',
   email: parseEmailAddress('ronnen@example.test'),
@@ -42,6 +44,7 @@ const MANAGER_PROPS: TreeRowProps = {
   setSize: 2,
   posInSet: 1,
   isSignedInUser: false,
+  onPhotoError: vi.fn(),
 };
 
 describe('TreeRow', () => {
