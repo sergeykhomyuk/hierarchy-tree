@@ -1,0 +1,100 @@
+{
+  "task": "login-visual-alignment",
+  "title": "Login page - align visual styling with mockup",
+  "type": "fix",
+  "size": "S",
+  "status": "active",
+  "phase": "plan",
+  "phase_entered": "2026-08-17T09:49:48Z",
+  "created": "2026-08-17",
+  "updated": "2026-08-17T09:49:53Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "S",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": null,
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "skipped",
+      "attempts": 0
+    },
+    "G2": {
+      "status": "pending",
+      "attempts": 0,
+      "steps_total": 1,
+      "steps_done": 0
+    },
+    "G3": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G4": {
+      "status": "pending",
+      "attempts": 0,
+      "security_pass": null
+    },
+    "G5": {
+      "status": "pending",
+      "attempts": 0
+    }
+  },
+  "retro": null,
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "Add missing Tailwind layout/typography classes across ApplicationLayout, LoginPage, Field, Input and a new Button fullWidth prop to match the mockup",
+      "tests": [
+        "src/shared/ui/Button.test.tsx::Button > renders at full width when fullWidth is set",
+        "src/shared/ui/Button.test.tsx::Button > does not stretch to full width by default",
+        "src/shared/ui/Field.test.tsx::Field > stacks the label above its control with a small gap",
+        "src/shared/ui/Input.test.tsx::Input > fills the width of its container",
+        "src/shared/ui/Input.test.tsx::Input > shows a danger border when the field context marks it invalid",
+        "src/app/layout/ApplicationLayout.test.tsx::ApplicationLayout > visually hides the skip link until it is focused",
+        "src/features/auth/LoginPage.test.tsx::LoginPage > centers the card on the login canvas background",
+        "src/features/auth/LoginPage.test.tsx::LoginPage > gives the heading bold mockup-sized typography",
+        "src/features/auth/LoginPage.test.tsx::LoginPage > renders the submit control at full width"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    }
+  ],
+  "log": [
+    "2026-08-17T09:44:30Z init: type=fix size=S flags=[]",
+    "2026-08-17T09:44:33Z triage: type=fix (known-wrong visual behavior vs an already-approved mockup, no design ambiguity), size=S (targeted Tailwind class additions across ApplicationLayout, LoginPage form wrapper, Field, Button - no new components, no logic changes). Continuing on branch loop/feature/phase-2-login per user instruction rather than a fresh branch.",
+    "2026-08-17T09:44:39Z note: could not link as spawned-from phase-2-login - that loop is done/immutable and link mutation is refused on a done parent. Recording the relationship here in prose instead: this fix addresses a visual gap in phase-2-login's LoginPage discovered post-close against specs/phase-2-login/mockups/.",
+    "2026-08-17T09:47:44Z phase -> frame (reason: begin reproduction)",
+    "2026-08-17T09:49:39Z step 1 added: Add missing Tailwind layout/typography classes across ApplicationLayout, LoginPage, Field, Input and a new Button fullWidth prop to match the mockup",
+    "2026-08-17T09:49:48Z phase -> plan (reason: frame complete: repro red observed for all 8 gap tests, regression scope defined)",
+    "2026-08-17T09:49:48Z frame: reproduced via live Playwright render of /login against specs/phase-2-login/mockups (1a-1d) + npx vitest red run (evidence/step1-red.txt) - card not centered/no canvas background, Field label inline not stacked, heading/subtext untyped by Tailwind preflight, submit button not full width, invalid input has no danger border, skip link permanently visible. Root cause: ApplicationLayout/LoginPage/Field's own layout markup never received Tailwind utility classes, while Card/Input/Button/ProductMark's own default styling already existed. --color-canvas-login and --radius-login-card tokens in theme.css were declared for this and are currently unused anywhere in src.",
+    "2026-08-17T09:49:53Z evidence recorded: evidence/step1-red.txt (44df9180b047) - npx vitest red run for all 9 registered tests: 8 fail for the right reason (missing Tailwind classes), 33 pre-existing tests unaffected",
+    "2026-08-17T09:49:53Z evidence recorded: evidence/current-1a-idle.png (16f5baf9b340) - Playwright screenshot of live /login (idle state) pre-fix, compare against specs/phase-2-login/mockups/mockup-1a.png"
+  ],
+  "evidence_hashes": {
+    "evidence/step1-red.txt": {
+      "sha": "44df9180b047",
+      "recorded": "2026-08-17T09:49:53Z",
+      "note": "npx vitest red run for all 9 registered tests: 8 fail for the right reason (missing Tailwind classes), 33 pre-existing tests unaffected"
+    },
+    "evidence/current-1a-idle.png": {
+      "sha": "16f5baf9b340",
+      "recorded": "2026-08-17T09:49:53Z",
+      "note": "Playwright screenshot of live /login (idle state) pre-fix, compare against specs/phase-2-login/mockups/mockup-1a.png"
+    }
+  }
+}

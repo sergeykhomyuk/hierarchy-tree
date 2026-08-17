@@ -22,14 +22,16 @@ import { loadTranslations } from './loadTranslations';
 import { LoginPage } from './LoginPage';
 import type { LoginPageDependencies } from './LoginPage';
 
-async function renderLoginPage(element: ReactElement): Promise<void> {
+async function renderLoginPage(
+  element: ReactElement,
+): Promise<ReturnType<typeof render>> {
   const i18n = await createInternationalization({
     resources: { common: {} },
     language: Locale.Test,
     observability: { logger: { error: vi.fn() } },
   });
   await loadTranslations(i18n);
-  render(<I18nextProvider i18n={i18n}>{element}</I18nextProvider>);
+  return render(<I18nextProvider i18n={i18n}>{element}</I18nextProvider>);
 }
 
 function createSpyObservability(): ObservabilityFacade {
@@ -505,5 +507,39 @@ describe('LoginPage', () => {
       screen.getByRole('button', { name: 'login.submit' }),
     ]);
     assertNoTabIndexAnywhere();
+  });
+
+  it('centers the card on the login canvas background', async () => {
+    const { container } = await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+
+    expect(container.firstElementChild).toHaveClass(
+      'flex',
+      'items-center',
+      'justify-center',
+      'bg-canvas-login',
+    );
+  });
+
+  it('gives the heading bold mockup-sized typography', async () => {
+    await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveClass(
+      'text-2xl',
+      'font-bold',
+    );
+  });
+
+  it('renders the submit control at full width', async () => {
+    await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'login.submit' }),
+    ).toHaveClass('w-full');
   });
 });

@@ -134,4 +134,28 @@ describe('Button', () => {
 
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
   });
+
+  it('renders at full width when fullWidth is set', () => {
+    render(
+      <Button variant="primary" fullWidth onClick={vi.fn()}>
+        Save
+      </Button>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass(
+      'w-full',
+    );
+  });
+
+  it('does not stretch to full width by default', () => {
+    render(
+      <Button variant="primary" onClick={vi.fn()}>
+        Save
+      </Button>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Save' })).not.toHaveClass(
+      'w-full',
+    );
+  });
 });

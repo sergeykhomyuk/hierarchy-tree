@@ -66,6 +66,23 @@ describe('Field', () => {
 
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
   });
+
+  it('stacks the label above its control with a small gap', () => {
+    const { container } = render(
+      <Field id="email" label="Email">
+        <Input
+          id="email"
+          name="email"
+          type="text"
+          value=""
+          onChange={vi.fn()}
+        />
+      </Field>,
+    );
+
+    expect(container.firstElementChild).toHaveClass('flex', 'flex-col');
+    expect(screen.getByText('Email')).toHaveClass('text-sm', 'font-medium');
+  });
 });
 
 describe('Input', () => {

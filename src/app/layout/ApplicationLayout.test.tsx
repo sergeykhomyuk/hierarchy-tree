@@ -34,4 +34,12 @@ describe('ApplicationLayout', () => {
 
     expect(skipLink).toHaveAttribute('href', `#${main.id}`);
   });
+
+  it('visually hides the skip link until it is focused', async () => {
+    await renderLayout();
+
+    const skipLink = screen.getByRole('link', { name: 'layout.skipLink' });
+
+    expect(skipLink).toHaveClass('sr-only', 'focus:not-sr-only');
+  });
 });
