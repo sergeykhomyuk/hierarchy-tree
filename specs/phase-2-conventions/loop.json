@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "review",
-  "phase_entered": "2026-08-17T11:05:13Z",
+  "phase": "prove",
+  "phase_entered": "2026-08-17T11:15:51Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:15:47Z",
+  "updated": "2026-08-17T11:16:24Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -26,7 +26,7 @@
     "spec": null,
     "plan": "PLAN.md",
     "design": null,
-    "proof": null,
+    "proof": "PROOF.md",
     "evidence": "evidence/"
   },
   "gates": {
@@ -233,7 +233,9 @@
     "2026-08-17T11:14:49Z evidence recorded: evidence/reviews/g4-codex-fix-confirmation.md (0565de13494d) - Codex-1 fix confirmation, same thread, RESOLVED",
     "2026-08-17T11:14:55Z evidence recorded: evidence/reviews/full-diff.txt (619bb6945cae) - full diff (d31a2b5..HEAD, src/features/auth) given to both G4 reviewers",
     "2026-08-17T11:15:47Z evidence recorded: evidence/g4-final-verify.txt (52f3787bbfb9) - post-G4-fix npm run verify full green (typecheck/lint/format:check/test:coverage/build/verify:build/size)",
-    "2026-08-17T11:15:47Z evidence recorded: evidence/g4-final-e2e.txt (8f601f25e1bd) - post-G4-fix npm run e2e 41/41 passing"
+    "2026-08-17T11:15:47Z evidence recorded: evidence/g4-final-e2e.txt (8f601f25e1bd) - post-G4-fix npm run e2e 41/41 passing",
+    "2026-08-17T11:15:51Z phase -> prove",
+    "2026-08-17T11:16:24Z set proof = PROOF.md"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
