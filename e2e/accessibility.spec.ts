@@ -4,6 +4,7 @@ import {
   installDeferredUserMock,
   submitSignInForm,
 } from './support/deferredUserMock';
+import { installPopulatedHierarchyMock } from './support/hierarchyFixture';
 import { installRouteMocks } from './support/routeMocks';
 import { installSignInApiMock, signIn } from './support/signIn';
 
@@ -95,6 +96,34 @@ test.describe('accessibility', () => {
       await expect(page.getByText('header.signedInFallback')).toBeVisible();
 
       const results = await createAxeBuilder(page).analyze();
+      expect(results.violations).toEqual([]);
+    });
+  }
+
+  // The Data state - a real, nested, schema-valid tree - was unreachable
+  // by any e2e mock before the M3 hierarchy fixture: every other route
+  // mock in this suite produces only Error or Empty. Scoped to
+  // color-contrast only, not a full unscoped scan: role="tree" has no
+  // focusable content until M4's roving tabindex work lands (steps
+  // 31-36), which a full scan would correctly flag as a SEPARATE,
+  // already-known and out-of-scope violation for this milestone - this
+  // test's own claim is the tree's tokens (row hover, indent rail,
+  // toggle border, report-count text) clear the contrast floor, not that
+  // the tree is keyboard-operable yet.
+  for (const colorScheme of ['light', 'dark'] as const) {
+    test(`the populated tree meets the color-contrast floor, in ${colorScheme}`, async ({
+      page,
+      baseURL,
+    }) => {
+      await installRouteMocks(page, baseURL ?? '');
+      await page.emulateMedia({ colorScheme });
+      await installPopulatedHierarchyMock(page);
+      await signIn(page);
+      await expect(page.getByRole('tree')).toBeVisible();
+
+      const results = await createAxeBuilder(page)
+        .withRules(['color-contrast'])
+        .analyze();
       expect(results.violations).toEqual([]);
     });
   }

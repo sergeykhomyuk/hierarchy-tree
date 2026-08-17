@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T20:30:40Z",
+  "updated": "2026-08-17T21:11:16Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -278,12 +278,12 @@
         "Gap-2": {
           "desc": "invariant 102: personDisplayName.ts joins first/last name with a hardcoded JS space, never through an i18next catalogue string - no locale can reorder the name parts as the invariant requires. Fixing this properly ripples into ~15-25 existing test assertions across TreeRow.test.tsx, HierarchyTree.test.tsx and e2e/hierarchy-layout.spec.ts that currently assert literal rendered names under the key-echo test locale, since createKeyEchoCatalogue discards interpolation placeholders along with template content.",
           "blocking": false,
-          "disposition": null
+          "disposition": "accepted"
         },
         "Gap-3": {
           "desc": "invariant 180: no contrast-floor (axe or manual) check exists anywhere for the populated tree Data state in either light or dark theme. Coincides with the M4-deferred gap (role=tree has no focusable content until roving tabindex lands), but 180 itself (row hover, indent rail, toggle border, report-count text contrast) is separable from focus-order concerns and currently has zero evidence.",
           "blocking": false,
-          "disposition": null
+          "disposition": "covered"
         }
       }
     },
@@ -1233,7 +1233,13 @@
     "2026-08-17T20:30:39Z evidence recorded: evidence/screenshots/treerow-indent-rail-missing-crop-20260817T195951Z.png (3dc423a9cfc7) - Gap-1 evidence: cropped screenshot showing the missing indent rail before the fix",
     "2026-08-17T20:30:39Z evidence recorded: evidence/traces/hierarchy-layout-bounding-box-stability-20260817T195951Z.zip (748618424952) - M3 G3 verify: Playwright trace for the bounding-box stability test",
     "2026-08-17T20:30:39Z evidence recorded: evidence/traces/hierarchy-layout-responsive-one-line-20260817T195951Z.zip (1352473472e5) - M3 G3 verify: Playwright trace for the responsive one-line test",
-    "2026-08-17T20:30:40Z evidence recorded: evidence/traces/hierarchy-layout-scroll-position-stability-20260817T195951Z.zip (ee6ea69b3120) - M3 G3 verify: Playwright trace for the scroll-position stability test"
+    "2026-08-17T20:30:40Z evidence recorded: evidence/traces/hierarchy-layout-scroll-position-stability-20260817T195951Z.zip (ee6ea69b3120) - M3 G3 verify: Playwright trace for the scroll-position stability test",
+    "2026-08-17T21:08:06Z Gap-2 disposition: accepted, not fixed now. Fixing invariant 102 properly (routing personDisplayName through an i18next catalogue string) would ripple into ~15-25 existing test assertions across TreeRow.test.tsx, HierarchyTree.test.tsx and e2e/hierarchy-layout.spec.ts that assert literal rendered names under the key-echo test locale, since createKeyEchoCatalogue discards interpolation placeholders along with template content. User chose to accept this as a known gap for now and revisit later rather than take on that ripple mid-M3-closeout.",
+    "2026-08-17T21:08:06Z G3 finding Gap-2 dispositioned: accepted",
+    "2026-08-17T21:11:10Z evidence recorded: evidence/logs/gap3-fix-suite.txt (e31d9622cea6) - Gap-3 fix: full vitest suite 548/548 pass",
+    "2026-08-17T21:11:10Z evidence recorded: evidence/logs/gap3-fix-e2e.txt (79c9d4b97e84) - Gap-3 fix: full playwright suite 50/50 pass (48 baseline + 2 new contrast scans)",
+    "2026-08-17T21:11:16Z Gap-3 fix: added a color-contrast-only axe scan (createAxeBuilder(page).withRules(['color-contrast'])) of the populated tree in both light and dark, in accessibility.spec.ts. Deliberately scoped to exclude the known M4-deferred focus-order violations (role=tree has no focusable content until roving tabindex lands). Sanity-checked non-vacuously: temporarily weakened --color-ink-muted to a near-white value, confirmed the scan failed on real row text (andrew.crist@example.com, insufficient contrast 1.13 vs required 4.5), then reverted and confirmed green again. Full suite and e2e both green.",
+    "2026-08-17T21:11:16Z G3 finding Gap-3 dispositioned: covered"
   ],
   "milestones": [
     {
@@ -1687,6 +1693,16 @@
       "sha": "ee6ea69b3120",
       "recorded": "2026-08-17T20:30:40Z",
       "note": "M3 G3 verify: Playwright trace for the scroll-position stability test"
+    },
+    "evidence/logs/gap3-fix-suite.txt": {
+      "sha": "e31d9622cea6",
+      "recorded": "2026-08-17T21:11:10Z",
+      "note": "Gap-3 fix: full vitest suite 548/548 pass"
+    },
+    "evidence/logs/gap3-fix-e2e.txt": {
+      "sha": "79c9d4b97e84",
+      "recorded": "2026-08-17T21:11:10Z",
+      "note": "Gap-3 fix: full playwright suite 50/50 pass (48 baseline + 2 new contrast scans)"
     }
   },
   "test_file_hashes": {
