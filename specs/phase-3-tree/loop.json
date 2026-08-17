@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T13:05:17Z",
+  "updated": "2026-08-17T13:07:50Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 9
+      "steps_done": 10
     },
     "G3": {
       "status": "pending",
@@ -414,14 +414,14 @@
       "id": 10,
       "desc": "parsePeople envelope normalization ahead of validation: a dense array, an array whose null holes are removed before validation rather than counted as malformed rows, an object read in its own key order, null as an empty list, and every scalar as invalidEnvelope. Invariants 42, 43, 44, 45 (the kind), 46.",
       "tests": [
-        "an array carrying a null hole produces no dropped row",
-        "an object-keyed envelope is read in its own key order",
-        "null, an empty array, an array of only holes and an empty object all mean no users",
-        "a string, a number and a boolean each produce invalidEnvelope",
-        "which envelope arrived never changes the surviving records or their order"
+        "src/features/hierarchy/data/parsePeople.test.ts::parsePeople > an array carrying a null hole produces no dropped row",
+        "src/features/hierarchy/data/parsePeople.test.ts::parsePeople > an object-keyed envelope is read in its own key order",
+        "src/features/hierarchy/data/parsePeople.test.ts::parsePeople > null, an empty array, an array of only holes and an empty object all mean no users",
+        "src/features/hierarchy/data/parsePeople.test.ts::parsePeople > a string, a number and a boolean each produce invalidEnvelope",
+        "src/features/hierarchy/data/parsePeople.test.ts::parsePeople > which envelope arrived never changes the surviving records or their order"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T13:06:14Z evidence/logs/step10-red.txt: parsePeople.ts does not exist yet",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1044,7 +1044,12 @@
     "2026-08-17T13:04:24Z step 9 -> red",
     "2026-08-17T13:05:17Z step 9 -> green",
     "2026-08-17T13:05:17Z step 9 -> done",
-    "2026-08-17T13:05:17Z evidence recorded: evidence/logs/step9-green.txt (5de28617eeba) - green: all 5 personSchema tests pass"
+    "2026-08-17T13:05:17Z evidence recorded: evidence/logs/step9-green.txt (5de28617eeba) - green: all 5 personSchema tests pass",
+    "2026-08-17T13:06:06Z step 10 amended: desc: 'parsePeople envelope normalization ahead of validation: a dense array, an array whose null holes are removed before validation rather than counted as malformed rows, an object read in its own key order, null as an empty list, and every scalar as invalidEnvelope. Invariants 42, 43, 44, 45 (the kind), 46.' -> 'parsePeople envelope normalization ahead of validation: a dense array, an array whose null holes are removed before validation rather than counted as malformed rows, an object read in its own key order, null as an empty list, and every scalar as invalidEnvelope. Invariants 42, 43, 44, 45 (the kind), 46.'; tests: ['an array carrying a null hole produces no dropped row', 'an object-keyed envelope is read in its own key order', 'null, an empty array, an array of only holes and an empty object all mean no users', 'a string, a number and a boolean each produce invalidEnvelope', 'which envelope arrived never changes the surviving records or their order'] -> ['src/features/hierarchy/data/parsePeople.test.ts::parsePeople > an array carrying a null hole produces no dropped row', 'src/features/hierarchy/data/parsePeople.test.ts::parsePeople > an object-keyed envelope is read in its own key order', 'src/features/hierarchy/data/parsePeople.test.ts::parsePeople > null, an empty array, an array of only holes and an empty object all mean no users', 'src/features/hierarchy/data/parsePeople.test.ts::parsePeople > a string, a number and a boolean each produce invalidEnvelope', 'src/features/hierarchy/data/parsePeople.test.ts::parsePeople > which envelope arrived never changes the surviving records or their order']",
+    "2026-08-17T13:06:14Z step 10 -> red",
+    "2026-08-17T13:07:50Z step 10 -> green",
+    "2026-08-17T13:07:50Z step 10 -> done",
+    "2026-08-17T13:07:50Z evidence recorded: evidence/logs/step10-green.txt (b8dcb02390fb) - green: all 5 parsePeople envelope tests pass"
   ],
   "milestones": [
     {
@@ -1188,6 +1193,11 @@
       "sha": "5de28617eeba",
       "recorded": "2026-08-17T13:05:17Z",
       "note": "green: all 5 personSchema tests pass"
+    },
+    "evidence/logs/step10-green.txt": {
+      "sha": "b8dcb02390fb",
+      "recorded": "2026-08-17T13:07:50Z",
+      "note": "green: all 5 parsePeople envelope tests pass"
     }
   },
   "test_file_hashes": {
@@ -1232,6 +1242,12 @@
       "step": 9,
       "recorded": "2026-08-17T13:04:24Z",
       "log_index": 211
+    },
+    "src/features/hierarchy/data/parsePeople.test.ts": {
+      "sha": "d228368f86ef",
+      "step": 10,
+      "recorded": "2026-08-17T13:06:14Z",
+      "log_index": 216
     }
   }
 }
