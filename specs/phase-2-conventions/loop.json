@@ -1,0 +1,160 @@
+{
+  "task": "phase-2-conventions",
+  "title": "Align features/auth with coding conventions",
+  "type": "refactor",
+  "size": "S",
+  "status": "active",
+  "phase": "plan",
+  "phase_entered": "2026-08-17T10:52:03Z",
+  "created": "2026-08-17",
+  "updated": "2026-08-17T10:52:14Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "S",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": null,
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "skipped",
+      "attempts": 0
+    },
+    "G2": {
+      "status": "pending",
+      "attempts": 0,
+      "steps_total": 9,
+      "steps_done": 0
+    },
+    "G3": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G4": {
+      "status": "pending",
+      "attempts": 0,
+      "security_pass": null
+    },
+    "G5": {
+      "status": "pending",
+      "attempts": 0
+    }
+  },
+  "retro": null,
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "domain/index.ts barrel; repoint data/guard/session/root imports through it",
+      "tests": [
+        "src/features/auth/domain/deriveSecret.test.ts::deriveSecret > matches the brief's own encode, position by position, for a hand-worked input",
+        "src/features/auth/domain/userIdentifier.test.ts::userIdentifier > accepts a finite integer and a conservative string alike"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "desc": "data/index.ts barrel; repoint root index.ts and useLoginSubmission.ts through it",
+      "tests": [
+        "src/features/auth/data/lookupUserIdentifier.test.ts::lookupUserIdentifier > issues exactly one request, to the secrets path"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "desc": "guard/index.ts barrel; repoint root index.ts through it",
+      "tests": [
+        "src/features/auth/guard/requireSession.test.ts::requireSession > redirects a visitor with no session to the login route carrying from",
+        "src/features/auth/guard/redirectSignedInVisitor.test.ts::redirectSignedInVisitor > sends a signed-in visitor to the from target or the hierarchy route"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "desc": "session/index.ts barrel; repoint root index.ts, guard/, useLoginSubmission.ts through it",
+      "tests": [
+        "src/features/auth/session/readSession.test.ts::readSession > returns the signed-in view for a well-formed record"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "desc": "LoginCardStateKind + LoginResultOutcome const-object enums in loginCardState.ts",
+      "tests": [
+        "src/features/auth/loginCardState.test.ts::loginCardState > derives idle, ready, submitting, no-match and service-problem from the result and pending flags",
+        "src/features/auth/LoginPage.test.tsx::LoginPage > renders both fields read-only with their values while submitting"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 6,
+      "desc": "SessionStatus const-object enum in session/readSession.ts",
+      "tests": [
+        "src/features/auth/guard/requireSession.test.ts::requireSession > replaces the current entry on a direct load and pushes on an in-app navigation"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 7,
+      "desc": "SessionShadowStatus const-object enum in session/sessionShadow.ts",
+      "tests": [
+        "src/features/auth/session/readSession.test.ts::readSession > prefers the in-page shadow over a stale valid record left by a failed write"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 8,
+      "desc": "LookupOutcomeKind const-object enum in data/lookupUserIdentifier.ts",
+      "tests": [
+        "src/features/auth/useLoginSubmission.test.tsx::useLoginSubmission > derives once and requests once when submitted twice in flight"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 9,
+      "desc": "SessionUnreadableReason const-object enum in session/readSession.ts",
+      "tests": [
+        "src/features/auth/session/readSession.test.ts::readSession > treats an unparseable, id-less or wrong-version record as no session and removes it"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    }
+  ],
+  "log": [
+    "2026-08-17T10:42:08Z init: type=refactor size=S flags=[]",
+    "2026-08-17T10:42:11Z triage: refactor/S, mirrors phase-1-conventions precedent (mechanical alignment to typescript-coding/react-coding conventions, no behavior change, G1 skipped, characterization tests + green suite at each boundary). Scope: src/features/auth (61 files) - missing index.ts barrels, hardcoded string literals that should be enums/const-objects, general TS/React convention alignment. User explicitly requested working on top of the current branch (loop/feature/phase-2-login) rather than cutting a new branch, since this must land before that phase-2-login work merges.",
+    "2026-08-17T10:51:02Z phase -> frame",
+    "2026-08-17T10:52:03Z frame: behavior-preservation contract - pure structural refactor (barrel imports + literal-union to const-object-enum), no runtime behavior change. Coverage audit: features/auth already at 100% statement/function, 93-98% branch coverage on every touched file; existing suite (deriveSecret/userIdentifier/lookupUserIdentifier/loginCardState/LoginPage/useLoginSubmission/readSession/sessionRecord/requireSession/redirectSignedInVisitor tests) exercises every changed line already, so no new characterization tests needed - each step is G2 case (c), guarded by pre-existing tests. Scope confirmed with user via AskUserQuestion: (1) missing index.ts barrels in domain/data/guard/session, (2) six const-object enums (LoginCardStateKind, LoginResultOutcome, SessionStatus, SessionShadowStatus, LookupOutcomeKind, SessionUnreadableReason); explicitly out of scope: analytics/log event-name strings, since wrapping only auth's would be inconsistent with the rest of the app's identical unwrapped pattern (app.route_viewed, app.web_vital, app.error_boundary_shown).",
+    "2026-08-17T10:52:03Z phase -> plan",
+    "2026-08-17T10:52:13Z step 1 added: domain/index.ts barrel; repoint data/guard/session/root imports through it",
+    "2026-08-17T10:52:13Z step 2 added: data/index.ts barrel; repoint root index.ts and useLoginSubmission.ts through it",
+    "2026-08-17T10:52:13Z step 3 added: guard/index.ts barrel; repoint root index.ts through it",
+    "2026-08-17T10:52:13Z step 4 added: session/index.ts barrel; repoint root index.ts, guard/, useLoginSubmission.ts through it",
+    "2026-08-17T10:52:14Z step 5 added: LoginCardStateKind + LoginResultOutcome const-object enums in loginCardState.ts",
+    "2026-08-17T10:52:14Z step 6 added: SessionStatus const-object enum in session/readSession.ts",
+    "2026-08-17T10:52:14Z step 7 added: SessionShadowStatus const-object enum in session/sessionShadow.ts",
+    "2026-08-17T10:52:14Z step 8 added: LookupOutcomeKind const-object enum in data/lookupUserIdentifier.ts",
+    "2026-08-17T10:52:14Z step 9 added: SessionUnreadableReason const-object enum in session/readSession.ts"
+  ]
+}
