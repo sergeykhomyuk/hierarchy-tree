@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import type { Transport } from '@platform/http';
@@ -27,6 +27,30 @@ function validPersonPayload(): unknown {
 function dataResponse(): Promise<Response> {
   return Promise.resolve(
     new Response(JSON.stringify(validPersonPayload()), { status: 200 }),
+  );
+}
+
+function managerPayload(): unknown {
+  return [
+    {
+      id: 1,
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      email: 'ada@example.test',
+    },
+    {
+      id: 2,
+      firstName: 'Grace',
+      lastName: 'Hopper',
+      email: 'grace@example.test',
+      managerId: 1,
+    },
+  ];
+}
+
+function managerDataResponse(): Promise<Response> {
+  return Promise.resolve(
+    new Response(JSON.stringify(managerPayload()), { status: 200 }),
   );
 }
 
@@ -171,5 +195,28 @@ describe('HomeRoute', () => {
     const thirdId = runtime.interactionTracker.currentCorrelationId();
     expect(thirdId).not.toBe(secondId);
     expect(retryButton()).not.toBeDisabled();
+  });
+
+  it('a history entry that changes the expansion fetches nothing', async () => {
+    const user = userEvent.setup();
+    const clock = createFakeClock();
+    const responder = vi.fn(managerDataResponse);
+    const transport = createFakeTransport({ 'GET /users.json': [responder] });
+    const { router } = await renderHomeRoute(transport, clock);
+    await screen.findByRole('tree');
+    expect(responder).toHaveBeenCalledTimes(1);
+
+    const toggle = within(
+      screen.getByRole('treeitem', { name: 'Ada Lovelace' }),
+    ).getByRole('button', { hidden: true });
+    await user.click(toggle);
+
+    // The toggle DOES change the URL - proof this is the real
+    // useExpansion/useSearchParams path and not a click that happens to
+    // fetch nothing because nothing about it touches the URL at all.
+    expect(router.state.location.search).toBe('?expanded=');
+    await user.click(toggle);
+
+    expect(responder).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,0 +1,56 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/useExpansion.test.tsx (0 test)
+ ❯ |ui| src/app/routing/routes/HomeRoute.test.tsx (4 tests | 1 failed) 128ms
+     × a history entry that changes the expansion fetches nothing 15ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/useExpansion.test.tsx [ src/features/hierarchy/useExpansion.test.tsx ]
+Error: Failed to resolve import "./useExpansion" from "src/features/hierarchy/useExpansion.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/useExpansion.test.tsx:5:29
+  3  |  import userEvent from "@testing-library/user-event";
+  4  |  import { createMemoryRouter, RouterProvider } from "react-router";
+  5  |  import { useExpansion } from "./useExpansion";
+     |                                ^
+  6  |  import { buildForest } from "./domain/buildForest";
+  7  |  import { parsePersonIdentifier } from "./domain/personIdentifier";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/routing/routes/HomeRoute.test.tsx > HomeRoute > a history entry that changes the expansion fetches nothing
+AssertionError: expected '' to be '?expanded=' // Object.is equality
+
+- Expected
++ Received
+
+- ?expanded=
+
+ ❯ src/app/routing/routes/HomeRoute.test.tsx:217:42
+    215|     // useExpansion/useSearchParams path and not a click that happens …
+    216|     // fetch nothing because nothing about it touches the URL at all.
+    217|     expect(router.state.location.search).toBe('?expanded=');
+       |                                          ^
+    218|     await user.click(toggle);
+    219|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  1 failed | 3 passed (4)
+   Start at  17:50:23
+   Duration  695ms (transform 162ms, setup 146ms, import 194ms, tests 128ms, environment 492ms)
+

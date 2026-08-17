@@ -1,0 +1,5 @@
+  ✓  38 [chromium] › e2e/accessibility.spec.ts:85:5 › accessibility › / has zero axe violations when the header's name cannot resolve, in dark (1.2s)
+  ✓  41 [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header (263ms)
+  ✓  42 [development] › e2e/kit-route.spec.ts:103:3 › kit route › mirrors correctly under a forced right-to-left direction (503ms)
+
+  42 passed (7.3s)

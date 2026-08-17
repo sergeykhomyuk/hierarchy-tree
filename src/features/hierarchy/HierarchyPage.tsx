@@ -1,16 +1,22 @@
-import { memo, use, useCallback, useState } from 'react';
+import { memo, use, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import type { ObservabilityFacade } from '@platform/observability';
 import { EmptyState, ErrorState } from '@shared/ui';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyResult } from './data/fetchPeople';
-import { defaultExpansion } from './domain/defaultExpansion';
-import type { PersonIdentifier } from './domain/personIdentifier';
 import { HierarchySummary } from './HierarchySummary';
 import { HierarchyTree } from './HierarchyTree';
+import { useExpansion } from './useExpansion';
+import type { TreeNode } from './domain/treeNode';
 
 const LOGIN_PATH = '/login';
+
+// A stable identity for the non-Data states - useExpansion runs
+// unconditionally on every render (a hook cannot be called only inside the
+// switch below), and a fresh [] every render would make its search-params
+// effect re-run for no reason.
+const EMPTY_ROOTS: readonly TreeNode[] = [];
 
 export type HierarchyPageDependencies = {
   observability: ObservabilityFacade;
@@ -44,30 +50,9 @@ export const HierarchyPage = memo(function HierarchyPage({
     void navigate(LOGIN_PATH);
   }, [navigate]);
   const result = use(hierarchy);
-  // Stands in for useExpansion (step 27) until it lands: a plain toggle
-  // of the clicked id's membership, which is also what makes invariant
-  // 110 true for free - collapsing a parent only removes the PARENT's
-  // own id, never a descendant's, so a descendant's own expansion is
-  // still in the set, untouched, the moment the parent is re-expanded.
-  // use() runs first, so the initializer can read result directly rather
-  // than needing an effect that would flash an empty tree for a frame.
-  const [expandedIds, setExpandedIds] = useState<ReadonlySet<PersonIdentifier>>(
-    () =>
-      result.kind === HierarchyResultKind.Data
-        ? defaultExpansion(result.roots)
-        : new Set(),
+  const { expandedIds, toggleExpanded } = useExpansion(
+    result.kind === HierarchyResultKind.Data ? result.roots : EMPTY_ROOTS,
   );
-  const toggleExpanded = useCallback((personId: PersonIdentifier) => {
-    setExpandedIds((current) => {
-      const next = new Set(current);
-      if (next.has(personId)) {
-        next.delete(personId);
-      } else {
-        next.add(personId);
-      }
-      return next;
-    });
-  }, []);
 
   switch (result.kind) {
     case HierarchyResultKind.Cancelled:

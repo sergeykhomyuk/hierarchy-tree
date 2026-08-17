@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T16:42:46Z",
+  "updated": "2026-08-17T16:53:11Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 26
+      "steps_done": 27
     },
     "G3": {
       "status": "pending",
@@ -654,8 +654,8 @@
         "a toggle preserves every other search parameter",
         "expansion writes nothing to local storage, session storage or a cookie"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T16:50:34Z evidence/logs/step27-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1165,7 +1165,14 @@
     "2026-08-17T16:42:45Z evidence recorded: evidence/logs/step26-green.txt (fde9f5ea83f3) - step 26 green: TreeRow.test.tsx + HierarchyTree.test.tsx, 15/15 pass",
     "2026-08-17T16:42:45Z evidence recorded: evidence/logs/step26-full-suite.txt (7734024f73c0) - step 26: full vitest suite 536/536 pass, no regressions (531 baseline + 5 new)",
     "2026-08-17T16:42:45Z evidence recorded: evidence/logs/step26-e2e.txt (14e2d5e9eb8a) - step 26: full playwright suite 42/42 pass, no regressions",
-    "2026-08-17T16:42:46Z step 26 -> done"
+    "2026-08-17T16:42:46Z step 26 -> done",
+    "2026-08-17T16:50:34Z step 27 -> red",
+    "2026-08-17T16:50:41Z step 27 -> green",
+    "2026-08-17T16:53:11Z evidence recorded: evidence/logs/step27-red.txt (7b15f402ca2c) - step 27 red: useExpansion.test.tsx fails to resolve import (module missing); HomeRoute fetch-integration test fails asserting URL unchanged under the old local-state implementation",
+    "2026-08-17T16:53:11Z evidence recorded: evidence/logs/step27-green.txt (c2b20cff7482) - step 27 green: useExpansion.test.tsx + HomeRoute.test.tsx + HierarchyPage.test.tsx, 21/21 pass",
+    "2026-08-17T16:53:11Z evidence recorded: evidence/logs/step27-full-suite.txt (e4ad17a251fa) - step 27: full vitest suite 542/542 pass, no regressions (536 baseline + 6 new)",
+    "2026-08-17T16:53:11Z evidence recorded: evidence/logs/step27-e2e.txt (d780edb9969d) - step 27: full playwright suite 42/42 pass, no regressions",
+    "2026-08-17T16:53:11Z step 27 -> done"
   ],
   "milestones": [
     {
@@ -1479,6 +1486,26 @@
       "sha": "14e2d5e9eb8a",
       "recorded": "2026-08-17T16:42:45Z",
       "note": "step 26: full playwright suite 42/42 pass, no regressions"
+    },
+    "evidence/logs/step27-red.txt": {
+      "sha": "7b15f402ca2c",
+      "recorded": "2026-08-17T16:53:11Z",
+      "note": "step 27 red: useExpansion.test.tsx fails to resolve import (module missing); HomeRoute fetch-integration test fails asserting URL unchanged under the old local-state implementation"
+    },
+    "evidence/logs/step27-green.txt": {
+      "sha": "c2b20cff7482",
+      "recorded": "2026-08-17T16:53:11Z",
+      "note": "step 27 green: useExpansion.test.tsx + HomeRoute.test.tsx + HierarchyPage.test.tsx, 21/21 pass"
+    },
+    "evidence/logs/step27-full-suite.txt": {
+      "sha": "e4ad17a251fa",
+      "recorded": "2026-08-17T16:53:11Z",
+      "note": "step 27: full vitest suite 542/542 pass, no regressions (536 baseline + 6 new)"
+    },
+    "evidence/logs/step27-e2e.txt": {
+      "sha": "d780edb9969d",
+      "recorded": "2026-08-17T16:53:11Z",
+      "note": "step 27: full playwright suite 42/42 pass, no regressions"
     }
   },
   "test_file_hashes": {
