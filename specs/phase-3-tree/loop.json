@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T12:35:34Z",
+  "updated": "2026-08-17T13:05:17Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 8
+      "steps_done": 9
     },
     "G3": {
       "status": "pending",
@@ -400,14 +400,14 @@
       "id": 9,
       "desc": "personSchema and usersResourcePath: id a safe positive integer, firstName, lastName and email required strings, managerId and photo optional, and everything else - password included - stripped by Zod. Failures report the failing field names and the element position, never the values. Invariants 47, 50, 51, 52, 53.",
       "tests": [
-        "the parsed person carries no password field",
-        "each required field missing in turn drops the row",
-        "each optional field mistyped in turn drops the row",
-        "an id that is negative, fractional or beyond the safe integer range is rejected",
-        "a validation failure reports the failing field names and the element position and no values"
+        "src/features/hierarchy/data/personSchema.test.ts::personSchema > the parsed person carries no password field",
+        "src/features/hierarchy/data/personSchema.test.ts::personSchema > each required field missing in turn drops the row",
+        "src/features/hierarchy/data/personSchema.test.ts::personSchema > each optional field mistyped in turn drops the row",
+        "src/features/hierarchy/data/personSchema.test.ts::personSchema > an id that is negative, fractional or beyond the safe integer range is rejected",
+        "src/features/hierarchy/data/personSchema.test.ts::personSchema > a validation failure reports the failing field names and the element position and no values"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T13:04:24Z evidence/logs/step9-red.txt: personSchema.ts does not exist yet",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1039,7 +1039,12 @@
     "2026-08-17T12:34:10Z G4 finding Claude-2 recorded [round: milestone-1]: flattenVisible.test.ts's 'expanding a node and collapsing it again reproduces the original row list exactly' test doesn't exercise a real round-trip: flattenVisible is pure/stateless, so two separate empty-Set calls only reconfirm determinism: the intervening expanded call is discarded and doesn't affect the result. Would pass against any stateless refactor; doesn't guard the caching/memoization concern the name implies.",
     "2026-08-17T12:35:31Z G4 finding Claude-1 dispositioned: accepted: cosmetic test-name overclaim, not a contract violation - invariant 52 requires branding only, not content validation; user accepted as-is",
     "2026-08-17T12:35:31Z G4 finding Claude-2 dispositioned: accepted: flattenVisible is provably stateless (confirmed by code reading in the review), so the round-trip test structurally cannot miss a caching bug that cannot exist; user accepted as-is",
-    "2026-08-17T12:35:34Z milestone 1 reviewed: Fresh loop-reviewer on the M1 diff (2e0cc06..HEAD): 2 non-blocking findings (Claude-1, Claude-2), both accepted by user. Review: evidence/reviews/m1-claude-review.md"
+    "2026-08-17T12:35:34Z milestone 1 reviewed: Fresh loop-reviewer on the M1 diff (2e0cc06..HEAD): 2 non-blocking findings (Claude-1, Claude-2), both accepted by user. Review: evidence/reviews/m1-claude-review.md",
+    "2026-08-17T13:04:16Z step 9 amended: desc: 'personSchema and usersResourcePath: id a safe positive integer, firstName, lastName and email required strings, managerId and photo optional, and everything else - password included - stripped by Zod. Failures report the failing field names and the element position, never the values. Invariants 47, 50, 51, 52, 53.' -> 'personSchema and usersResourcePath: id a safe positive integer, firstName, lastName and email required strings, managerId and photo optional, and everything else - password included - stripped by Zod. Failures report the failing field names and the element position, never the values. Invariants 47, 50, 51, 52, 53.'; tests: ['the parsed person carries no password field', 'each required field missing in turn drops the row', 'each optional field mistyped in turn drops the row', 'an id that is negative, fractional or beyond the safe integer range is rejected', 'a validation failure reports the failing field names and the element position and no values'] -> ['src/features/hierarchy/data/personSchema.test.ts::personSchema > the parsed person carries no password field', 'src/features/hierarchy/data/personSchema.test.ts::personSchema > each required field missing in turn drops the row', 'src/features/hierarchy/data/personSchema.test.ts::personSchema > each optional field mistyped in turn drops the row', 'src/features/hierarchy/data/personSchema.test.ts::personSchema > an id that is negative, fractional or beyond the safe integer range is rejected', 'src/features/hierarchy/data/personSchema.test.ts::personSchema > a validation failure reports the failing field names and the element position and no values']",
+    "2026-08-17T13:04:24Z step 9 -> red",
+    "2026-08-17T13:05:17Z step 9 -> green",
+    "2026-08-17T13:05:17Z step 9 -> done",
+    "2026-08-17T13:05:17Z evidence recorded: evidence/logs/step9-green.txt (5de28617eeba) - green: all 5 personSchema tests pass"
   ],
   "milestones": [
     {
@@ -1178,6 +1183,11 @@
       "sha": "3c26b30365a0",
       "recorded": "2026-08-17T12:34:10Z",
       "note": "M1 boundary review: fresh-context loop-reviewer on the M1 diff, 2 non-blocking findings"
+    },
+    "evidence/logs/step9-green.txt": {
+      "sha": "5de28617eeba",
+      "recorded": "2026-08-17T13:05:17Z",
+      "note": "green: all 5 personSchema tests pass"
     }
   },
   "test_file_hashes": {
@@ -1216,6 +1226,12 @@
       "step": 8,
       "recorded": "2026-08-17T12:20:09Z",
       "log_index": 197
+    },
+    "src/features/hierarchy/data/personSchema.test.ts": {
+      "sha": "83854da58136",
+      "step": 9,
+      "recorded": "2026-08-17T13:04:24Z",
+      "log_index": 211
     }
   }
 }
