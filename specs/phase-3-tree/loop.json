@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T14:11:19Z",
+  "updated": "2026-08-17T14:16:22Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 17
+      "steps_done": 18
     },
     "G3": {
       "status": "pending",
@@ -534,11 +534,11 @@
       "id": 18,
       "desc": "The content security policy img-src widens to self, data: and https: and no other directive changes, so secure third-party photo hosts load while http:// URLs stay blocked - which is what keeps the mixed-content fallback a real path. Photo requests carry no referrer and photos are loaded as images and nothing else. Invariants 99, 171, 172.",
       "tests": [
-        "the content security policy permits https image origins and changes no other directive",
-        "an intercepted image request carries no Referer header"
+        "scripts/buildContentSecurityPolicy.test.ts::buildContentSecurityPolicy > the content security policy permits https image origins and changes no other directive",
+        "e2e/kit-route.spec.ts::kit route > an intercepted image request carries no Referer header"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T14:14:30Z evidence/logs/step18-red.txt: unit test fails (img-src lacks https:); e2e test times out because the current CSP blocks the request client-side before any network call fires",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1113,7 +1113,12 @@
     "2026-08-17T14:09:39Z step 17 -> red",
     "2026-08-17T14:11:19Z step 17 -> green",
     "2026-08-17T14:11:19Z step 17 -> done",
-    "2026-08-17T14:11:19Z evidence recorded: evidence/logs/step17-green.txt (086c731af711) - green: all 15 kit tests pass (ErrorState, EmptyState, Avatar); full suite (501 tests) unaffected"
+    "2026-08-17T14:11:19Z evidence recorded: evidence/logs/step17-green.txt (086c731af711) - green: all 15 kit tests pass (ErrorState, EmptyState, Avatar); full suite (501 tests) unaffected",
+    "2026-08-17T14:13:35Z step 18 amended: desc: 'The content security policy img-src widens to self, data: and https: and no other directive changes, so secure third-party photo hosts load while http:// URLs stay blocked - which is what keeps the mixed-content fallback a real path. Photo requests carry no referrer and photos are loaded as images and nothing else. Invariants 99, 171, 172.' -> 'The content security policy img-src widens to self, data: and https: and no other directive changes, so secure third-party photo hosts load while http:// URLs stay blocked - which is what keeps the mixed-content fallback a real path. Photo requests carry no referrer and photos are loaded as images and nothing else. Invariants 99, 171, 172.'; tests: ['the content security policy permits https image origins and changes no other directive', 'an intercepted image request carries no Referer header'] -> ['scripts/buildContentSecurityPolicy.test.ts::buildContentSecurityPolicy > the content security policy permits https image origins and changes no other directive', 'e2e/kit-route.spec.ts::kit route > an intercepted image request carries no Referer header']",
+    "2026-08-17T14:14:30Z step 18 -> red",
+    "2026-08-17T14:16:21Z step 18 -> green",
+    "2026-08-17T14:16:22Z step 18 -> done",
+    "2026-08-17T14:16:22Z evidence recorded: evidence/logs/step18-green.txt (f5142af6800d) - green: unit + e2e tests pass; full unit suite (503 tests) and full e2e suite (42 tests) unaffected"
   ],
   "milestones": [
     {
@@ -1312,6 +1317,11 @@
       "sha": "086c731af711",
       "recorded": "2026-08-17T14:11:19Z",
       "note": "green: all 15 kit tests pass (ErrorState, EmptyState, Avatar); full suite (501 tests) unaffected"
+    },
+    "evidence/logs/step18-green.txt": {
+      "sha": "f5142af6800d",
+      "recorded": "2026-08-17T14:16:22Z",
+      "note": "green: unit + e2e tests pass; full unit suite (503 tests) and full e2e suite (42 tests) unaffected"
     }
   },
   "test_file_hashes": {
@@ -1428,6 +1438,18 @@
       "step": 17,
       "recorded": "2026-08-17T14:09:39Z",
       "log_index": 262
+    },
+    "scripts/buildContentSecurityPolicy.test.ts": {
+      "sha": "75ebc9d15492",
+      "step": 18,
+      "recorded": "2026-08-17T14:14:30Z",
+      "log_index": 267
+    },
+    "e2e/kit-route.spec.ts": {
+      "sha": "2c21045982bf",
+      "step": 18,
+      "recorded": "2026-08-17T14:14:30Z",
+      "log_index": 267
     }
   }
 }
