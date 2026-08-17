@@ -4,7 +4,13 @@ import type { Person } from '../domain/person';
 import { personSchema } from './personSchema';
 
 export type ParsePeopleResult =
-  | { readonly people: readonly Person[]; readonly dropped: number }
+  | {
+      readonly people: readonly Person[];
+      readonly dropped: number;
+      // The field names behind every drop in this call, deduped - never a
+      // value (invariant 53).
+      readonly droppedFields: readonly string[];
+    }
   | 'invalidEnvelope';
 
 // Firebase's REST API renders the same collection as an array (with `null`
@@ -28,11 +34,15 @@ export function parsePeople(payload: unknown): ParsePeopleResult {
   if (rawEntries === null) return 'invalidEnvelope';
 
   let dropped = 0;
+  const droppedFields = new Set<string>();
   const people: Person[] = [];
   for (const entry of rawEntries) {
     const result = personSchema.safeParse(entry);
     if (!result.success) {
       dropped += 1;
+      for (const issue of result.error.issues) {
+        droppedFields.add(issue.path.join('.'));
+      }
       continue;
     }
 
@@ -49,5 +59,5 @@ export function parsePeople(payload: unknown): ParsePeopleResult {
     });
   }
 
-  return { people, dropped };
+  return { people, dropped, droppedFields: [...droppedFields] };
 }

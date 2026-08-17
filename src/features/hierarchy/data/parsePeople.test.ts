@@ -47,6 +47,25 @@ describe('parsePeople', () => {
     expect(parsePeople(true)).toBe('invalidEnvelope');
   });
 
+  it("a dropped row's failing field names are collected, deduped, and never a value", () => {
+    const result = parsePeople([
+      validRecord(1),
+      {
+        id: 'not-a-number',
+        firstName: 'Ok',
+        lastName: 'Ok',
+        email: 'ok@example.test',
+      },
+      { id: 999, firstName: 'Ok', lastName: 'Ok' },
+    ]);
+
+    expect(result).not.toBe('invalidEnvelope');
+    if (result === 'invalidEnvelope') return;
+    expect(result.dropped).toBe(2);
+    expect([...result.droppedFields].sort()).toEqual(['email', 'id']);
+    expect(JSON.stringify(result.droppedFields)).not.toContain('not-a-number');
+  });
+
   it('which envelope arrived never changes the surviving records or their order', () => {
     const asArray = parsePeople([validRecord(1), validRecord(2)]);
     const asObject = parsePeople({
