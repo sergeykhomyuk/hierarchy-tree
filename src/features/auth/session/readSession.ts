@@ -17,6 +17,15 @@ export type SessionView =
   | { status: typeof SessionStatus.SignedIn; userId: UserIdentifier }
   | { status: typeof SessionStatus.SignedOut };
 
+export const SessionUnreadableReason = {
+  InvalidJson: 'invalid_json',
+  InvalidShape: 'invalid_shape',
+  WrongVersion: 'wrong_version',
+} as const;
+
+export type SessionUnreadableReason =
+  (typeof SessionUnreadableReason)[keyof typeof SessionUnreadableReason];
+
 // The shadow decides first (invariants 79, 79a); storage is consulted
 // only when the shadow is unset, which is always true on a fresh page
 // load.
@@ -41,15 +50,27 @@ export function readSession(
   try {
     parsedJson = JSON.parse(raw);
   } catch {
-    return signedOutUnreadable(storage, observability, 'invalid_json');
+    return signedOutUnreadable(
+      storage,
+      observability,
+      SessionUnreadableReason.InvalidJson,
+    );
   }
 
   const parsed = sessionRecordSchema.safeParse(parsedJson);
   if (!parsed.success) {
-    return signedOutUnreadable(storage, observability, 'invalid_shape');
+    return signedOutUnreadable(
+      storage,
+      observability,
+      SessionUnreadableReason.InvalidShape,
+    );
   }
   if (parsed.data.version !== SESSION_SCHEMA_VERSION) {
-    return signedOutUnreadable(storage, observability, 'wrong_version');
+    return signedOutUnreadable(
+      storage,
+      observability,
+      SessionUnreadableReason.WrongVersion,
+    );
   }
 
   return {
@@ -61,7 +82,7 @@ export function readSession(
 function signedOutUnreadable(
   storage: KeyValueStorage,
   observability: ObservabilityFacade,
-  reason: 'invalid_json' | 'invalid_shape' | 'wrong_version',
+  reason: SessionUnreadableReason,
 ): SessionView {
   observability.logger.warn('auth.session_unreadable', { reason });
   storage.remove(SESSION_STORAGE_KEY);

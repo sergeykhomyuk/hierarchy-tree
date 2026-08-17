@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T10:52:30Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:02:15Z",
+  "updated": "2026-08-17T11:03:27Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 9,
-      "steps_done": 8
+      "steps_done": 9
     },
     "G3": {
       "status": "pending",
@@ -137,8 +137,8 @@
       "tests": [
         "src/features/auth/session/readSession.test.ts::readSession > treats an unparseable, id-less or wrong-version record as no session and removes it"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
     }
   ],
   "log": [
@@ -188,7 +188,11 @@
     "2026-08-17T11:01:06Z step 8 -> na",
     "2026-08-17T11:02:15Z evidence recorded: evidence/steps/step8-green.txt (bead52136d56) - LookupOutcomeKind as-const enum in data/lookupUserIdentifier.ts; updated useLoginSubmission.ts; full vitest suite green; tsc -b + lint clean",
     "2026-08-17T11:02:15Z step 8 -> green",
-    "2026-08-17T11:02:15Z step 8 -> done"
+    "2026-08-17T11:02:15Z step 8 -> done",
+    "2026-08-17T11:02:18Z step 9 -> na",
+    "2026-08-17T11:03:26Z evidence recorded: evidence/steps/step9-green.txt (974387cc2eee) - SessionUnreadableReason as-const enum in session/readSession.ts; full vitest suite green; tsc -b + lint clean",
+    "2026-08-17T11:03:27Z step 9 -> green",
+    "2026-08-17T11:03:27Z step 9 -> done"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
@@ -223,9 +227,9 @@
     },
     "src/features/auth/session/readSession.test.ts": {
       "sha": "81e29df071bb",
-      "step": 7,
-      "recorded": "2026-08-17T11:00:07Z",
-      "log_index": 39
+      "step": 9,
+      "recorded": "2026-08-17T11:02:18Z",
+      "log_index": 47
     },
     "src/features/auth/loginCardState.test.ts": {
       "sha": "ca33ad96c84a",
@@ -286,6 +290,11 @@
       "sha": "bead52136d56",
       "recorded": "2026-08-17T11:02:15Z",
       "note": "LookupOutcomeKind as-const enum in data/lookupUserIdentifier.ts; updated useLoginSubmission.ts; full vitest suite green; tsc -b + lint clean"
+    },
+    "evidence/steps/step9-green.txt": {
+      "sha": "974387cc2eee",
+      "recorded": "2026-08-17T11:03:26Z",
+      "note": "SessionUnreadableReason as-const enum in session/readSession.ts; full vitest suite green; tsc -b + lint clean"
     }
   }
 }
