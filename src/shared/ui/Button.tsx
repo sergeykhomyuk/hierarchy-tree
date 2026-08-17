@@ -65,7 +65,13 @@ export const Button = memo(function Button({
       aria-busy={busy ? 'true' : undefined}
       aria-disabled={busy ? 'true' : undefined}
       onClick={handleClick}
-      className={`duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50 ${fullWidth ? 'w-full' : ''} ${busy ? VARIANT_CLASS[variant].busy : VARIANT_CLASS[variant].default}`}
+      className={[
+        'duration-fast rounded-control px-4 py-2 font-medium transition-colors ease-standard disabled:opacity-50',
+        fullWidth && 'w-full',
+        busy ? VARIANT_CLASS[variant].busy : VARIANT_CLASS[variant].default,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {busy && (
         <span

@@ -4,10 +4,10 @@
   "type": "fix",
   "size": "S",
   "status": "active",
-  "phase": "verify",
-  "phase_entered": "2026-08-17T09:53:57Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-17T10:05:22Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T09:55:38Z",
+  "updated": "2026-08-17T10:24:58Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -36,10 +36,10 @@
     },
     "G2": {
       "status": "passed",
-      "attempts": 1,
-      "steps_total": 1,
-      "steps_done": 1,
-      "note": "step 1 done: 8 red tests now green, 1 regression-guard test held throughout; full suite (npm test) 427/427 green (evidence/step1-green.txt); lint + typecheck clean"
+      "attempts": 2,
+      "steps_total": 2,
+      "steps_done": 2,
+      "note": "step 2 done: Codex-1 (card width/radius) and Claude-1 (Button whitespace) fixes green; full suite 430/430 (evidence/step2-full-suite.txt)"
     },
     "G3": {
       "status": "passed",
@@ -49,7 +49,24 @@
     "G4": {
       "status": "pending",
       "attempts": 0,
-      "security_pass": null
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "Cosmetic double-space in Button.tsx:68's className template literal when fullWidth is falsy (extra space between disabled:opacity-50 and the variant class) - no functional/visual effect, HTML class attribute and toHaveClass both tolerate it",
+          "blocking": false,
+          "disposition": "fixed: user chose to fix - one-line cosmetic cleanup while already touching Button.tsx"
+        },
+        "Codex-1": {
+          "desc": "Login card geometry still doesn't match mockup-1a: outer wrapper's max-w-sm caps the card at 384px while the mockup measures ~404px wide, and Card retains the generic 14px rounded-card radius instead of the already-declared-but-unused 16px --radius-login-card token. Confirmed by pixel measurement: mockup card=404px (x=59-462 @ 522px canvas), implementation card=382px (x=70-451), consistent across 6 sampled rows.",
+          "blocking": true,
+          "disposition": "fixed: user chose to fix - widen wrapper to measured mockup width (~406px) and add Card radius='login' using --radius-login-card"
+        },
+        "Codex-2": {
+          "desc": "The new visual tests permit several acceptance-breaking implementations to remain green: removing min-h-screen, the field gap, all subtext classes, or w-full only-while-busy would still pass; the skip-link test checks for sr-only/focus:not-sr-only class tokens without asserting actual focused-state visibility (computed style/visible bounding box).",
+          "blocking": false,
+          "disposition": "accepted: user chose to accept as-is - underlying behavior already covered by axe e2e scans + manual screenshot comparison; tightening every assertion is disproportionate for an S-size visual fix"
+        }
+      }
     },
     "G5": {
       "status": "pending",
@@ -73,6 +90,17 @@
         "src/features/auth/LoginPage.test.tsx::LoginPage > renders the submit control at full width"
       ],
       "red_observed": "2026-08-17T09:50:15Z evidence/step1-red.txt: 8 of 9 registered tests fail for the right reason against unfixed code",
+      "status": "done"
+    },
+    {
+      "id": 2,
+      "desc": "Fix Codex-1 (blocking): widen login card wrapper to the measured mockup width and add Card's login-specific radius via a new radius prop; also fix Claude-1 (non-blocking): drop the double-space in Button's className template",
+      "tests": [
+        "src/shared/ui/Card.test.tsx::Card > uses the login card radius when radius is set to login",
+        "src/shared/ui/Card.test.tsx::Card > uses the generic card radius by default",
+        "src/features/auth/LoginPage.test.tsx::LoginPage > sizes the card to the mockup width and uses the login card radius"
+      ],
+      "red_observed": "2026-08-17T10:06:02Z evidence/step2-red.txt: 2 of 3 registered tests fail for the right reason (the default-radius test already held)",
       "status": "done"
     }
   ],
@@ -103,7 +131,25 @@
     "2026-08-17T09:55:33Z approved-change: src/shared/ui/Field.test.tsx - self-approved by implementer: eslint-disable-next-line comment added for testing-library/no-node-access on container.firstElementChild, no assertion/name changes",
     "2026-08-17T09:55:33Z approved-change: src/features/auth/LoginPage.test.tsx - self-approved by implementer: eslint-disable-next-line comment added for testing-library/no-node-access on container.firstElementChild plus prettier --write reformatting, no assertion/name changes",
     "2026-08-17T09:55:33Z step 1 hash rebased (src/shared/ui/Button.test.tsx, src/shared/ui/Field.test.tsx, src/features/auth/LoginPage.test.tsx): approved-change entries logged above for all three files - mechanical eslint-disable comments and prettier formatting only",
-    "2026-08-17T09:55:38Z G3 -> passed (npm run verify clean (evidence/g3-verify.txt); npm run e2e 41/41 incl. axe zero-violations on /login x5 states, RTL mirroring, dev-console hygiene (evidence/g3-e2e.txt); live-render screenshots compared against mockup-1a/1b/1d (evidence/fixed-1a-idle.png, fixed-1b-ready.png, fixed-1d-nomatch.png) - AC1-AC7 all verified)"
+    "2026-08-17T09:55:38Z G3 -> passed (npm run verify clean (evidence/g3-verify.txt); npm run e2e 41/41 incl. axe zero-violations on /login x5 states, RTL mirroring, dev-console hygiene (evidence/g3-e2e.txt); live-render screenshots compared against mockup-1a/1b/1d (evidence/fixed-1a-idle.png, fixed-1b-ready.png, fixed-1d-nomatch.png) - AC1-AC7 all verified)",
+    "2026-08-17T09:55:57Z phase -> review (reason: G3 passed)",
+    "2026-08-17T09:59:16Z evidence recorded: evidence/reviews/g4-claude.md (ef550891d5e5) - fresh-context loop-reviewer subagent, full diff pasted, 1 non-blocking finding",
+    "2026-08-17T09:59:17Z G4 finding Claude-1 recorded: Cosmetic double-space in Button.tsx:68's className template literal when fullWidth is falsy (extra space between disabled:opacity-50 and the variant class) - no functional/visual effect, HTML class attribute and toHaveClass both tolerate it",
+    "2026-08-17T10:04:30Z evidence recorded: evidence/reviews/g4-codex.txt (ce7d5c6badf8) - Codex CLI (codex exec -s read-only), fresh thread, full diff + file paths, 2 findings (1 blocking)",
+    "2026-08-17T10:04:37Z G4 finding Codex-1 recorded (blocking): Login card geometry still doesn't match mockup-1a: outer wrapper's max-w-sm caps the card at 384px while the mockup measures ~404px wide, and Card retains the generic 14px rounded-card radius instead of the already-declared-but-unused 16px --radius-login-card token. Confirmed by pixel measurement: mockup card=404px (x=59-462 @ 522px canvas), implementation card=382px (x=70-451), consistent across 6 sampled rows.",
+    "2026-08-17T10:04:37Z G4 finding Codex-2 recorded: The new visual tests permit several acceptance-breaking implementations to remain green: removing min-h-screen, the field gap, all subtext classes, or w-full only-while-busy would still pass; the skip-link test checks for sr-only/focus:not-sr-only class tokens without asserting actual focused-state visibility (computed style/visible bounding box).",
+    "2026-08-17T10:05:19Z G4 finding Codex-1 dispositioned: fixed: user chose to fix - widen wrapper to measured mockup width (~406px) and add Card radius='login' using --radius-login-card",
+    "2026-08-17T10:05:19Z G4 finding Codex-2 dispositioned: accepted: user chose to accept as-is - underlying behavior already covered by axe e2e scans + manual screenshot comparison; tightening every assertion is disproportionate for an S-size visual fix",
+    "2026-08-17T10:05:19Z G4 finding Claude-1 dispositioned: fixed: user chose to fix - one-line cosmetic cleanup while already touching Button.tsx",
+    "2026-08-17T10:05:22Z phase -> implement (reason: fixing blocking Codex-1 (card width/radius) and non-blocking Claude-1 (cosmetic double-space) per user disposition)",
+    "2026-08-17T10:06:02Z evidence recorded: evidence/step2-red.txt (04f138a0176a) - red for the Codex-1 fix: Card radius='login' variant and LoginPage's max-w-[406px] wrapper",
+    "2026-08-17T10:06:02Z step 2 added: Fix Codex-1 (blocking): widen login card wrapper to the measured mockup width and add Card's login-specific radius via a new radius prop; also fix Claude-1 (non-blocking): drop the double-space in Button's className template",
+    "2026-08-17T10:06:02Z step 2 -> red",
+    "2026-08-17T10:24:54Z evidence recorded: evidence/step2-green.txt (532b4dcc2393) - 33/33 green in the 3 touched test files after implementing Codex-1 + Claude-1 fixes",
+    "2026-08-17T10:24:54Z evidence recorded: evidence/step2-full-suite.txt (f36dafcdede8) - full npm test suite 430/430 green after round 2",
+    "2026-08-17T10:24:58Z step 2 -> green",
+    "2026-08-17T10:24:58Z step 2 -> done",
+    "2026-08-17T10:24:58Z G2 -> passed (step 2 done: Codex-1 (card width/radius) and Claude-1 (Button whitespace) fixes green; full suite 430/430 (evidence/step2-full-suite.txt))"
   ],
   "evidence_hashes": {
     "evidence/step1-red.txt": {
@@ -145,6 +191,31 @@
       "sha": "b25b4e51f442",
       "recorded": "2026-08-17T09:55:08Z",
       "note": "npm run e2e: 41/41 passed, incl. axe zero-violations on /login in all 5 states and RTL mirroring on /login"
+    },
+    "evidence/reviews/g4-claude.md": {
+      "sha": "ef550891d5e5",
+      "recorded": "2026-08-17T09:59:16Z",
+      "note": "fresh-context loop-reviewer subagent, full diff pasted, 1 non-blocking finding"
+    },
+    "evidence/reviews/g4-codex.txt": {
+      "sha": "ce7d5c6badf8",
+      "recorded": "2026-08-17T10:04:30Z",
+      "note": "Codex CLI (codex exec -s read-only), fresh thread, full diff + file paths, 2 findings (1 blocking)"
+    },
+    "evidence/step2-red.txt": {
+      "sha": "04f138a0176a",
+      "recorded": "2026-08-17T10:06:02Z",
+      "note": "red for the Codex-1 fix: Card radius='login' variant and LoginPage's max-w-[406px] wrapper"
+    },
+    "evidence/step2-green.txt": {
+      "sha": "532b4dcc2393",
+      "recorded": "2026-08-17T10:24:54Z",
+      "note": "33/33 green in the 3 touched test files after implementing Codex-1 + Claude-1 fixes"
+    },
+    "evidence/step2-full-suite.txt": {
+      "sha": "f36dafcdede8",
+      "recorded": "2026-08-17T10:24:54Z",
+      "note": "full npm test suite 430/430 green after round 2"
     }
   },
   "test_file_hashes": {
@@ -175,11 +246,16 @@
       "log_index": 10
     },
     "src/features/auth/LoginPage.test.tsx": {
-      "sha": "3dc2db25e21f",
-      "step": 1,
-      "recorded": "2026-08-17T09:55:33Z",
-      "log_index": 25,
-      "rebased": "approved-change entries logged above for all three files - mechanical eslint-disable comments and prettier formatting only"
+      "sha": "21311ee858bc",
+      "step": 2,
+      "recorded": "2026-08-17T10:06:02Z",
+      "log_index": 39
+    },
+    "src/shared/ui/Card.test.tsx": {
+      "sha": "ca9448810d0c",
+      "step": 2,
+      "recorded": "2026-08-17T10:06:02Z",
+      "log_index": 39
     }
   }
 }

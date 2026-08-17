@@ -543,4 +543,19 @@ describe('LoginPage', () => {
       'w-full',
     );
   });
+
+  it('sizes the card to the mockup width and uses the login card radius', async () => {
+    const { container } = await renderLoginPage(
+      <LoginPage dependencies={createTestDependencies()} destination="/" />,
+    );
+
+    // eslint-disable-next-line testing-library/no-node-access -- there is no RTL query for "the page's own width wrapper and its classes".
+    expect(container.firstElementChild?.firstElementChild).toHaveClass(
+      'max-w-[406px]',
+    );
+    const cardElement =
+      // eslint-disable-next-line testing-library/no-node-access -- there is no RTL query for "the Card's own root element and its classes".
+      container.firstElementChild?.firstElementChild?.firstElementChild;
+    expect(cardElement).toHaveClass('rounded-login-card');
+  });
 });

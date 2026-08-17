@@ -80,8 +80,8 @@ export const LoginPage = memo(function LoginPage({
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-canvas-login p-4">
-      <div className="w-full max-w-sm">
-        <Card>
+      <div className="w-full max-w-[406px]">
+        <Card radius="login">
           <form
             action={formAction}
             onSubmit={onSubmit}
