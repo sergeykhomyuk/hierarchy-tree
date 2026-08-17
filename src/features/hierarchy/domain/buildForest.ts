@@ -1,4 +1,5 @@
 import { elementAt } from './elementAt';
+import { popElement } from './popElement';
 import type { ForestAnomalies } from './forestAnomaly';
 import type { Person } from './person';
 import type { PersonIdentifier } from './personIdentifier';
@@ -107,8 +108,7 @@ export function buildForest(people: readonly Person[]): ForestBuildResult {
     }
   }
   while (readyIndices.length > 0) {
-    const index = readyIndices.pop();
-    if (index === undefined) break;
+    const index = popElement(readyIndices);
 
     const children = elementAt(childrenIndicesByIndex, index)
       .map((childIndex) => nodes[childIndex])

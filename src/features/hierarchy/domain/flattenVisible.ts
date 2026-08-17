@@ -1,4 +1,5 @@
 import { elementAt } from './elementAt';
+import { popElement } from './popElement';
 import type { Person } from './person';
 import type { PersonIdentifier } from './personIdentifier';
 import type { TreeNode } from './treeNode';
@@ -39,8 +40,7 @@ export function flattenVisible(
   }
 
   while (stack.length > 0) {
-    const entry = stack.pop();
-    if (entry === undefined) break;
+    const entry = popElement(stack);
     const { node, depth, setSize, posInSet } = entry;
     const hasChildren = node.children.length > 0;
     const isExpanded = hasChildren && expandedIds.has(node.person.id);

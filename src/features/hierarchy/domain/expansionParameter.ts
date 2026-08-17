@@ -1,4 +1,5 @@
 import { parsePersonIdentifier } from './personIdentifier';
+import { popElement } from './popElement';
 import type { PersonIdentifier } from './personIdentifier';
 import type { TreeNode } from './treeNode';
 
@@ -18,8 +19,7 @@ function collectManagerIds(
   const managerIds = new Set<PersonIdentifier>();
   const stack: TreeNode[] = [...roots];
   while (stack.length > 0) {
-    const node = stack.pop();
-    if (node === undefined) break;
+    const node = popElement(stack);
     if (node.children.length > 0) {
       managerIds.add(node.person.id);
     }
