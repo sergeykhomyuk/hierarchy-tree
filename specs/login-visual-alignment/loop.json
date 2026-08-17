@@ -3,11 +3,11 @@
   "title": "Login page - align visual styling with mockup",
   "type": "fix",
   "size": "S",
-  "status": "active",
-  "phase": "prove",
-  "phase_entered": "2026-08-17T10:27:48Z",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-17T10:28:48Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T10:28:27Z",
+  "updated": "2026-08-17T10:28:48Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -75,7 +75,10 @@
       "note": "PROOF.md written, all 7 ACs mapped to passing tests + pixel-verified screenshots; evidence registry parity ok (17 registered); loop check clean"
     }
   },
-  "retro": null,
+  "retro": {
+    "outcome": "What the user corrected: nothing mid-flight - user answered the three finding-disposition questions (fix Codex-1, accept Codex-2, fix Claude-1) as posed. What reviewers caught that an earlier phase should have: the card-width/radius mismatch (Codex-1) should have been caught during my own Frame-phase root-cause read - I read theme.css and noted --color-canvas-login and --radius-login-card were unused tokens 'declared for exactly this', but didn't follow through and check the token was actually WIRED UP once I added the wrapper; I eyeballed the round-1 screenshot as 'nearly a pixel match' instead of measuring it. Only Codex's independent read caught the quantifiable 22px/radius gap. Lesson for this skill: when a mockup screenshot is available, G3's design-track note (design-compare pairs) should be treated as load-bearing even at S/honor-system - a pixel measurement (Pillow/sips or equivalent) costs one command and catches what eyeballing a downscaled screenshot misses. Where this playbook didn't answer: the codex CLI's exact flag syntax (codex exec -s <mode> resume --last <prompt>, not resume --last -s <mode>) and the prettier-plugin-tailwindcss quirk of trimming whitespace across template-literal interpolation boundaries (silently breaking a conditional Tailwind class every time --write ran) aren't documented anywhere in the loop docs or this repo's CLAUDE.md - worth a note in codex-contract.md and a repo convention (array+filter+join for conditional Tailwind classes) respectively.",
+    "date": "2026-08-17T10:28:44Z"
+  },
   "plan_steps": [
     {
       "id": 1,
@@ -164,7 +167,11 @@
     "2026-08-17T10:27:43Z G4 -> passed (reviews: evidence/reviews/g4-claude.md (fresh loop-reviewer subagent) + evidence/reviews/g4-codex.txt (Codex CLI, fresh thread) + evidence/reviews/g4-codex-confirm.md (Codex fix confirmation, same thread). Findings: Claude-1 fixed (mechanical, no re-confirmation needed per gates.md), Codex-1 fixed and confirmed RESOLVED by raiser, Codex-2 accepted as-is by user.)",
     "2026-08-17T10:27:48Z phase -> prove (reason: G4 passed)",
     "2026-08-17T10:28:24Z set proof = PROOF.md",
-    "2026-08-17T10:28:27Z G5 -> passed (PROOF.md written, all 7 ACs mapped to passing tests + pixel-verified screenshots; evidence registry parity ok (17 registered); loop check clean)"
+    "2026-08-17T10:28:27Z G5 -> passed (PROOF.md written, all 7 ACs mapped to passing tests + pixel-verified screenshots; evidence registry parity ok (17 registered); loop check clean)",
+    "2026-08-17T10:28:44Z set retro = What the user corrected: nothing mid-flight - user answered the three finding-disposition questions (fix Codex-1, accept Codex-2, fix Claude-1) as posed. What reviewers caught that an earlier phase should have: the card-width/radius mismatch (Codex-1) should have been caught during my own Frame-phase root-cause read - I read theme.css and noted --color-canvas-login and --radius-login-card were unused tokens 'declared for exactly this', but didn't follow through and check the token was actually WIRED UP once I added the wrapper; I eyeballed the round-1 screenshot as 'nearly a pixel match' instead of measuring it. Only Codex's independent read caught the quantifiable 22px/radius gap. Lesson for this skill: when a mockup screenshot is available, G3's design-track note (design-compare pairs) should be treated as load-bearing even at S/honor-system - a pixel measurement (Pillow/sips or equivalent) costs one command and catches what eyeballing a downscaled screenshot misses. Where this playbook didn't answer: the codex CLI's exact flag syntax (codex exec -s <mode> resume --last <prompt>, not resume --last -s <mode>) and the prettier-plugin-tailwindcss quirk of trimming whitespace across template-literal interpolation boundaries (silently breaking a conditional Tailwind class every time --write ran) aren't documented anywhere in the loop docs or this repo's CLAUDE.md - worth a note in codex-contract.md and a repo convention (array+filter+join for conditional Tailwind classes) respectively.",
+    "2026-08-17T10:28:48Z phase -> retro (reason: retro recorded)",
+    "2026-08-17T10:28:48Z closing: login page visually aligned with mockup-1a/1b/1d (pixel-verified), full suite 430/430, e2e 41/41, both reviews passed with findings dispositioned",
+    "2026-08-17T10:28:48Z phase -> done"
   ],
   "evidence_hashes": {
     "evidence/step1-red.txt": {
