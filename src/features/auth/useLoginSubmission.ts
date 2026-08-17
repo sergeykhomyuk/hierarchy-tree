@@ -13,7 +13,7 @@ import {
 } from '@platform/observability';
 import type { KeyValueStorage } from '@platform/runtime';
 import { deriveSecret } from './domain';
-import { lookupUserIdentifier } from './data';
+import { lookupUserIdentifier, LookupOutcomeKind } from './data';
 import { LoginResultOutcome, type LoginResult } from './loginCardState';
 import { writeSession } from './session';
 
@@ -93,12 +93,12 @@ export function useLoginSubmission(
       );
       controllerRef.current = null;
 
-      if (outcome.kind === 'cancelled') {
+      if (outcome.kind === LookupOutcomeKind.Cancelled) {
         dependencies.endInteraction();
         return previousResult;
       }
 
-      if (outcome.kind === 'signedIn') {
+      if (outcome.kind === LookupOutcomeKind.SignedIn) {
         writeSession(
           dependencies.tabStorage,
           dependencies.observability,
@@ -112,7 +112,7 @@ export function useLoginSubmission(
         return UNTOUCHED;
       }
 
-      if (outcome.kind === 'noMatch') {
+      if (outcome.kind === LookupOutcomeKind.NoMatch) {
         dependencies.observability.logger.info('auth.sign_in_no_match', {
           correlationId,
         });

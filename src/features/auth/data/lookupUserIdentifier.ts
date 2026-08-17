@@ -3,11 +3,21 @@ import { userIdentifier, type DerivedSecret, type UserIdentifier } from '../doma
 import { lookupResultSchema } from './lookupResultSchema';
 import { secretResourcePath } from './secretResourcePath';
 
+export const LookupOutcomeKind = {
+  SignedIn: 'signedIn',
+  NoMatch: 'noMatch',
+  ServiceProblem: 'serviceProblem',
+  Cancelled: 'cancelled',
+} as const;
+
+export type LookupOutcomeKind =
+  (typeof LookupOutcomeKind)[keyof typeof LookupOutcomeKind];
+
 export type LookupOutcome =
-  | { kind: 'signedIn'; userId: UserIdentifier }
-  | { kind: 'noMatch' }
-  | { kind: 'serviceProblem'; correlationId: string }
-  | { kind: 'cancelled' };
+  | { kind: typeof LookupOutcomeKind.SignedIn; userId: UserIdentifier }
+  | { kind: typeof LookupOutcomeKind.NoMatch }
+  | { kind: typeof LookupOutcomeKind.ServiceProblem; correlationId: string }
+  | { kind: typeof LookupOutcomeKind.Cancelled };
 
 // The one lookup request (invariants 13-22): a GET with no query string, no
 // body, and every failure arm - network, timeout, an HTTP status, a
@@ -27,16 +37,19 @@ export async function lookupUserIdentifier(
   });
 
   if (result.outcome === 'cancelled') {
-    return { kind: 'cancelled' };
+    return { kind: LookupOutcomeKind.Cancelled };
   }
 
   if (result.outcome === 'failure') {
-    return { kind: 'serviceProblem', correlationId };
+    return { kind: LookupOutcomeKind.ServiceProblem, correlationId };
   }
 
   if (result.value === null) {
-    return { kind: 'noMatch' };
+    return { kind: LookupOutcomeKind.NoMatch };
   }
 
-  return { kind: 'signedIn', userId: userIdentifier(result.value) };
+  return {
+    kind: LookupOutcomeKind.SignedIn,
+    userId: userIdentifier(result.value),
+  };
 }

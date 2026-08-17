@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T10:52:30Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:01:03Z",
+  "updated": "2026-08-17T11:02:15Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 9,
-      "steps_done": 7
+      "steps_done": 8
     },
     "G3": {
       "status": "pending",
@@ -128,8 +128,8 @@
       "tests": [
         "src/features/auth/useLoginSubmission.test.tsx::useLoginSubmission > derives once and requests once when submitted twice in flight"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
     },
     {
       "id": 9,
@@ -184,7 +184,11 @@
     "2026-08-17T11:00:07Z step 7 -> na",
     "2026-08-17T11:01:03Z evidence recorded: evidence/steps/step7-green.txt (94a814ab88d0) - SessionShadowStatus as-const enum in session/sessionShadow.ts; updated session/readSession.ts; full vitest suite green; tsc -b + lint clean",
     "2026-08-17T11:01:03Z step 7 -> green",
-    "2026-08-17T11:01:03Z step 7 -> done"
+    "2026-08-17T11:01:03Z step 7 -> done",
+    "2026-08-17T11:01:06Z step 8 -> na",
+    "2026-08-17T11:02:15Z evidence recorded: evidence/steps/step8-green.txt (bead52136d56) - LookupOutcomeKind as-const enum in data/lookupUserIdentifier.ts; updated useLoginSubmission.ts; full vitest suite green; tsc -b + lint clean",
+    "2026-08-17T11:02:15Z step 8 -> green",
+    "2026-08-17T11:02:15Z step 8 -> done"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
@@ -234,6 +238,12 @@
       "step": 5,
       "recorded": "2026-08-17T10:56:53Z",
       "log_index": 31
+    },
+    "src/features/auth/useLoginSubmission.test.tsx": {
+      "sha": "122d2f5acf82",
+      "step": 8,
+      "recorded": "2026-08-17T11:01:06Z",
+      "log_index": 43
     }
   },
   "evidence_hashes": {
@@ -271,6 +281,11 @@
       "sha": "94a814ab88d0",
       "recorded": "2026-08-17T11:01:03Z",
       "note": "SessionShadowStatus as-const enum in session/sessionShadow.ts; updated session/readSession.ts; full vitest suite green; tsc -b + lint clean"
+    },
+    "evidence/steps/step8-green.txt": {
+      "sha": "bead52136d56",
+      "recorded": "2026-08-17T11:02:15Z",
+      "note": "LookupOutcomeKind as-const enum in data/lookupUserIdentifier.ts; updated useLoginSubmission.ts; full vitest suite green; tsc -b + lint clean"
     }
   }
 }
