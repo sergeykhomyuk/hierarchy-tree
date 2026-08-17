@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCount } from './formatCount';
 import type { ForestSummaryCounts } from './domain/buildForest';
 
 export type HierarchySummaryProps = {
@@ -14,17 +15,17 @@ export type HierarchySummaryProps = {
 export const HierarchySummary = memo(function HierarchySummary({
   counts,
 }: HierarchySummaryProps) {
-  const { t } = useTranslation('hierarchy');
+  const { t, i18n } = useTranslation('hierarchy');
 
   return (
     <div className="flex items-center justify-between border-b border-border-hairline pb-4">
       <h1 className="text-lg font-semibold text-ink">{t('page.cardTitle')}</h1>
       <p className="text-ink-muted">
-        {counts.people} {t('page.summaryPeopleLabel')}
-        {' · '}
-        {counts.managers} {t('page.summaryManagersLabel')}
-        {' · '}
-        {counts.roots} {t('page.summaryRootsLabel')}
+        {t('page.summary', {
+          people: formatCount(counts.people, i18n.language),
+          managers: formatCount(counts.managers, i18n.language),
+          roots: formatCount(counts.roots, i18n.language),
+        })}
       </p>
     </div>
   );

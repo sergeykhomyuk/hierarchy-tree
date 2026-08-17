@@ -4,6 +4,7 @@ import { Avatar } from '@shared/ui';
 import { personDisplayName } from './domain/personDisplayName';
 import type { EmailAddress } from './domain/emailAddress';
 import type { PersonIdentifier } from './domain/personIdentifier';
+import { formatCount } from './formatCount';
 import { TreeToggle } from './TreeToggle';
 
 const INDENT_REM_PER_DEPTH = 2;
@@ -48,7 +49,7 @@ export const TreeRow = memo(function TreeRow({
   onPhotoError,
   onToggle,
 }: TreeRowProps) {
-  const { t } = useTranslation('hierarchy');
+  const { t, i18n } = useTranslation('hierarchy');
   const displayName = personDisplayName({ firstName, lastName, email });
   const accessibleName = isSignedInUser
     ? `${displayName}, ${t('page.youMarkerLabel')}`
@@ -110,8 +111,10 @@ export const TreeRow = memo(function TreeRow({
       </div>
       {hasChildren && (
         <p className="shrink-0 text-ink-muted">
-          {reportCount}{' '}
-          {isExpanded ? t('page.reportsLabel') : t('page.hiddenLabel')}
+          {formatCount(reportCount, i18n.language)}{' '}
+          {isExpanded
+            ? t('page.reports', { count: reportCount })
+            : t('page.hiddenLabel')}
         </p>
       )}
     </div>

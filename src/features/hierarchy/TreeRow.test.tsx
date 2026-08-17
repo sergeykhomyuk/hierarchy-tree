@@ -82,7 +82,7 @@ describe('TreeRow', () => {
 
   it('a manager row shows its direct report count and a non-manager row shows none', async () => {
     await renderRow(MANAGER_PROPS);
-    expect(screen.getByText(/3 page\.reportsLabel/)).toBeInTheDocument();
+    expect(screen.getByText(/3 page\.reports_other/)).toBeInTheDocument();
 
     cleanup();
 
@@ -92,7 +92,7 @@ describe('TreeRow', () => {
       isExpanded: false,
       reportCount: 0,
     });
-    expect(screen.queryByText(/page\.reportsLabel/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/page\.reports_other/)).not.toBeInTheDocument();
     expect(screen.queryByText(/page\.hiddenLabel/)).not.toBeInTheDocument();
   });
 
@@ -100,7 +100,7 @@ describe('TreeRow', () => {
     await renderRow({ ...MANAGER_PROPS, isExpanded: false });
 
     expect(screen.getByText(/3 page\.hiddenLabel/)).toBeInTheDocument();
-    expect(screen.queryByText(/page\.reportsLabel/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/page\.reports_other/)).not.toBeInTheDocument();
   });
 
   it('toggling a branch under one root leaves the render count of a row under another root unchanged', async () => {
@@ -185,5 +185,20 @@ describe('TreeRow', () => {
       'aria-selected',
       'false',
     );
+  });
+
+  it('the report count pluralizes through the catalogue rather than an equality branch', async () => {
+    await renderRow({ ...MANAGER_PROPS, reportCount: 1 });
+    // Under the key-echoed test catalogue, t('page.reports', {count}) can
+    // only land on 'page.reports_one' by way of i18next's own CLDR plural
+    // resolution picking that key for count 1 - a component-side
+    // `count === 1 ? ... : ...` branch could never produce this exact
+    // string, since it has no access to the catalogue's own key suffixes.
+    expect(screen.getByText(/1 page\.reports_one/)).toBeInTheDocument();
+
+    cleanup();
+
+    await renderRow({ ...MANAGER_PROPS, reportCount: 2 });
+    expect(screen.getByText(/2 page\.reports_other/)).toBeInTheDocument();
   });
 });

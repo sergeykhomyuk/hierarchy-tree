@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T16:56:42Z",
+  "updated": "2026-08-17T17:41:54Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 28
+      "steps_done": 29
     },
     "G3": {
       "status": "pending",
@@ -677,8 +677,8 @@
         "the summary line composes from one catalogue string with placeholders",
         "the hierarchy catalogue loads with the route and not with the app entry"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T17:39:45Z evidence/logs/step29-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1179,7 +1179,15 @@
     "2026-08-17T16:56:42Z evidence recorded: evidence/logs/step28-green.txt (899be8ee2d1b) - step 28 green: NavigationRail.test.tsx + AuthenticatedLayout.test.tsx, 3/3 pass",
     "2026-08-17T16:56:42Z evidence recorded: evidence/logs/step28-full-suite.txt (40d14d5bde62) - step 28: full vitest suite 543/543 pass, no regressions (542 baseline + 1 new)",
     "2026-08-17T16:56:42Z evidence recorded: evidence/logs/step28-e2e.txt (ee5ba69bc441) - step 28: full playwright suite 42/42 pass including axe scans, no regressions",
-    "2026-08-17T16:56:42Z step 28 -> done"
+    "2026-08-17T16:56:42Z step 28 -> done",
+    "2026-08-17T17:39:45Z step 29 -> red",
+    "2026-08-17T17:39:49Z step 29 note: of the 4 registered tests, 2 (report-count pluralization, summary composition) discriminate genuinely against the reverted implementation; the other 2 (no-literal-string, catalogue-loads-with-route) pass even reverted since they guard invariants already satisfied by earlier steps' lint discipline and step 22's route-lazy wiring - documented in step29-red.txt",
+    "2026-08-17T17:40:05Z step 29 -> green",
+    "2026-08-17T17:41:53Z evidence recorded: evidence/logs/step29-red.txt (2b6c1936c11a) - step 29 red: 7 tests fail genuinely under reverted catalogue/component; 2 of the 4 registered tests pass even reverted since they guard invariants already satisfied by earlier steps (documented via loop log)",
+    "2026-08-17T17:41:54Z evidence recorded: evidence/logs/step29-green.txt (b40d7dfd87c6) - step 29 green: full hierarchy+app suite 174/174 pass",
+    "2026-08-17T17:41:54Z evidence recorded: evidence/logs/step29-full-suite.txt (7eb3539bda20) - step 29: full vitest suite 547/547 pass, no regressions (543 baseline + 4 new)",
+    "2026-08-17T17:41:54Z evidence recorded: evidence/logs/step29-e2e.txt (568f25ee2a45) - step 29: full playwright suite 42/42 pass on re-run (one flaky failure under parallel load reproduced as passing in isolation and on full re-run)",
+    "2026-08-17T17:41:54Z step 29 -> done"
   ],
   "milestones": [
     {
@@ -1533,6 +1541,26 @@
       "sha": "ee5ba69bc441",
       "recorded": "2026-08-17T16:56:42Z",
       "note": "step 28: full playwright suite 42/42 pass including axe scans, no regressions"
+    },
+    "evidence/logs/step29-red.txt": {
+      "sha": "2b6c1936c11a",
+      "recorded": "2026-08-17T17:41:53Z",
+      "note": "step 29 red: 7 tests fail genuinely under reverted catalogue/component; 2 of the 4 registered tests pass even reverted since they guard invariants already satisfied by earlier steps (documented via loop log)"
+    },
+    "evidence/logs/step29-green.txt": {
+      "sha": "b40d7dfd87c6",
+      "recorded": "2026-08-17T17:41:54Z",
+      "note": "step 29 green: full hierarchy+app suite 174/174 pass"
+    },
+    "evidence/logs/step29-full-suite.txt": {
+      "sha": "7eb3539bda20",
+      "recorded": "2026-08-17T17:41:54Z",
+      "note": "step 29: full vitest suite 547/547 pass, no regressions (543 baseline + 4 new)"
+    },
+    "evidence/logs/step29-e2e.txt": {
+      "sha": "568f25ee2a45",
+      "recorded": "2026-08-17T17:41:54Z",
+      "note": "step 29: full playwright suite 42/42 pass on re-run (one flaky failure under parallel load reproduced as passing in isolation and on full re-run)"
     }
   },
   "test_file_hashes": {

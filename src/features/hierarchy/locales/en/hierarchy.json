@@ -1,9 +1,4 @@
 {
-  "home": {
-    "documentTitle": "Hierarchy",
-    "title": "The hierarchy view isn't built yet",
-    "message": "This screen is a placeholder for phase 2's real hierarchy view."
-  },
   "page": {
     "documentTitle": "Hierarchy",
     "cardTitle": "All users",
@@ -15,11 +10,10 @@
     "emptyHeading": "No users in the hierarchy yet",
     "emptyBody": "The tree builds itself from the manager id on each record. Users will appear here once they exist.",
     "refreshLabel": "Refresh",
-    "summaryPeopleLabel": "people",
-    "summaryManagersLabel": "managers",
-    "summaryRootsLabel": "roots",
+    "summary": "{{people}} people · {{managers}} managers · {{roots}} roots",
     "youMarkerLabel": "you",
-    "reportsLabel": "reports",
+    "reports_one": "report",
+    "reports_other": "reports",
     "hiddenLabel": "hidden"
   }
 }

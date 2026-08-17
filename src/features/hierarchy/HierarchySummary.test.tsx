@@ -27,14 +27,35 @@ async function renderSummary(counts: {
 }
 
 describe('HierarchySummary', () => {
-  it('renders the title and all three counts', async () => {
+  it('renders the title and the summary line', async () => {
     await renderSummary({ people: 10, managers: 4, roots: 2 });
 
     expect(
       screen.getByRole('heading', { level: 1, name: 'page.cardTitle' }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/10/)).toBeInTheDocument();
-    expect(screen.getByText(/4/)).toBeInTheDocument();
-    expect(screen.getByText(/2/)).toBeInTheDocument();
+    expect(screen.getByText('page.summary')).toBeInTheDocument();
+  });
+
+  it('the summary line composes from one catalogue string with placeholders', async () => {
+    const i18n = await createInternationalization({
+      resources: { common: {} },
+      language: Locale.English,
+      observability: { logger: { error: vi.fn() } },
+    });
+    await loadTranslations(i18n);
+
+    render(
+      <I18nextProvider i18n={i18n}>
+        <HierarchySummary counts={{ people: 1234, managers: 4, roots: 2 }} />
+      </I18nextProvider>,
+    );
+
+    // ONE catalogue string carrying all three placeholders, not three
+    // fragments joined by a separator in code (invariant 157) - and 1234
+    // people renders as "1,234", proving the number itself came through
+    // Intl formatting rather than raw interpolation (invariant 156).
+    expect(
+      screen.getByText('1,234 people · 4 managers · 2 roots'),
+    ).toBeInTheDocument();
   });
 });
