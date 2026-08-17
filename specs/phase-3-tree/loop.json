@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T13:07:50Z",
+  "updated": "2026-08-17T13:09:45Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 10
+      "steps_done": 11
     },
     "G3": {
       "status": "pending",
@@ -428,12 +428,12 @@
       "id": 11,
       "desc": "Display derivation on the parsed person: whitespace around a name trimmed for display and neither name re-cased, the email kept exactly as stored, and a person whose names are both empty after trimming falling back to their email. Invariants 54, 55, 56.",
       "tests": [
-        "a name is trimmed for display and never re-cased",
-        "the email is carried exactly as stored",
-        "a person whose names are both empty after trimming falls back to their email"
+        "src/features/hierarchy/domain/personDisplayName.test.ts::personDisplayName > a name is trimmed for display and never re-cased",
+        "src/features/hierarchy/domain/personDisplayName.test.ts::personDisplayName > the email is carried exactly as stored",
+        "src/features/hierarchy/domain/personDisplayName.test.ts::personDisplayName > a person whose names are both empty after trimming falls back to their email"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T13:09:12Z evidence/logs/step11-red.txt: personDisplayName.ts does not exist yet",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1049,7 +1049,12 @@
     "2026-08-17T13:06:14Z step 10 -> red",
     "2026-08-17T13:07:50Z step 10 -> green",
     "2026-08-17T13:07:50Z step 10 -> done",
-    "2026-08-17T13:07:50Z evidence recorded: evidence/logs/step10-green.txt (b8dcb02390fb) - green: all 5 parsePeople envelope tests pass"
+    "2026-08-17T13:07:50Z evidence recorded: evidence/logs/step10-green.txt (b8dcb02390fb) - green: all 5 parsePeople envelope tests pass",
+    "2026-08-17T13:09:04Z step 11 amended: desc: 'Display derivation on the parsed person: whitespace around a name trimmed for display and neither name re-cased, the email kept exactly as stored, and a person whose names are both empty after trimming falling back to their email. Invariants 54, 55, 56.' -> 'Display derivation on the parsed person: whitespace around a name trimmed for display and neither name re-cased, the email kept exactly as stored, and a person whose names are both empty after trimming falling back to their email. Invariants 54, 55, 56.'; tests: ['a name is trimmed for display and never re-cased', 'the email is carried exactly as stored', 'a person whose names are both empty after trimming falls back to their email'] -> ['src/features/hierarchy/domain/personDisplayName.test.ts::personDisplayName > a name is trimmed for display and never re-cased', 'src/features/hierarchy/domain/personDisplayName.test.ts::personDisplayName > the email is carried exactly as stored', 'src/features/hierarchy/domain/personDisplayName.test.ts::personDisplayName > a person whose names are both empty after trimming falls back to their email']",
+    "2026-08-17T13:09:12Z step 11 -> red",
+    "2026-08-17T13:09:44Z step 11 -> green",
+    "2026-08-17T13:09:44Z step 11 -> done",
+    "2026-08-17T13:09:45Z evidence recorded: evidence/logs/step11-green.txt (133476646808) - green: all 3 personDisplayName tests pass"
   ],
   "milestones": [
     {
@@ -1198,6 +1203,11 @@
       "sha": "b8dcb02390fb",
       "recorded": "2026-08-17T13:07:50Z",
       "note": "green: all 5 parsePeople envelope tests pass"
+    },
+    "evidence/logs/step11-green.txt": {
+      "sha": "133476646808",
+      "recorded": "2026-08-17T13:09:45Z",
+      "note": "green: all 3 personDisplayName tests pass"
     }
   },
   "test_file_hashes": {
@@ -1248,6 +1258,12 @@
       "step": 10,
       "recorded": "2026-08-17T13:06:14Z",
       "log_index": 216
+    },
+    "src/features/hierarchy/domain/personDisplayName.test.ts": {
+      "sha": "066e14795acb",
+      "step": 11,
+      "recorded": "2026-08-17T13:09:12Z",
+      "log_index": 221
     }
   }
 }
