@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T13:09:45Z",
+  "updated": "2026-08-17T13:13:16Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 11
+      "steps_done": 12
     },
     "G3": {
       "status": "pending",
@@ -440,13 +440,13 @@
       "id": 12,
       "desc": "The fetchPeople repository: the total HierarchyResult union of data, empty, failure and cancelled; allRowsInvalid as a failure rather than an empty; cancelled as its own kind reachable with a pre-aborted signal; one users request per navigation. It never throws and never rejects. Invariants 41, 48, 49, 57, 170, 174.",
       "tests": [
-        "one bad record is dropped and counted while the rest still builds a forest",
-        "a payload whose every element fails validation returns allRowsInvalid rather than empty",
-        "a pre-aborted signal returns cancelled and not a failure",
-        "fetchPeople never throws and never rejects on any outcome"
+        "src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > one bad record is dropped and counted while the rest still builds a forest",
+        "src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a payload whose every element fails validation returns allRowsInvalid rather than empty",
+        "src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a pre-aborted signal returns cancelled and not a failure",
+        "src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > fetchPeople never throws and never rejects on any outcome"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T13:12:32Z evidence/logs/step12-red.txt: fetchPeople.ts does not exist yet",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1054,7 +1054,12 @@
     "2026-08-17T13:09:12Z step 11 -> red",
     "2026-08-17T13:09:44Z step 11 -> green",
     "2026-08-17T13:09:44Z step 11 -> done",
-    "2026-08-17T13:09:45Z evidence recorded: evidence/logs/step11-green.txt (133476646808) - green: all 3 personDisplayName tests pass"
+    "2026-08-17T13:09:45Z evidence recorded: evidence/logs/step11-green.txt (133476646808) - green: all 3 personDisplayName tests pass",
+    "2026-08-17T13:12:17Z step 12 amended: desc: 'The fetchPeople repository: the total HierarchyResult union of data, empty, failure and cancelled; allRowsInvalid as a failure rather than an empty; cancelled as its own kind reachable with a pre-aborted signal; one users request per navigation. It never throws and never rejects. Invariants 41, 48, 49, 57, 170, 174.' -> 'The fetchPeople repository: the total HierarchyResult union of data, empty, failure and cancelled; allRowsInvalid as a failure rather than an empty; cancelled as its own kind reachable with a pre-aborted signal; one users request per navigation. It never throws and never rejects. Invariants 41, 48, 49, 57, 170, 174.'; tests: ['one bad record is dropped and counted while the rest still builds a forest', 'a payload whose every element fails validation returns allRowsInvalid rather than empty', 'a pre-aborted signal returns cancelled and not a failure', 'fetchPeople never throws and never rejects on any outcome'] -> ['src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > one bad record is dropped and counted while the rest still builds a forest', 'src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a payload whose every element fails validation returns allRowsInvalid rather than empty', 'src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a pre-aborted signal returns cancelled and not a failure', 'src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > fetchPeople never throws and never rejects on any outcome']",
+    "2026-08-17T13:12:32Z step 12 -> red",
+    "2026-08-17T13:13:16Z step 12 -> green",
+    "2026-08-17T13:13:16Z step 12 -> done",
+    "2026-08-17T13:13:16Z evidence recorded: evidence/logs/step12-green.txt (57b630576bc7) - green: all 4 fetchPeople tests pass"
   ],
   "milestones": [
     {
@@ -1208,6 +1213,11 @@
       "sha": "133476646808",
       "recorded": "2026-08-17T13:09:45Z",
       "note": "green: all 3 personDisplayName tests pass"
+    },
+    "evidence/logs/step12-green.txt": {
+      "sha": "57b630576bc7",
+      "recorded": "2026-08-17T13:13:16Z",
+      "note": "green: all 4 fetchPeople tests pass"
     }
   },
   "test_file_hashes": {
@@ -1264,6 +1274,12 @@
       "step": 11,
       "recorded": "2026-08-17T13:09:12Z",
       "log_index": 221
+    },
+    "src/features/hierarchy/data/fetchPeople.test.ts": {
+      "sha": "fccec876adab",
+      "step": 12,
+      "recorded": "2026-08-17T13:12:32Z",
+      "log_index": 226
     }
   }
 }
