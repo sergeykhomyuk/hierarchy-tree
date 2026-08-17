@@ -1,9 +1,11 @@
 import { createElement } from 'react';
 import type { LoaderFunctionArgs, RouteObject } from 'react-router';
-import { redirectSignedInVisitor } from '@features/auth';
+import { redirectSignedInVisitor, withSessionGuard } from '@features/auth';
 import type { Runtime } from '../composition';
 import { ApplicationLayout } from '../layout/ApplicationLayout';
 import { RouteErrorBoundary } from '../error-boundary/RouteErrorBoundary';
+import { createHierarchyLoader } from './createHierarchyLoader';
+import { shouldRevalidateExpansionOnly } from './shouldRevalidateExpansionOnly';
 
 // Each lazy() awaits its feature's own loadTranslations(instance) before
 // resolving, so a route never renders before its namespace is registered
@@ -11,12 +13,27 @@ import { RouteErrorBoundary } from '../error-boundary/RouteErrorBoundary';
 // the route SET stays `/`, `login` and `*` (plus `__kit` in development) -
 // a guard adds a wrapper, not a new path.
 export function routeDefinitions(runtime: Runtime): RouteObject[] {
-  const { i18n, configuration, tabStorage, observability, signedInUserStore } =
-    runtime;
+  const {
+    i18n,
+    configuration,
+    tabStorage,
+    observability,
+    signedInUserStore,
+    http,
+    interactionTracker,
+  } = runtime;
 
   const children: RouteObject[] = [
     {
       id: 'authenticated',
+      // Both this route and the index route below carry the same
+      // predicate (TECH.md's decision log): if only `authenticated`
+      // revalidated on an expansion-only URL change, that navigation would
+      // still have a loader to run, the router would not take its
+      // no-loader short-circuit, and the interaction tracker would open an
+      // interaction and emit a route_viewed per toggle - the exact thing
+      // suppressing revalidation here exists to prevent.
+      shouldRevalidate: shouldRevalidateExpansionOnly,
       lazy: async () => {
         const { AuthenticatedLayout, createAuthenticatedLoader } =
           await import('./routes/AuthenticatedRoute');
@@ -32,6 +49,11 @@ export function routeDefinitions(runtime: Runtime): RouteObject[] {
       children: [
         {
           index: true,
+          shouldRevalidate: shouldRevalidateExpansionOnly,
+          loader: withSessionGuard(
+            { tabStorage, observability },
+            createHierarchyLoader({ http, observability, interactionTracker }),
+          ),
           lazy: async () => {
             const { HomeRoute, loadTranslations } =
               await import('./routes/HomeRoute');

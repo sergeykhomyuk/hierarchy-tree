@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T13:27:16Z",
+  "updated": "2026-08-17T13:50:20Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 15
+      "steps_done": 16
     },
     "G3": {
       "status": "pending",
@@ -491,13 +491,13 @@
       "id": 16,
       "desc": "The shouldRevalidate predicate on BOTH the authenticated route and the index route: compute the set of search parameters whose values differ between the current and next URL, return false only when that set is non-empty and every member of it is expanded, otherwise return defaultShouldRevalidate. The non-empty clause is load-bearing - without it an identical-URL revalidation is vacuously true and Retry, Refresh and phase 2 bfcache guard all silently no-op. Plus the interaction tracker learning to ignore a state change where navigation.state is unchanged and revalidation changed, and nothing wider. Invariants 124 (mechanism), 161 and 165 (the no-route-viewed halves).",
       "tests": [
-        "an expanded-only difference suppresses revalidation on both routes",
-        "an identical-URL revalidation returns defaultShouldRevalidate rather than false",
-        "a difference in any other search parameter falls back to defaultShouldRevalidate",
-        "a revalidation-only state change opens no interaction and settles none"
+        "src/app/routing/shouldRevalidateExpansionOnly.test.ts::shouldRevalidateExpansionOnly > an expanded-only difference suppresses revalidation on both routes",
+        "src/app/routing/shouldRevalidateExpansionOnly.test.ts::shouldRevalidateExpansionOnly > an identical-URL revalidation returns defaultShouldRevalidate rather than false",
+        "src/app/routing/shouldRevalidateExpansionOnly.test.ts::shouldRevalidateExpansionOnly > a difference in any other search parameter falls back to defaultShouldRevalidate",
+        "src/app/routing/createInteractionTracker.test.ts::createInteractionTracker > a revalidation-only state change opens no interaction and settles none"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T13:47:45Z evidence/logs/step16-red.txt: shouldRevalidateExpansionOnly.ts does not exist; the pre-fix interaction tracker settles a revalidation-only state change and emits a spurious route_viewed",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1074,7 +1074,12 @@
     "2026-08-17T13:24:28Z step 15 -> red",
     "2026-08-17T13:27:15Z step 15 -> green",
     "2026-08-17T13:27:16Z step 15 -> done",
-    "2026-08-17T13:27:16Z evidence recorded: evidence/logs/step15-green.txt (8f06181d77a7) - green: all 4 step-15 tests pass; full suite (492 tests) unaffected"
+    "2026-08-17T13:27:16Z evidence recorded: evidence/logs/step15-green.txt (8f06181d77a7) - green: all 4 step-15 tests pass; full suite (492 tests) unaffected",
+    "2026-08-17T13:47:26Z step 16 amended: desc: 'The shouldRevalidate predicate on BOTH the authenticated route and the index route: compute the set of search parameters whose values differ between the current and next URL, return false only when that set is non-empty and every member of it is expanded, otherwise return defaultShouldRevalidate. The non-empty clause is load-bearing - without it an identical-URL revalidation is vacuously true and Retry, Refresh and phase 2 bfcache guard all silently no-op. Plus the interaction tracker learning to ignore a state change where navigation.state is unchanged and revalidation changed, and nothing wider. Invariants 124 (mechanism), 161 and 165 (the no-route-viewed halves).' -> 'The shouldRevalidate predicate on BOTH the authenticated route and the index route: compute the set of search parameters whose values differ between the current and next URL, return false only when that set is non-empty and every member of it is expanded, otherwise return defaultShouldRevalidate. The non-empty clause is load-bearing - without it an identical-URL revalidation is vacuously true and Retry, Refresh and phase 2 bfcache guard all silently no-op. Plus the interaction tracker learning to ignore a state change where navigation.state is unchanged and revalidation changed, and nothing wider. Invariants 124 (mechanism), 161 and 165 (the no-route-viewed halves).'; tests: ['an expanded-only difference suppresses revalidation on both routes', 'an identical-URL revalidation returns defaultShouldRevalidate rather than false', 'a difference in any other search parameter falls back to defaultShouldRevalidate', 'a revalidation-only state change opens no interaction and settles none'] -> ['src/app/routing/shouldRevalidateExpansionOnly.test.ts::shouldRevalidateExpansionOnly > an expanded-only difference suppresses revalidation on both routes', 'src/app/routing/shouldRevalidateExpansionOnly.test.ts::shouldRevalidateExpansionOnly > an identical-URL revalidation returns defaultShouldRevalidate rather than false', 'src/app/routing/shouldRevalidateExpansionOnly.test.ts::shouldRevalidateExpansionOnly > a difference in any other search parameter falls back to defaultShouldRevalidate', 'src/app/routing/createInteractionTracker.test.ts::createInteractionTracker > a revalidation-only state change opens no interaction and settles none']",
+    "2026-08-17T13:47:45Z step 16 -> red",
+    "2026-08-17T13:50:20Z step 16 -> green",
+    "2026-08-17T13:50:20Z step 16 -> done",
+    "2026-08-17T13:50:20Z evidence recorded: evidence/logs/step16-green.txt (115eb2338da6) - green: all 4 step-16 tests pass plus routeDefinitions regression; full suite (496 tests), build and verify:build unaffected"
   ],
   "milestones": [
     {
@@ -1248,6 +1253,11 @@
       "sha": "8f06181d77a7",
       "recorded": "2026-08-17T13:27:16Z",
       "note": "green: all 4 step-15 tests pass; full suite (492 tests) unaffected"
+    },
+    "evidence/logs/step16-green.txt": {
+      "sha": "115eb2338da6",
+      "recorded": "2026-08-17T13:50:20Z",
+      "note": "green: all 4 step-16 tests pass plus routeDefinitions regression; full suite (496 tests), build and verify:build unaffected"
     }
   },
   "test_file_hashes": {
@@ -1334,6 +1344,18 @@
       "step": 15,
       "recorded": "2026-08-17T13:24:28Z",
       "log_index": 241
+    },
+    "src/app/routing/shouldRevalidateExpansionOnly.test.ts": {
+      "sha": "d3d76a041eab",
+      "step": 16,
+      "recorded": "2026-08-17T13:47:45Z",
+      "log_index": 246
+    },
+    "src/app/routing/createInteractionTracker.test.ts": {
+      "sha": "3509117bd39d",
+      "step": 16,
+      "recorded": "2026-08-17T13:47:45Z",
+      "log_index": 246
     }
   }
 }
