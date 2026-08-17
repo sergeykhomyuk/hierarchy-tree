@@ -14,6 +14,7 @@ import { HierarchyPage } from './HierarchyPage';
 import { HierarchySkeleton } from './HierarchySkeleton';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyFailureKind, HierarchyResult } from './data/fetchPeople';
+import { parsePeople } from './data/parsePeople';
 
 const EMPTY_ANOMALIES = {
   duplicateId: 0,
@@ -30,6 +31,7 @@ function LocationSearchProbe() {
 
 type RenderIsolatedOptions = {
   onRetry?: () => void;
+  onRefresh?: () => void;
   initialEntries?: string[];
 };
 
@@ -44,6 +46,7 @@ async function renderIsolated(
   options: RenderIsolatedOptions = {},
 ) {
   const onRetry = options.onRetry ?? vi.fn();
+  const onRefresh = options.onRefresh ?? vi.fn();
   const i18n = await createInternationalization({
     resources: { common: {} },
     language: Locale.Test,
@@ -62,7 +65,11 @@ async function renderIsolated(
                 <>
                   <LocationSearchProbe />
                   <Suspense fallback={<HierarchySkeleton />}>
-                    <HierarchyPage hierarchy={hierarchy} onRetry={onRetry} />
+                    <HierarchyPage
+                      hierarchy={hierarchy}
+                      onRetry={onRetry}
+                      onRefresh={onRefresh}
+                    />
                   </Suspense>
                 </>
               }
@@ -197,5 +204,41 @@ describe('HierarchyPage', () => {
     expect(screen.getByTestId('location-search')).toHaveTextContent(
       '?expanded=1,2,3',
     );
+  });
+
+  it('an empty collection in each of its three envelope shapes renders the empty state', async () => {
+    // The three envelopes parsePeople tolerates - null, an empty array and
+    // an empty object - all normalize to zero people (invariant 42),
+    // which is what collapses them into the SAME HierarchyResult.Empty
+    // kind fetchPeople.ts returns; there is nothing left to distinguish by
+    // the time a result reaches this page (invariant 46).
+    const envelopes: readonly unknown[] = [null, [], {}];
+
+    for (const envelope of envelopes) {
+      const parsed = parsePeople(envelope);
+      expect(parsed).not.toBe('invalidEnvelope');
+      if (parsed === 'invalidEnvelope') continue;
+      expect(parsed.people).toHaveLength(0);
+
+      await renderIsolated(
+        Promise.resolve({ kind: HierarchyResultKind.Empty }),
+      );
+
+      expect(screen.getByText('page.emptyHeading')).toBeInTheDocument();
+      expect(screen.getByText('page.emptyBody')).toBeInTheDocument();
+
+      cleanup();
+    }
+  });
+
+  it('the empty state exposes no tree role, no summary line and exactly one action', async () => {
+    await renderIsolated(Promise.resolve({ kind: HierarchyResultKind.Empty }));
+
+    expect(screen.queryByRole('tree')).not.toBeInTheDocument();
+    expect(screen.queryByText('page.cardTitle')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+    expect(
+      screen.getByRole('button', { name: 'page.refreshLabel' }),
+    ).toBeInTheDocument();
   });
 });

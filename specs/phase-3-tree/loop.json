@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T14:38:04Z",
+  "updated": "2026-08-17T14:41:49Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 20
+      "steps_done": 21
     },
     "G3": {
       "status": "pending",
@@ -574,8 +574,8 @@
         "an empty collection in each of its three envelope shapes renders the empty state",
         "the empty state exposes no tree role, no summary line and exactly one action"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T14:40:41Z evidence/logs/step21-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1129,7 +1129,12 @@
     "2026-08-17T14:38:00Z step 20 -> green",
     "2026-08-17T14:38:00Z step 20 -> done",
     "2026-08-17T14:38:04Z evidence recorded: evidence/logs/step20-green.txt (d1a23f48ab31) - step20: error state wiring - full suite green (513/513)",
-    "2026-08-17T14:38:04Z evidence recorded: evidence/logs/step20-red.txt (50f84cc4cc10) - step20: error state red - 4/5 new tests genuinely fail against pre-step-20 HierarchyPage.tsx (Failure branch returning null); the 5th (expanded-param-untouched) is a valid pre-passing regression pin, not implementation-dependent"
+    "2026-08-17T14:38:04Z evidence recorded: evidence/logs/step20-red.txt (50f84cc4cc10) - step20: error state red - 4/5 new tests genuinely fail against pre-step-20 HierarchyPage.tsx (Failure branch returning null); the 5th (expanded-param-untouched) is a valid pre-passing regression pin, not implementation-dependent",
+    "2026-08-17T14:40:41Z step 21 -> red",
+    "2026-08-17T14:41:44Z step 21 -> green",
+    "2026-08-17T14:41:44Z step 21 -> done",
+    "2026-08-17T14:41:48Z evidence recorded: evidence/logs/step21-green.txt (e780b15ef55c) - step21: empty state wiring - full suite green (515/515)",
+    "2026-08-17T14:41:49Z evidence recorded: evidence/logs/step21-red.txt (c7554b2e2120) - step21: empty state red - both new tests genuinely fail against pre-step-21 HierarchyPage.tsx (Empty branch returning null)"
   ],
   "milestones": [
     {
@@ -1353,6 +1358,16 @@
       "sha": "50f84cc4cc10",
       "recorded": "2026-08-17T14:38:04Z",
       "note": "step20: error state red - 4/5 new tests genuinely fail against pre-step-20 HierarchyPage.tsx (Failure branch returning null); the 5th (expanded-param-untouched) is a valid pre-passing regression pin, not implementation-dependent"
+    },
+    "evidence/logs/step21-green.txt": {
+      "sha": "e780b15ef55c",
+      "recorded": "2026-08-17T14:41:48Z",
+      "note": "step21: empty state wiring - full suite green (515/515)"
+    },
+    "evidence/logs/step21-red.txt": {
+      "sha": "c7554b2e2120",
+      "recorded": "2026-08-17T14:41:49Z",
+      "note": "step21: empty state red - both new tests genuinely fail against pre-step-21 HierarchyPage.tsx (Empty branch returning null)"
     }
   },
   "test_file_hashes": {

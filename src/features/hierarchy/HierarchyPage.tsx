@@ -1,7 +1,7 @@
 import { memo, use, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
-import { ErrorState } from '@shared/ui';
+import { EmptyState, ErrorState } from '@shared/ui';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyResult } from './data/fetchPeople';
 
@@ -10,6 +10,7 @@ const LOGIN_PATH = '/login';
 export type HierarchyPageProps = {
   hierarchy: Promise<HierarchyResult>;
   onRetry: () => void;
+  onRefresh: () => void;
 };
 
 // Reads the loader promise with use() and switches on HierarchyResult.kind
@@ -20,6 +21,7 @@ export type HierarchyPageProps = {
 export const HierarchyPage = memo(function HierarchyPage({
   hierarchy,
   onRetry,
+  onRefresh,
 }: HierarchyPageProps) {
   const { t } = useTranslation('hierarchy');
   const navigate = useNavigate();
@@ -54,7 +56,20 @@ export const HierarchyPage = memo(function HierarchyPage({
         />
       );
     case HierarchyResultKind.Empty:
-      return null;
+      return (
+        <EmptyState
+          framed={false}
+          glyph={
+            <span
+              aria-hidden="true"
+              className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-border-hairline"
+            />
+          }
+          title={t('page.emptyHeading')}
+          message={t('page.emptyBody')}
+          action={{ label: t('page.refreshLabel'), onActivate: onRefresh }}
+        />
+      );
     case HierarchyResultKind.Data:
       return (
         <div>

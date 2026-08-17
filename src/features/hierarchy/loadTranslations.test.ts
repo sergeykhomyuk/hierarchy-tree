@@ -66,6 +66,9 @@ describe('hierarchy loadTranslations', () => {
         errorBody: 'page.errorBody',
         retryLabel: 'page.retryLabel',
         backToLoginLabel: 'page.backToLoginLabel',
+        emptyHeading: 'page.emptyHeading',
+        emptyBody: 'page.emptyBody',
+        refreshLabel: 'page.refreshLabel',
       },
     });
 
