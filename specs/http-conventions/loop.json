@@ -1,0 +1,102 @@
+{
+  "task": "http-conventions",
+  "title": "Extract enums in platform/http",
+  "type": "refactor",
+  "size": "S",
+  "status": "active",
+  "phase": "plan",
+  "phase_entered": "2026-08-17T11:21:11Z",
+  "created": "2026-08-17",
+  "updated": "2026-08-17T11:21:34Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "S",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": null,
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "skipped",
+      "attempts": 0
+    },
+    "G2": {
+      "status": "pending",
+      "attempts": 0,
+      "steps_total": 3,
+      "steps_done": 0
+    },
+    "G3": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G4": {
+      "status": "pending",
+      "attempts": 0,
+      "security_pass": null
+    },
+    "G5": {
+      "status": "pending",
+      "attempts": 0
+    }
+  },
+  "retro": null,
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "HttpFailureKind const-object enum in httpFailure.ts; update performAttempt.ts, createHttpClient.ts, shouldRetry.ts",
+      "tests": [
+        "src/platform/http/httpFailure.test.ts::HttpFailure > the failure union is exhaustive without a default branch",
+        "src/platform/http/shouldRetry.test.ts::shouldRetry > retries a GET network failure on the first attempt",
+        "src/platform/http/performAttempt.test.ts::performAttempt > reports a network failure when the transport rejects without an abort"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "desc": "AttemptOutcomeKind const-object enum in performAttempt.ts; update createHttpClient.ts",
+      "tests": [
+        "src/platform/http/performAttempt.test.ts::performAttempt > reports aborted (not network failure) when the transport rejects on an aborted signal",
+        "src/platform/http/createHttpClient.test.ts::createHttpClient > a caller abort yields cancelled without retrying or reporting an error"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "desc": "HttpResultOutcome const-object enum in httpResult.ts; update createHttpClient.ts, features/auth fetchSignedInUser.ts + lookupUserIdentifier.ts",
+      "tests": [
+        "src/platform/http/createHttpClient.test.ts::createHttpClient > returns success with the parsed value and status",
+        "src/features/auth/data/fetchSignedInUser.test.ts::fetchSignedInUser > resolves to null for every transport failure arm and warns once",
+        "src/features/auth/data/lookupUserIdentifier.test.ts::lookupUserIdentifier > maps every transport failure arm to the service-problem outcome"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    }
+  ],
+  "log": [
+    "2026-08-17T11:20:53Z init: type=refactor size=S flags=[]",
+    "2026-08-17T11:20:53Z triage: refactor/S, mirrors phase-1-conventions/phase-2-conventions precedent. Scope: src/platform/http (3 discriminant unions: HttpResultOutcome, HttpFailureKind, AttemptOutcomeKind); HTTP methods excluded per phase-1-conventions' documented decision (mirrors an external platform API 1:1). Cross-directory extension confirmed with user: features/auth/data/fetchSignedInUser.ts and lookupUserIdentifier.ts also hardcode HttpResultOutcome's literal values and are in scope. User explicitly requested landing on the current branch (loop/feature/phase-2-login) rather than a fresh one, same as the prior two convention loops.",
+    "2026-08-17T11:20:58Z phase -> frame",
+    "2026-08-17T11:21:11Z frame: behavior-preservation contract - pure structural refactor (literal-union to const-object-enum), no runtime behavior change. Coverage audit: platform/http already at 96.73% statement / 95.83% branch coverage; existing suite (httpFailure/performAttempt/createHttpClient/shouldRetry/fetchSignedInUser/lookupUserIdentifier tests) exercises every changed line already, so no new characterization tests needed - each step is G2 case (c), guarded by pre-existing tests. HTTP method literals ('GET'/'POST'/...) excluded - mirrors an external platform API 1:1, matches phase-1-conventions' documented decision. statusDescription()'s return strings ('server error'/'client error'/'error') excluded - free-text labels never compared/branched on, not a discriminant.",
+    "2026-08-17T11:21:11Z phase -> plan",
+    "2026-08-17T11:21:34Z step 1 added: HttpFailureKind const-object enum in httpFailure.ts; update performAttempt.ts, createHttpClient.ts, shouldRetry.ts",
+    "2026-08-17T11:21:34Z step 2 added: AttemptOutcomeKind const-object enum in performAttempt.ts; update createHttpClient.ts",
+    "2026-08-17T11:21:34Z step 3 added: HttpResultOutcome const-object enum in httpResult.ts; update createHttpClient.ts, features/auth fetchSignedInUser.ts + lookupUserIdentifier.ts"
+  ]
+}
