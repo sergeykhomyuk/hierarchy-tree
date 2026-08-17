@@ -93,13 +93,13 @@ describe('TreeRow', () => {
       reportCount: 0,
     });
     expect(screen.queryByText(/page\.reports_other/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/page\.hiddenLabel/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/page\.hidden_other/)).not.toBeInTheDocument();
   });
 
   it('the hidden wording counts direct reports so the number never changes with expansion', async () => {
     await renderRow({ ...MANAGER_PROPS, isExpanded: false });
 
-    expect(screen.getByText(/3 page\.hiddenLabel/)).toBeInTheDocument();
+    expect(screen.getByText(/3 page\.hidden_other/)).toBeInTheDocument();
     expect(screen.queryByText(/page\.reports_other/)).not.toBeInTheDocument();
   });
 

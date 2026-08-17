@@ -335,4 +335,53 @@ describe('HierarchyTree', () => {
     expect(buildForestSpy).not.toHaveBeenCalled();
     expect(fetchSpy).not.toHaveBeenCalled();
   });
+
+  it("clicking a toggle emits one telemetry event carrying the new state and the row's depth, with no name, email or person id", async () => {
+    const { roots } = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+    ]);
+    const rootId = parsePersonIdentifier(1);
+    const user = userEvent.setup();
+
+    const { observability } = await renderStatefulTree({
+      roots,
+      initialExpandedIds: new Set([rootId]),
+    });
+
+    await user.click(rowToggle('First1 Last1'));
+
+    expect(observability.analytics.track).toHaveBeenCalledTimes(1);
+    const [eventName, payload] =
+      vi.mocked(observability.analytics.track).mock.calls[0] ?? [];
+    expect(eventName).toBe('hierarchy.toggled');
+    expect(payload).toEqual({ expanded: false, depth: 0 });
+    expect(JSON.stringify(payload)).not.toContain('First1');
+    expect(JSON.stringify(payload)).not.toContain('example.test');
+  });
+
+  it('clicking a toggle announces the new state and the affected branch through a live region', async () => {
+    const { roots } = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+    ]);
+    const rootId = parsePersonIdentifier(1);
+    const user = userEvent.setup();
+
+    await renderStatefulTree({ roots, initialExpandedIds: new Set([rootId]) });
+
+    await user.click(rowToggle('First1 Last1'));
+    // Under the key-echoed test catalogue, the announcement can only land
+    // on this exact key by way of the toggle's own new-state branch - a
+    // component-side string built without the catalogue could never
+    // reproduce it.
+    expect(screen.getByTestId('tree-announcer')).toHaveTextContent(
+      'page.toggleAnnouncedCollapsed',
+    );
+
+    await user.click(rowToggle('First1 Last1'));
+    expect(screen.getByTestId('tree-announcer')).toHaveTextContent(
+      'page.toggleAnnouncedExpanded',
+    );
+  });
 });

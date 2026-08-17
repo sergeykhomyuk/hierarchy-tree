@@ -1,0 +1,10 @@
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  132 passed (132)
+      Tests  550 passed (550)
+   Start at  22:52:07
+   Duration  38.35s (transform 8.83s, setup 30.87s, import 20.48s, tests 73.17s, environment 119.26s)
+

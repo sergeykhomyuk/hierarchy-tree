@@ -14,6 +14,12 @@ declare module '@platform/observability/analyticsEvents' {
       readonly failureKind: string;
       readonly correlationId: string;
     };
+    // No name, no email and no person id (invariant 115) - only the new
+    // state and the row's depth.
+    'hierarchy.toggled': {
+      readonly expanded: boolean;
+      readonly depth: number;
+    };
   }
 }
 

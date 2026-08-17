@@ -68,7 +68,10 @@ describe('hierarchy loadTranslations', () => {
         youMarkerLabel: 'page.youMarkerLabel',
         reports_one: 'page.reports_one',
         reports_other: 'page.reports_other',
-        hiddenLabel: 'page.hiddenLabel',
+        hidden_one: 'page.hidden_one',
+        hidden_other: 'page.hidden_other',
+        toggleAnnouncedExpanded: 'page.toggleAnnouncedExpanded',
+        toggleAnnouncedCollapsed: 'page.toggleAnnouncedCollapsed',
       },
     });
 

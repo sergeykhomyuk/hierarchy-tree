@@ -1,9 +1,12 @@
-import { memo, useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { ObservabilityFacade } from '@platform/observability';
 import { flattenVisible } from './domain/flattenVisible';
+import { personDisplayName } from './domain/personDisplayName';
 import type { PersonIdentifier } from './domain/personIdentifier';
 import type { TreeNode } from './domain/treeNode';
 import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
+import { TreeAnnouncer } from './TreeAnnouncer';
 import { TreeRow } from './TreeRow';
 
 export type HierarchyTreeProps = {
@@ -32,6 +35,7 @@ export const HierarchyTree = memo(function HierarchyTree({
   observability,
   onToggle,
 }: HierarchyTreeProps) {
+  const { t } = useTranslation('hierarchy');
   const rows = flattenVisible(roots, expandedIds);
 
   // Held here rather than by a row: collapsing and re-expanding a branch
@@ -57,29 +61,67 @@ export const HierarchyTree = memo(function HierarchyTree({
     [observability],
   );
 
+  // rows is a fresh array every render (flattenVisible never reuses the
+  // previous call's objects), so a ref rather than a dependency keeps
+  // handleRowToggle's own identity stable across toggles - otherwise every
+  // row's memo would bail out on nothing, since a new onToggle prop would
+  // look like a change on every single one (invariant 91).
+  const rowsRef = useRef(rows);
+  rowsRef.current = rows;
+  const [announcement, setAnnouncement] = useState('');
+  const handleRowToggle = useCallback(
+    (personId: PersonIdentifier) => {
+      const row = rowsRef.current.find(
+        (candidate) => candidate.person.id === personId,
+      );
+      if (row !== undefined) {
+        const willBeExpanded = !row.isExpanded;
+        // Depth and the new state only - no name, no email, no person id
+        // (invariant 115).
+        observability.analytics.track('hierarchy.toggled', {
+          expanded: willBeExpanded,
+          depth: row.depth,
+        });
+        setAnnouncement(
+          t(
+            willBeExpanded
+              ? 'page.toggleAnnouncedExpanded'
+              : 'page.toggleAnnouncedCollapsed',
+            { name: personDisplayName(row.person) },
+          ),
+        );
+      }
+      onToggle(personId);
+    },
+    [onToggle, observability, t],
+  );
+
   return (
-    <div role="tree" className={ROW_LIST_MAX_HEIGHT_CLASS}>
-      {rows.map((row) => (
-        <TreeRow
-          key={row.person.id}
-          personId={row.person.id}
-          firstName={row.person.firstName}
-          lastName={row.person.lastName}
-          email={row.person.email}
-          {...(row.person.photo !== undefined
-            ? { photo: row.person.photo }
-            : {})}
-          depth={row.depth}
-          isExpanded={row.isExpanded}
-          hasChildren={row.hasChildren}
-          reportCount={row.reportCount}
-          setSize={row.setSize}
-          posInSet={row.posInSet}
-          isSignedInUser={row.person.id === signedInUserId}
-          onPhotoError={handlePhotoError}
-          onToggle={onToggle}
-        />
-      ))}
-    </div>
+    <>
+      <TreeAnnouncer message={announcement} />
+      <div role="tree" className={ROW_LIST_MAX_HEIGHT_CLASS}>
+        {rows.map((row) => (
+          <TreeRow
+            key={row.person.id}
+            personId={row.person.id}
+            firstName={row.person.firstName}
+            lastName={row.person.lastName}
+            email={row.person.email}
+            {...(row.person.photo !== undefined
+              ? { photo: row.person.photo }
+              : {})}
+            depth={row.depth}
+            isExpanded={row.isExpanded}
+            hasChildren={row.hasChildren}
+            reportCount={row.reportCount}
+            setSize={row.setSize}
+            posInSet={row.posInSet}
+            isSignedInUser={row.person.id === signedInUserId}
+            onPhotoError={handlePhotoError}
+            onToggle={handleRowToggle}
+          />
+        ))}
+      </div>
+    </>
   );
 });

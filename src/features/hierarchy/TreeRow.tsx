@@ -112,9 +112,9 @@ export const TreeRow = memo(function TreeRow({
       {hasChildren && (
         <p className="shrink-0 text-ink-muted">
           {formatCount(reportCount, i18n.language)}{' '}
-          {isExpanded
-            ? t('page.reports', { count: reportCount })
-            : t('page.hiddenLabel')}
+          {t(isExpanded ? 'page.reports' : 'page.hidden', {
+            count: reportCount,
+          })}
         </p>
       )}
     </div>

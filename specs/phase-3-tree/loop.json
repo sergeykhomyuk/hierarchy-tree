@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T21:11:16Z",
+  "updated": "2026-08-17T21:53:08Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -321,6 +321,26 @@
           "blocking": false,
           "disposition": "fixed: reportAnomalies now iterates Object.entries(anomalies) excluding skippedExpansionSegment instead of a hardcoded kind list, so a future ForestAnomalies field is reported automatically rather than needing a manual update",
           "round": "milestone-2"
+        },
+        "Claude-6": {
+          "desc": "BLOCKING - invariants 114/115 (mouse path, explicitly claimed done by step 26): toggling emits no telemetry event and announces nothing through a live region. useExpansion.toggleExpanded only calls setSearchParams; no observability.analytics.track call exists for toggling anywhere, and no aria-live/role=status region exists for it (only the loading skeleton's unrelated one). analyticsEvents.ts declares only hierarchy.viewed/load_failed, no toggle event.",
+          "blocking": true,
+          "disposition": "fixed"
+        },
+        "Claude-7": {
+          "desc": "non-blocking - invariant 155: page.hiddenLabel never pluralizes through the catalogue (t('page.hiddenLabel') called with no count), unlike its sibling page.reports which correctly resolves _one/_other. Catalogue only defines a flat 'hidden' string.",
+          "blocking": false,
+          "disposition": "fixed"
+        },
+        "Claude-8": {
+          "desc": "non-blocking - invariant 155 vs 157 tension: HierarchySummary's single composed catalogue string hardcodes plural nouns (people/managers/roots) with no per-count pluralization, so counts=1 would render grammatically-invalid '1 managers'/'1 roots'. i18next's own interpolation mechanism cannot independently pluralize 3 nested nouns inside one template string without nested t() calls, which would violate invariant 157's 'one catalogue string' requirement. Untested with count=1 (fixture only exercises managers:4/roots:2).",
+          "blocking": false,
+          "disposition": null
+        },
+        "Claude-9": {
+          "desc": "non-blocking - invariant 84's positive you-marker match (row.person.id === signedInUserId) is only unit-tested via the negative (no-match) case in HierarchyTree.test.tsx; the positive case is only exercised by passing isSignedInUser directly as a TreeRow prop, bypassing the real comparison. Separately, e2e/support/hierarchyFixture.ts's own comment claims its signed-in user carries the you marker on the deepest row, but the secret mock returns String(DEEPEST_PERSON_ID) (a JSON string '7') while person.id is a branded number, so 7 === '7' is always false and the marker never actually renders in that fixture - the comment is inaccurate.",
+          "blocking": false,
+          "disposition": null
         }
       }
     },
@@ -1239,7 +1259,17 @@
     "2026-08-17T21:11:10Z evidence recorded: evidence/logs/gap3-fix-suite.txt (e31d9622cea6) - Gap-3 fix: full vitest suite 548/548 pass",
     "2026-08-17T21:11:10Z evidence recorded: evidence/logs/gap3-fix-e2e.txt (79c9d4b97e84) - Gap-3 fix: full playwright suite 50/50 pass (48 baseline + 2 new contrast scans)",
     "2026-08-17T21:11:16Z Gap-3 fix: added a color-contrast-only axe scan (createAxeBuilder(page).withRules(['color-contrast'])) of the populated tree in both light and dark, in accessibility.spec.ts. Deliberately scoped to exclude the known M4-deferred focus-order violations (role=tree has no focusable content until roving tabindex lands). Sanity-checked non-vacuously: temporarily weakened --color-ink-muted to a near-white value, confirmed the scan failed on real row text (andrew.crist@example.com, insufficient contrast 1.13 vs required 4.5), then reverted and confirmed green again. Full suite and e2e both green.",
-    "2026-08-17T21:11:16Z G3 finding Gap-3 dispositioned: covered"
+    "2026-08-17T21:11:16Z G3 finding Gap-3 dispositioned: covered",
+    "2026-08-17T21:11:41Z milestone 3 boundary verified: Fresh agentic-loop:loop-verifier ran npm run verify (green, 97%+ coverage) and full npx playwright test --trace on (48/48 green) against the built preview, then checked every M3 invariant (steps 17-30) against source, not just tests. Found 2 genuine gaps: Gap-1 (invariant 90, missing-space template-literal bug dropping the indent rail) fixed with a regression test; Gap-3 (invariant 180, no contrast check for the populated tree) fixed with a color-contrast-scoped axe scan in both themes, sanity-checked non-vacuously. Gap-2 (invariant 102, person names not catalogue-interpolated) dispositioned accepted - a known limitation given the test-suite ripple fixing it properly would cause. Evidence: evidence/milestones/m3-suite-g3verify-20260817T195951Z.txt, evidence/milestones/m3-e2e-g3verify-20260817T195951Z.txt, evidence/logs/gap1-fix-*.txt, evidence/logs/gap3-fix-*.txt, evidence/screenshots/, evidence/traces/.",
+    "2026-08-17T21:46:21Z G4 finding Claude-6 recorded (blocking): BLOCKING - invariants 114/115 (mouse path, explicitly claimed done by step 26): toggling emits no telemetry event and announces nothing through a live region. useExpansion.toggleExpanded only calls setSearchParams; no observability.analytics.track call exists for toggling anywhere, and no aria-live/role=status region exists for it (only the loading skeleton's unrelated one). analyticsEvents.ts declares only hierarchy.viewed/load_failed, no toggle event.",
+    "2026-08-17T21:46:21Z G4 finding Claude-7 recorded: non-blocking - invariant 155: page.hiddenLabel never pluralizes through the catalogue (t('page.hiddenLabel') called with no count), unlike its sibling page.reports which correctly resolves _one/_other. Catalogue only defines a flat 'hidden' string.",
+    "2026-08-17T21:46:21Z G4 finding Claude-8 recorded: non-blocking - invariant 155 vs 157 tension: HierarchySummary's single composed catalogue string hardcodes plural nouns (people/managers/roots) with no per-count pluralization, so counts=1 would render grammatically-invalid '1 managers'/'1 roots'. i18next's own interpolation mechanism cannot independently pluralize 3 nested nouns inside one template string without nested t() calls, which would violate invariant 157's 'one catalogue string' requirement. Untested with count=1 (fixture only exercises managers:4/roots:2).",
+    "2026-08-17T21:46:21Z G4 finding Claude-9 recorded: non-blocking - invariant 84's positive you-marker match (row.person.id === signedInUserId) is only unit-tested via the negative (no-match) case in HierarchyTree.test.tsx; the positive case is only exercised by passing isSignedInUser directly as a TreeRow prop, bypassing the real comparison. Separately, e2e/support/hierarchyFixture.ts's own comment claims its signed-in user carries the you marker on the deepest row, but the secret mock returns String(DEEPEST_PERSON_ID) (a JSON string '7') while person.id is a branded number, so 7 === '7' is always false and the marker never actually renders in that fixture - the comment is inaccurate.",
+    "2026-08-17T21:52:58Z evidence recorded: evidence/logs/claude6-7-fix-suite.txt (da443b4cc492) - Claude-6/7 fix: full vitest suite 550/550 pass",
+    "2026-08-17T21:52:58Z evidence recorded: evidence/logs/claude6-7-fix-e2e.txt (dfe2186ddb76) - Claude-6/7 fix: full playwright suite 50/50 pass (one flaky scroll-position failure under parallel load reproduced as passing 3/3 in isolation and on full re-run)",
+    "2026-08-17T21:53:08Z Claude-6 fix (blocking): added hierarchy.toggled analytics event (expanded, depth - no name/email/id) and a persistent aria-live/aria-atomic TreeAnnouncer (not role=status, to avoid colliding with the loading indicator's own status role) inside HierarchyTree.tsx, wrapped around onToggle via a ref-stabilized handleRowToggle that preserves the existing per-row memoization (invariant 91 test still passes). Claude-7 fix: page.hiddenLabel replaced with page.hidden_one/hidden_other, now genuinely pluralizing through the catalogue like its reports sibling. Both new component tests are non-vacuous (assert exact analytics payload with no name/email leakage; assert the live region's text switches between the two catalogue keys across two toggles). Full suite 550/550, full e2e 50/50.",
+    "2026-08-17T21:53:08Z G4 finding Claude-6 dispositioned: fixed",
+    "2026-08-17T21:53:08Z G4 finding Claude-7 dispositioned: fixed"
   ],
   "milestones": [
     {
@@ -1257,7 +1287,7 @@
     {
       "id": 3,
       "title": "The page: four states, the tree, and expansion",
-      "verified": null,
+      "verified": "2026-08-17T21:11:41Z Fresh agentic-loop:loop-verifier ran npm run verify (green, 97%+ coverage) and full npx playwright test --trace on (48/48 green) against the built preview, then checked every M3 invariant (steps 17-30) against source, not just tests. Found 2 genuine gaps: Gap-1 (invariant 90, missing-space template-literal bug dropping the indent rail) fixed with a regression test; Gap-3 (invariant 180, no contrast check for the populated tree) fixed with a color-contrast-scoped axe scan in both themes, sanity-checked non-vacuously. Gap-2 (invariant 102, person names not catalogue-interpolated) dispositioned accepted - a known limitation given the test-suite ripple fixing it properly would cause. Evidence: evidence/milestones/m3-suite-g3verify-20260817T195951Z.txt, evidence/milestones/m3-e2e-g3verify-20260817T195951Z.txt, evidence/logs/gap1-fix-*.txt, evidence/logs/gap3-fix-*.txt, evidence/screenshots/, evidence/traces/.",
       "reviewed": null
     },
     {
@@ -1703,6 +1733,16 @@
       "sha": "79c9d4b97e84",
       "recorded": "2026-08-17T21:11:10Z",
       "note": "Gap-3 fix: full playwright suite 50/50 pass (48 baseline + 2 new contrast scans)"
+    },
+    "evidence/logs/claude6-7-fix-suite.txt": {
+      "sha": "da443b4cc492",
+      "recorded": "2026-08-17T21:52:58Z",
+      "note": "Claude-6/7 fix: full vitest suite 550/550 pass"
+    },
+    "evidence/logs/claude6-7-fix-e2e.txt": {
+      "sha": "dfe2186ddb76",
+      "recorded": "2026-08-17T21:52:58Z",
+      "note": "Claude-6/7 fix: full playwright suite 50/50 pass (one flaky scroll-position failure under parallel load reproduced as passing 3/3 in isolation and on full re-run)"
     }
   },
   "test_file_hashes": {

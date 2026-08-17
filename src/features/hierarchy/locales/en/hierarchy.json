@@ -14,6 +14,9 @@
     "youMarkerLabel": "you",
     "reports_one": "report",
     "reports_other": "reports",
-    "hiddenLabel": "hidden"
+    "hidden_one": "hidden",
+    "hidden_other": "hidden",
+    "toggleAnnouncedExpanded": "{{name}} expanded",
+    "toggleAnnouncedCollapsed": "{{name}} collapsed"
   }
 }
