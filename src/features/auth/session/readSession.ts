@@ -17,13 +17,13 @@ export type SessionView =
   | { status: typeof SessionStatus.SignedIn; userId: UserIdentifier }
   | { status: typeof SessionStatus.SignedOut };
 
-export const SessionUnreadableReason = {
+const SessionUnreadableReason = {
   InvalidJson: 'invalid_json',
   InvalidShape: 'invalid_shape',
   WrongVersion: 'wrong_version',
 } as const;
 
-export type SessionUnreadableReason =
+type SessionUnreadableReason =
   (typeof SessionUnreadableReason)[keyof typeof SessionUnreadableReason];
 
 // The shadow decides first (invariants 79, 79a); storage is consulted

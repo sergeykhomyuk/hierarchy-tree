@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "verify",
-  "phase_entered": "2026-08-17T11:03:34Z",
+  "phase": "review",
+  "phase_entered": "2026-08-17T11:05:13Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:03:34Z",
+  "updated": "2026-08-17T11:13:50Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -42,13 +42,31 @@
       "note": "All 9 refactor steps done: domain/data/guard/session index.ts barrels added and every cross-subdirectory deep import repointed through them (steps 1-4); six discriminant unions extracted to as-const object enums - LoginCardStateKind, LoginResultOutcome, SessionStatus, SessionShadowStatus, LookupOutcomeKind, SessionUnreadableReason (steps 5-9). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint clean at every step boundary."
     },
     "G3": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "npm run verify full green (typecheck/lint/format:check/test:coverage 96%/build/verify:build/size, evidence/g3-verify-full.txt) and npm run e2e 41/41 passing (evidence/g3-e2e-full.txt), zero new console errors (development-console.spec.ts unchanged and passing). All 6 acceptance criteria checked against the diff: AC1 (four barrels, zero deep cross-subdirectory imports remaining, verified by grep), AC2-AC6 (six const-object enums, all call sites repointed, verified by grep for remaining raw literals - none found outside the enum declarations themselves). No design flag, no new user-facing surface - pure structural refactor."
     },
     "G4": {
       "status": "pending",
       "attempts": 0,
-      "security_pass": null
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "New const-enums (LoginResultOutcome, LoginCardStateKind, SessionStatus, SessionUnreadableReason, SessionShadowStatus, LookupOutcomeKind) were inlined into existing multi-export files instead of getting their own dedicated file per typescript-coding's one-symbol-per-file rule and the repo's own SignInOutcome precedent. Pre-existing multi-export files made worse, not introduced from clean. No runtime/compile effect.",
+          "blocking": false,
+          "disposition": "accepted: user's decision - each enum stays colocated with the type/function that uses it as a discriminant (tightly-coupled state-machine modules, not standalone shared taxonomies like SignInOutcome); splitting into 5 more single-purpose files would fragment small, closely-related declarations for no readability gain"
+        },
+        "Codex-1": {
+          "desc": "SessionUnreadableReason exported despite AC6's single-file scope promise - nothing outside readSession.ts consumed it, expanding module surface unnecessarily.",
+          "blocking": true,
+          "disposition": "fixed: removed export from SessionUnreadableReason's const and type declarations in readSession.ts - nothing outside the file consumed it, and it was never re-exported from session/index.ts; tsc/lint/vitest reconfirmed green"
+        },
+        "Codex-2": {
+          "desc": "9 step evidence .txt logs have a trailing blank line git diff --check flags; committed patch fails git whitespace validation, no runtime effect.",
+          "blocking": false,
+          "disposition": "accepted: user's decision - trailing newline in captured command-output evidence logs, no effect on content/correctness; loop convention treats registered evidence as immutable, so recapturing under new filenames for a whitespace nit is not worth the churn"
+        }
+      }
     },
     "G5": {
       "status": "pending",
@@ -195,7 +213,21 @@
     "2026-08-17T11:03:27Z step 9 -> green",
     "2026-08-17T11:03:27Z step 9 -> done",
     "2026-08-17T11:03:31Z G2 -> passed (All 9 refactor steps done: domain/data/guard/session index.ts barrels added and every cross-subdirectory deep import repointed through them (steps 1-4); six discriminant unions extracted to as-const object enums - LoginCardStateKind, LoginResultOutcome, SessionStatus, SessionShadowStatus, LookupOutcomeKind, SessionUnreadableReason (steps 5-9). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint clean at every step boundary.)",
-    "2026-08-17T11:03:34Z phase -> verify"
+    "2026-08-17T11:03:34Z phase -> verify",
+    "2026-08-17T11:04:36Z evidence recorded: evidence/g3-verify-full.txt (e8264ff5320a) - npm run verify (typecheck+lint+format:check+test:coverage+build+verify:build+size) full green after prettier fix",
+    "2026-08-17T11:04:37Z evidence recorded: evidence/g3-e2e-full.txt (c20f894e0a85) - npm run e2e 41/41 passing, no regressions from the barrel/enum refactor",
+    "2026-08-17T11:04:53Z approved-change: src/features/auth/guard/redirectSignedInVisitor.test.ts - user authorized this refactor's full scope via AskUserQuestion (barrels + six enums); the file's only edits since step 3's na registration were import-path repoints (../session/writeSession -> ../session in step 4, ../domain/userIdentifier -> ../domain earlier), never an assertion or test-title change. Verified by diff: test bodies byte-identical.",
+    "2026-08-17T11:04:53Z step 3 hash rebased (src/features/auth/guard/redirectSignedInVisitor.test.ts): import-path-only edit (barrel repoint in step 4), assertions unchanged - see approved-change log entry above",
+    "2026-08-17T11:05:07Z G3 -> passed (npm run verify full green (typecheck/lint/format:check/test:coverage 96%/build/verify:build/size, evidence/g3-verify-full.txt) and npm run e2e 41/41 passing (evidence/g3-e2e-full.txt), zero new console errors (development-console.spec.ts unchanged and passing). All 6 acceptance criteria checked against the diff: AC1 (four barrels, zero deep cross-subdirectory imports remaining, verified by grep), AC2-AC6 (six const-object enums, all call sites repointed, verified by grep for remaining raw literals - none found outside the enum declarations themselves). No design flag, no new user-facing surface - pure structural refactor.)",
+    "2026-08-17T11:05:13Z phase -> review",
+    "2026-08-17T11:08:46Z evidence recorded: evidence/reviews/g4-claude-review.md (edc148f8680d) - fresh-context Claude G4 review, 1 non-blocking finding (one-symbol-per-file)",
+    "2026-08-17T11:08:46Z G4 finding Claude-1 recorded: New const-enums (LoginResultOutcome, LoginCardStateKind, SessionStatus, SessionUnreadableReason, SessionShadowStatus, LookupOutcomeKind) were inlined into existing multi-export files instead of getting their own dedicated file per typescript-coding's one-symbol-per-file rule and the repo's own SignInOutcome precedent. Pre-existing multi-export files made worse, not introduced from clean. No runtime/compile effect.",
+    "2026-08-17T11:13:44Z evidence recorded: evidence/reviews/g4-codex-review.md (3b2eb833e90f) - Codex G4 second opinion, 2 findings (1 blocking: SessionUnreadableReason export scope)",
+    "2026-08-17T11:13:44Z G4 finding Codex-1 recorded (blocking): SessionUnreadableReason exported despite AC6's single-file scope promise - nothing outside readSession.ts consumed it, expanding module surface unnecessarily.",
+    "2026-08-17T11:13:44Z G4 finding Codex-2 recorded: 9 step evidence .txt logs have a trailing blank line git diff --check flags; committed patch fails git whitespace validation, no runtime effect.",
+    "2026-08-17T11:13:49Z G4 finding Codex-1 dispositioned: fixed: removed export from SessionUnreadableReason's const and type declarations in readSession.ts - nothing outside the file consumed it, and it was never re-exported from session/index.ts; tsc/lint/vitest reconfirmed green",
+    "2026-08-17T11:13:49Z G4 finding Codex-2 dispositioned: accepted: user's decision - trailing newline in captured command-output evidence logs, no effect on content/correctness; loop convention treats registered evidence as immutable, so recapturing under new filenames for a whitespace nit is not worth the churn",
+    "2026-08-17T11:13:50Z G4 finding Claude-1 dispositioned: accepted: user's decision - each enum stays colocated with the type/function that uses it as a discriminant (tightly-coupled state-machine modules, not standalone shared taxonomies like SignInOutcome); splitting into 5 more single-purpose files would fragment small, closely-related declarations for no readability gain"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
@@ -223,10 +255,11 @@
       "log_index": 35
     },
     "src/features/auth/guard/redirectSignedInVisitor.test.ts": {
-      "sha": "f365811839c8",
+      "sha": "d650b16abcd7",
       "step": 3,
-      "recorded": "2026-08-17T10:55:04Z",
-      "log_index": 23
+      "recorded": "2026-08-17T11:04:53Z",
+      "log_index": 56,
+      "rebased": "import-path-only edit (barrel repoint in step 4), assertions unchanged - see approved-change log entry above"
     },
     "src/features/auth/session/readSession.test.ts": {
       "sha": "81e29df071bb",
@@ -298,6 +331,26 @@
       "sha": "974387cc2eee",
       "recorded": "2026-08-17T11:03:26Z",
       "note": "SessionUnreadableReason as-const enum in session/readSession.ts; full vitest suite green; tsc -b + lint clean"
+    },
+    "evidence/g3-verify-full.txt": {
+      "sha": "e8264ff5320a",
+      "recorded": "2026-08-17T11:04:36Z",
+      "note": "npm run verify (typecheck+lint+format:check+test:coverage+build+verify:build+size) full green after prettier fix"
+    },
+    "evidence/g3-e2e-full.txt": {
+      "sha": "c20f894e0a85",
+      "recorded": "2026-08-17T11:04:37Z",
+      "note": "npm run e2e 41/41 passing, no regressions from the barrel/enum refactor"
+    },
+    "evidence/reviews/g4-claude-review.md": {
+      "sha": "edc148f8680d",
+      "recorded": "2026-08-17T11:08:46Z",
+      "note": "fresh-context Claude G4 review, 1 non-blocking finding (one-symbol-per-file)"
+    },
+    "evidence/reviews/g4-codex-review.md": {
+      "sha": "3b2eb833e90f",
+      "recorded": "2026-08-17T11:13:44Z",
+      "note": "Codex G4 second opinion, 2 findings (1 blocking: SessionUnreadableReason export scope)"
     }
   }
 }
