@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T13:13:16Z",
+  "updated": "2026-08-17T13:17:14Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 12
+      "steps_done": 13
     },
     "G3": {
       "status": "pending",
@@ -467,11 +467,11 @@
       "id": 14,
       "desc": "AnalyticsPayloads becomes an interface a feature augments by declaration merging, targeting the module that declares it rather than the observability barrel, so the hierarchy event names and payload types live in features/hierarchy and platform stays ignorant of what a manager is. AnalyticsEventName as keyof AnalyticsPayloads survives unaltered. Invariants 168.",
       "tests": [
-        "the hierarchy events are visible to the observability facade through declaration merging",
-        "no hierarchy vocabulary appears in an exported platform identifier"
+        "src/features/hierarchy/data/analyticsEvents.test.ts::the hierarchy analytics augmentation > the hierarchy events are visible to the observability facade through declaration merging",
+        "src/features/hierarchy/data/analyticsEvents.test.ts::the hierarchy analytics augmentation > no hierarchy vocabulary appears in an exported platform identifier"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T13:16:12Z evidence/logs/step14-red.txt: analyticsEvents.ts (the feature's declaration-merging augmentation) does not exist yet",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1059,7 +1059,12 @@
     "2026-08-17T13:12:32Z step 12 -> red",
     "2026-08-17T13:13:16Z step 12 -> green",
     "2026-08-17T13:13:16Z step 12 -> done",
-    "2026-08-17T13:13:16Z evidence recorded: evidence/logs/step12-green.txt (57b630576bc7) - green: all 4 fetchPeople tests pass"
+    "2026-08-17T13:13:16Z evidence recorded: evidence/logs/step12-green.txt (57b630576bc7) - green: all 4 fetchPeople tests pass",
+    "2026-08-17T13:16:02Z step 14 amended: desc: 'AnalyticsPayloads becomes an interface a feature augments by declaration merging, targeting the module that declares it rather than the observability barrel, so the hierarchy event names and payload types live in features/hierarchy and platform stays ignorant of what a manager is. AnalyticsEventName as keyof AnalyticsPayloads survives unaltered. Invariants 168.' -> 'AnalyticsPayloads becomes an interface a feature augments by declaration merging, targeting the module that declares it rather than the observability barrel, so the hierarchy event names and payload types live in features/hierarchy and platform stays ignorant of what a manager is. AnalyticsEventName as keyof AnalyticsPayloads survives unaltered. Invariants 168.'; tests: ['the hierarchy events are visible to the observability facade through declaration merging', 'no hierarchy vocabulary appears in an exported platform identifier'] -> ['src/features/hierarchy/data/analyticsEvents.test.ts::the hierarchy analytics augmentation > the hierarchy events are visible to the observability facade through declaration merging', 'src/features/hierarchy/data/analyticsEvents.test.ts::the hierarchy analytics augmentation > no hierarchy vocabulary appears in an exported platform identifier']",
+    "2026-08-17T13:16:12Z step 14 -> red",
+    "2026-08-17T13:17:13Z step 14 -> green",
+    "2026-08-17T13:17:14Z step 14 -> done",
+    "2026-08-17T13:17:14Z evidence recorded: evidence/logs/step14-green.txt (62a890aa1d06) - green: both analyticsEvents tests pass; full suite (482 tests) unaffected"
   ],
   "milestones": [
     {
@@ -1218,6 +1223,11 @@
       "sha": "57b630576bc7",
       "recorded": "2026-08-17T13:13:16Z",
       "note": "green: all 4 fetchPeople tests pass"
+    },
+    "evidence/logs/step14-green.txt": {
+      "sha": "62a890aa1d06",
+      "recorded": "2026-08-17T13:17:14Z",
+      "note": "green: both analyticsEvents tests pass; full suite (482 tests) unaffected"
     }
   },
   "test_file_hashes": {
@@ -1280,6 +1290,12 @@
       "step": 12,
       "recorded": "2026-08-17T13:12:32Z",
       "log_index": 226
+    },
+    "src/features/hierarchy/data/analyticsEvents.test.ts": {
+      "sha": "fd4effca14c6",
+      "step": 14,
+      "recorded": "2026-08-17T13:16:12Z",
+      "log_index": 231
     }
   }
 }
