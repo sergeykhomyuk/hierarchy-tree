@@ -3,11 +3,11 @@
   "title": "Align features/auth with coding conventions",
   "type": "refactor",
   "size": "S",
-  "status": "active",
-  "phase": "prove",
-  "phase_entered": "2026-08-17T11:15:51Z",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-17T11:16:43Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:16:24Z",
+  "updated": "2026-08-17T11:16:43Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -70,11 +70,15 @@
       "note": "Fresh-context Claude review (evidence/reviews/g4-claude-review.md, 1 non-blocking) and Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking) on the full diff (d31a2b5..HEAD, src/features/auth). Codex-1 (blocking: SessionUnreadableReason exported despite AC6's single-file scope) fixed - export removed, verified green (tsc/lint/vitest), Codex confirmed RESOLVED in the same thread. Claude-1 (one-symbol-per-file for the 6 new enums) and Codex-2 (evidence-file trailing newline) both accepted by user's explicit decision. No security_review flag on this loop (pure refactor, no auth-logic change, no new input-handling surface)."
     },
     "G5": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md written and registered; all 6 acceptance criteria mapped to their step evidence; verification summary cites npm run verify/e2e evidence (both pre and post the G4 fix); both G4 reviews (Claude fresh-context + Codex) referenced with outcomes; known-limitations section covers the 2 accepted findings. loop check clean."
     }
   },
-  "retro": null,
+  "retro": {
+    "outcome": "What did the user correct? Nothing during implementation - both AskUserQuestion checkpoints (initial enum scope, then the 6-candidate list) were used to CONFIRM scope before writing code, not to fix a wrong guess after the fact. What did reviewers catch that an earlier phase should have? Codex-1 (blocking): SessionUnreadableReason was exported despite my own PLAN.md AC6 explicitly promising single-file scope - I exported it reflexively to match the other five enums' pattern without checking whether anything outside the file actually consumed it. Lesson: when a plan explicitly scopes a symbol to single-file use, grep for external consumers BEFORE deciding export vs file-private, don't default to exporting just because sibling symbols in the same step batch are exported. Where did this playbook not answer? Mid-review scope disagreement: Claude's non-blocking finding (one-symbol-per-file for the six new enums) directly contradicted the loop's own stated convention precedent (SignInOutcome), and the right call depended on a judgment - tightly-coupled discriminant vs standalone taxonomy - that isn't mechanically decidable from the rule text alone. The s-path's 'present ALL findings to the user for accept/fix' already covers this correctly (asked, got accept), so no gap here - just noting the pattern (a real repo rule the diff arguably violates, but only by one plausible reading of what counts as tight coupling) is worth flagging as a judgment call rather than a rule-following exercise, not folding it into a rigid checklist. Nothing durable enough to propose a skill diff for this run.",
+    "date": "2026-08-17T11:16:40Z"
+  },
   "plan_steps": [
     {
       "id": 1,
@@ -235,7 +239,12 @@
     "2026-08-17T11:15:47Z evidence recorded: evidence/g4-final-verify.txt (52f3787bbfb9) - post-G4-fix npm run verify full green (typecheck/lint/format:check/test:coverage/build/verify:build/size)",
     "2026-08-17T11:15:47Z evidence recorded: evidence/g4-final-e2e.txt (8f601f25e1bd) - post-G4-fix npm run e2e 41/41 passing",
     "2026-08-17T11:15:51Z phase -> prove",
-    "2026-08-17T11:16:24Z set proof = PROOF.md"
+    "2026-08-17T11:16:24Z set proof = PROOF.md",
+    "2026-08-17T11:16:30Z G5 -> passed (PROOF.md written and registered; all 6 acceptance criteria mapped to their step evidence; verification summary cites npm run verify/e2e evidence (both pre and post the G4 fix); both G4 reviews (Claude fresh-context + Codex) referenced with outcomes; known-limitations section covers the 2 accepted findings. loop check clean.)",
+    "2026-08-17T11:16:40Z set retro = What did the user correct? Nothing during implementation - both AskUserQuestion checkpoints (initial enum scope, then the 6-candidate list) were used to CONFIRM scope before writing code, not to fix a wrong guess after the fact. What did reviewers catch that an earlier phase should have? Codex-1 (blocking): SessionUnreadableReason was exported despite my own PLAN.md AC6 explicitly promising single-file scope - I exported it reflexively to match the other five enums' pattern without checking whether anything outside the file actually consumed it. Lesson: when a plan explicitly scopes a symbol to single-file use, grep for external consumers BEFORE deciding export vs file-private, don't default to exporting just because sibling symbols in the same step batch are exported. Where did this playbook not answer? Mid-review scope disagreement: Claude's non-blocking finding (one-symbol-per-file for the six new enums) directly contradicted the loop's own stated convention precedent (SignInOutcome), and the right call depended on a judgment - tightly-coupled discriminant vs standalone taxonomy - that isn't mechanically decidable from the rule text alone. The s-path's 'present ALL findings to the user for accept/fix' already covers this correctly (asked, got accept), so no gap here - just noting the pattern (a real repo rule the diff arguably violates, but only by one plausible reading of what counts as tight coupling) is worth flagging as a judgment call rather than a rule-following exercise, not folding it into a rigid checklist. Nothing durable enough to propose a skill diff for this run.",
+    "2026-08-17T11:16:40Z phase -> retro",
+    "2026-08-17T11:16:43Z loop complete: 9 steps, 4 barrels + 6 const-object enums in src/features/auth, G4 dual review (Claude + Codex) with 1 blocking finding fixed and confirmed, G5 proof registered. Ready for done.",
+    "2026-08-17T11:16:43Z phase -> done"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
