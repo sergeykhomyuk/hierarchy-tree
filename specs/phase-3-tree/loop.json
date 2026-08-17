@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T12:21:01Z",
+  "updated": "2026-08-17T12:35:34Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -273,7 +273,21 @@
     "G4": {
       "status": "pending",
       "attempts": 0,
-      "security_pass": null
+      "security_pass": null,
+      "findings": {
+        "Claude-1": {
+          "desc": "emailAddress.test.ts's test name 'brands a non-empty string and rejects a non-string' overclaims: parseEmailAddress('') passes through unvalidated since only typeof is checked. Not a contract violation (invariant 52 requires branding only, not content validation) but the test/description overclaims what's guarded.",
+          "blocking": false,
+          "disposition": "accepted: cosmetic test-name overclaim, not a contract violation - invariant 52 requires branding only, not content validation; user accepted as-is",
+          "round": "milestone-1"
+        },
+        "Claude-2": {
+          "desc": "flattenVisible.test.ts's 'expanding a node and collapsing it again reproduces the original row list exactly' test doesn't exercise a real round-trip: flattenVisible is pure/stateless, so two separate empty-Set calls only reconfirm determinism: the intervening expanded call is discarded and doesn't affect the result. Would pass against any stateless refactor; doesn't guard the caching/memoization concern the name implies.",
+          "blocking": false,
+          "disposition": "accepted: flattenVisible is provably stateless (confirmed by code reading in the review), so the round-trip test structurally cannot miss a caching bug that cannot exist; user accepted as-is",
+          "round": "milestone-1"
+        }
+      }
     },
     "G5": {
       "status": "pending",
@@ -1016,14 +1030,23 @@
     "2026-08-17T12:20:09Z step 8 -> red",
     "2026-08-17T12:21:00Z step 8 -> green",
     "2026-08-17T12:21:01Z step 8 -> done",
-    "2026-08-17T12:21:01Z evidence recorded: evidence/logs/step8-green.txt (e348fff9ccf7) - green: all 6 parseExpansion/formatExpansion tests pass"
+    "2026-08-17T12:21:01Z evidence recorded: evidence/logs/step8-green.txt (e348fff9ccf7) - green: all 6 parseExpansion/formatExpansion tests pass",
+    "2026-08-17T12:26:04Z evidence recorded: evidence/milestones/m1-suite.txt (274709025cea) - M1 boundary: npm run verify green (typecheck, lint, format, test:coverage 100% on domain, build, verify:build, size)",
+    "2026-08-17T12:26:04Z evidence recorded: evidence/milestones/m1-e2e.txt (095b7553b453) - M1 boundary: existing 41 e2e tests (phase 2 flows) unaffected, all pass",
+    "2026-08-17T12:26:07Z milestone 1 boundary verified: npm run verify green with 100% coverage on src/features/hierarchy/domain/**; existing e2e suite (41 tests, phase 2 flows) unaffected. Evidence: evidence/milestones/m1-suite.txt, evidence/milestones/m1-e2e.txt",
+    "2026-08-17T12:34:10Z evidence recorded: evidence/reviews/m1-claude-review.md (3c26b30365a0) - M1 boundary review: fresh-context loop-reviewer on the M1 diff, 2 non-blocking findings",
+    "2026-08-17T12:34:10Z G4 finding Claude-1 recorded [round: milestone-1]: emailAddress.test.ts's test name 'brands a non-empty string and rejects a non-string' overclaims: parseEmailAddress('') passes through unvalidated since only typeof is checked. Not a contract violation (invariant 52 requires branding only, not content validation) but the test/description overclaims what's guarded.",
+    "2026-08-17T12:34:10Z G4 finding Claude-2 recorded [round: milestone-1]: flattenVisible.test.ts's 'expanding a node and collapsing it again reproduces the original row list exactly' test doesn't exercise a real round-trip: flattenVisible is pure/stateless, so two separate empty-Set calls only reconfirm determinism: the intervening expanded call is discarded and doesn't affect the result. Would pass against any stateless refactor; doesn't guard the caching/memoization concern the name implies.",
+    "2026-08-17T12:35:31Z G4 finding Claude-1 dispositioned: accepted: cosmetic test-name overclaim, not a contract violation - invariant 52 requires branding only, not content validation; user accepted as-is",
+    "2026-08-17T12:35:31Z G4 finding Claude-2 dispositioned: accepted: flattenVisible is provably stateless (confirmed by code reading in the review), so the round-trip test structurally cannot miss a caching bug that cannot exist; user accepted as-is",
+    "2026-08-17T12:35:34Z milestone 1 reviewed: Fresh loop-reviewer on the M1 diff (2e0cc06..HEAD): 2 non-blocking findings (Claude-1, Claude-2), both accepted by user. Review: evidence/reviews/m1-claude-review.md"
   ],
   "milestones": [
     {
       "id": 1,
       "title": "The tree domain, and the tripwires that block it",
-      "verified": null,
-      "reviewed": null
+      "verified": "2026-08-17T12:26:07Z npm run verify green with 100% coverage on src/features/hierarchy/domain/**; existing e2e suite (41 tests, phase 2 flows) unaffected. Evidence: evidence/milestones/m1-suite.txt, evidence/milestones/m1-e2e.txt",
+      "reviewed": "2026-08-17T12:35:34Z Fresh loop-reviewer on the M1 diff (2e0cc06..HEAD): 2 non-blocking findings (Claude-1, Claude-2), both accepted by user. Review: evidence/reviews/m1-claude-review.md"
     },
     {
       "id": 2,
@@ -1140,6 +1163,21 @@
       "sha": "e348fff9ccf7",
       "recorded": "2026-08-17T12:21:01Z",
       "note": "green: all 6 parseExpansion/formatExpansion tests pass"
+    },
+    "evidence/milestones/m1-suite.txt": {
+      "sha": "274709025cea",
+      "recorded": "2026-08-17T12:26:04Z",
+      "note": "M1 boundary: npm run verify green (typecheck, lint, format, test:coverage 100% on domain, build, verify:build, size)"
+    },
+    "evidence/milestones/m1-e2e.txt": {
+      "sha": "095b7553b453",
+      "recorded": "2026-08-17T12:26:04Z",
+      "note": "M1 boundary: existing 41 e2e tests (phase 2 flows) unaffected, all pass"
+    },
+    "evidence/reviews/m1-claude-review.md": {
+      "sha": "3c26b30365a0",
+      "recorded": "2026-08-17T12:34:10Z",
+      "note": "M1 boundary review: fresh-context loop-reviewer on the M1 diff, 2 non-blocking findings"
     }
   },
   "test_file_hashes": {
