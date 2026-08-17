@@ -6,8 +6,16 @@ import { sessionRecordSchema } from './sessionRecordSchema';
 import { readShadow } from './sessionShadow';
 import { SESSION_STORAGE_KEY } from './sessionStorageKey';
 
+export const SessionStatus = {
+  SignedIn: 'signedIn',
+  SignedOut: 'signedOut',
+} as const;
+
+export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus];
+
 export type SessionView =
-  { status: 'signedIn'; userId: UserIdentifier } | { status: 'signedOut' };
+  | { status: typeof SessionStatus.SignedIn; userId: UserIdentifier }
+  | { status: typeof SessionStatus.SignedOut };
 
 // The shadow decides first (invariants 79, 79a); storage is consulted
 // only when the shadow is unset, which is always true on a fresh page
@@ -18,15 +26,15 @@ export function readSession(
 ): SessionView {
   const shadow = readShadow(storage);
   if (shadow.status === 'set') {
-    return { status: 'signedIn', userId: shadow.record.userId };
+    return { status: SessionStatus.SignedIn, userId: shadow.record.userId };
   }
   if (shadow.status === 'cleared') {
-    return { status: 'signedOut' };
+    return { status: SessionStatus.SignedOut };
   }
 
   const raw = storage.read(SESSION_STORAGE_KEY);
   if (raw === null) {
-    return { status: 'signedOut' };
+    return { status: SessionStatus.SignedOut };
   }
 
   let parsedJson: unknown;
@@ -44,7 +52,10 @@ export function readSession(
     return signedOutUnreadable(storage, observability, 'wrong_version');
   }
 
-  return { status: 'signedIn', userId: userIdentifier(parsed.data.userId) };
+  return {
+    status: SessionStatus.SignedIn,
+    userId: userIdentifier(parsed.data.userId),
+  };
 }
 
 function signedOutUnreadable(
@@ -54,5 +65,5 @@ function signedOutUnreadable(
 ): SessionView {
   observability.logger.warn('auth.session_unreadable', { reason });
   storage.remove(SESSION_STORAGE_KEY);
-  return { status: 'signedOut' };
+  return { status: SessionStatus.SignedOut };
 }

@@ -1,5 +1,5 @@
 import { redirect, replace } from 'react-router';
-import { readSession } from '../session';
+import { readSession, SessionStatus } from '../session';
 import type { UserIdentifier } from '../domain';
 import type { GuardContext } from './guardContext';
 
@@ -17,7 +17,7 @@ export function requireSession({
   observability,
 }: GuardContext): { userId: UserIdentifier } {
   const session = readSession(tabStorage, observability);
-  if (session.status === 'signedIn') {
+  if (session.status === SessionStatus.SignedIn) {
     return { userId: session.userId };
   }
 

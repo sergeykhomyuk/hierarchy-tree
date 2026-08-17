@@ -1,5 +1,5 @@
 import { redirect, replace } from 'react-router';
-import { readSession } from '../session';
+import { readSession, SessionStatus } from '../session';
 import type { GuardContext } from './guardContext';
 import { resolveDestination } from './resolveDestination';
 
@@ -15,7 +15,7 @@ export function redirectSignedInVisitor({
   observability,
 }: GuardContext): null {
   const session = readSession(tabStorage, observability);
-  if (session.status !== 'signedIn') {
+  if (session.status !== SessionStatus.SignedIn) {
     return null;
   }
 

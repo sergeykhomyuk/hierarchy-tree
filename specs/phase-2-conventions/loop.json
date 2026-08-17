@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T10:52:30Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T10:58:37Z",
+  "updated": "2026-08-17T11:00:03Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 9,
-      "steps_done": 5
+      "steps_done": 6
     },
     "G3": {
       "status": "pending",
@@ -110,8 +110,8 @@
       "tests": [
         "src/features/auth/guard/requireSession.test.ts::requireSession > replaces the current entry on a direct load and pushes on an in-app navigation"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
     },
     {
       "id": 7,
@@ -176,7 +176,11 @@
     "2026-08-17T10:56:53Z step 5 -> na",
     "2026-08-17T10:58:37Z evidence recorded: evidence/steps/step5-green.txt (fe62384e17b0) - LoginCardStateKind + LoginResultOutcome as-const enums in loginCardState.ts; updated useLoginSubmission.ts, LoginPage.tsx, LoginAlert.tsx (props type + comparisons); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean",
     "2026-08-17T10:58:37Z step 5 -> green",
-    "2026-08-17T10:58:37Z step 5 -> done"
+    "2026-08-17T10:58:37Z step 5 -> done",
+    "2026-08-17T10:58:45Z step 6 -> na",
+    "2026-08-17T11:00:03Z evidence recorded: evidence/steps/step6-green.txt (a955a3d6419d) - SessionStatus as-const enum in session/readSession.ts; updated guard/requireSession.ts, guard/redirectSignedInVisitor.ts; full vitest suite green; tsc -b + lint clean",
+    "2026-08-17T11:00:03Z step 6 -> green",
+    "2026-08-17T11:00:03Z step 6 -> done"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
@@ -199,9 +203,9 @@
     },
     "src/features/auth/guard/requireSession.test.ts": {
       "sha": "4eb815d8503e",
-      "step": 3,
-      "recorded": "2026-08-17T10:55:04Z",
-      "log_index": 23
+      "step": 6,
+      "recorded": "2026-08-17T10:58:45Z",
+      "log_index": 35
     },
     "src/features/auth/guard/redirectSignedInVisitor.test.ts": {
       "sha": "f365811839c8",
@@ -253,6 +257,11 @@
       "sha": "fe62384e17b0",
       "recorded": "2026-08-17T10:58:37Z",
       "note": "LoginCardStateKind + LoginResultOutcome as-const enums in loginCardState.ts; updated useLoginSubmission.ts, LoginPage.tsx, LoginAlert.tsx (props type + comparisons); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean"
+    },
+    "evidence/steps/step6-green.txt": {
+      "sha": "a955a3d6419d",
+      "recorded": "2026-08-17T11:00:03Z",
+      "note": "SessionStatus as-const enum in session/readSession.ts; updated guard/requireSession.ts, guard/redirectSignedInVisitor.ts; full vitest suite green; tsc -b + lint clean"
     }
   }
 }
