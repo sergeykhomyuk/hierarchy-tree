@@ -1,11 +1,12 @@
 import { memo } from 'react';
 import { Button } from '@shared/ui';
+import { LoginCardStateKind } from './loginCardState';
 
 type LoginAlertProps =
-  | { id: string; kind: 'noMatch'; message: string }
+  | { id: string; kind: typeof LoginCardStateKind.NoMatch; message: string }
   | {
       id: string;
-      kind: 'serviceProblem';
+      kind: typeof LoginCardStateKind.ServiceProblem;
       message: string;
       correlationId: string;
       correlationLabel: string;
@@ -29,7 +30,7 @@ export const LoginAlert = memo(function LoginAlert(props: LoginAlertProps) {
       className="rounded-card border border-border-hairline bg-danger-surface p-3 text-danger"
     >
       <p>{props.message}</p>
-      {props.kind === 'serviceProblem' && (
+      {props.kind === LoginCardStateKind.ServiceProblem && (
         <>
           <p>
             {props.correlationLabel}: {props.correlationId}

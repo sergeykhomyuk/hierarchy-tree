@@ -8,7 +8,7 @@ import { Button, Card, Field, FieldContext, Input } from '@shared/ui';
 import type { FieldContextValue } from '@shared/ui';
 import { useDocumentTitle } from '@shared/hooks';
 import { LoginAlert } from './LoginAlert';
-import { loginCardState } from './loginCardState';
+import { LoginCardStateKind, loginCardState } from './loginCardState';
 import { ProductMark } from './ProductMark';
 import { useLoginSubmission } from './useLoginSubmission';
 
@@ -44,8 +44,8 @@ export const LoginPage = memo(function LoginPage({
 
   const isReady = email.trim() !== '' && password !== '';
   const cardState = loginCardState(result, isPending, isReady);
-  const submitting = cardState.kind === 'submitting';
-  const noMatch = cardState.kind === 'noMatch';
+  const submitting = cardState.kind === LoginCardStateKind.Submitting;
+  const noMatch = cardState.kind === LoginCardStateKind.NoMatch;
   const loginButtonRef = useRef<HTMLButtonElement>(null);
 
   // Retrying unmounts the alert holding the focused retry control - which
@@ -97,14 +97,14 @@ export const LoginPage = memo(function LoginPage({
             {noMatch && (
               <LoginAlert
                 id={ALERT_ID}
-                kind="noMatch"
+                kind={LoginCardStateKind.NoMatch}
                 message={t('login.noMatchMessage')}
               />
             )}
-            {cardState.kind === 'serviceProblem' && (
+            {cardState.kind === LoginCardStateKind.ServiceProblem && (
               <LoginAlert
                 id={ALERT_ID}
-                kind="serviceProblem"
+                kind={LoginCardStateKind.ServiceProblem}
                 message={t('login.serviceProblemMessage')}
                 correlationId={cardState.correlationId}
                 correlationLabel={t('login.serviceProblemCorrelationLabel')}

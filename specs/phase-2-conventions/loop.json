@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T10:52:30Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T10:56:38Z",
+  "updated": "2026-08-17T10:58:37Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 9,
-      "steps_done": 4
+      "steps_done": 5
     },
     "G3": {
       "status": "pending",
@@ -101,8 +101,8 @@
         "src/features/auth/loginCardState.test.ts::loginCardState > derives idle, ready, submitting, no-match and service-problem from the result and pending flags",
         "src/features/auth/LoginPage.test.tsx::LoginPage > renders both fields read-only with their values while submitting"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
     },
     {
       "id": 6,
@@ -172,7 +172,11 @@
     "2026-08-17T10:55:37Z step 4 -> na",
     "2026-08-17T10:56:38Z evidence recorded: evidence/steps/step4-green.txt (3f024c98cad9) - session/index.ts barrel + 5 prod + 2 test import repoints (root index.ts, guard/, useLoginSubmission.ts); vitest features/auth 25/25 files, 82/82 tests green; tsc -b + lint clean",
     "2026-08-17T10:56:38Z step 4 -> green",
-    "2026-08-17T10:56:38Z step 4 -> done"
+    "2026-08-17T10:56:38Z step 4 -> done",
+    "2026-08-17T10:56:53Z step 5 -> na",
+    "2026-08-17T10:58:37Z evidence recorded: evidence/steps/step5-green.txt (fe62384e17b0) - LoginCardStateKind + LoginResultOutcome as-const enums in loginCardState.ts; updated useLoginSubmission.ts, LoginPage.tsx, LoginAlert.tsx (props type + comparisons); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean",
+    "2026-08-17T10:58:37Z step 5 -> green",
+    "2026-08-17T10:58:37Z step 5 -> done"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
@@ -210,6 +214,18 @@
       "step": 4,
       "recorded": "2026-08-17T10:55:37Z",
       "log_index": 27
+    },
+    "src/features/auth/loginCardState.test.ts": {
+      "sha": "ca33ad96c84a",
+      "step": 5,
+      "recorded": "2026-08-17T10:56:53Z",
+      "log_index": 31
+    },
+    "src/features/auth/LoginPage.test.tsx": {
+      "sha": "32bd7daad60f",
+      "step": 5,
+      "recorded": "2026-08-17T10:56:53Z",
+      "log_index": 31
     }
   },
   "evidence_hashes": {
@@ -232,6 +248,11 @@
       "sha": "3f024c98cad9",
       "recorded": "2026-08-17T10:56:38Z",
       "note": "session/index.ts barrel + 5 prod + 2 test import repoints (root index.ts, guard/, useLoginSubmission.ts); vitest features/auth 25/25 files, 82/82 tests green; tsc -b + lint clean"
+    },
+    "evidence/steps/step5-green.txt": {
+      "sha": "fe62384e17b0",
+      "recorded": "2026-08-17T10:58:37Z",
+      "note": "LoginCardStateKind + LoginResultOutcome as-const enums in loginCardState.ts; updated useLoginSubmission.ts, LoginPage.tsx, LoginAlert.tsx (props type + comparisons); full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean"
     }
   }
 }

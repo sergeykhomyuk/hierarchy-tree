@@ -14,7 +14,7 @@ import {
 import type { KeyValueStorage } from '@platform/runtime';
 import { deriveSecret } from './domain';
 import { lookupUserIdentifier } from './data';
-import type { LoginResult } from './loginCardState';
+import { LoginResultOutcome, type LoginResult } from './loginCardState';
 import { writeSession } from './session';
 
 export type UseLoginSubmissionDependencies = {
@@ -33,7 +33,7 @@ export type UseLoginSubmissionResult = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
 
-const UNTOUCHED: LoginResult = { outcome: 'untouched' };
+const UNTOUCHED: LoginResult = { outcome: LoginResultOutcome.Untouched };
 
 // Wraps useActionState: the single in-flight guard is the form's own
 // onSubmit calling preventDefault while pending, which stops React from
@@ -121,7 +121,7 @@ export function useLoginSubmission(
           outcome: SignInOutcome.NoMatch,
         });
         dependencies.endInteraction();
-        return { outcome: 'noMatch' };
+        return { outcome: LoginResultOutcome.NoMatch };
       }
 
       dependencies.observability.logger.error('auth.sign_in_service_problem', {
@@ -132,7 +132,7 @@ export function useLoginSubmission(
         outcome: SignInOutcome.ServiceProblem,
       });
       dependencies.endInteraction();
-      return { outcome: 'serviceProblem', correlationId };
+      return { outcome: LoginResultOutcome.ServiceProblem, correlationId };
     },
     UNTOUCHED,
   );
