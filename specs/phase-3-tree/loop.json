@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T11:58:12Z",
+  "updated": "2026-08-17T12:01:50Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 1
+      "steps_done": 2
     },
     "G3": {
       "status": "pending",
@@ -296,11 +296,11 @@
       "id": 2,
       "desc": "Branded PersonIdentifier and EmailAddress with their parsers, plus the person, treeNode and forestAnomaly types and the fixture set. Invariants 52 (mechanism; proven at M2 boundary), 24.",
       "tests": [
-        "parsePersonIdentifier accepts a safe positive integer and rejects everything else",
-        "parseEmailAddress brands a non-empty string and rejects a non-string"
+        "src/features/hierarchy/domain/personIdentifier.test.ts::parsePersonIdentifier > accepts a safe positive integer and rejects everything else",
+        "src/features/hierarchy/domain/emailAddress.test.ts::parseEmailAddress > brands a non-empty string and rejects a non-string"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T12:00:10Z evidence/logs/step2-red.txt: personIdentifier.ts and emailAddress.ts do not exist yet",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -980,7 +980,13 @@
     "2026-08-17T11:58:09Z step 1 -> green",
     "2026-08-17T11:58:09Z step 1 -> done",
     "2026-08-17T11:58:12Z evidence recorded: evidence/logs/step1-red.txt (01c39a5e129d) - red: new test fails, retired tripwires still fire",
-    "2026-08-17T11:58:12Z evidence recorded: evidence/logs/step1-green.txt (ed62b794821d) - green: all 15 guard-scripts tests pass after retiring tripwires"
+    "2026-08-17T11:58:12Z evidence recorded: evidence/logs/step1-green.txt (ed62b794821d) - green: all 15 guard-scripts tests pass after retiring tripwires",
+    "2026-08-17T11:59:42Z step 2 amended: desc: 'Branded PersonIdentifier and EmailAddress with their parsers, plus the person, treeNode and forestAnomaly types and the fixture set. Invariants 52 (mechanism; proven at M2 boundary), 24.' -> 'Branded PersonIdentifier and EmailAddress with their parsers, plus the person, treeNode and forestAnomaly types and the fixture set. Invariants 52 (mechanism; proven at M2 boundary), 24.'; tests: ['parsePersonIdentifier accepts a safe positive integer and rejects everything else', 'parseEmailAddress brands a non-empty string and rejects a non-string'] -> ['src/features/hierarchy/domain/personIdentifier.test.ts::parsePersonIdentifier accepts a safe positive integer and rejects everything else', 'src/features/hierarchy/domain/emailAddress.test.ts::parseEmailAddress brands a non-empty string and rejects a non-string']",
+    "2026-08-17T12:00:08Z step 2 amended: desc: 'Branded PersonIdentifier and EmailAddress with their parsers, plus the person, treeNode and forestAnomaly types and the fixture set. Invariants 52 (mechanism; proven at M2 boundary), 24.' -> 'Branded PersonIdentifier and EmailAddress with their parsers, plus the person, treeNode and forestAnomaly types and the fixture set. Invariants 52 (mechanism; proven at M2 boundary), 24.'; tests: ['src/features/hierarchy/domain/personIdentifier.test.ts::parsePersonIdentifier accepts a safe positive integer and rejects everything else', 'src/features/hierarchy/domain/emailAddress.test.ts::parseEmailAddress brands a non-empty string and rejects a non-string'] -> ['src/features/hierarchy/domain/personIdentifier.test.ts::parsePersonIdentifier > accepts a safe positive integer and rejects everything else', 'src/features/hierarchy/domain/emailAddress.test.ts::parseEmailAddress > brands a non-empty string and rejects a non-string']",
+    "2026-08-17T12:00:10Z step 2 -> red",
+    "2026-08-17T12:01:50Z step 2 -> green",
+    "2026-08-17T12:01:50Z step 2 -> done",
+    "2026-08-17T12:01:50Z evidence recorded: evidence/logs/step2-green.txt (c74be8e74d23) - green: parsePersonIdentifier and parseEmailAddress pass; person/treeNode/forestAnomaly types added"
   ],
   "milestones": [
     {
@@ -1069,7 +1075,25 @@
       "sha": "ed62b794821d",
       "recorded": "2026-08-17T11:58:12Z",
       "note": "green: all 15 guard-scripts tests pass after retiring tripwires"
+    },
+    "evidence/logs/step2-green.txt": {
+      "sha": "c74be8e74d23",
+      "recorded": "2026-08-17T12:01:50Z",
+      "note": "green: parsePersonIdentifier and parseEmailAddress pass; person/treeNode/forestAnomaly types added"
     }
   },
-  "test_file_hashes": {}
+  "test_file_hashes": {
+    "src/features/hierarchy/domain/personIdentifier.test.ts": {
+      "sha": "53061bb6fda4",
+      "step": 2,
+      "recorded": "2026-08-17T12:00:10Z",
+      "log_index": 167
+    },
+    "src/features/hierarchy/domain/emailAddress.test.ts": {
+      "sha": "41e58af9027b",
+      "step": 2,
+      "recorded": "2026-08-17T12:00:10Z",
+      "log_index": 167
+    }
+  }
 }
