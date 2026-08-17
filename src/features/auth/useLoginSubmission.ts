@@ -12,7 +12,7 @@ import {
   type ObservabilityFacade,
 } from '@platform/observability';
 import type { KeyValueStorage } from '@platform/runtime';
-import { deriveSecret } from './domain/deriveSecret';
+import { deriveSecret } from './domain';
 import { lookupUserIdentifier } from './data/lookupUserIdentifier';
 import type { LoginResult } from './loginCardState';
 import { writeSession } from './session/writeSession';

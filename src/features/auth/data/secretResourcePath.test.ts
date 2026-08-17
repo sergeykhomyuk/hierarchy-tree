@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { DerivedSecret } from '../domain/derivedSecret';
+import type { DerivedSecret } from '../domain';
 import { secretResourcePath } from './secretResourcePath';
 
 describe('secretResourcePath', () => {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { USER_IDENTIFIER_PATTERN } from '../domain/userIdentifier';
+import { USER_IDENTIFIER_PATTERN } from '../domain';
 
 // Reuses userIdentifier's own charset pattern (section 3), so a
 // hand-edited or downgraded storage record carrying a hostile id is

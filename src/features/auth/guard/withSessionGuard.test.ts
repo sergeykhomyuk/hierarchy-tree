@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { KeyValueStorage } from '@platform/runtime';
-import { userIdentifier } from '../domain/userIdentifier';
+import { userIdentifier } from '../domain';
 import { writeSession } from '../session/writeSession';
 import { isSessionGuarded, withSessionGuard } from './withSessionGuard';
 

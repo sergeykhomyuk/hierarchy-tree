@@ -3,7 +3,7 @@ import { createFakeClock, createFakeRandomness } from '@shared/testing';
 import { createHttpClient } from '@platform/http';
 import type { HttpClientDependencies, Transport } from '@platform/http';
 import type { ObservabilityFacade } from '@platform/observability';
-import type { DerivedSecret } from '../domain/derivedSecret';
+import type { DerivedSecret } from '../domain';
 import { lookupUserIdentifier } from './lookupUserIdentifier';
 
 const SECRET = 'AB'.repeat(32) as DerivedSecret;

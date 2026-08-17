@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { USER_IDENTIFIER_PATTERN } from '../domain/userIdentifier';
+import { USER_IDENTIFIER_PATTERN } from '../domain';
 
 // null means no match; a charset-restricted string or a plain integer
 // means a hit. Anything else - an object, an array, a boolean, an empty

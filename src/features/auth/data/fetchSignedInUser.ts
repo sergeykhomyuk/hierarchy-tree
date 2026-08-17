@@ -1,6 +1,6 @@
 import type { HttpClient } from '@platform/http';
 import type { ObservabilityFacade } from '@platform/observability';
-import type { UserIdentifier } from '../domain/userIdentifier';
+import type { UserIdentifier } from '../domain';
 import { parseSignedInUsers } from './parseSignedInUsers';
 import type { SignedInUserView } from './signedInUserView';
 import { USERS_COLLECTION_RESOURCE_PATH } from './usersCollectionResourcePath';

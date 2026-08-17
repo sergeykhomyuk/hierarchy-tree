@@ -1,6 +1,6 @@
 import type { HttpClient } from '@platform/http';
 import type { ObservabilityFacade } from '@platform/observability';
-import type { UserIdentifier } from '../domain/userIdentifier';
+import type { UserIdentifier } from '../domain';
 import { fetchSignedInUser } from './fetchSignedInUser';
 import type { SignedInUserView } from './signedInUserView';
 

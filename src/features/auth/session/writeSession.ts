@@ -1,6 +1,6 @@
 import type { KeyValueStorage } from '@platform/runtime';
 import type { ObservabilityFacade } from '@platform/observability';
-import type { UserIdentifier } from '../domain/userIdentifier';
+import type { UserIdentifier } from '../domain';
 import { SESSION_SCHEMA_VERSION, type SessionRecord } from './sessionRecord';
 import { setShadow } from './sessionShadow';
 import { SESSION_STORAGE_KEY } from './sessionStorageKey';

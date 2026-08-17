@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { userIdentifier } from '../domain/userIdentifier';
+import { userIdentifier } from '../domain';
 import { SESSION_SCHEMA_VERSION, type SessionRecord } from './sessionRecord';
 
 describe('the session record', () => {

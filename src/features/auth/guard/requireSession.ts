@@ -1,6 +1,6 @@
 import { redirect, replace } from 'react-router';
 import { readSession } from '../session/readSession';
-import type { UserIdentifier } from '../domain/userIdentifier';
+import type { UserIdentifier } from '../domain';
 import type { GuardContext } from './guardContext';
 
 const LOGIN_PATH = '/login';

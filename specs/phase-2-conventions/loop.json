@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "plan",
-  "phase_entered": "2026-08-17T10:52:03Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-17T10:52:30Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T10:52:14Z",
+  "updated": "2026-08-17T10:54:20Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 9,
-      "steps_done": 0
+      "steps_done": 1
     },
     "G3": {
       "status": "pending",
@@ -63,8 +63,8 @@
         "src/features/auth/domain/deriveSecret.test.ts::deriveSecret > matches the brief's own encode, position by position, for a hand-worked input",
         "src/features/auth/domain/userIdentifier.test.ts::userIdentifier > accepts a finite integer and a conservative string alike"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - pure re-export addition + import path change, no behavior change",
+      "status": "done"
     },
     {
       "id": 2,
@@ -155,6 +155,32 @@
     "2026-08-17T10:52:14Z step 6 added: SessionStatus const-object enum in session/readSession.ts",
     "2026-08-17T10:52:14Z step 7 added: SessionShadowStatus const-object enum in session/sessionShadow.ts",
     "2026-08-17T10:52:14Z step 8 added: LookupOutcomeKind const-object enum in data/lookupUserIdentifier.ts",
-    "2026-08-17T10:52:14Z step 9 added: SessionUnreadableReason const-object enum in session/readSession.ts"
-  ]
+    "2026-08-17T10:52:14Z step 9 added: SessionUnreadableReason const-object enum in session/readSession.ts",
+    "2026-08-17T10:52:30Z phase -> implement",
+    "2026-08-17T10:52:42Z step 1 -> na",
+    "2026-08-17T10:54:20Z evidence recorded: evidence/steps/step1-green.txt (feeb6c1f0151) - domain/index.ts barrel + 12 prod + 10 test import repoints; vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean",
+    "2026-08-17T10:54:20Z step 1 -> green",
+    "2026-08-17T10:54:20Z step 1 -> done"
+  ],
+  "test_file_hashes": {
+    "src/features/auth/domain/deriveSecret.test.ts": {
+      "sha": "73811a1b89e1",
+      "step": 1,
+      "recorded": "2026-08-17T10:52:42Z",
+      "log_index": 15
+    },
+    "src/features/auth/domain/userIdentifier.test.ts": {
+      "sha": "29a1ffc1207d",
+      "step": 1,
+      "recorded": "2026-08-17T10:52:42Z",
+      "log_index": 15
+    }
+  },
+  "evidence_hashes": {
+    "evidence/steps/step1-green.txt": {
+      "sha": "feeb6c1f0151",
+      "recorded": "2026-08-17T10:54:20Z",
+      "note": "domain/index.ts barrel + 12 prod + 10 test import repoints; vitest features/auth 25/25 files, 82/82 tests green; tsc -b clean"
+    }
+  }
 }

@@ -3,7 +3,7 @@ import { createFakeClock, createFakeRandomness } from '@shared/testing';
 import { createHttpClient } from '@platform/http';
 import type { HttpClientDependencies, Transport } from '@platform/http';
 import type { ObservabilityFacade } from '@platform/observability';
-import { userIdentifier } from '../domain/userIdentifier';
+import { userIdentifier } from '../domain';
 import { createSignedInUserStore } from './createSignedInUserStore';
 
 function createSpyObservability(): ObservabilityFacade {

@@ -1,4 +1,4 @@
-import type { UserIdentifier } from '../domain/userIdentifier';
+import type { UserIdentifier } from '../domain';
 
 export const SESSION_SCHEMA_VERSION = 1;
 
