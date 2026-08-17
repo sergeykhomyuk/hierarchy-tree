@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "review",
-  "phase_entered": "2026-08-17T11:29:20Z",
+  "phase": "prove",
+  "phase_entered": "2026-08-17T11:35:43Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:35:35Z",
+  "updated": "2026-08-17T11:36:02Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -26,7 +26,7 @@
     "spec": null,
     "plan": "PLAN.md",
     "design": null,
-    "proof": null,
+    "proof": "PROOF.md",
     "evidence": "evidence/"
   },
   "gates": {
@@ -123,7 +123,9 @@
     "2026-08-17T11:31:46Z evidence recorded: evidence/reviews/g4-claude-review.md (e641744b1d7b) - fresh-context Claude G4 review, CLEAN, 0 findings",
     "2026-08-17T11:31:46Z evidence recorded: evidence/reviews/full-diff.txt (d3db2da8b236) - full diff (d7ef594..HEAD, platform/http + features/auth) given to both G4 reviewers",
     "2026-08-17T11:35:30Z codex unavailable at G4: the codex-rescue background job (b2gngv4yf) never completed within the session - after ~10 minutes of waiting and one resume, the underlying rescue subagent was no longer listed among running agents with no findings returned. User explicitly approved proceeding single-reviewer ('check codex. if still running - skip it.').",
-    "2026-08-17T11:35:35Z G4 -> passed (Fresh-context Claude review (evidence/reviews/g4-claude-review.md): CLEAN, 0 findings - enum value fidelity, call-site repointing, the three deliberate exclusions (HttpRequest.method, statusDescription, timingRecord.ts) and the two features/auth cross-directory consumers all verified. Codex second opinion unavailable: the background job never completed after ~10 minutes and one resume attempt; logged per contract, user explicitly approved proceeding single-reviewer. No security_review flag on this loop (pure refactor, no auth-logic or input-handling change).)"
+    "2026-08-17T11:35:35Z G4 -> passed (Fresh-context Claude review (evidence/reviews/g4-claude-review.md): CLEAN, 0 findings - enum value fidelity, call-site repointing, the three deliberate exclusions (HttpRequest.method, statusDescription, timingRecord.ts) and the two features/auth cross-directory consumers all verified. Codex second opinion unavailable: the background job never completed after ~10 minutes and one resume attempt; logged per contract, user explicitly approved proceeding single-reviewer. No security_review flag on this loop (pure refactor, no auth-logic or input-handling change).)",
+    "2026-08-17T11:35:43Z phase -> prove",
+    "2026-08-17T11:36:02Z set proof = PROOF.md"
   ],
   "test_file_hashes": {
     "src/platform/http/httpFailure.test.ts": {
