@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:21:40Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:23:36Z",
+  "updated": "2026-08-17T11:25:23Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 3,
-      "steps_done": 1
+      "steps_done": 2
     },
     "G3": {
       "status": "pending",
@@ -74,8 +74,8 @@
         "src/platform/http/performAttempt.test.ts::performAttempt > reports aborted (not network failure) when the transport rejects on an aborted signal",
         "src/platform/http/createHttpClient.test.ts::createHttpClient > a caller abort yields cancelled without retrying or reporting an error"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): refactor/chore step guarded by pre-existing tests - literal union to as-const object enum, same runtime string values, no behavior change",
+      "status": "done"
     },
     {
       "id": 3,
@@ -102,7 +102,11 @@
     "2026-08-17T11:21:43Z step 1 -> na",
     "2026-08-17T11:23:36Z evidence recorded: evidence/steps/step1-green.txt (f86da19a4510) - HttpFailureKind as-const enum in httpFailure.ts; updated performAttempt.ts, createHttpClient.ts, shouldRetry.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean",
     "2026-08-17T11:23:36Z step 1 -> green",
-    "2026-08-17T11:23:36Z step 1 -> done"
+    "2026-08-17T11:23:36Z step 1 -> done",
+    "2026-08-17T11:23:40Z step 2 -> na",
+    "2026-08-17T11:25:22Z evidence recorded: evidence/steps/step2-green.txt (6c0f7b141bc7) - AttemptOutcomeKind as-const enum in performAttempt.ts; updated createHttpClient.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean",
+    "2026-08-17T11:25:22Z step 2 -> green",
+    "2026-08-17T11:25:23Z step 2 -> done"
   ],
   "test_file_hashes": {
     "src/platform/http/httpFailure.test.ts": {
@@ -119,9 +123,15 @@
     },
     "src/platform/http/performAttempt.test.ts": {
       "sha": "f95501d3a1d3",
-      "step": 1,
-      "recorded": "2026-08-17T11:21:43Z",
-      "log_index": 9
+      "step": 2,
+      "recorded": "2026-08-17T11:23:40Z",
+      "log_index": 13
+    },
+    "src/platform/http/createHttpClient.test.ts": {
+      "sha": "1af39d7cbc4a",
+      "step": 2,
+      "recorded": "2026-08-17T11:23:40Z",
+      "log_index": 13
     }
   },
   "evidence_hashes": {
@@ -129,6 +139,11 @@
       "sha": "f86da19a4510",
       "recorded": "2026-08-17T11:23:36Z",
       "note": "HttpFailureKind as-const enum in httpFailure.ts; updated performAttempt.ts, createHttpClient.ts, shouldRetry.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean"
+    },
+    "evidence/steps/step2-green.txt": {
+      "sha": "6c0f7b141bc7",
+      "recorded": "2026-08-17T11:25:22Z",
+      "note": "AttemptOutcomeKind as-const enum in performAttempt.ts; updated createHttpClient.ts; full vitest suite 108/108 files, 430/430 tests green; tsc -b + lint clean"
     }
   }
 }

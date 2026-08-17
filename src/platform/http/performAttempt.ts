@@ -3,10 +3,19 @@ import type { HttpRequest } from './httpRequest';
 import { statusDescription } from './statusDescription';
 import type { Transport } from './transport';
 
+export const AttemptOutcomeKind = {
+  Success: 'success',
+  Failure: 'failure',
+  Aborted: 'aborted',
+} as const;
+
+export type AttemptOutcomeKind =
+  (typeof AttemptOutcomeKind)[keyof typeof AttemptOutcomeKind];
+
 export type AttemptOutcome<Value> =
-  | { kind: 'success'; value: Value; status: number }
-  | { kind: 'failure'; failure: HttpFailure }
-  | { kind: 'aborted' };
+  | { kind: typeof AttemptOutcomeKind.Success; value: Value; status: number }
+  | { kind: typeof AttemptOutcomeKind.Failure; failure: HttpFailure }
+  | { kind: typeof AttemptOutcomeKind.Aborted };
 
 export async function performAttempt<Value>(
   httpRequest: HttpRequest<Value>,
@@ -32,16 +41,16 @@ export async function performAttempt<Value>(
   try {
     response = await transport(webRequest);
   } catch {
-    if (signal.aborted) return { kind: 'aborted' };
+    if (signal.aborted) return { kind: AttemptOutcomeKind.Aborted };
     return {
-      kind: 'failure',
+      kind: AttemptOutcomeKind.Failure,
       failure: { kind: HttpFailureKind.Network },
     };
   }
 
   if (!response.ok) {
     return {
-      kind: 'failure',
+      kind: AttemptOutcomeKind.Failure,
       failure: {
         kind: HttpFailureKind.Http,
         status: response.status,
@@ -53,7 +62,7 @@ export async function performAttempt<Value>(
   try {
     const payload: unknown = await response.json();
     return {
-      kind: 'success',
+      kind: AttemptOutcomeKind.Success,
       value: httpRequest.parse(payload),
       status: response.status,
     };
@@ -62,7 +71,10 @@ export async function performAttempt<Value>(
     // being read, which rejects response.json() the same way a genuine
     // parse failure would - unconditionally mapping this catch to
     // 'parse' misreported a cancellation/timeout as malformed JSON.
-    if (signal.aborted) return { kind: 'aborted' };
-    return { kind: 'failure', failure: { kind: HttpFailureKind.Parse } };
+    if (signal.aborted) return { kind: AttemptOutcomeKind.Aborted };
+    return {
+      kind: AttemptOutcomeKind.Failure,
+      failure: { kind: HttpFailureKind.Parse },
+    };
   }
 }

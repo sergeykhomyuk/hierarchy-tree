@@ -7,7 +7,7 @@ import {
 import { buildUrl } from './buildUrl';
 import { createTraceparent } from './createTraceparent';
 import { HttpFailureKind } from './httpFailure';
-import { performAttempt } from './performAttempt';
+import { AttemptOutcomeKind, performAttempt } from './performAttempt';
 import { retryDelayMilliseconds } from './retryDelayMilliseconds';
 import { shouldRetry } from './shouldRetry';
 import type { HttpRequest } from './httpRequest';
@@ -104,7 +104,7 @@ export function createHttpClient(
         );
         const durationMilliseconds = clock.now() - attemptStartedAt;
 
-        if (rawOutcome.kind === 'aborted') {
+        if (rawOutcome.kind === AttemptOutcomeKind.Aborted) {
           if (httpRequest.signal?.aborted) {
             observability.logger.debug('http.request_cancelled', {
               resourcePath: httpRequest.resourcePath,
@@ -138,7 +138,7 @@ export function createHttpClient(
         }
 
         const status =
-          rawOutcome.kind === 'success'
+          rawOutcome.kind === AttemptOutcomeKind.Success
             ? rawOutcome.status
             : rawOutcome.failure.kind === HttpFailureKind.Http
               ? rawOutcome.failure.status
@@ -154,7 +154,7 @@ export function createHttpClient(
           ...(status !== undefined ? { status } : {}),
         });
 
-        if (rawOutcome.kind === 'success') {
+        if (rawOutcome.kind === AttemptOutcomeKind.Success) {
           return {
             outcome: 'success',
             value: rawOutcome.value,
