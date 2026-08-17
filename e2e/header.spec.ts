@@ -92,7 +92,7 @@ test.describe('the signed-in header', () => {
     await expect(page.getByRole('alert')).toHaveCount(0);
   });
 
-  test('requests the user record once across two authenticated navigations', async ({
+  test("the signed-in user record's own fetch is cached across two authenticated navigations", async ({
     page,
     baseURL,
   }) => {
@@ -116,7 +116,12 @@ test.describe('the signed-in header', () => {
 
     await submitSignInForm(page);
     await expect(page.getByText('Ada Lovelace')).toBeVisible();
-    expect(userRequestCount).toBe(1);
+    // Two independent readers of the same /users.json collection settle
+    // on the first navigation: the header's signedInUserStore (this
+    // test's own concern) and the hierarchy page's own repository fetch
+    // (phase 3, invariant 4 - "this page issues exactly one request of
+    // its own"). What this test actually verifies is the DELTA below.
+    expect(userRequestCount).toBe(2);
 
     // Simulates a second navigation into the authenticated route without
     // a page reload: the same mechanism createBackForwardRestore.ts wires
@@ -130,7 +135,12 @@ test.describe('the signed-in header', () => {
     });
 
     await expect(page.getByText('Ada Lovelace')).toBeVisible();
-    expect(userRequestCount).toBe(1);
+    // signedInUserStore stays cached for the page's lifetime and
+    // contributes no further request; the hierarchy page has no such
+    // cache and re-fetches on every navigation the router revalidates,
+    // this bfcache restore included - so the count grows by exactly one,
+    // not two.
+    expect(userRequestCount).toBe(3);
   });
 
   test('signs in and out entirely from the keyboard', async ({

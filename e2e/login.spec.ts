@@ -100,7 +100,7 @@ test.describe('the login card', () => {
     expect(secretCallCount).toBe(3);
   });
 
-  test('issues exactly one secrets request while authenticating, and exactly one users request from the landing route', async ({
+  test('issues exactly one secrets request while authenticating, and exactly two users requests from the landing route', async ({
     page,
     baseURL,
   }) => {
@@ -131,11 +131,12 @@ test.describe('the login card', () => {
     );
 
     expect(secretRequestCount).toBe(1);
-    // Exactly one, not zero: the authenticated route's own loader (M3)
-    // fetches the signed-in user's record once landing on / - the
-    // sign-in flow itself still never touches the users path, only the
-    // subsequent navigation's loader does.
-    expect(userRequestCount).toBe(1);
+    // Two, not zero and not one: the sign-in flow itself never touches
+    // the users path, only the subsequent navigation's loaders do - and
+    // landing on / runs two independent ones, the authenticated route's
+    // signed-in-name lookup and the hierarchy page's own repository fetch
+    // (invariant 4 - "this page issues exactly one request of its own").
+    expect(userRequestCount).toBe(2);
   });
 
   test('leaves no credential material in the telemetry buffer or storage', async ({

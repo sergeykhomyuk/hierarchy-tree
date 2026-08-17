@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T13:50:20Z",
+  "updated": "2026-08-17T13:55:13Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -1079,7 +1079,10 @@
     "2026-08-17T13:47:45Z step 16 -> red",
     "2026-08-17T13:50:20Z step 16 -> green",
     "2026-08-17T13:50:20Z step 16 -> done",
-    "2026-08-17T13:50:20Z evidence recorded: evidence/logs/step16-green.txt (115eb2338da6) - green: all 4 step-16 tests pass plus routeDefinitions regression; full suite (496 tests), build and verify:build unaffected"
+    "2026-08-17T13:50:20Z evidence recorded: evidence/logs/step16-green.txt (115eb2338da6) - green: all 4 step-16 tests pass plus routeDefinitions regression; full suite (496 tests), build and verify:build unaffected",
+    "2026-08-17T13:55:08Z evidence recorded: evidence/milestones/m2-suite.txt (a1e4c7a65496) - M2 boundary: npm run verify green (100% coverage on hierarchy data+domain layers)",
+    "2026-08-17T13:55:09Z evidence recorded: evidence/milestones/m2-e2e.txt (6487567a527d) - M2 boundary: full 41-test e2e suite green, including two phase-2 tests updated for the hierarchy page's now-legitimate second /users.json request",
+    "2026-08-17T13:55:13Z milestone 2 boundary verified: npm run verify green (100% coverage on hierarchy data/domain); full 41-test e2e suite green after updating two phase-2 request-count assertions (header.spec.ts, login.spec.ts) that predated the hierarchy page's own /users.json fetch. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt"
   ],
   "milestones": [
     {
@@ -1091,7 +1094,7 @@
     {
       "id": 2,
       "title": "The boundary, the repository and the loader",
-      "verified": null,
+      "verified": "2026-08-17T13:55:13Z npm run verify green (100% coverage on hierarchy data/domain); full 41-test e2e suite green after updating two phase-2 request-count assertions (header.spec.ts, login.spec.ts) that predated the hierarchy page's own /users.json fetch. Evidence: evidence/milestones/m2-suite.txt, evidence/milestones/m2-e2e.txt",
       "reviewed": null
     },
     {
@@ -1258,6 +1261,16 @@
       "sha": "115eb2338da6",
       "recorded": "2026-08-17T13:50:20Z",
       "note": "green: all 4 step-16 tests pass plus routeDefinitions regression; full suite (496 tests), build and verify:build unaffected"
+    },
+    "evidence/milestones/m2-suite.txt": {
+      "sha": "a1e4c7a65496",
+      "recorded": "2026-08-17T13:55:08Z",
+      "note": "M2 boundary: npm run verify green (100% coverage on hierarchy data+domain layers)"
+    },
+    "evidence/milestones/m2-e2e.txt": {
+      "sha": "6487567a527d",
+      "recorded": "2026-08-17T13:55:09Z",
+      "note": "M2 boundary: full 41-test e2e suite green, including two phase-2 tests updated for the hierarchy page's now-legitimate second /users.json request"
     }
   },
   "test_file_hashes": {
