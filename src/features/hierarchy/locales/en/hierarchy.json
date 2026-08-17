@@ -3,5 +3,10 @@
     "documentTitle": "Hierarchy",
     "title": "The hierarchy view isn't built yet",
     "message": "This screen is a placeholder for phase 2's real hierarchy view."
+  },
+  "page": {
+    "documentTitle": "Hierarchy",
+    "cardTitle": "All users",
+    "loadingLabel": "Loading hierarchy…"
   }
 }

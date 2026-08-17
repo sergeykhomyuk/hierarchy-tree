@@ -58,6 +58,11 @@ describe('hierarchy loadTranslations', () => {
         title: 'home.title',
         message: 'home.message',
       },
+      page: {
+        documentTitle: 'page.documentTitle',
+        cardTitle: 'page.cardTitle',
+        loadingLabel: 'page.loadingLabel',
+      },
     });
 
     const secondEnglishInstance = await createTestI18n(Locale.English);

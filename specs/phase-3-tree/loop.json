@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T14:16:22Z",
+  "updated": "2026-08-17T14:27:51Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 18
+      "steps_done": 19
     },
     "G3": {
       "status": "pending",
@@ -545,12 +545,12 @@
       "id": 19,
       "desc": "HierarchySkeleton and the loading state: the card title with a loading indicator over skeleton rows shaped like tree rows at varying indents, decorative to assistive technology with no rows, no tree role, no interactive element and no text in the placeholder shapes, announced busy once, no summary line, and no minimum display time. Invariants 58, 59, 60, 61, 62, 63, 65.",
       "tests": [
-        "the skeleton exposes no row, no tree role and no interactive element",
-        "the loading state announces itself busy once and stops when data arrives",
-        "a response faster than the skeleton still renders the data state"
+        "src/features/hierarchy/HierarchySkeleton.test.tsx::HierarchySkeleton > exposes no row, no tree role and no interactive element",
+        "src/features/hierarchy/HierarchyPage.test.tsx::HierarchyPage > the loading state announces itself busy once and stops when data arrives",
+        "src/features/hierarchy/HierarchyPage.test.tsx::HierarchyPage > a response faster than the skeleton still renders the data state"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T14:22:04Z evidence/logs/step19-red.txt: HierarchySkeleton.tsx and HierarchyPage.tsx do not exist yet",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1118,7 +1118,13 @@
     "2026-08-17T14:14:30Z step 18 -> red",
     "2026-08-17T14:16:21Z step 18 -> green",
     "2026-08-17T14:16:22Z step 18 -> done",
-    "2026-08-17T14:16:22Z evidence recorded: evidence/logs/step18-green.txt (f5142af6800d) - green: unit + e2e tests pass; full unit suite (503 tests) and full e2e suite (42 tests) unaffected"
+    "2026-08-17T14:16:22Z evidence recorded: evidence/logs/step18-green.txt (f5142af6800d) - green: unit + e2e tests pass; full unit suite (503 tests) and full e2e suite (42 tests) unaffected",
+    "2026-08-17T14:21:45Z step 19 amended: desc: 'HierarchySkeleton and the loading state: the card title with a loading indicator over skeleton rows shaped like tree rows at varying indents, decorative to assistive technology with no rows, no tree role, no interactive element and no text in the placeholder shapes, announced busy once, no summary line, and no minimum display time. Invariants 58, 59, 60, 61, 62, 63, 65.' -> 'HierarchySkeleton and the loading state: the card title with a loading indicator over skeleton rows shaped like tree rows at varying indents, decorative to assistive technology with no rows, no tree role, no interactive element and no text in the placeholder shapes, announced busy once, no summary line, and no minimum display time. Invariants 58, 59, 60, 61, 62, 63, 65.'; tests: ['the skeleton exposes no row, no tree role and no interactive element', 'the loading state announces itself busy once and stops when data arrives', 'a response faster than the skeleton still renders the data state'] -> ['src/features/hierarchy/HierarchySkeleton.test.tsx::HierarchySkeleton > exposes no row, no tree role and no interactive element', 'src/features/hierarchy/HierarchyPage.test.tsx::HierarchyPage > the loading state announces itself busy once and stops when data arrives', 'src/features/hierarchy/HierarchyPage.test.tsx::HierarchyPage > a response faster than the skeleton still renders the data state']",
+    "2026-08-17T14:22:04Z step 19 -> red",
+    "2026-08-17T14:27:36Z step 19 -> green",
+    "2026-08-17T14:27:38Z step 19 -> done",
+    "2026-08-17T14:27:40Z evidence recorded: evidence/logs/step19-green.txt (6fb9381767f3) - step19: HierarchySkeleton + HierarchyPage loading/data path, full hierarchy suite green (65/65)",
+    "2026-08-17T14:27:51Z evidence recorded: evidence/logs/step19-red.txt (a1af2007d23f) - step19: HierarchySkeleton/HierarchyPage red - confirmed via temporary removal of both implementation files, both test files fail with module-not-found"
   ],
   "milestones": [
     {
@@ -1322,6 +1328,16 @@
       "sha": "f5142af6800d",
       "recorded": "2026-08-17T14:16:22Z",
       "note": "green: unit + e2e tests pass; full unit suite (503 tests) and full e2e suite (42 tests) unaffected"
+    },
+    "evidence/logs/step19-green.txt": {
+      "sha": "6fb9381767f3",
+      "recorded": "2026-08-17T14:27:40Z",
+      "note": "step19: HierarchySkeleton + HierarchyPage loading/data path, full hierarchy suite green (65/65)"
+    },
+    "evidence/logs/step19-red.txt": {
+      "sha": "a1af2007d23f",
+      "recorded": "2026-08-17T14:27:51Z",
+      "note": "step19: HierarchySkeleton/HierarchyPage red - confirmed via temporary removal of both implementation files, both test files fail with module-not-found"
     }
   },
   "test_file_hashes": {
@@ -1450,6 +1466,18 @@
       "step": 18,
       "recorded": "2026-08-17T14:14:30Z",
       "log_index": 267
+    },
+    "src/features/hierarchy/HierarchySkeleton.test.tsx": {
+      "sha": "3adf3d17d021",
+      "step": 19,
+      "recorded": "2026-08-17T14:22:04Z",
+      "log_index": 272
+    },
+    "src/features/hierarchy/HierarchyPage.test.tsx": {
+      "sha": "e74962de76dd",
+      "step": 19,
+      "recorded": "2026-08-17T14:22:04Z",
+      "log_index": 272
     }
   }
 }
