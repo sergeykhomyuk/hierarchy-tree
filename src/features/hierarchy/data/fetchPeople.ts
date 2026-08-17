@@ -3,10 +3,12 @@ import {
   type HttpClient,
   type HttpFailure,
 } from '@platform/http';
+import type { ObservabilityFacade } from '@platform/observability';
 import { buildForest } from '../domain/buildForest';
 import type { ForestAnomalies } from '../domain/forestAnomaly';
 import type { ForestSummaryCounts } from '../domain/buildForest';
 import type { TreeNode } from '../domain/treeNode';
+import './analyticsEvents';
 import { parsePeople } from './parsePeople';
 import { USERS_RESOURCE_PATH } from './usersResourcePath';
 
@@ -38,12 +40,37 @@ export type HierarchyResult =
     }
   | { readonly kind: typeof HierarchyResultKind.Cancelled };
 
+// Anomaly counts are reported by name, only when non-zero, so a shape
+// change in the shared database is visible rather than silently absorbed
+// (invariant 164) without spamming a report for every kind that didn't fire.
+function reportAnomalies(
+  observability: ObservabilityFacade,
+  anomalies: ForestAnomalies,
+): void {
+  const kinds: readonly (keyof ForestAnomalies)[] = [
+    'duplicateId',
+    'danglingManager',
+    'selfManaged',
+    'cycleBroken',
+  ];
+  for (const kind of kinds) {
+    const count = anomalies[kind];
+    if (count > 0) {
+      observability.logger.warn('hierarchy.anomaly_detected', {
+        kind,
+        count,
+      });
+    }
+  }
+}
+
 // The HTTP client never throws or rejects (fetchSignedInUser.ts's own
 // precedent), and neither does this repository: every non-success outcome
 // maps to a HierarchyResult arm instead (invariant 174).
 export async function fetchPeople(
   http: HttpClient,
   correlationId: string,
+  observability: ObservabilityFacade,
   signal?: AbortSignal,
 ): Promise<HierarchyResult> {
   const result = await http.request({
@@ -64,6 +91,10 @@ export async function fetchPeople(
   }
 
   if (result.outcome === HttpResultOutcome.Failure) {
+    observability.analytics.track('hierarchy.load_failed', {
+      failureKind: result.failure.kind,
+      correlationId,
+    });
     return {
       kind: HierarchyResultKind.Failure,
       failure: result.failure.kind,
@@ -71,20 +102,44 @@ export async function fetchPeople(
     };
   }
 
-  const { people, dropped } = result.value;
+  const { people, dropped, droppedFields } = result.value;
 
   if (people.length === 0) {
     if (dropped > 0) {
+      observability.analytics.track('hierarchy.load_failed', {
+        failureKind: 'allRowsInvalid',
+        correlationId,
+      });
       return {
         kind: HierarchyResultKind.Failure,
         failure: 'allRowsInvalid',
         correlationId,
       };
     }
+    observability.analytics.track('hierarchy.viewed', {
+      peopleCount: 0,
+      managerCount: 0,
+      rootCount: 0,
+      droppedCount: 0,
+    });
     return { kind: HierarchyResultKind.Empty };
   }
 
   const { roots, anomalies, counts } = buildForest(people);
+
+  if (dropped > 0) {
+    observability.logger.warn('hierarchy.rows_dropped', {
+      count: dropped,
+      fields: droppedFields,
+    });
+  }
+  reportAnomalies(observability, anomalies);
+  observability.analytics.track('hierarchy.viewed', {
+    peopleCount: counts.people,
+    managerCount: counts.managers,
+    rootCount: counts.roots,
+    droppedCount: dropped,
+  });
 
   return {
     kind: HierarchyResultKind.Data,

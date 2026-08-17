@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T13:17:14Z",
+  "updated": "2026-08-17T13:21:44Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 13
+      "steps_done": 14
     },
     "G3": {
       "status": "pending",
@@ -453,14 +453,14 @@
       "id": 13,
       "desc": "The telemetry the repository itself emits: one hierarchy-viewed event per completed load carrying the people, manager and root counts and the number of rows dropped; one drop report per load; one report per anomaly kind; one error event with the failure kind and the correlation id; and none at all for a cancelled request. No name, email or id on any of them. Invariants 160, 161 (the emission half), 162, 163, 164, 165 (the load half).",
       "tests": [
-        "a completed load emits exactly one hierarchy-viewed event carrying the counts and the drop count",
-        "dropped rows are reported once per load with the count and the failing field names",
-        "each anomaly kind is reported with its count",
-        "a failed load emits one error event with the failure kind and the correlation id",
-        "a cancelled request emits no event"
+        "src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a completed load emits exactly one hierarchy-viewed event carrying the counts and the drop count",
+        "src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > dropped rows are reported once per load with the count and the failing field names",
+        "src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > each anomaly kind is reported with its count",
+        "src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a failed load emits one error event with the failure kind and the correlation id",
+        "src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a cancelled request emits no event"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T13:20:06Z evidence/logs/step13-red.txt: fetchPeople does not accept an observability parameter yet, and emits no telemetry",
+      "status": "done",
       "milestone": 2
     },
     {
@@ -1064,7 +1064,12 @@
     "2026-08-17T13:16:12Z step 14 -> red",
     "2026-08-17T13:17:13Z step 14 -> green",
     "2026-08-17T13:17:14Z step 14 -> done",
-    "2026-08-17T13:17:14Z evidence recorded: evidence/logs/step14-green.txt (62a890aa1d06) - green: both analyticsEvents tests pass; full suite (482 tests) unaffected"
+    "2026-08-17T13:17:14Z evidence recorded: evidence/logs/step14-green.txt (62a890aa1d06) - green: both analyticsEvents tests pass; full suite (482 tests) unaffected",
+    "2026-08-17T13:19:50Z step 13 amended: desc: 'The telemetry the repository itself emits: one hierarchy-viewed event per completed load carrying the people, manager and root counts and the number of rows dropped; one drop report per load; one report per anomaly kind; one error event with the failure kind and the correlation id; and none at all for a cancelled request. No name, email or id on any of them. Invariants 160, 161 (the emission half), 162, 163, 164, 165 (the load half).' -> 'The telemetry the repository itself emits: one hierarchy-viewed event per completed load carrying the people, manager and root counts and the number of rows dropped; one drop report per load; one report per anomaly kind; one error event with the failure kind and the correlation id; and none at all for a cancelled request. No name, email or id on any of them. Invariants 160, 161 (the emission half), 162, 163, 164, 165 (the load half).'; tests: ['a completed load emits exactly one hierarchy-viewed event carrying the counts and the drop count', 'dropped rows are reported once per load with the count and the failing field names', 'each anomaly kind is reported with its count', 'a failed load emits one error event with the failure kind and the correlation id', 'a cancelled request emits no event'] -> ['src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a completed load emits exactly one hierarchy-viewed event carrying the counts and the drop count', 'src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > dropped rows are reported once per load with the count and the failing field names', 'src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > each anomaly kind is reported with its count', 'src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a failed load emits one error event with the failure kind and the correlation id', 'src/features/hierarchy/data/fetchPeople.test.ts::fetchPeople > a cancelled request emits no event']",
+    "2026-08-17T13:20:06Z step 13 -> red",
+    "2026-08-17T13:21:44Z step 13 -> green",
+    "2026-08-17T13:21:44Z step 13 -> done",
+    "2026-08-17T13:21:44Z evidence recorded: evidence/logs/step13-green.txt (b907089a60b1) - green: all 9 fetchPeople tests pass (4 from step 12 plus 5 new telemetry tests); full suite (488 tests) unaffected"
   ],
   "milestones": [
     {
@@ -1228,6 +1233,11 @@
       "sha": "62a890aa1d06",
       "recorded": "2026-08-17T13:17:14Z",
       "note": "green: both analyticsEvents tests pass; full suite (482 tests) unaffected"
+    },
+    "evidence/logs/step13-green.txt": {
+      "sha": "b907089a60b1",
+      "recorded": "2026-08-17T13:21:44Z",
+      "note": "green: all 9 fetchPeople tests pass (4 from step 12 plus 5 new telemetry tests); full suite (488 tests) unaffected"
     }
   },
   "test_file_hashes": {
@@ -1286,10 +1296,10 @@
       "log_index": 221
     },
     "src/features/hierarchy/data/fetchPeople.test.ts": {
-      "sha": "fccec876adab",
-      "step": 12,
-      "recorded": "2026-08-17T13:12:32Z",
-      "log_index": 226
+      "sha": "5a355ffe9bf4",
+      "step": 13,
+      "recorded": "2026-08-17T13:20:06Z",
+      "log_index": 236
     },
     "src/features/hierarchy/data/analyticsEvents.test.ts": {
       "sha": "fd4effca14c6",
