@@ -1,0 +1,33 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/layout/NavigationRail.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/layout/NavigationRail.test.tsx [ src/app/layout/NavigationRail.test.tsx ]
+Error: Failed to resolve import "./NavigationRail" from "src/app/layout/NavigationRail.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/layout/NavigationRail.test.tsx:3:31
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { render } from "@testing-library/react";
+  3  |  import { NavigationRail } from "./NavigationRail";
+     |                                  ^
+  4  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/layout/NavigationRail.test.tsx";
+  5  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  17:54:33
+   Duration  340ms (transform 22ms, setup 62ms, import 0ms, tests 0ms, environment 201ms)
+

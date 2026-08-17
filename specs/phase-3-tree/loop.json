@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T16:53:11Z",
+  "updated": "2026-08-17T16:56:42Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 27
+      "steps_done": 28
     },
     "G3": {
       "status": "pending",
@@ -664,8 +664,8 @@
       "tests": [
         "the nav rail holds no focusable element and is hidden from assistive technology"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T16:54:44Z evidence/logs/step28-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1172,7 +1172,14 @@
     "2026-08-17T16:53:11Z evidence recorded: evidence/logs/step27-green.txt (c2b20cff7482) - step 27 green: useExpansion.test.tsx + HomeRoute.test.tsx + HierarchyPage.test.tsx, 21/21 pass",
     "2026-08-17T16:53:11Z evidence recorded: evidence/logs/step27-full-suite.txt (e4ad17a251fa) - step 27: full vitest suite 542/542 pass, no regressions (536 baseline + 6 new)",
     "2026-08-17T16:53:11Z evidence recorded: evidence/logs/step27-e2e.txt (d780edb9969d) - step 27: full playwright suite 42/42 pass, no regressions",
-    "2026-08-17T16:53:11Z step 27 -> done"
+    "2026-08-17T16:53:11Z step 27 -> done",
+    "2026-08-17T16:54:44Z step 28 -> red",
+    "2026-08-17T16:54:49Z step 28 -> green",
+    "2026-08-17T16:56:42Z evidence recorded: evidence/logs/step28-red.txt (cd1cd592ad4e) - step 28 red: NavigationRail.test.tsx fails to resolve import (module missing)",
+    "2026-08-17T16:56:42Z evidence recorded: evidence/logs/step28-green.txt (899be8ee2d1b) - step 28 green: NavigationRail.test.tsx + AuthenticatedLayout.test.tsx, 3/3 pass",
+    "2026-08-17T16:56:42Z evidence recorded: evidence/logs/step28-full-suite.txt (40d14d5bde62) - step 28: full vitest suite 543/543 pass, no regressions (542 baseline + 1 new)",
+    "2026-08-17T16:56:42Z evidence recorded: evidence/logs/step28-e2e.txt (ee5ba69bc441) - step 28: full playwright suite 42/42 pass including axe scans, no regressions",
+    "2026-08-17T16:56:42Z step 28 -> done"
   ],
   "milestones": [
     {
@@ -1506,6 +1513,26 @@
       "sha": "d780edb9969d",
       "recorded": "2026-08-17T16:53:11Z",
       "note": "step 27: full playwright suite 42/42 pass, no regressions"
+    },
+    "evidence/logs/step28-red.txt": {
+      "sha": "cd1cd592ad4e",
+      "recorded": "2026-08-17T16:56:42Z",
+      "note": "step 28 red: NavigationRail.test.tsx fails to resolve import (module missing)"
+    },
+    "evidence/logs/step28-green.txt": {
+      "sha": "899be8ee2d1b",
+      "recorded": "2026-08-17T16:56:42Z",
+      "note": "step 28 green: NavigationRail.test.tsx + AuthenticatedLayout.test.tsx, 3/3 pass"
+    },
+    "evidence/logs/step28-full-suite.txt": {
+      "sha": "40d14d5bde62",
+      "recorded": "2026-08-17T16:56:42Z",
+      "note": "step 28: full vitest suite 543/543 pass, no regressions (542 baseline + 1 new)"
+    },
+    "evidence/logs/step28-e2e.txt": {
+      "sha": "ee5ba69bc441",
+      "recorded": "2026-08-17T16:56:42Z",
+      "note": "step 28: full playwright suite 42/42 pass including axe scans, no regressions"
     }
   },
   "test_file_hashes": {

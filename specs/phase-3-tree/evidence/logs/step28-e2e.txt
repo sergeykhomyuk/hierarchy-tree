@@ -1,0 +1,5 @@
+  ✓  40 [development] › e2e/kit-route.spec.ts:59:3 › kit route › a skeleton box equals the box of the content it stands in for (351ms)
+  ✓  41 [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header (219ms)
+  ✓  42 [development] › e2e/kit-route.spec.ts:103:3 › kit route › mirrors correctly under a forced right-to-left direction (494ms)
+
+  42 passed (7.8s)

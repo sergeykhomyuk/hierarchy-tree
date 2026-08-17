@@ -2,6 +2,7 @@ import { memo, useCallback } from 'react';
 import { Outlet, useLoaderData, useNavigate } from 'react-router';
 import { useRuntime } from '../composition';
 import type { AuthenticatedLoaderData } from './createAuthenticatedLoader';
+import { NavigationRail } from './NavigationRail';
 import { SignedInHeader } from './SignedInHeader';
 
 // SerializeFrom<T> (react-router's useLoaderData<T>() return type) only
@@ -36,7 +37,10 @@ export const AuthenticatedLayout = memo(function AuthenticatedLayout() {
           navigate,
         }}
       />
-      <Outlet />
+      <div className="flex">
+        <NavigationRail />
+        <Outlet />
+      </div>
     </>
   );
 });
