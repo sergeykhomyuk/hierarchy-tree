@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T12:01:50Z",
+  "updated": "2026-08-17T12:07:55Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 2
+      "steps_done": 3
     },
     "G3": {
       "status": "pending",
@@ -307,13 +307,13 @@
       "id": 3,
       "desc": "buildForest shape: ordered roots, ordered children, manager status, direct report counts, and the three summary counts computed after duplicate removal. Invariants 6, 8, 9, 17, 18, 19, 20, 21, 22, 23.",
       "tests": [
-        "a person with no managerId is a root and a person whose managerId names another person is that person's child",
-        "roots and children appear in payload order regardless of name, email, id value or subtree size",
-        "a manager is someone with at least one direct report and the report count is direct children only",
-        "an empty list produces an empty forest and a single person produces one childless root"
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > a person with no managerId is a root and a person whose managerId names another person is that person's child",
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > roots and children appear in payload order regardless of name, email, id value or subtree size",
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > a manager is someone with at least one direct report and the report count is direct children only",
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > an empty list produces an empty forest and a single person produces one childless root"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T12:05:44Z evidence/logs/step3-red.txt: buildForest.ts does not exist yet",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -986,7 +986,12 @@
     "2026-08-17T12:00:10Z step 2 -> red",
     "2026-08-17T12:01:50Z step 2 -> green",
     "2026-08-17T12:01:50Z step 2 -> done",
-    "2026-08-17T12:01:50Z evidence recorded: evidence/logs/step2-green.txt (c74be8e74d23) - green: parsePersonIdentifier and parseEmailAddress pass; person/treeNode/forestAnomaly types added"
+    "2026-08-17T12:01:50Z evidence recorded: evidence/logs/step2-green.txt (c74be8e74d23) - green: parsePersonIdentifier and parseEmailAddress pass; person/treeNode/forestAnomaly types added",
+    "2026-08-17T12:05:42Z step 3 amended: desc: 'buildForest shape: ordered roots, ordered children, manager status, direct report counts, and the three summary counts computed after duplicate removal. Invariants 6, 8, 9, 17, 18, 19, 20, 21, 22, 23.' -> 'buildForest shape: ordered roots, ordered children, manager status, direct report counts, and the three summary counts computed after duplicate removal. Invariants 6, 8, 9, 17, 18, 19, 20, 21, 22, 23.'; tests: [\"a person with no managerId is a root and a person whose managerId names another person is that person's child\", 'roots and children appear in payload order regardless of name, email, id value or subtree size', 'a manager is someone with at least one direct report and the report count is direct children only', 'an empty list produces an empty forest and a single person produces one childless root'] -> [\"src/features/hierarchy/domain/buildForest.test.ts::buildForest > a person with no managerId is a root and a person whose managerId names another person is that person's child\", 'src/features/hierarchy/domain/buildForest.test.ts::buildForest > roots and children appear in payload order regardless of name, email, id value or subtree size', 'src/features/hierarchy/domain/buildForest.test.ts::buildForest > a manager is someone with at least one direct report and the report count is direct children only', 'src/features/hierarchy/domain/buildForest.test.ts::buildForest > an empty list produces an empty forest and a single person produces one childless root']",
+    "2026-08-17T12:05:44Z step 3 -> red",
+    "2026-08-17T12:07:55Z step 3 -> green",
+    "2026-08-17T12:07:55Z step 3 -> done",
+    "2026-08-17T12:07:55Z evidence recorded: evidence/logs/step3-green.txt (686e88457d3e) - green: buildForest shape tests pass"
   ],
   "milestones": [
     {
@@ -1080,6 +1085,11 @@
       "sha": "c74be8e74d23",
       "recorded": "2026-08-17T12:01:50Z",
       "note": "green: parsePersonIdentifier and parseEmailAddress pass; person/treeNode/forestAnomaly types added"
+    },
+    "evidence/logs/step3-green.txt": {
+      "sha": "686e88457d3e",
+      "recorded": "2026-08-17T12:07:55Z",
+      "note": "green: buildForest shape tests pass"
     }
   },
   "test_file_hashes": {
@@ -1094,6 +1104,12 @@
       "step": 2,
       "recorded": "2026-08-17T12:00:10Z",
       "log_index": 167
+    },
+    "src/features/hierarchy/domain/buildForest.test.ts": {
+      "sha": "428cee3ca5a2",
+      "step": 3,
+      "recorded": "2026-08-17T12:05:44Z",
+      "log_index": 172
     }
   }
 }
