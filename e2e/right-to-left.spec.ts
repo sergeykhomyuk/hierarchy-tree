@@ -38,7 +38,11 @@ import { installSignInApiMock, signIn } from './support/signIn';
 const ROUTES = [
   {
     path: '/',
-    heading: 'home.title',
+    // installSignInApiMock's one user record satisfies auth's own schema
+    // but not the hierarchy feature's (no email, a string id), so this
+    // lands on the error state - see placeholder-routes.spec.ts's own
+    // note on the same mock.
+    heading: 'page.errorHeading',
     visit: async (page: Page) => {
       await installSignInApiMock(page);
       await signIn(page);

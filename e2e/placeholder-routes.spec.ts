@@ -4,13 +4,18 @@ import { installRouteMocks } from './support/routeMocks';
 import { installSignInApiMock, signIn } from './support/signIn';
 
 test.describe('placeholder routes', () => {
-  test('the home route renders the hierarchy placeholder', async ({
+  test('the home route renders through the real router once signed in', async ({
     page,
     baseURL,
   }) => {
-    // / is a guarded route since M3 - reaching the placeholder means
-    // signing in first, which is what this test is actually exercising
-    // now, alongside the placeholder itself.
+    // / is a guarded route since M3 - reaching it means signing in
+    // first, which is what this test is actually exercising, alongside
+    // the route itself. installSignInApiMock's one user record satisfies
+    // auth's own schema but not the hierarchy feature's (no email, a
+    // string id) - dedicated hierarchy-state coverage lives in
+    // HomeRoute.test.tsx and the M3 boundary's own e2e suite, so this is
+    // deliberately just the error state landing correctly rather than a
+    // claim about which of the four states renders.
     await installRouteMocks(page, baseURL ?? '');
     await installSignInApiMock(page);
     const { records } = recordConsole(page);
@@ -18,9 +23,9 @@ test.describe('placeholder routes', () => {
     await signIn(page);
 
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.errorHeading',
     );
-    await expect(page).toHaveTitle('home.documentTitle');
+    await expect(page).toHaveTitle('page.documentTitle');
     await expect(page.getByRole('main')).toBeVisible();
     await expect(
       page.getByRole('link', { name: 'layout.skipLink' }),

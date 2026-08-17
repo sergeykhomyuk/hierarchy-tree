@@ -27,7 +27,7 @@ export const ErrorState = memo(function ErrorState({
   return (
     <div role="alert" className={framed ? FRAME_CLASS : undefined}>
       {glyph !== undefined && <div>{glyph}</div>}
-      <p className="font-semibold text-ink">{title}</p>
+      <h1 className="font-semibold text-ink">{title}</h1>
       <p className="text-ink-muted">{message}</p>
       {correlationId !== undefined && (
         <p className="text-ink-faint">{correlationId}</p>

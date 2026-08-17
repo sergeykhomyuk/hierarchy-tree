@@ -1,4 +1,6 @@
-export { HierarchyPlaceholderPage } from './HierarchyPlaceholderPage';
 export { loadTranslations } from './loadTranslations';
-export { fetchPeople } from './data/fetchPeople';
-export type { HierarchyResult } from './data/fetchPeople';
+export { fetchPeople, HierarchyResultKind } from './data/fetchPeople';
+export type { HierarchyFailureKind, HierarchyResult } from './data/fetchPeople';
+export { HierarchyPage } from './HierarchyPage';
+export type { HierarchyPageProps } from './HierarchyPage';
+export { HierarchySkeleton } from './HierarchySkeleton';

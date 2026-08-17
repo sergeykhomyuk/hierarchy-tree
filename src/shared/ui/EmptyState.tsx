@@ -23,7 +23,7 @@ export const EmptyState = memo(function EmptyState({
   return (
     <div className={framed ? FRAME_CLASS : undefined}>
       {glyph !== undefined && <div>{glyph}</div>}
-      <p className="font-semibold text-ink">{title}</p>
+      <h1 className="font-semibold text-ink">{title}</h1>
       <p className="text-ink-muted">{message}</p>
       {action !== undefined && (
         <button

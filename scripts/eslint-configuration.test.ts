@@ -308,6 +308,16 @@ describe('demonstrable negatives', () => {
     expect(bannedOutput).toContain('no-restricted-imports');
     expect(bannedOutput).toContain('full document load');
   });
+
+  it('the feature layer may not import useRevalidator', () => {
+    const output = lintOutputFor(
+      'src/features/hierarchy/useRevalidatorProbe.ts',
+      "import { useRevalidator } from 'react-router';\nexport const _probe = useRevalidator;\n",
+    );
+
+    expect(output).toContain('no-restricted-imports');
+    expect(output).toContain('src/app/');
+  });
 });
 
 describe('the redirect sinks-ban narrowing', () => {

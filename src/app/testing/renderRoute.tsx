@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import { render, type RenderResult } from '@testing-library/react';
 import type { Configuration } from '@platform/configuration';
-import type { KeyValueStorage } from '@platform/runtime';
+import type { Clock, KeyValueStorage } from '@platform/runtime';
+import type { Transport } from '@platform/http';
 import { createObservability } from '@platform/observability';
 import {
   createInternationalization,
@@ -50,20 +51,21 @@ const TEST_CONFIGURATION: Configuration = Object.freeze({
 // clock, since createRuntime.ts itself always uses the real adapters.
 export async function buildTestRuntime(
   configurationOverrides: Partial<Configuration> = {},
+  transport: Transport = createFakeTransport({}),
+  clock: Clock = createFakeClock(),
 ): Promise<Runtime> {
   const configuration: Configuration = Object.freeze({
     ...TEST_CONFIGURATION,
     ...configurationOverrides,
   });
   const randomness = createFakeRandomness();
-  const clock = createFakeClock();
   const { facade: observability } = createObservability({
     configuration,
     randomness,
   });
   const interactionTracker = createInteractionTracker(observability);
   const http = createHttpClient({
-    transport: createFakeTransport({}),
+    transport,
     clock,
     randomness,
     observability,

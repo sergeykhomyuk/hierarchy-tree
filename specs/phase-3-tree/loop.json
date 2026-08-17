@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T14:41:49Z",
+  "updated": "2026-08-17T15:46:25Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 21
+      "steps_done": 22
     },
     "G3": {
       "status": "pending",
@@ -587,8 +587,8 @@
         "retry that fails again shows a different correlation id and never disables the button",
         "the feature layer may not import useRevalidator"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T15:30:58Z evidence/logs/step22-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1134,7 +1134,13 @@
     "2026-08-17T14:41:44Z step 21 -> green",
     "2026-08-17T14:41:44Z step 21 -> done",
     "2026-08-17T14:41:48Z evidence recorded: evidence/logs/step21-green.txt (e780b15ef55c) - step21: empty state wiring - full suite green (515/515)",
-    "2026-08-17T14:41:49Z evidence recorded: evidence/logs/step21-red.txt (c7554b2e2120) - step21: empty state red - both new tests genuinely fail against pre-step-21 HierarchyPage.tsx (Empty branch returning null)"
+    "2026-08-17T14:41:49Z evidence recorded: evidence/logs/step21-red.txt (c7554b2e2120) - step21: empty state red - both new tests genuinely fail against pre-step-21 HierarchyPage.tsx (Empty branch returning null)",
+    "2026-08-17T15:30:58Z step 22 -> red",
+    "2026-08-17T15:46:20Z step 22 -> green",
+    "2026-08-17T15:46:20Z step 22 -> done",
+    "2026-08-17T15:46:25Z evidence recorded: evidence/logs/step22-green.txt (9446db1d5403) - step22: HomeRoute rewrite - full unit suite green (518/518)",
+    "2026-08-17T15:46:25Z evidence recorded: evidence/logs/step22-e2e-green.txt (d01d4afe98a5) - step22: HomeRoute rewrite - full e2e suite green (42/42, chromium+development projects), including all placeholder-retirement fixups",
+    "2026-08-17T15:46:25Z evidence recorded: evidence/logs/step22-red.txt (48a1395f76c6) - step22: HomeRoute retry/refresh + useRevalidator ban red - 4/4 new tests genuinely fail against pre-step-22 HomeRoute.tsx (bare re-export) and eslint.config.js (no useRevalidator ban)"
   ],
   "milestones": [
     {
@@ -1368,6 +1374,21 @@
       "sha": "c7554b2e2120",
       "recorded": "2026-08-17T14:41:49Z",
       "note": "step21: empty state red - both new tests genuinely fail against pre-step-21 HierarchyPage.tsx (Empty branch returning null)"
+    },
+    "evidence/logs/step22-green.txt": {
+      "sha": "9446db1d5403",
+      "recorded": "2026-08-17T15:46:25Z",
+      "note": "step22: HomeRoute rewrite - full unit suite green (518/518)"
+    },
+    "evidence/logs/step22-e2e-green.txt": {
+      "sha": "d01d4afe98a5",
+      "recorded": "2026-08-17T15:46:25Z",
+      "note": "step22: HomeRoute rewrite - full e2e suite green (42/42, chromium+development projects), including all placeholder-retirement fixups"
+    },
+    "evidence/logs/step22-red.txt": {
+      "sha": "48a1395f76c6",
+      "recorded": "2026-08-17T15:46:25Z",
+      "note": "step22: HomeRoute retry/refresh + useRevalidator ban red - 4/4 new tests genuinely fail against pre-step-22 HomeRoute.tsx (bare re-export) and eslint.config.js (no useRevalidator ban)"
     }
   },
   "test_file_hashes": {

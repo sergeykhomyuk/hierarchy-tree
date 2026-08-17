@@ -36,8 +36,11 @@ test.describe('the login card', () => {
     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
     await page.getByRole('button', { name: 'login.submit' }).click();
 
+    // No user handler passed to installApiMocks fulfills /users.json
+    // with [] by default - the hierarchy feature's own empty envelope
+    // (invariant 44) - which lands the tree on the empty state.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.emptyHeading',
     );
     expect(new URL(page.url()).pathname).toBe('/');
   });
@@ -94,8 +97,11 @@ test.describe('the login card', () => {
 
     await page.getByRole('button', { name: 'login.retry' }).click();
 
+    // No user handler passed to installApiMocks fulfills /users.json
+    // with [] by default - the hierarchy feature's own empty envelope
+    // (invariant 44) - which lands the tree on the empty state.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.emptyHeading',
     );
     expect(secretCallCount).toBe(3);
   });
@@ -126,8 +132,10 @@ test.describe('the login card', () => {
     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
     await page.getByRole('button', { name: 'login.submit' }).click();
 
+    // [] is the hierarchy feature's own empty envelope (invariant 44),
+    // which lands the tree on the empty state.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.emptyHeading',
     );
 
     expect(secretRequestCount).toBe(1);
@@ -155,8 +163,11 @@ test.describe('the login card', () => {
     await page.getByLabel('login.emailLabel').fill(EMAIL);
     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
     await page.getByRole('button', { name: 'login.submit' }).click();
+    // No user handler passed to installApiMocks fulfills /users.json
+    // with [] by default - the hierarchy feature's own empty envelope
+    // (invariant 44) - which lands the tree on the empty state.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.emptyHeading',
     );
 
     const credentials = {

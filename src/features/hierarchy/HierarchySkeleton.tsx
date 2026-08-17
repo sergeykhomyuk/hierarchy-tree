@@ -23,12 +23,14 @@ export const HierarchySkeleton = memo(function HierarchySkeleton() {
   return (
     <div>
       <div className="flex items-center justify-between border-b border-border-hairline pb-4">
-        <p className="text-lg font-semibold text-ink">{t('page.cardTitle')}</p>
+        <h1 className="text-lg font-semibold text-ink">
+          {t('page.cardTitle')}
+        </h1>
         <span
           role="status"
           aria-busy="true"
           aria-label={t('page.loadingLabel')}
-          className="flex items-center gap-2 text-primary"
+          className="flex items-center gap-2 text-ink-muted"
         >
           {/* Button.tsx's own busy-spinner technique (aria-hidden, spun
               border ring), reused here rather than Skeleton, which is a

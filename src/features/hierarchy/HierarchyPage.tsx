@@ -73,9 +73,9 @@ export const HierarchyPage = memo(function HierarchyPage({
     case HierarchyResultKind.Data:
       return (
         <div>
-          <p className="text-lg font-semibold text-ink">
+          <h1 className="text-lg font-semibold text-ink">
             {t('page.cardTitle')}
-          </p>
+          </h1>
         </div>
       );
   }
