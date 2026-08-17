@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { testPerson } from '../testing/testPerson';
 import { buildForest } from './buildForest';
+import type { Person } from './person';
 
 describe('buildForest', () => {
   it("a person with no managerId is a root and a person whose managerId names another person is that person's child", () => {
@@ -131,5 +132,80 @@ describe('buildForest', () => {
     expect(roots[0]?.children[0]?.person).toBe(child);
     expect(anomalies.duplicateId).toBe(1);
     expect(counts.people).toBe(2);
+  });
+
+  it('buildForest mutates neither the array nor the person objects handed to it', () => {
+    const input = Object.freeze([
+      Object.freeze(testPerson(1)),
+      Object.freeze(testPerson(2, { managerId: 1 })),
+      Object.freeze(testPerson(3, { managerId: 999 })),
+    ]);
+
+    expect(() => buildForest(input)).not.toThrow();
+  });
+
+  it('buildForest visits each person a bounded number of times as the input grows', () => {
+    function chainOf(length: number): Person[] {
+      return Array.from({ length }, (_unused, index) =>
+        testPerson(index + 1, index === 0 ? {} : { managerId: index }),
+      );
+    }
+
+    function withReadCounter(person: Person, onRead: () => void): Person {
+      const { managerId, photo } = person;
+      return {
+        get id() {
+          onRead();
+          return person.id;
+        },
+        get firstName() {
+          onRead();
+          return person.firstName;
+        },
+        get lastName() {
+          onRead();
+          return person.lastName;
+        },
+        get email() {
+          onRead();
+          return person.email;
+        },
+        ...(managerId !== undefined
+          ? {
+              get managerId() {
+                onRead();
+                return managerId;
+              },
+            }
+          : {}),
+        ...(photo !== undefined
+          ? {
+              get photo() {
+                onRead();
+                return photo;
+              },
+            }
+          : {}),
+      };
+    }
+
+    function countPropertyReads(people: readonly Person[]): number {
+      let reads = 0;
+      const instrumented = people.map((person) =>
+        withReadCounter(person, () => {
+          reads += 1;
+        }),
+      );
+      buildForest(instrumented);
+      return reads;
+    }
+
+    const small = countPropertyReads(chainOf(20));
+    const large = countPropertyReads(chainOf(80));
+
+    // A quadratic implementation shows roughly 16x growth for a 4x input;
+    // a linear one stays close to 4x. 10x leaves headroom for constant
+    // overhead while still catching quadratic behavior.
+    expect(large / small).toBeLessThan(10);
   });
 });

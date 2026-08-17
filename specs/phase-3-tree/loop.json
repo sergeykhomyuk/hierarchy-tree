@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T12:10:12Z",
+  "updated": "2026-08-17T12:14:12Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 4
+      "steps_done": 5
     },
     "G3": {
       "status": "pending",
@@ -335,11 +335,11 @@
       "id": 5,
       "desc": "buildForest purity and linearity: no mutation of the array or the person objects handed in, no clock, randomness, network, storage, React or logging, and a bounded per-person visit count measured by instrumented operations across sizes rather than by timing. Invariants 24, 25, 26.",
       "tests": [
-        "buildForest mutates neither the array nor the person objects handed to it",
-        "buildForest visits each person a bounded number of times as the input grows"
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > buildForest mutates neither the array nor the person objects handed to it",
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > buildForest visits each person a bounded number of times as the input grows"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "n/a: case (b): buildForest's step-4 implementation never calls a mutating method on the input array or person objects (only for...of and .map() reads), and its topological/color-marked construction is single-pass over survivors - both purity and linearity already hold, so these tests pass immediately with no further production code change",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -996,7 +996,12 @@
     "2026-08-17T12:08:48Z step 4 -> red",
     "2026-08-17T12:10:12Z step 4 -> green",
     "2026-08-17T12:10:12Z step 4 -> done",
-    "2026-08-17T12:10:12Z evidence recorded: evidence/logs/step4-green.txt (2e3a2ecfce4b) - green: all 10 buildForest tests pass including anomaly handling"
+    "2026-08-17T12:10:12Z evidence recorded: evidence/logs/step4-green.txt (2e3a2ecfce4b) - green: all 10 buildForest tests pass including anomaly handling",
+    "2026-08-17T12:12:50Z step 5 amended: desc: 'buildForest purity and linearity: no mutation of the array or the person objects handed in, no clock, randomness, network, storage, React or logging, and a bounded per-person visit count measured by instrumented operations across sizes rather than by timing. Invariants 24, 25, 26.' -> 'buildForest purity and linearity: no mutation of the array or the person objects handed in, no clock, randomness, network, storage, React or logging, and a bounded per-person visit count measured by instrumented operations across sizes rather than by timing. Invariants 24, 25, 26.'; tests: ['buildForest mutates neither the array nor the person objects handed to it', 'buildForest visits each person a bounded number of times as the input grows'] -> ['src/features/hierarchy/domain/buildForest.test.ts::buildForest > buildForest mutates neither the array nor the person objects handed to it', 'src/features/hierarchy/domain/buildForest.test.ts::buildForest > buildForest visits each person a bounded number of times as the input grows']",
+    "2026-08-17T12:13:02Z step 5 -> na",
+    "2026-08-17T12:14:11Z step 5 -> green",
+    "2026-08-17T12:14:12Z step 5 -> done",
+    "2026-08-17T12:14:12Z evidence recorded: evidence/logs/step5-green.txt (9c413bc7942f) - green: purity and linearity tests pass; na was recorded for red since the step 4 implementation already satisfied both"
   ],
   "milestones": [
     {
@@ -1100,6 +1105,11 @@
       "sha": "2e3a2ecfce4b",
       "recorded": "2026-08-17T12:10:12Z",
       "note": "green: all 10 buildForest tests pass including anomaly handling"
+    },
+    "evidence/logs/step5-green.txt": {
+      "sha": "9c413bc7942f",
+      "recorded": "2026-08-17T12:14:12Z",
+      "note": "green: purity and linearity tests pass; na was recorded for red since the step 4 implementation already satisfied both"
     }
   },
   "test_file_hashes": {
@@ -1116,10 +1126,10 @@
       "log_index": 167
     },
     "src/features/hierarchy/domain/buildForest.test.ts": {
-      "sha": "a1a62b0a22d8",
-      "step": 4,
-      "recorded": "2026-08-17T12:08:48Z",
-      "log_index": 177
+      "sha": "e11c21bbf7ae",
+      "step": 5,
+      "recorded": "2026-08-17T12:13:02Z",
+      "log_index": 182
     }
   }
 }
