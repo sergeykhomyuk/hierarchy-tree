@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T12:19:03Z",
+  "updated": "2026-08-17T12:21:01Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 7
+      "steps_done": 8
     },
     "G3": {
       "status": "pending",
@@ -372,14 +372,14 @@
       "id": 8,
       "desc": "parseExpansion and formatExpansion, total by construction: split on commas, trim, skip empty segments, skip anything that is not a safe positive integer, skip ids naming no manager, dedupe, and return the surviving set plus a skipped count. Absent and present-but-empty are distinct inputs with distinct results. Invariants 118, 119, 120, 121.",
       "tests": [
-        "an absent parameter and a present but empty parameter give different results",
-        "a bad segment never affects a good one",
-        "signs, decimals, exponents and unsafe integers are skipped",
-        "an id naming no person or naming a non-manager is skipped",
-        "duplicates are honoured once and the skipped segments are counted"
+        "src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > an absent parameter and a present but empty parameter give different results",
+        "src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > a bad segment never affects a good one",
+        "src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > signs, decimals, exponents and unsafe integers are skipped",
+        "src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > an id naming no person or naming a non-manager is skipped",
+        "src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > duplicates are honoured once and the skipped segments are counted"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T12:20:09Z evidence/logs/step8-red.txt: expansionParameter.ts does not exist yet",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -1011,7 +1011,12 @@
     "2026-08-17T12:18:32Z step 7 -> red",
     "2026-08-17T12:19:03Z step 7 -> green",
     "2026-08-17T12:19:03Z step 7 -> done",
-    "2026-08-17T12:19:03Z evidence recorded: evidence/logs/step7-green.txt (2cc43f92aafa) - green: defaultExpansion tests pass for the small and 30-person fixtures"
+    "2026-08-17T12:19:03Z evidence recorded: evidence/logs/step7-green.txt (2cc43f92aafa) - green: defaultExpansion tests pass for the small and 30-person fixtures",
+    "2026-08-17T12:20:02Z step 8 amended: desc: 'parseExpansion and formatExpansion, total by construction: split on commas, trim, skip empty segments, skip anything that is not a safe positive integer, skip ids naming no manager, dedupe, and return the surviving set plus a skipped count. Absent and present-but-empty are distinct inputs with distinct results. Invariants 118, 119, 120, 121.' -> 'parseExpansion and formatExpansion, total by construction: split on commas, trim, skip empty segments, skip anything that is not a safe positive integer, skip ids naming no manager, dedupe, and return the surviving set plus a skipped count. Absent and present-but-empty are distinct inputs with distinct results. Invariants 118, 119, 120, 121.'; tests: ['an absent parameter and a present but empty parameter give different results', 'a bad segment never affects a good one', 'signs, decimals, exponents and unsafe integers are skipped', 'an id naming no person or naming a non-manager is skipped', 'duplicates are honoured once and the skipped segments are counted'] -> ['src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > an absent parameter and a present but empty parameter give different results', 'src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > a bad segment never affects a good one', 'src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > signs, decimals, exponents and unsafe integers are skipped', 'src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > an id naming no person or naming a non-manager is skipped', 'src/features/hierarchy/domain/expansionParameter.test.ts::parseExpansion > duplicates are honoured once and the skipped segments are counted']",
+    "2026-08-17T12:20:09Z step 8 -> red",
+    "2026-08-17T12:21:00Z step 8 -> green",
+    "2026-08-17T12:21:01Z step 8 -> done",
+    "2026-08-17T12:21:01Z evidence recorded: evidence/logs/step8-green.txt (e348fff9ccf7) - green: all 6 parseExpansion/formatExpansion tests pass"
   ],
   "milestones": [
     {
@@ -1130,6 +1135,11 @@
       "sha": "2cc43f92aafa",
       "recorded": "2026-08-17T12:19:03Z",
       "note": "green: defaultExpansion tests pass for the small and 30-person fixtures"
+    },
+    "evidence/logs/step8-green.txt": {
+      "sha": "e348fff9ccf7",
+      "recorded": "2026-08-17T12:21:01Z",
+      "note": "green: all 6 parseExpansion/formatExpansion tests pass"
     }
   },
   "test_file_hashes": {
@@ -1162,6 +1172,12 @@
       "step": 7,
       "recorded": "2026-08-17T12:18:32Z",
       "log_index": 192
+    },
+    "src/features/hierarchy/domain/expansionParameter.test.ts": {
+      "sha": "811cf2a01bfa",
+      "step": 8,
+      "recorded": "2026-08-17T12:20:09Z",
+      "log_index": 197
     }
   }
 }
