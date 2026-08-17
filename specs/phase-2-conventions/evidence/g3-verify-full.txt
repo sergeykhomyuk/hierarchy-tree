@@ -1,0 +1,20 @@
+
+> hierarchy-tree@0.0.0 verify
+> npm run typecheck && npm run lint && npm run format:check && npm run test:coverage && npm run build && npm run verify:build && npm run size
+
+
+> hierarchy-tree@0.0.0 typecheck
+> tsc -b
+
+
+> hierarchy-tree@0.0.0 lint
+> eslint . && node scripts/assert-no-physical-properties.mjs && node scripts/assert-domain-vocabulary.mjs && node scripts/assert-no-lorem-ipsum.mjs && node scripts/assert-no-secrets.mjs --source-only
+
+
+> hierarchy-tree@0.0.0 format:check
+> prettier --check .
+
+Checking formatting...
+[warn] src/features/auth/data/index.ts
+[warn] src/features/auth/data/lookupUserIdentifier.ts
+[warn] Code style issues found in 2 files. Run Prettier with --write to fix.

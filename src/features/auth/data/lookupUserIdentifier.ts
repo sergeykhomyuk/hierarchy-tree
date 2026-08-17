@@ -1,5 +1,9 @@
 import type { HttpClient } from '@platform/http';
-import { userIdentifier, type DerivedSecret, type UserIdentifier } from '../domain';
+import {
+  userIdentifier,
+  type DerivedSecret,
+  type UserIdentifier,
+} from '../domain';
 import { lookupResultSchema } from './lookupResultSchema';
 import { secretResourcePath } from './secretResourcePath';
 

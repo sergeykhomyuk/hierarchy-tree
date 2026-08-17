@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "implement",
-  "phase_entered": "2026-08-17T10:52:30Z",
+  "phase": "verify",
+  "phase_entered": "2026-08-17T11:03:34Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:03:27Z",
+  "updated": "2026-08-17T11:03:34Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -35,10 +35,11 @@
       "attempts": 0
     },
     "G2": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "steps_total": 9,
-      "steps_done": 9
+      "steps_done": 9,
+      "note": "All 9 refactor steps done: domain/data/guard/session index.ts barrels added and every cross-subdirectory deep import repointed through them (steps 1-4); six discriminant unions extracted to as-const object enums - LoginCardStateKind, LoginResultOutcome, SessionStatus, SessionShadowStatus, LookupOutcomeKind, SessionUnreadableReason (steps 5-9). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint clean at every step boundary."
     },
     "G3": {
       "status": "pending",
@@ -192,7 +193,9 @@
     "2026-08-17T11:02:18Z step 9 -> na",
     "2026-08-17T11:03:26Z evidence recorded: evidence/steps/step9-green.txt (974387cc2eee) - SessionUnreadableReason as-const enum in session/readSession.ts; full vitest suite green; tsc -b + lint clean",
     "2026-08-17T11:03:27Z step 9 -> green",
-    "2026-08-17T11:03:27Z step 9 -> done"
+    "2026-08-17T11:03:27Z step 9 -> done",
+    "2026-08-17T11:03:31Z G2 -> passed (All 9 refactor steps done: domain/data/guard/session index.ts barrels added and every cross-subdirectory deep import repointed through them (steps 1-4); six discriminant unions extracted to as-const object enums - LoginCardStateKind, LoginResultOutcome, SessionStatus, SessionShadowStatus, LookupOutcomeKind, SessionUnreadableReason (steps 5-9). Full vitest suite green (108/108 files, 430/430 tests) and tsc -b + lint clean at every step boundary.)",
+    "2026-08-17T11:03:34Z phase -> verify"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
