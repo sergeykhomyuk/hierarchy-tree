@@ -7,7 +7,7 @@
   "phase": "review",
   "phase_entered": "2026-08-17T11:05:13Z",
   "created": "2026-08-17",
-  "updated": "2026-08-17T11:14:55Z",
+  "updated": "2026-08-17T11:15:47Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -231,7 +231,9 @@
     "2026-08-17T11:13:50Z G4 finding Claude-1 dispositioned: accepted: user's decision - each enum stays colocated with the type/function that uses it as a discriminant (tightly-coupled state-machine modules, not standalone shared taxonomies like SignInOutcome); splitting into 5 more single-purpose files would fragment small, closely-related declarations for no readability gain",
     "2026-08-17T11:14:29Z G4 -> passed (Fresh-context Claude review (evidence/reviews/g4-claude-review.md, 1 non-blocking) and Codex second opinion (evidence/reviews/g4-codex-review.md, 2 findings/1 blocking) on the full diff (d31a2b5..HEAD, src/features/auth). Codex-1 (blocking: SessionUnreadableReason exported despite AC6's single-file scope) fixed - export removed, verified green (tsc/lint/vitest), Codex confirmed RESOLVED in the same thread. Claude-1 (one-symbol-per-file for the 6 new enums) and Codex-2 (evidence-file trailing newline) both accepted by user's explicit decision. No security_review flag on this loop (pure refactor, no auth-logic change, no new input-handling surface).)",
     "2026-08-17T11:14:49Z evidence recorded: evidence/reviews/g4-codex-fix-confirmation.md (0565de13494d) - Codex-1 fix confirmation, same thread, RESOLVED",
-    "2026-08-17T11:14:55Z evidence recorded: evidence/reviews/full-diff.txt (619bb6945cae) - full diff (d31a2b5..HEAD, src/features/auth) given to both G4 reviewers"
+    "2026-08-17T11:14:55Z evidence recorded: evidence/reviews/full-diff.txt (619bb6945cae) - full diff (d31a2b5..HEAD, src/features/auth) given to both G4 reviewers",
+    "2026-08-17T11:15:47Z evidence recorded: evidence/g4-final-verify.txt (52f3787bbfb9) - post-G4-fix npm run verify full green (typecheck/lint/format:check/test:coverage/build/verify:build/size)",
+    "2026-08-17T11:15:47Z evidence recorded: evidence/g4-final-e2e.txt (8f601f25e1bd) - post-G4-fix npm run e2e 41/41 passing"
   ],
   "test_file_hashes": {
     "src/features/auth/domain/deriveSecret.test.ts": {
@@ -365,6 +367,16 @@
       "sha": "619bb6945cae",
       "recorded": "2026-08-17T11:14:55Z",
       "note": "full diff (d31a2b5..HEAD, src/features/auth) given to both G4 reviewers"
+    },
+    "evidence/g4-final-verify.txt": {
+      "sha": "52f3787bbfb9",
+      "recorded": "2026-08-17T11:15:47Z",
+      "note": "post-G4-fix npm run verify full green (typecheck/lint/format:check/test:coverage/build/verify:build/size)"
+    },
+    "evidence/g4-final-e2e.txt": {
+      "sha": "8f601f25e1bd",
+      "recorded": "2026-08-17T11:15:47Z",
+      "note": "post-G4-fix npm run e2e 41/41 passing"
     }
   }
 }
