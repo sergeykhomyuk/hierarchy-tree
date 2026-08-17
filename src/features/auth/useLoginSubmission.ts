@@ -15,7 +15,7 @@ import type { KeyValueStorage } from '@platform/runtime';
 import { deriveSecret } from './domain';
 import { lookupUserIdentifier } from './data';
 import type { LoginResult } from './loginCardState';
-import { writeSession } from './session/writeSession';
+import { writeSession } from './session';
 
 export type UseLoginSubmissionDependencies = {
   http: HttpClient;

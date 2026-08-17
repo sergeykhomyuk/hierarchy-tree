@@ -1,5 +1,5 @@
 import { redirect, replace } from 'react-router';
-import { readSession } from '../session/readSession';
+import { readSession } from '../session';
 import type { UserIdentifier } from '../domain';
 import type { GuardContext } from './guardContext';
 

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { KeyValueStorage } from '@platform/runtime';
 import { userIdentifier } from '../domain';
-import { writeSession } from '../session/writeSession';
+import { writeSession } from '../session';
 import { redirectSignedInVisitor } from './redirectSignedInVisitor';
 
 function createSpyObservability(): ObservabilityFacade {

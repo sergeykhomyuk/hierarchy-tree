@@ -19,5 +19,4 @@ export {
   withSessionGuard,
   isSessionGuarded,
 } from './guard';
-export { clearSession } from './session/clearSession';
-export { readSession } from './session/readSession';
+export { clearSession, readSession } from './session';
