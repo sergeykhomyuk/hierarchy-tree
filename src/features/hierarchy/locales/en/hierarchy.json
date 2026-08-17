@@ -17,6 +17,9 @@
     "refreshLabel": "Refresh",
     "summaryPeopleLabel": "people",
     "summaryManagersLabel": "managers",
-    "summaryRootsLabel": "roots"
+    "summaryRootsLabel": "roots",
+    "youMarkerLabel": "you",
+    "reportsLabel": "reports",
+    "hiddenLabel": "hidden"
   }
 }

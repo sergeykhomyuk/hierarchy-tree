@@ -72,6 +72,9 @@ describe('hierarchy loadTranslations', () => {
         summaryPeopleLabel: 'page.summaryPeopleLabel',
         summaryManagersLabel: 'page.summaryManagersLabel',
         summaryRootsLabel: 'page.summaryRootsLabel',
+        youMarkerLabel: 'page.youMarkerLabel',
+        reportsLabel: 'page.reportsLabel',
+        hiddenLabel: 'page.hiddenLabel',
       },
     });
 

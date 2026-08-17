@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router';
 import { EmptyState, ErrorState } from '@shared/ui';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyResult } from './data/fetchPeople';
+import { defaultExpansion } from './domain/defaultExpansion';
 import { HierarchySummary } from './HierarchySummary';
+import { HierarchyTree } from './HierarchyTree';
 
 const LOGIN_PATH = '/login';
 
@@ -12,6 +14,9 @@ export type HierarchyPageProps = {
   hierarchy: Promise<HierarchyResult>;
   onRetry: () => void;
   onRefresh: () => void;
+  // A plain string|number, not auth's own UserIdentifier - see
+  // HierarchyTree.tsx's own note on the same choice.
+  userId?: string | number;
 };
 
 // Reads the loader promise with use() and switches on HierarchyResult.kind
@@ -23,6 +28,7 @@ export const HierarchyPage = memo(function HierarchyPage({
   hierarchy,
   onRetry,
   onRefresh,
+  userId,
 }: HierarchyPageProps) {
   const { t } = useTranslation('hierarchy');
   const navigate = useNavigate();
@@ -75,6 +81,11 @@ export const HierarchyPage = memo(function HierarchyPage({
       return (
         <div>
           <HierarchySummary counts={result.counts} />
+          <HierarchyTree
+            roots={result.roots}
+            expandedIds={defaultExpansion(result.roots)}
+            {...(userId !== undefined ? { signedInUserId: userId } : {})}
+          />
         </div>
       );
   }

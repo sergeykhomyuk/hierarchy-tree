@@ -1,9 +1,14 @@
 import { memo, Suspense, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoaderData, useRevalidator } from 'react-router';
+import {
+  useLoaderData,
+  useRevalidator,
+  useRouteLoaderData,
+} from 'react-router';
 import { HierarchyPage, HierarchySkeleton } from '@features/hierarchy';
 import { useDocumentTitle } from '@shared/hooks';
 import type { HierarchyLoaderData } from '../createHierarchyLoader';
+import type { AuthenticatedLoaderData } from '../../layout/createAuthenticatedLoader';
 import { RevalidationState } from '../revalidationState';
 import { useRuntime } from '../../composition';
 
@@ -11,6 +16,7 @@ import { useRuntime } from '../../composition';
 // resolves through a function type, not a plain data type -
 // AuthenticatedLayout.tsx's own precedent.
 type HierarchyRouteLoader = () => HierarchyLoaderData;
+type AuthenticatedRouteLoader = () => AuthenticatedLoaderData;
 
 export { loadTranslations } from '@features/hierarchy';
 
@@ -24,6 +30,8 @@ export const HomeRoute = memo(function HomeRoute() {
   const { t } = useTranslation('hierarchy');
   useDocumentTitle(t('page.documentTitle'));
   const { hierarchy } = useLoaderData<HierarchyRouteLoader>();
+  const authenticatedData =
+    useRouteLoaderData<AuthenticatedRouteLoader>('authenticated');
   const revalidator = useRevalidator();
 
   // beginInteraction() -> revalidate() -> endInteraction(), literally in
@@ -55,6 +63,9 @@ export const HomeRoute = memo(function HomeRoute() {
         hierarchy={hierarchy}
         onRetry={handleReload}
         onRefresh={handleReload}
+        {...(authenticatedData?.userId !== undefined
+          ? { userId: authenticatedData.userId }
+          : {})}
       />
     </Suspense>
   );

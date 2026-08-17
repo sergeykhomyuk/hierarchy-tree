@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T15:54:23Z",
+  "updated": "2026-08-17T16:11:44Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 23
+      "steps_done": 24
     },
     "G3": {
       "status": "pending",
@@ -613,8 +613,8 @@
         "a manager row shows its direct report count and a non-manager row shows none",
         "the hidden wording counts direct reports so the number never changes with expansion"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T16:08:17Z evidence/logs/step24-red.txt",
+      "status": "done",
       "milestone": 3
     },
     {
@@ -1146,7 +1146,13 @@
     "2026-08-17T15:54:17Z step 23 -> done",
     "2026-08-17T15:54:23Z evidence recorded: evidence/logs/step23-green.txt (05b9687b2c61) - step23: HierarchySummary - full unit suite green (521/521)",
     "2026-08-17T15:54:23Z evidence recorded: evidence/logs/step23-e2e-green.txt (c259660fd77c) - step23: HierarchySummary - full e2e suite green (42/42)",
-    "2026-08-17T15:54:23Z evidence recorded: evidence/logs/step23-red.txt (6ecc6d352108) - step23: HierarchySummary red - 3 new tests genuinely fail against pre-step-23 HierarchyPage.tsx (no HierarchySummary import) and missing HierarchySummary.tsx"
+    "2026-08-17T15:54:23Z evidence recorded: evidence/logs/step23-red.txt (6ecc6d352108) - step23: HierarchySummary red - 3 new tests genuinely fail against pre-step-23 HierarchyPage.tsx (no HierarchySummary import) and missing HierarchySummary.tsx",
+    "2026-08-17T16:08:17Z step 24 -> red",
+    "2026-08-17T16:11:40Z step 24 -> green",
+    "2026-08-17T16:11:40Z step 24 -> done",
+    "2026-08-17T16:11:44Z evidence recorded: evidence/logs/step24-green.txt (0f2cb5f591f0) - step24: HierarchyTree/TreeRow - full unit suite green (528/528)",
+    "2026-08-17T16:11:44Z evidence recorded: evidence/logs/step24-e2e-green.txt (628ca5cc221f) - step24: HierarchyTree/TreeRow - full e2e suite green (42/42)",
+    "2026-08-17T16:11:44Z evidence recorded: evidence/logs/step24-red.txt (43d823dbdc86) - step24: HierarchyTree/TreeRow red - both new test files fail to resolve against pre-step-24 state (TreeRow.tsx and HierarchyTree.tsx did not exist)"
   ],
   "milestones": [
     {
@@ -1410,6 +1416,21 @@
       "sha": "6ecc6d352108",
       "recorded": "2026-08-17T15:54:23Z",
       "note": "step23: HierarchySummary red - 3 new tests genuinely fail against pre-step-23 HierarchyPage.tsx (no HierarchySummary import) and missing HierarchySummary.tsx"
+    },
+    "evidence/logs/step24-green.txt": {
+      "sha": "0f2cb5f591f0",
+      "recorded": "2026-08-17T16:11:44Z",
+      "note": "step24: HierarchyTree/TreeRow - full unit suite green (528/528)"
+    },
+    "evidence/logs/step24-e2e-green.txt": {
+      "sha": "628ca5cc221f",
+      "recorded": "2026-08-17T16:11:44Z",
+      "note": "step24: HierarchyTree/TreeRow - full e2e suite green (42/42)"
+    },
+    "evidence/logs/step24-red.txt": {
+      "sha": "43d823dbdc86",
+      "recorded": "2026-08-17T16:11:44Z",
+      "note": "step24: HierarchyTree/TreeRow red - both new test files fail to resolve against pre-step-24 state (TreeRow.tsx and HierarchyTree.tsx did not exist)"
     }
   },
   "test_file_hashes": {
