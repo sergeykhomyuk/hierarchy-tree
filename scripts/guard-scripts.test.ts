@@ -121,10 +121,7 @@ describe('assert-domain-vocabulary', () => {
       'export function buildForest() { return []; }\nexport function flattenVisible() { return []; }\nexport const RoleAttributeProbe = () => <div role="tree" />;\n',
     );
     // make32 stays banned - the retirement must not touch other names.
-    writeFileSync(
-      stillBannedFile,
-      'export function make32() { return 32; }\n',
-    );
+    writeFileSync(stillBannedFile, 'export function make32() { return 32; }\n');
 
     const retiredResult = runScript('scripts/assert-domain-vocabulary.mjs', [
       retiredFile,
@@ -140,10 +137,9 @@ describe('assert-domain-vocabulary', () => {
       retiredResult.status,
       'buildForest, flattenVisible and role="tree" must no longer be flagged',
     ).toBe(0);
-    expect(
-      stillBannedResult.status,
-      'make32 must still be flagged',
-    ).not.toBe(0);
+    expect(stillBannedResult.status, 'make32 must still be flagged').not.toBe(
+      0,
+    );
     expect(stillBannedResult.output).toContain('make32');
   });
 

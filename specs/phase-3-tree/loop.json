@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T12:07:55Z",
+  "updated": "2026-08-17T12:10:12Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 43,
-      "steps_done": 3
+      "steps_done": 4
     },
     "G3": {
       "status": "pending",
@@ -320,15 +320,15 @@
       "id": 4,
       "desc": "buildForest anomaly handling: dangling manager references, self-references, cycles broken at the earliest ring member, and duplicate ids where the first valid occurrence wins. All returned as data, never logged from inside the domain. Invariants 7, 10, 11, 12, 13, 14, 15, 16.",
       "tests": [
-        "a dangling manager reference makes a root and is counted, never dropped",
-        "a self-managing person is a root and does not appear as their own child",
-        "a ring is broken at its earliest member and every other manager edge survives",
-        "building the same list twice produces an identical forest",
-        "a ring of two, a ring of three and a ring of everyone all terminate",
-        "the first valid occurrence of a duplicate id wins and children attach to the survivor"
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > a dangling manager reference makes a root and is counted, never dropped",
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > a self-managing person is a root and does not appear as their own child",
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > a ring is broken at its earliest member and every other manager edge survives",
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > building the same list twice produces an identical forest",
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > a ring of two, a ring of three and a ring of everyone all terminate",
+        "src/features/hierarchy/domain/buildForest.test.ts::buildForest > the first valid occurrence of a duplicate id wins and children attach to the survivor"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-17T12:08:48Z evidence/logs/step4-red.txt: 5 of 6 anomaly-handling tests fail against the shape-only implementation (dangling, self-ref, cycle-break, ring-termination, duplicate-id); determinism passes trivially since the current impl has no randomness",
+      "status": "done",
       "milestone": 1
     },
     {
@@ -991,7 +991,12 @@
     "2026-08-17T12:05:44Z step 3 -> red",
     "2026-08-17T12:07:55Z step 3 -> green",
     "2026-08-17T12:07:55Z step 3 -> done",
-    "2026-08-17T12:07:55Z evidence recorded: evidence/logs/step3-green.txt (686e88457d3e) - green: buildForest shape tests pass"
+    "2026-08-17T12:07:55Z evidence recorded: evidence/logs/step3-green.txt (686e88457d3e) - green: buildForest shape tests pass",
+    "2026-08-17T12:08:36Z step 4 amended: desc: 'buildForest anomaly handling: dangling manager references, self-references, cycles broken at the earliest ring member, and duplicate ids where the first valid occurrence wins. All returned as data, never logged from inside the domain. Invariants 7, 10, 11, 12, 13, 14, 15, 16.' -> 'buildForest anomaly handling: dangling manager references, self-references, cycles broken at the earliest ring member, and duplicate ids where the first valid occurrence wins. All returned as data, never logged from inside the domain. Invariants 7, 10, 11, 12, 13, 14, 15, 16.'; tests: ['a dangling manager reference makes a root and is counted, never dropped', 'a self-managing person is a root and does not appear as their own child', 'a ring is broken at its earliest member and every other manager edge survives', 'building the same list twice produces an identical forest', 'a ring of two, a ring of three and a ring of everyone all terminate', 'the first valid occurrence of a duplicate id wins and children attach to the survivor'] -> ['src/features/hierarchy/domain/buildForest.test.ts::buildForest > a dangling manager reference makes a root and is counted, never dropped', 'src/features/hierarchy/domain/buildForest.test.ts::buildForest > a self-managing person is a root and does not appear as their own child', 'src/features/hierarchy/domain/buildForest.test.ts::buildForest > a ring is broken at its earliest member and every other manager edge survives', 'src/features/hierarchy/domain/buildForest.test.ts::buildForest > building the same list twice produces an identical forest', 'src/features/hierarchy/domain/buildForest.test.ts::buildForest > a ring of two, a ring of three and a ring of everyone all terminate', 'src/features/hierarchy/domain/buildForest.test.ts::buildForest > the first valid occurrence of a duplicate id wins and children attach to the survivor']",
+    "2026-08-17T12:08:48Z step 4 -> red",
+    "2026-08-17T12:10:12Z step 4 -> green",
+    "2026-08-17T12:10:12Z step 4 -> done",
+    "2026-08-17T12:10:12Z evidence recorded: evidence/logs/step4-green.txt (2e3a2ecfce4b) - green: all 10 buildForest tests pass including anomaly handling"
   ],
   "milestones": [
     {
@@ -1090,6 +1095,11 @@
       "sha": "686e88457d3e",
       "recorded": "2026-08-17T12:07:55Z",
       "note": "green: buildForest shape tests pass"
+    },
+    "evidence/logs/step4-green.txt": {
+      "sha": "2e3a2ecfce4b",
+      "recorded": "2026-08-17T12:10:12Z",
+      "note": "green: all 10 buildForest tests pass including anomaly handling"
     }
   },
   "test_file_hashes": {
@@ -1106,10 +1116,10 @@
       "log_index": 167
     },
     "src/features/hierarchy/domain/buildForest.test.ts": {
-      "sha": "428cee3ca5a2",
-      "step": 3,
-      "recorded": "2026-08-17T12:05:44Z",
-      "log_index": 172
+      "sha": "a1a62b0a22d8",
+      "step": 4,
+      "recorded": "2026-08-17T12:08:48Z",
+      "log_index": 177
     }
   }
 }

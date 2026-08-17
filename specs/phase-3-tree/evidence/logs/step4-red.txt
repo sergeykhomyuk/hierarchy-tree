@@ -1,0 +1,113 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/domain/buildForest.test.ts (10 tests | 5 failed) 5ms
+     × a dangling manager reference makes a root and is counted, never dropped 2ms
+     × a self-managing person is a root and does not appear as their own child 0ms
+     × a ring is broken at its earliest member and every other manager edge survives 0ms
+     × a ring of two, a ring of three and a ring of everyone all terminate 0ms
+     × the first valid occurrence of a duplicate id wins and children attach to the survivor 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/domain/buildForest.test.ts > buildForest > a dangling manager reference makes a root and is counted, never dropped
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/features/hierarchy/domain/buildForest.test.ts:62:39
+     60|     expect(roots).toHaveLength(1);
+     61|     expect(roots[0]?.person).toBe(orphan);
+     62|     expect(anomalies.danglingManager).toBe(1);
+       |                                       ^
+     63|   });
+     64|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |ui| src/features/hierarchy/domain/buildForest.test.ts > buildForest > a self-managing person is a root and does not appear as their own child
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/features/hierarchy/domain/buildForest.test.ts:70:19
+     68|     const { roots, anomalies } = buildForest([selfManager]);
+     69|
+     70|     expect(roots).toHaveLength(1);
+       |                   ^
+     71|     expect(roots[0]?.person).toBe(selfManager);
+     72|     expect(roots[0]?.children).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |ui| src/features/hierarchy/domain/buildForest.test.ts > buildForest > a ring is broken at its earliest member and every other manager edge survives
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/features/hierarchy/domain/buildForest.test.ts:83:19
+     81|     const { roots, anomalies } = buildForest([first, second, third]);
+     82|
+     83|     expect(roots).toHaveLength(1);
+       |                   ^
+     84|     expect(roots[0]?.person).toBe(first);
+     85|     expect(roots[0]?.children).toHaveLength(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |ui| src/features/hierarchy/domain/buildForest.test.ts > buildForest > a ring of two, a ring of three and a ring of everyone all terminate
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/features/hierarchy/domain/buildForest.test.ts:118:42
+    116|     );
+    117|
+    118|     expect(buildForest(ringOfTwo).roots).toHaveLength(1);
+       |                                          ^
+    119|     expect(buildForest(ringOfThree).roots).toHaveLength(1);
+    120|     expect(buildForest(ringOfEveryone).roots).toHaveLength(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |ui| src/features/hierarchy/domain/buildForest.test.ts > buildForest > the first valid occurrence of a duplicate id wins and children attach to the survivor
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/features/hierarchy/domain/buildForest.test.ts:134:35
+    132|     expect(roots[0]?.children).toHaveLength(1);
+    133|     expect(roots[0]?.children[0]?.person).toBe(child);
+    134|     expect(anomalies.duplicateId).toBe(1);
+       |                                   ^
+    135|     expect(counts.people).toBe(2);
+    136|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 5 passed (10)
+   Start at  13:08:41
+   Duration  513ms (transform 35ms, setup 101ms, import 12ms, tests 5ms, environment 333ms)
+

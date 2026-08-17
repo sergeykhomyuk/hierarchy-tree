@@ -16,19 +16,74 @@ export type ForestBuildResult = {
   readonly counts: ForestSummaryCounts;
 };
 
+const VisitColor = {
+  White: 0,
+  Grey: 1,
+  Black: 2,
+} as const;
+type VisitColor = (typeof VisitColor)[keyof typeof VisitColor];
+
 export function buildForest(people: readonly Person[]): ForestBuildResult {
   const survivors: Person[] = [];
   const indexById = new Map<PersonIdentifier, number>();
+  let duplicateId = 0;
   for (const person of people) {
-    if (indexById.has(person.id)) continue;
+    if (indexById.has(person.id)) {
+      duplicateId += 1;
+      continue;
+    }
     indexById.set(person.id, survivors.length);
     survivors.push(person);
   }
 
+  let danglingManager = 0;
+  let selfManaged = 0;
   const managerIndexOf: (number | undefined)[] = survivors.map((person) => {
     if (person.managerId === undefined) return undefined;
-    return indexById.get(person.managerId);
+    if (person.managerId === person.id) {
+      selfManaged += 1;
+      return undefined;
+    }
+    const managerIndex = indexById.get(person.managerId);
+    if (managerIndex === undefined) {
+      danglingManager += 1;
+      return undefined;
+    }
+    return managerIndex;
   });
+
+  // Iterative white/grey/black walk (invariant 14: must terminate on every
+  // input, including a ring of everyone) rather than recursion. A cycle is
+  // found when the walk reaches a grey node still on the current path; the
+  // earliest ring member in payload order becomes the root (invariant 12).
+  let cycleBroken = 0;
+  const color: VisitColor[] = survivors.map(() => VisitColor.White);
+  for (let startIndex = 0; startIndex < survivors.length; startIndex += 1) {
+    if (elementAt(color, startIndex) !== VisitColor.White) continue;
+
+    const path: number[] = [];
+    let current: number | undefined = startIndex;
+    while (
+      current !== undefined &&
+      elementAt(color, current) === VisitColor.White
+    ) {
+      color[current] = VisitColor.Grey;
+      path.push(current);
+      current = managerIndexOf[current];
+    }
+
+    if (
+      current !== undefined &&
+      elementAt(color, current) === VisitColor.Grey
+    ) {
+      const cycleStart = path.indexOf(current);
+      const cycleIndices = path.slice(cycleStart);
+      const earliestIndex = Math.min(...cycleIndices);
+      managerIndexOf[earliestIndex] = undefined;
+      cycleBroken += 1;
+    }
+    for (const visitedIndex of path) color[visitedIndex] = VisitColor.Black;
+  }
 
   const childrenIndicesByIndex: number[][] = survivors.map(() => []);
   const rootIndices: number[] = [];
@@ -80,10 +135,10 @@ export function buildForest(people: readonly Person[]): ForestBuildResult {
   return {
     roots,
     anomalies: {
-      duplicateId: 0,
-      danglingManager: 0,
-      selfManaged: 0,
-      cycleBroken: 0,
+      duplicateId,
+      danglingManager,
+      selfManaged,
+      cycleBroken,
       skippedExpansionSegment: 0,
     },
     counts: {

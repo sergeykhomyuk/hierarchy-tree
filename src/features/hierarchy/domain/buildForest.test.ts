@@ -24,9 +24,7 @@ describe('buildForest', () => {
     const { roots } = buildForest([rootB, rootA, childOfA1, childOfA2]);
 
     expect(roots.map((node) => node.person.id)).toEqual([50, 2]);
-    expect(roots[1]?.children.map((node) => node.person.id)).toEqual([
-      30, 10,
-    ]);
+    expect(roots[1]?.children.map((node) => node.person.id)).toEqual([30, 10]);
   });
 
   it('a manager is someone with at least one direct report and the report count is direct children only', () => {
@@ -50,5 +48,88 @@ describe('buildForest', () => {
     expect(roots).toHaveLength(1);
     expect(roots[0]?.person).toBe(solo);
     expect(roots[0]?.children).toEqual([]);
+  });
+
+  it('a dangling manager reference makes a root and is counted, never dropped', () => {
+    const orphan = testPerson(1, { managerId: 999 });
+
+    const { roots, anomalies } = buildForest([orphan]);
+
+    expect(roots).toHaveLength(1);
+    expect(roots[0]?.person).toBe(orphan);
+    expect(anomalies.danglingManager).toBe(1);
+  });
+
+  it('a self-managing person is a root and does not appear as their own child', () => {
+    const selfManager = testPerson(1, { managerId: 1 });
+
+    const { roots, anomalies } = buildForest([selfManager]);
+
+    expect(roots).toHaveLength(1);
+    expect(roots[0]?.person).toBe(selfManager);
+    expect(roots[0]?.children).toEqual([]);
+    expect(anomalies.selfManaged).toBe(1);
+  });
+
+  it('a ring is broken at its earliest member and every other manager edge survives', () => {
+    const first = testPerson(1, { managerId: 3 });
+    const second = testPerson(2, { managerId: 1 });
+    const third = testPerson(3, { managerId: 2 });
+
+    const { roots, anomalies } = buildForest([first, second, third]);
+
+    expect(roots).toHaveLength(1);
+    expect(roots[0]?.person).toBe(first);
+    expect(roots[0]?.children).toHaveLength(1);
+    expect(roots[0]?.children[0]?.person).toBe(second);
+    expect(roots[0]?.children[0]?.children).toHaveLength(1);
+    expect(roots[0]?.children[0]?.children[0]?.person).toBe(third);
+    expect(anomalies.cycleBroken).toBe(1);
+  });
+
+  it('building the same list twice produces an identical forest', () => {
+    const people = [
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+      testPerson(3, { managerId: 999 }),
+    ];
+
+    expect(buildForest(people)).toEqual(buildForest(people));
+  });
+
+  it('a ring of two, a ring of three and a ring of everyone all terminate', () => {
+    const ringOfTwo = [
+      testPerson(1, { managerId: 2 }),
+      testPerson(2, { managerId: 1 }),
+    ];
+    const ringOfThree = [
+      testPerson(1, { managerId: 2 }),
+      testPerson(2, { managerId: 3 }),
+      testPerson(3, { managerId: 1 }),
+    ];
+    const ringOfEveryone = Array.from({ length: 8 }, (_unused, index) =>
+      testPerson(index + 1, {
+        managerId: ((index + 1) % 8) + 1,
+      }),
+    );
+
+    expect(buildForest(ringOfTwo).roots).toHaveLength(1);
+    expect(buildForest(ringOfThree).roots).toHaveLength(1);
+    expect(buildForest(ringOfEveryone).roots).toHaveLength(1);
+  });
+
+  it('the first valid occurrence of a duplicate id wins and children attach to the survivor', () => {
+    const real = testPerson(1, { firstName: 'Real' });
+    const impostor = testPerson(1, { firstName: 'Impostor' });
+    const child = testPerson(2, { managerId: 1 });
+
+    const { roots, anomalies, counts } = buildForest([real, impostor, child]);
+
+    expect(roots).toHaveLength(1);
+    expect(roots[0]?.person).toBe(real);
+    expect(roots[0]?.children).toHaveLength(1);
+    expect(roots[0]?.children[0]?.person).toBe(child);
+    expect(anomalies.duplicateId).toBe(1);
+    expect(counts.people).toBe(2);
   });
 });
