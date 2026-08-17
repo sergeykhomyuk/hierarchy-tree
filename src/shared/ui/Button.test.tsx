@@ -142,9 +142,7 @@ describe('Button', () => {
       </Button>,
     );
 
-    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass(
-      'w-full',
-    );
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass('w-full');
   });
 
   it('does not stretch to full width by default', () => {

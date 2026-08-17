@@ -539,8 +539,8 @@ describe('LoginPage', () => {
       <LoginPage dependencies={createTestDependencies()} destination="/" />,
     );
 
-    expect(
-      screen.getByRole('button', { name: 'login.submit' }),
-    ).toHaveClass('w-full');
+    expect(screen.getByRole('button', { name: 'login.submit' })).toHaveClass(
+      'w-full',
+    );
   });
 });
