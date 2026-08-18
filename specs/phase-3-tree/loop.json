@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T08:10:31Z",
+  "updated": "2026-08-18T08:16:00Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 44,
-      "steps_done": 32
+      "steps_done": 33
     },
     "G3": {
       "status": "pending",
@@ -774,12 +774,13 @@
       "id": 33,
       "desc": "Enter and Space both toggle the focused manager branch and do nothing on a non-manager row, through the same implementation the mouse uses - so a toggle made with either updates the URL, the live region and telemetry identically. Moving focus is not a toggle: arrows, Home, End and type-ahead change focus only and write nothing to the URL and nothing to telemetry. Invariants 137, 142, and the keyboard path of 114 and 115.",
       "tests": [
-        "Enter and Space both toggle the focused manager and do nothing on a non-manager",
-        "a keyboard toggle and a mouse toggle produce the same URL, the same announcement and the same event",
-        "moving focus writes nothing to the URL and nothing to telemetry"
+        "Enter toggles the focused manager's branch and does nothing on a non-manager row",
+        "Space toggles the focused manager's branch and does nothing on a non-manager row",
+        "a keyboard toggle - Enter, Space, Right or Left - updates the URL, the live region and telemetry identically to a mouse click",
+        "moving focus with arrow keys, Home or End writes nothing to the URL and emits no telemetry"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-18T08:15:57Z evidence/logs/step33-red.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1326,7 +1327,13 @@
     "2026-08-18T08:10:27Z step 32 -> green",
     "2026-08-18T08:10:27Z step 32 -> done",
     "2026-08-18T08:10:31Z evidence recorded: evidence/logs/step32-red.txt (cd72d9ff4a2c) - step 32 red: 7 keyboard-navigation component tests failing, no keydown handler exists yet (rowNavigation's nextVisibleIndex/firstChildRowIndex were separately observed red before implementation earlier in this session)",
-    "2026-08-18T08:10:31Z evidence recorded: evidence/logs/step32-green.txt (20c1b7444a0e) - step 32 green: 38/38 tests passing across rowNavigation, HierarchyTree, TreeRow"
+    "2026-08-18T08:10:31Z evidence recorded: evidence/logs/step32-green.txt (20c1b7444a0e) - step 32 green: 38/38 tests passing across rowNavigation, HierarchyTree, TreeRow",
+    "2026-08-18T08:15:54Z step 33 amended: tests: ['Enter and Space both toggle the focused manager and do nothing on a non-manager', 'a keyboard toggle and a mouse toggle produce the same URL, the same announcement and the same event', 'moving focus writes nothing to the URL and nothing to telemetry'] -> [\"Enter toggles the focused manager's branch and does nothing on a non-manager row\", \"Space toggles the focused manager's branch and does nothing on a non-manager row\", 'a keyboard toggle - Enter, Space, Right or Left - updates the URL, the live region and telemetry identically to a mouse click', 'moving focus with arrow keys, Home or End writes nothing to the URL and emits no telemetry']",
+    "2026-08-18T08:15:57Z step 33 -> red",
+    "2026-08-18T08:15:57Z step 33 -> green",
+    "2026-08-18T08:15:57Z step 33 -> done",
+    "2026-08-18T08:16:00Z evidence recorded: evidence/logs/step33-red.txt (28e8d8ebb7be) - step 33 red: 3 Enter/Space toggle-parity tests failing before Enter/Space case existed",
+    "2026-08-18T08:16:00Z evidence recorded: evidence/logs/step33-green.txt (c2c9f4a93d09) - step 33 green: 27/27 HierarchyTree tests passing"
   ],
   "milestones": [
     {
@@ -1830,6 +1837,16 @@
       "sha": "20c1b7444a0e",
       "recorded": "2026-08-18T08:10:31Z",
       "note": "step 32 green: 38/38 tests passing across rowNavigation, HierarchyTree, TreeRow"
+    },
+    "evidence/logs/step33-red.txt": {
+      "sha": "28e8d8ebb7be",
+      "recorded": "2026-08-18T08:16:00Z",
+      "note": "step 33 red: 3 Enter/Space toggle-parity tests failing before Enter/Space case existed"
+    },
+    "evidence/logs/step33-green.txt": {
+      "sha": "c2c9f4a93d09",
+      "recorded": "2026-08-18T08:16:00Z",
+      "note": "step 33 green: 27/27 HierarchyTree tests passing"
     }
   },
   "test_file_hashes": {

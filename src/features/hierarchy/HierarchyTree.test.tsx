@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react';
+import { act, useCallback, useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+// eslint-disable-next-line testing-library/no-manual-cleanup -- the keyboard/mouse-parity test renders twice in one test (once per key) and needs each isolated from the last.
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import {
@@ -83,6 +84,18 @@ function rowToggle(rowName: string): HTMLElement {
     'button',
     { hidden: true },
   );
+}
+
+// element.focus() alone leaves the resulting tabbableId update unflushed
+// under React's automatic batching - the very next getAllByRole
+// ('treeitem') would still see the OLD tabIndex attributes. act() forces
+// that update to commit before this returns, while a raw .focus() (not
+// fireEvent.focus) is what actually moves document.activeElement, which
+// toHaveFocus() reads.
+function focusRow(name: string) {
+  act(() => {
+    screen.getByRole('treeitem', { name }).focus();
+  });
 }
 
 function createSpyObservability(): ObservabilityFacade {
@@ -450,7 +463,7 @@ describe('HierarchyTree', () => {
       const user = userEvent.setup();
 
       await renderStatefulTree({ roots, initialExpandedIds: new Set([rootId]) });
-      fireEvent.focus(screen.getByRole('treeitem', { name: 'First2 Last2' }));
+      focusRow('First2 Last2');
 
       await user.click(rowToggle('First1 Last1'));
 
@@ -502,7 +515,7 @@ describe('HierarchyTree', () => {
       pressKey('ArrowUp');
       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
 
-      fireEvent.focus(screen.getByRole('treeitem', { name: 'First2 Last2' }));
+      focusRow('First2 Last2');
       pressKey('ArrowDown');
       expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toHaveFocus();
     });
@@ -514,7 +527,7 @@ describe('HierarchyTree', () => {
       ]);
 
       await renderStatefulTree({ roots, initialExpandedIds: new Set() });
-      screen.getByRole('treeitem', { name: 'First1 Last1' }).focus();
+      focusRow('First1 Last1');
       pressKey('ArrowRight');
 
       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
@@ -540,7 +553,7 @@ describe('HierarchyTree', () => {
       const { roots } = buildForest([testPerson(1)]);
 
       await renderTree({ roots, expandedIds: new Set() });
-      screen.getByRole('treeitem', { name: 'First1 Last1' }).focus();
+      focusRow('First1 Last1');
       pressKey('ArrowRight');
 
       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
@@ -556,7 +569,7 @@ describe('HierarchyTree', () => {
         roots,
         initialExpandedIds: new Set([parsePersonIdentifier(1)]),
       });
-      screen.getByRole('treeitem', { name: 'First1 Last1' }).focus();
+      focusRow('First1 Last1');
       pressKey('ArrowLeft');
 
       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
@@ -576,7 +589,7 @@ describe('HierarchyTree', () => {
         roots,
         expandedIds: new Set([parsePersonIdentifier(1)]),
       });
-      fireEvent.focus(screen.getByRole('treeitem', { name: 'First3 Last3' }));
+      focusRow('First3 Last3');
       pressKey('ArrowLeft');
 
       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
@@ -586,7 +599,7 @@ describe('HierarchyTree', () => {
       const { roots } = buildForest([testPerson(1)]);
 
       await renderTree({ roots, expandedIds: new Set() });
-      screen.getByRole('treeitem', { name: 'First1 Last1' }).focus();
+      focusRow('First1 Last1');
       pressKey('ArrowLeft');
 
       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
@@ -607,6 +620,102 @@ describe('HierarchyTree', () => {
       expect(screen.getByRole('treeitem', { name: 'First3 Last3' })).toHaveFocus();
       pressKey('Home');
       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+    });
+
+    it('Enter toggles the focused manager\'s branch and does nothing on a non-manager row', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3),
+      ]);
+
+      await renderStatefulTree({
+        roots,
+        initialExpandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+      focusRow('First1 Last1');
+      pressKey('Enter');
+      expect(
+        screen.queryByRole('treeitem', { name: 'First2 Last2' }),
+      ).not.toBeInTheDocument();
+
+      focusRow('First3 Last3');
+      pressKey('Enter');
+      expect(screen.getAllByRole('treeitem')).toHaveLength(2);
+    });
+
+    it("Space toggles the focused manager's branch and does nothing on a non-manager row", async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3),
+      ]);
+
+      await renderStatefulTree({
+        roots,
+        initialExpandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+      focusRow('First1 Last1');
+      pressKey(' ');
+      expect(
+        screen.queryByRole('treeitem', { name: 'First2 Last2' }),
+      ).not.toBeInTheDocument();
+
+      focusRow('First3 Last3');
+      pressKey(' ');
+      expect(screen.getAllByRole('treeitem')).toHaveLength(2);
+    });
+
+    it('a keyboard toggle - Enter, Space, Right or Left - updates the URL, the live region and telemetry identically to a mouse click', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+      ]);
+      const rootId = parsePersonIdentifier(1);
+
+      for (const key of ['Enter', ' ']) {
+        const { observability } = await renderStatefulTree({
+          roots,
+          initialExpandedIds: new Set([rootId]),
+        });
+        focusRow('First1 Last1');
+
+        pressKey(key);
+
+        expect(observability.analytics.track).toHaveBeenCalledTimes(1);
+        const [eventName, payload] =
+          vi.mocked(observability.analytics.track).mock.calls[0] ?? [];
+        expect(eventName).toBe('hierarchy.toggled');
+        expect(payload).toEqual({ expanded: false, depth: 0 });
+        expect(screen.getByTestId('tree-announcer')).toHaveTextContent(
+          'page.toggleAnnouncedCollapsed',
+        );
+        cleanup();
+      }
+    });
+
+    it('moving focus with arrow keys, Home or End writes nothing to the URL and emits no telemetry', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+      ]);
+      const onToggle = vi.fn();
+      const observability = createSpyObservability();
+
+      await renderTree({
+        roots,
+        expandedIds: new Set([parsePersonIdentifier(1)]),
+        onToggle,
+        observability,
+      });
+
+      pressKey('ArrowDown');
+      pressKey('ArrowUp');
+      pressKey('Home');
+      pressKey('End');
+
+      expect(onToggle).not.toHaveBeenCalled();
+      expect(observability.analytics.track).not.toHaveBeenCalled();
     });
   });
 });

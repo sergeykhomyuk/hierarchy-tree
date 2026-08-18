@@ -83,6 +83,13 @@ export function useTreeKeyboard({
           onFocusRow(rows[rows.length - 1].person.id);
           return;
         }
+        case 'Enter':
+        case ' ': {
+          if (!row.hasChildren) return;
+          event.preventDefault();
+          onToggleRow(row.person.id);
+          return;
+        }
         default:
           return;
       }
