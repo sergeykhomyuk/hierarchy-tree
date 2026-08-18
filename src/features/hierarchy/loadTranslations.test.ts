@@ -56,6 +56,7 @@ describe('hierarchy loadTranslations', () => {
       page: {
         documentTitle: 'page.documentTitle',
         cardTitle: 'page.cardTitle',
+        treeLabel: 'page.treeLabel',
         loadingLabel: 'page.loadingLabel',
         errorHeading: 'page.errorHeading',
         errorBody: 'page.errorBody',

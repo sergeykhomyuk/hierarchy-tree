@@ -106,25 +106,12 @@ export const HierarchyTree = memo(function HierarchyTree({
   const [tabbableId, setTabbableId] = useState<PersonIdentifier | null>(
     () => rows[0]?.person.id ?? null,
   );
-  const previousRowsForFocusRef = useRef(rows);
-  useEffect(() => {
-    const previousRows = previousRowsForFocusRef.current;
-    const currentRows = rowsRef.current;
-    previousRowsForFocusRef.current = currentRows;
-    setTabbableId((current) =>
-      current === null
-        ? (currentRows[0]?.person.id ?? null)
-        : recoverFocusedRowId(previousRows, currentRows, current),
-    );
-  }, [expandedIds]);
-  const handleRowFocus = useCallback((personId: PersonIdentifier) => {
-    setTabbableId(personId);
-  }, []);
-
-  // Element refs, keyed by person id, so arrow/Home/End movement can call
-  // .focus() directly - a native focus event is what actually moves the
-  // roving tab stop (via TreeRow's own onFocus -> handleRowFocus), so
-  // this hook never sets tabbableId itself.
+  // Element refs, keyed by person id, so arrow/Home/End movement - and the
+  // recovery effect below - can call .focus() directly. A native focus
+  // event is what actually moves the roving tab stop (via TreeRow's own
+  // onFocus -> handleRowFocus) for every OTHER path; this ref exists
+  // precisely so recovery can do the same thing rather than owning a
+  // second way to decide what's tabbable.
   const rowElementsRef = useRef(new Map<PersonIdentifier, HTMLDivElement>());
   const registerRowElement = useCallback(
     (personId: PersonIdentifier, element: HTMLDivElement | null) => {
@@ -138,6 +125,35 @@ export const HierarchyTree = memo(function HierarchyTree({
   );
   const focusRow = useCallback((personId: PersonIdentifier) => {
     rowElementsRef.current.get(personId)?.focus();
+  }, []);
+
+  // Read via a ref rather than closed over directly - a setState updater
+  // must stay a pure reducer, so the side effect (focusRow, a real DOM
+  // .focus() call) happens as a plain statement in the effect body, after
+  // the recovered value is known, never inside the updater itself.
+  const tabbableIdRef = useRef(tabbableId);
+  tabbableIdRef.current = tabbableId;
+  const previousRowsForFocusRef = useRef(rows);
+  useEffect(() => {
+    const previousRows = previousRowsForFocusRef.current;
+    const currentRows = rowsRef.current;
+    previousRowsForFocusRef.current = currentRows;
+    const current = tabbableIdRef.current;
+    const recovered =
+      current === null
+        ? (currentRows[0]?.person.id ?? null)
+        : recoverFocusedRowId(previousRows, currentRows, current);
+    if (recovered === current) return;
+    setTabbableId(recovered);
+    // Only a genuine recovery - the previously-tabbable row is actually
+    // gone - moves real DOM focus. Collapsing a branch that contains the
+    // focused row (invariant 143) and a Back/Forward that removes it
+    // (invariant 144) both land here; an ordinary toggle elsewhere in the
+    // tree, which never changes who was focused, does not.
+    if (recovered !== null) focusRow(recovered);
+  }, [expandedIds, focusRow]);
+  const handleRowFocus = useCallback((personId: PersonIdentifier) => {
+    setTabbableId(personId);
   }, []);
 
   const handleRowToggle = useCallback(
@@ -197,7 +213,11 @@ export const HierarchyTree = memo(function HierarchyTree({
   return (
     <>
       <TreeAnnouncer message={announcement} />
-      <div role="tree" className={ROW_LIST_MAX_HEIGHT_CLASS}>
+      <div
+        role="tree"
+        aria-label={t('page.treeLabel')}
+        className={ROW_LIST_MAX_HEIGHT_CLASS}
+      >
         {rows.map((row) => (
           <TreeRow
             key={row.person.id}

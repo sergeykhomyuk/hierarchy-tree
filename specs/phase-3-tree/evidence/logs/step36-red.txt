@@ -1,0 +1,389 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+stderr | src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > aria contract > collapsing a branch that contains the focused row moves focus to the row being collapsed
+The current testing environment is not configured to support act(...)
+
+stderr | src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > aria contract > a history navigation that removes the focused row without any collapse moves focus to its nearest still-visible ancestor
+The current testing environment is not configured to support act(...)
+
+stderr | src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > aria contract > a history navigation with no surviving ancestor moves focus to the first visible row, never leaving it on document.body
+The current testing environment is not configured to support act(...)
+
+ ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (40 tests | 4 failed) 362ms
+       × the tree exposes an accessible name from the catalogue 4ms
+       × collapsing a branch that contains the focused row moves focus to the row being collapsed 12ms
+       × a history navigation that removes the focused row without any collapse moves focus to its nearest still-visible ancestor 5ms
+       × a history navigation with no surviving ancestor moves focus to the first visible row, never leaving it on document.body 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > aria contract > the tree exposes an accessible name from the catalogue
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAccessibleName()[22m
+
+Expected element to have accessible name:
+[32m  page.treeLabel[39m
+Received:
+[31m[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:948:40
+    946|       await renderTree({ roots, expandedIds: new Set() });
+    947|
+    948|       expect(screen.getByRole('tree')).toHaveAccessibleName('page.tree…
+       |                                        ^
+    949|     });
+    950|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > aria contract > collapsing a branch that contains the focused row moves focus to the row being collapsed
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<div
+  aria-expanded="false"
+  aria-label="First1 Last1"
+  aria-level="1"
+  aria-posinset="1"
+  aria-selected="false"
+  aria-setsize="1"
+  class="flex items-center gap-3 py-3 "
+  role="treeitem"
+  style="padding-inline-start: 0rem;"
+  tabindex="0"
+>
+  <button
+    aria-hidden="true"
+    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+    tabindex="-1"
+    type="button"
+  >
+    +
+  </button>
+  <span
+    aria-hidden="true"
+    class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+  >
+    FL
+  </span>
+  <div
+    class="min-w-0 flex-1"
+  >
+    <p
+      class="flex items-center gap-2 truncate font-semibold text-ink"
+    >
+      First1 Last1
+    </p>
+    <p
+      class="truncate text-ink-muted"
+    >
+      person1@example.test
+    </p>
+  </div>
+  <p
+    class="shrink-0 text-ink-muted"
+  >
+    1······
+    page.hidden_one
+  </p>
+</div>[39m
+Received element with focus:
+  [31m<button
+  aria-hidden="true"
+  class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+  tabindex="-1"
+  type="button"
+>
+  +
+</button>[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:971:9
+    969|       expect(
+    970|         screen.getByRole('treeitem', { name: 'First1 Last1' }),
+    971|       ).toHaveFocus();
+       |         ^
+    972|     });
+    973|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > aria contract > a history navigation that removes the focused row without any collapse moves focus to its nearest still-visible ancestor
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<div
+  aria-expanded="false"
+  aria-label="First2 Last2"
+  aria-level="2"
+  aria-posinset="1"
+  aria-selected="false"
+  aria-setsize="1"
+  class="flex items-center gap-3 py-3 border-s border-border-hairline"
+  role="treeitem"
+  style="padding-inline-start: 2rem;"
+  tabindex="0"
+>
+  <button
+    aria-hidden="true"
+    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+    tabindex="-1"
+    type="button"
+  >
+    +
+  </button>
+  <span
+    aria-hidden="true"
+    class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+  >
+    FL
+  </span>
+  <div
+    class="min-w-0 flex-1"
+  >
+    <p
+      class="flex items-center gap-2 truncate font-semibold text-ink"
+    >
+      First2 Last2
+    </p>
+    <p
+      class="truncate text-ink-muted"
+    >
+      person2@example.test
+    </p>
+  </div>
+  <p
+    class="shrink-0 text-ink-muted"
+  >
+    1······
+    page.hidden_one
+  </p>
+</div>[39m
+Received element with focus:
+  [31m<body>
+  <div>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="sr-only"
+      data-testid="tree-announcer"
+    />
+    <div
+      class="max-h-48 overflow-y-auto"
+      role="tree"
+    >
+      <div
+        aria-expanded="true"
+        aria-label="First1 Last1"
+        aria-level="1"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="1"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="-1"
+      >
+        <button
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+          tabindex="-1"
+          type="button"
+        >
+          −
+        </button>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First1 Last1
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person1@example.test
+          </p>
+        </div>
+        <p
+          class="shrink-0 text-ink-muted"
+        >
+          1············
+          page.reports_one
+        </p>
+      </div>
+      <div
+        aria-expanded="false"
+        aria-label="First2 Last2"
+        aria-level="2"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="1"
+        class="flex items-center gap-3 py-3 border-s border-border-hairline"
+        role="treeitem"
+        style="padding-inline-start: 2rem;"
+        tabindex="0"
+      >
+        <button
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+          tabindex="-1"
+          type="button"
+        >
+          +
+        </button>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First2 Last2
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person2@example.test
+          </p>
+        </div>
+        <p
+          class="shrink-0 text-ink-muted"
+        >
+          1············
+          page.hidden_one
+        </p>
+      </div>
+    </div>
+  </div>
+</body>[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:1009:9
+    1007|       expect(
+    1008|         screen.getByRole('treeitem', { name: 'First2 Last2' }),
+    1009|       ).toHaveFocus();
+       |         ^
+    1010|     });
+    1011|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > aria contract > a history navigation with no surviving ancestor moves focus to the first visible row, never leaving it on document.body
+Error: [2mexpect([22m[31melement[39m[2m).not.toHaveFocus()[22m
+
+Received element is focused:
+  [31m<body>
+  <div>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="sr-only"
+      data-testid="tree-announcer"
+    />
+    <div
+      class="max-h-48 overflow-y-auto"
+      role="tree"
+    >
+      <div
+        aria-label="First3 Last3"
+        aria-level="1"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="0"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First3 Last3
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person3@example.test
+          </p>
+        </div>
+      </div>
+      <div
+        aria-label="First4 Last4"
+        aria-level="1"
+        aria-posinset="2"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="-1"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First4 Last4
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person4@example.test
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:1039:33
+    1037|       );
+    1038|
+    1039|       expect(document.body).not.toHaveFocus();
+       |                                 ^
+    1040|       expect(
+    1041|         screen.getByRole('treeitem', { name: 'First3 Last3' }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  4 failed | 51 passed (55)
+   Start at  10:38:10
+   Duration  1.89s (transform 902ms, setup 936ms, import 644ms, tests 512ms, environment 2.15s)
+

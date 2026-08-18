@@ -16,6 +16,7 @@ import {
 } from '@platform/internationalization';
 import type { ObservabilityFacade } from '@platform/observability';
 import { createFakeClock } from '@shared/testing';
+import '@shared/testing/toHaveNoAxeViolations';
 import { loadTranslations } from './loadTranslations';
 import { HierarchyTree } from './HierarchyTree';
 import type { HierarchyTreeProps } from './HierarchyTree';
@@ -935,6 +936,150 @@ describe('HierarchyTree', () => {
       expect(screen.getByTestId('tree-announcer')).toHaveTextContent(
         'page.siblingsExpandedAnnounced',
       );
+    });
+  });
+
+  describe('aria contract', () => {
+    it('the tree exposes an accessible name from the catalogue', async () => {
+      const { roots } = buildForest([testPerson(1)]);
+
+      await renderTree({ roots, expandedIds: new Set() });
+
+      expect(screen.getByRole('tree')).toHaveAccessibleName('page.treeLabel');
+    });
+
+    it('collapsing a branch that contains the focused row moves focus to the row being collapsed', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3, { managerId: 2 }),
+      ]);
+      const rootId = parsePersonIdentifier(1);
+      const childId = parsePersonIdentifier(2);
+      const user = userEvent.setup();
+
+      await renderStatefulTree({
+        roots,
+        initialExpandedIds: new Set([rootId, childId]),
+      });
+      focusRow('First3 Last3');
+
+      await user.click(rowToggle('First1 Last1'));
+
+      expect(
+        screen.getByRole('treeitem', { name: 'First1 Last1' }),
+      ).toHaveFocus();
+    });
+
+    it('a history navigation that removes the focused row without any collapse moves focus to its nearest still-visible ancestor', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3, { managerId: 2 }),
+      ]);
+      const rootId = parsePersonIdentifier(1);
+      const childId = parsePersonIdentifier(2);
+
+      const { rerender, i18n, observability, clock, onToggle, onExpandMany } =
+        await renderTree({
+          roots,
+          expandedIds: new Set([rootId, childId]),
+        });
+      focusRow('First3 Last3');
+
+      // Simulates a Back/Forward: expandedIds changes to a value this
+      // component never asked for through its own onToggle, exactly what
+      // a POP navigation looks like from HierarchyTree's side (invariant
+      // 144) - the vanished row's nearest surviving ancestor is 2, not 1.
+      rerender(
+        <I18nextProvider i18n={i18n}>
+          <HierarchyTree
+            roots={roots}
+            expandedIds={new Set([rootId])}
+            observability={observability}
+            clock={clock}
+            onToggle={onToggle}
+            onExpandMany={onExpandMany}
+          />
+        </I18nextProvider>,
+      );
+
+      expect(
+        screen.getByRole('treeitem', { name: 'First2 Last2' }),
+      ).toHaveFocus();
+    });
+
+    it('a history navigation with no surviving ancestor moves focus to the first visible row, never leaving it on document.body', async () => {
+      const before = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+      ]);
+      const after = buildForest([testPerson(3), testPerson(4)]);
+
+      const { rerender, i18n, observability, clock, onToggle, onExpandMany } =
+        await renderTree({
+          roots: before.roots,
+          expandedIds: new Set([parsePersonIdentifier(1)]),
+        });
+      focusRow('First2 Last2');
+
+      rerender(
+        <I18nextProvider i18n={i18n}>
+          <HierarchyTree
+            roots={after.roots}
+            expandedIds={new Set()}
+            observability={observability}
+            clock={clock}
+            onToggle={onToggle}
+            onExpandMany={onExpandMany}
+          />
+        </I18nextProvider>,
+      );
+
+      expect(document.body).not.toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First3 Last3' }),
+      ).toHaveFocus();
+    });
+
+    it('a keyboard toggle keeps focus on the row that triggered it rather than moving it', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+      ]);
+
+      await renderStatefulTree({
+        roots,
+        initialExpandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+      focusRow('First1 Last1');
+
+      pressKey('Enter');
+
+      expect(
+        screen.getByRole('treeitem', { name: 'First1 Last1' }),
+      ).toHaveFocus();
+    });
+
+    it('a nested, partially expanded tree with the you marker and a keyboard-focused row has zero axe violations', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3, { managerId: 2 }),
+        testPerson(4),
+      ]);
+
+      const { container } = await renderTree({
+        roots,
+        expandedIds: new Set([
+          parsePersonIdentifier(1),
+          parsePersonIdentifier(2),
+        ]),
+        signedInUserId: parsePersonIdentifier(3),
+      });
+      focusRow('First2 Last2');
+
+      await expect(container).toHaveNoAxeViolations();
     });
   });
 });

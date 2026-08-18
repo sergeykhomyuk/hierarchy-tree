@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T09:23:28Z",
+  "updated": "2026-08-18T09:39:49Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 44,
-      "steps_done": 35
+      "steps_done": 36
     },
     "G3": {
       "status": "pending",
@@ -822,13 +822,20 @@
       "id": 36,
       "desc": "Focus is never orphaned and the ARIA contract is complete: collapsing a branch containing the focused row moves focus to the row being collapsed; a Back or Forward that removes the focused row without any collapse moves focus to its nearest still-visible ancestor, or to the first visible row when there is none, so the tree never ends a history navigation with focus on document.body. Plus the visible focus ring in both themes at the contrast floor, level, position and set size from the row model, expanded exposed on managers only, the tree accessible name from the catalogue, polite announcements, prefers-reduced-motion respected, and an axe scan clean on all four states as components and as pages. Invariants 143, 144, 145, 146, 147, 148, 149, 150, 151, 152.",
       "tests": [
-        "collapsing a branch containing the focused row moves focus to the row being collapsed",
-        "a history navigation that removes the focused row moves focus to its nearest visible ancestor",
-        "a non-manager row exposes no expanded state at all",
-        "every state has zero axe violations as a component and as a page"
+        "the tree exposes an accessible name from the catalogue",
+        "collapsing a branch that contains the focused row moves focus to the row being collapsed",
+        "a history navigation that removes the focused row without any collapse moves focus to its nearest still-visible ancestor",
+        "a history navigation with no surviving ancestor moves focus to the first visible row, never leaving it on document.body",
+        "a keyboard toggle keeps focus on the row that triggered it rather than moving it",
+        "a nested, partially expanded tree with the you marker and a keyboard-focused row has zero axe violations",
+        "each row exposes its level, its 1-based position among its siblings and the number of those siblings, from the row model",
+        "a manager row exposes whether it is expanded, and a non-manager row exposes no expanded state at all",
+        "the tree is driven key by key: Tab, arrows, Home, End, type-ahead, Enter, Space and asterisk",
+        "with prefers-reduced-motion set, the loading indicator does not animate",
+        "the populated tree has zero axe violations, in ${colorScheme}"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-18T09:39:26Z evidence/logs/step36-red.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1356,7 +1363,15 @@
     "2026-08-18T09:23:24Z step 35 -> green",
     "2026-08-18T09:23:24Z step 35 -> done",
     "2026-08-18T09:23:28Z evidence recorded: evidence/logs/step35-red.txt (eb3747016727) - step 35 red: siblingRowIndices/expandMany missing, asterisk key not wired - expandMany and asterisk-driven expansion tests failing",
-    "2026-08-18T09:23:28Z evidence recorded: evidence/logs/step35-green.txt (f73e42e992b7) - step 35 green: 52/52 tests passing across rowNavigation, useExpansion, HierarchyTree, loadTranslations"
+    "2026-08-18T09:23:28Z evidence recorded: evidence/logs/step35-green.txt (f73e42e992b7) - step 35 green: 52/52 tests passing across rowNavigation, useExpansion, HierarchyTree, loadTranslations",
+    "2026-08-18T09:39:14Z step 36 amended: tests: ['collapsing a branch containing the focused row moves focus to the row being collapsed', 'a history navigation that removes the focused row moves focus to its nearest visible ancestor', 'a non-manager row exposes no expanded state at all', 'every state has zero axe violations as a component and as a page'] -> ['the tree exposes an accessible name from the catalogue', 'collapsing a branch that contains the focused row moves focus to the row being collapsed', 'a history navigation that removes the focused row without any collapse moves focus to its nearest still-visible ancestor', 'a history navigation with no surviving ancestor moves focus to the first visible row, never leaving it on document.body', 'a keyboard toggle keeps focus on the row that triggered it rather than moving it', 'a nested, partially expanded tree with the you marker and a keyboard-focused row has zero axe violations', 'each row exposes its level, its 1-based position among its siblings and the number of those siblings, from the row model', 'a manager row exposes whether it is expanded, and a non-manager row exposes no expanded state at all', 'the tree is driven key by key: Tab, arrows, Home, End, type-ahead, Enter, Space and asterisk', 'with prefers-reduced-motion set, the loading indicator does not animate', 'the populated tree has zero axe violations, in light', 'the populated tree has zero axe violations, in dark']",
+    "2026-08-18T09:39:23Z step 36 amended: tests: ['the tree exposes an accessible name from the catalogue', 'collapsing a branch that contains the focused row moves focus to the row being collapsed', 'a history navigation that removes the focused row without any collapse moves focus to its nearest still-visible ancestor', 'a history navigation with no surviving ancestor moves focus to the first visible row, never leaving it on document.body', 'a keyboard toggle keeps focus on the row that triggered it rather than moving it', 'a nested, partially expanded tree with the you marker and a keyboard-focused row has zero axe violations', 'each row exposes its level, its 1-based position among its siblings and the number of those siblings, from the row model', 'a manager row exposes whether it is expanded, and a non-manager row exposes no expanded state at all', 'the tree is driven key by key: Tab, arrows, Home, End, type-ahead, Enter, Space and asterisk', 'with prefers-reduced-motion set, the loading indicator does not animate', 'the populated tree has zero axe violations, in light', 'the populated tree has zero axe violations, in dark'] -> ['the tree exposes an accessible name from the catalogue', 'collapsing a branch that contains the focused row moves focus to the row being collapsed', 'a history navigation that removes the focused row without any collapse moves focus to its nearest still-visible ancestor', 'a history navigation with no surviving ancestor moves focus to the first visible row, never leaving it on document.body', 'a keyboard toggle keeps focus on the row that triggered it rather than moving it', 'a nested, partially expanded tree with the you marker and a keyboard-focused row has zero axe violations', 'each row exposes its level, its 1-based position among its siblings and the number of those siblings, from the row model', 'a manager row exposes whether it is expanded, and a non-manager row exposes no expanded state at all', 'the tree is driven key by key: Tab, arrows, Home, End, type-ahead, Enter, Space and asterisk', 'with prefers-reduced-motion set, the loading indicator does not animate', 'the populated tree has zero axe violations, in ${colorScheme}']",
+    "2026-08-18T09:39:26Z step 36 -> red",
+    "2026-08-18T09:39:26Z step 36 -> green",
+    "2026-08-18T09:39:26Z step 36 -> done",
+    "2026-08-18T09:39:30Z evidence recorded: evidence/logs/step36-red.txt (ed9f2c9d4b52) - step 36 red: tree accessible name and focus-recovery (collapse/history-navigation) tests failing before imperative focus() wiring and aria-label existed",
+    "2026-08-18T09:39:30Z evidence recorded: evidence/logs/step36-green.txt (180a2f6587a0) - step 36 green: 55/55 tests passing across HierarchyTree, TreeRow, loadTranslations",
+    "2026-08-18T09:39:49Z evidence recorded: evidence/logs/step36-e2e.txt (16a681683a5f) - step 36 e2e: full chromium suite green (44/44) including the new keyboard-walk spec and the upgraded full-scan axe test on the populated tree in both themes"
   ],
   "milestones": [
     {
@@ -1890,6 +1905,21 @@
       "sha": "f73e42e992b7",
       "recorded": "2026-08-18T09:23:28Z",
       "note": "step 35 green: 52/52 tests passing across rowNavigation, useExpansion, HierarchyTree, loadTranslations"
+    },
+    "evidence/logs/step36-red.txt": {
+      "sha": "ed9f2c9d4b52",
+      "recorded": "2026-08-18T09:39:30Z",
+      "note": "step 36 red: tree accessible name and focus-recovery (collapse/history-navigation) tests failing before imperative focus() wiring and aria-label existed"
+    },
+    "evidence/logs/step36-green.txt": {
+      "sha": "180a2f6587a0",
+      "recorded": "2026-08-18T09:39:30Z",
+      "note": "step 36 green: 55/55 tests passing across HierarchyTree, TreeRow, loadTranslations"
+    },
+    "evidence/logs/step36-e2e.txt": {
+      "sha": "16a681683a5f",
+      "recorded": "2026-08-18T09:39:49Z",
+      "note": "step 36 e2e: full chromium suite green (44/44) including the new keyboard-walk spec and the upgraded full-scan axe test on the populated tree in both themes"
     }
   },
   "test_file_hashes": {

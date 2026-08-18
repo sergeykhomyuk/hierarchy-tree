@@ -102,16 +102,12 @@ test.describe('accessibility', () => {
 
   // The Data state - a real, nested, schema-valid tree - was unreachable
   // by any e2e mock before the M3 hierarchy fixture: every other route
-  // mock in this suite produces only Error or Empty. Scoped to
-  // color-contrast only, not a full unscoped scan: role="tree" has no
-  // focusable content until M4's roving tabindex work lands (steps
-  // 31-36), which a full scan would correctly flag as a SEPARATE,
-  // already-known and out-of-scope violation for this milestone - this
-  // test's own claim is the tree's tokens (row hover, indent rail,
-  // toggle border, report-count text) clear the contrast floor, not that
-  // the tree is keyboard-operable yet.
+  // mock in this suite produces only Error or Empty. A full, unscoped
+  // scan now that M4's roving tabindex work has landed - role="tree" has
+  // real focusable content (invariant 151), so the color-contrast-only
+  // scoping this test carried through M3 no longer has a reason to exist.
   for (const colorScheme of ['light', 'dark'] as const) {
-    test(`the populated tree meets the color-contrast floor, in ${colorScheme}`, async ({
+    test(`the populated tree has zero axe violations, in ${colorScheme}`, async ({
       page,
       baseURL,
     }) => {
@@ -121,9 +117,7 @@ test.describe('accessibility', () => {
       await signIn(page);
       await expect(page.getByRole('tree')).toBeVisible();
 
-      const results = await createAxeBuilder(page)
-        .withRules(['color-contrast'])
-        .analyze();
+      const results = await createAxeBuilder(page).analyze();
       expect(results.violations).toEqual([]);
     });
   }

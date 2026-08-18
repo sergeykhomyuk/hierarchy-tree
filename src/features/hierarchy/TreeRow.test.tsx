@@ -222,4 +222,37 @@ describe('TreeRow', () => {
       expect.arrayContaining(['py-3', 'border-s', 'border-border-hairline']),
     );
   });
+
+  it('each row exposes its level, its 1-based position among its siblings and the number of those siblings, from the row model', async () => {
+    await renderRow({
+      ...MANAGER_PROPS,
+      depth: 2,
+      posInSet: 3,
+      setSize: 5,
+    });
+
+    const row = screen.getByRole('treeitem');
+    expect(row).toHaveAttribute('aria-level', '3');
+    expect(row).toHaveAttribute('aria-posinset', '3');
+    expect(row).toHaveAttribute('aria-setsize', '5');
+  });
+
+  it('a manager row exposes whether it is expanded, and a non-manager row exposes no expanded state at all', async () => {
+    await renderRow({
+      ...MANAGER_PROPS,
+      hasChildren: true,
+      isExpanded: false,
+    });
+    expect(screen.getByRole('treeitem')).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
+
+    cleanup();
+
+    await renderRow({ ...MANAGER_PROPS, hasChildren: false });
+    // Not "false" - genuinely absent, per invariant 147's own distinction
+    // between "exposes no expanded state" and "exposes a false one".
+    expect(screen.getByRole('treeitem')).not.toHaveAttribute('aria-expanded');
+  });
 });
