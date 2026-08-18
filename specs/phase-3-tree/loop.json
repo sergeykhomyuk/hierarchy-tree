@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T13:18:58Z",
+  "updated": "2026-08-18T17:05:28Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -263,8 +263,8 @@
     "G2": {
       "status": "pending",
       "attempts": 0,
-      "steps_total": 50,
-      "steps_done": 43
+      "steps_total": 52,
+      "steps_done": 45
     },
     "G3": {
       "status": "pending",
@@ -891,7 +891,7 @@
     },
     {
       "id": 38,
-      "desc": "The eight decision-log entries in ARCHITECTURE.md - the correlation-id chip, the one-button empty state, the img-src widening, flat treeitems over nested groups, the decorative avatar, the kit widening, the extensible analytics map and the retired tripwires - each with what was chosen, why, and what was rejected; plus ROADMAP.md status board, phase 3 checkboxes and progress log updated in the same change. Two of the eight depart from the mockups and six from ARCHITECTURE.md or a phase-1 decision. Invariant 185 states the count in three places and requires the three to agree, which is what makes it mechanically checkable. Invariants 185, 186.",
+      "desc": "The nine decision-log entries in ARCHITECTURE.md - the correlation-id chip, the one-button empty state, the img-src widening, flat treeitems over nested groups, the decorative avatar, the kit widening, the extensible analytics map, the retired tripwires, and the shared route-path module added during implementation - each with what was chosen, why, and what was rejected; plus ROADMAP.md status board, phase 3 checkboxes and progress log updated in the same change. Two of the nine depart from the mockups and seven from ARCHITECTURE.md or a phase-1 decision. Invariant 185 states the count in three places and requires the three to agree, which is what makes it mechanically checkable. Invariants 185, 186.",
       "tests": [
         "the deviation count agrees in PRODUCT.md, the deviations section and the decision log",
         "every phase 3 checkbox in ROADMAP.md is ticked and the status board agrees"
@@ -1049,6 +1049,37 @@
         "formatCount > formats a value with no grouping separator unchanged"
       ],
       "red_observed": "n/a: case (a): every test in this step adds unit-level coverage for behavior fully implemented and already correct in earlier steps (24, 31-35 for useTreeKeyboard/TreeAnnouncer/TreeToggle; the domain formatting rule from step 29 for formatCount) - no production code changed",
+      "status": "done",
+      "milestone": 5
+    },
+    {
+      "id": 51,
+      "desc": "chore: move domain-independent helpers out of src/features/hierarchy/ into shared/utils/, grouped by folder - elementAt and popElement (generic array helpers) to shared/utils/array/, formatCount (Intl.NumberFormat wrapper) and findTypeAheadMatch (renamed from typeAheadMatch - a generic locale-aware string-prefix matcher with zero domain imports) to shared/utils/string/. No behavior change; all four keep their existing tests, relocated and re-exported through the @shared/utils barrel per the existing bytesToHex convention.",
+      "tests": [
+        "src/shared/utils/array/elementAt.test.ts::elementAt > returns the element at a valid index",
+        "src/shared/utils/array/elementAt.test.ts::elementAt > throws when the index is out of bounds",
+        "src/shared/utils/array/popElement.test.ts::popElement > pops the last element from a non-empty array",
+        "src/shared/utils/array/popElement.test.ts::popElement > throws when the array is empty",
+        "src/shared/utils/string/formatCount.test.ts::formatCount > groups digits per the passed language rather than a hardcoded one",
+        "src/shared/utils/string/formatCount.test.ts::formatCount > formats a value with no grouping separator unchanged",
+        "src/shared/utils/string/findTypeAheadMatch.test.ts::findTypeAheadMatch > two or more distinct characters match by prefix, case-insensitively",
+        "src/shared/utils/string/findTypeAheadMatch.test.ts::findTypeAheadMatch > matches accent-insensitively through a locale-aware comparison",
+        "src/shared/utils/string/findTypeAheadMatch.test.ts::findTypeAheadMatch > a single repeated character cycles through every row starting with it",
+        "src/shared/utils/string/findTypeAheadMatch.test.ts::findTypeAheadMatch > wraps to the top when no match remains after the current row",
+        "src/shared/utils/string/findTypeAheadMatch.test.ts::findTypeAheadMatch > returns null when nothing matches",
+        "src/shared/utils/string/findTypeAheadMatch.test.ts::findTypeAheadMatch > returns null for an empty row list"
+      ],
+      "red_observed": "2026-08-18T16:30:53Z evidence/step51-red.txt",
+      "status": "done",
+      "milestone": 5
+    },
+    {
+      "id": 52,
+      "desc": "chore: centralize route paths - a new shared/routing module (ROUTE_PATHS) replaces three independently-defined LOGIN_PATH constants (features/hierarchy/HierarchyPage.tsx, features/auth/guard/requireSession.ts, resolveDestination.ts) plus a bare '/login' literal (app/layout/SignedInHeader.tsx) and app/routing/routeDefinitions.ts's own route-registration literals; NotFoundRoute.tsx's home link too. No behavior change. Extends PRODUCT.md invariant 190's shared-surface list and adds deviation 9 (user-approved) since it touches two of phase 2's files beyond the original list.",
+      "tests": [
+        "src/features/auth/guard/resolveDestination.test.ts::resolveDestination > derives its fallback and its login match from the shared ROUTE_PATHS map rather than an independent literal"
+      ],
+      "red_observed": "2026-08-18T17:04:35Z evidence/step52-red.txt",
       "status": "done",
       "milestone": 5
     }
@@ -1572,7 +1603,25 @@
     "2026-08-18T13:18:16Z step 50 -> na",
     "2026-08-18T13:18:54Z step 50 -> green",
     "2026-08-18T13:18:58Z step 50 -> done",
-    "2026-08-18T13:18:58Z step 50: registered test names as 'Suite > title' rather than 'file.test.tsx::Suite > title', so the CLI could not resolve them to files for G3's tamper-hash baseline (na accepted with a warning, not refused) - process note for future steps, not a functional gap; all 14 tests pass and npm run verify is green."
+    "2026-08-18T13:18:58Z step 50: registered test names as 'Suite > title' rather than 'file.test.tsx::Suite > title', so the CLI could not resolve them to files for G3's tamper-hash baseline (na accepted with a warning, not refused) - process note for future steps, not a functional gap; all 14 tests pass and npm run verify is green.",
+    "2026-08-18T16:30:50Z step 51 added (milestone 5): chore: move domain-independent helpers out of src/features/hierarchy/ into shared/utils/, grouped by folder - elementAt and popElement (generic array helpers) to shared/utils/array/, formatCount (Intl.NumberFormat wrapper) and findTypeAheadMatch (renamed from typeAheadMatch - a generic locale-aware string-prefix matcher with zero domain imports) to shared/utils/string/. No behavior change; all four keep their existing tests, relocated and re-exported through the @shared/utils barrel per the existing bytesToHex convention.",
+    "2026-08-18T16:30:53Z step 51 -> red",
+    "2026-08-18T16:34:49Z evidence recorded: evidence/step51-red.txt (cc7b89ba0613) - red: the 4 new shared/utils test files fail to resolve their not-yet-created implementation modules",
+    "2026-08-18T16:34:49Z evidence recorded: evidence/step51-green-unit.txt (3ea33b4798df) - green: npm run test:coverage after the move - 140 files, 631 tests, same coverage numbers as before the move (pure relocation)",
+    "2026-08-18T16:34:50Z evidence recorded: evidence/step51-green-e2e.txt (9cd1326429d8) - green: full Playwright suite (57 tests) unaffected by the move, including the keyboard contract and mockup layout comparisons",
+    "2026-08-18T16:34:53Z step 51 -> green",
+    "2026-08-18T16:34:53Z step 51 -> done",
+    "2026-08-18T16:35:00Z step 51: moved elementAt/popElement (domain/ -> shared/utils/array/) and formatCount/typeAheadMatch->findTypeAheadMatch (feature root/domain -> shared/utils/string/) - all four were zero-domain-import generic helpers, only formatCount was user-named but typeAheadMatch passed the same objective test (no Person/TreeNode imports) so it moved too. Re-exported through the existing @shared/utils barrel per the bytesToHex convention; 7 consumer files updated to import from there instead of relative feature paths. Real TDD: new test files written at the destination first, observed failing (module not found) before the move, green after. npm run verify and the full e2e suite (57 tests) both green, bundle sizes unchanged.",
+    "2026-08-18T16:38:26Z step 51 refinement (still uncommitted, folded into the same step): added array/index.ts, string/index.ts and number/index.ts barrels under shared/utils/, and moved the pre-existing bytesToHex from shared/utils/ into shared/utils/number/ - the top-level shared/utils/index.ts now re-exports through the three subfolder barrels instead of deep file paths. No test/logic changes; npm run verify and bundle sizes unchanged.",
+    "2026-08-18T17:02:20Z step 38 amended: desc: 'The eight decision-log entries in ARCHITECTURE.md - the correlation-id chip, the one-button empty state, the img-src widening, flat treeitems over nested groups, the decorative avatar, the kit widening, the extensible analytics map and the retired tripwires - each with what was chosen, why, and what was rejected; plus ROADMAP.md status board, phase 3 checkboxes and progress log updated in the same change. Two of the eight depart from the mockups and six from ARCHITECTURE.md or a phase-1 decision. Invariant 185 states the count in three places and requires the three to agree, which is what makes it mechanically checkable. Invariants 185, 186.' -> 'The nine decision-log entries in ARCHITECTURE.md - the correlation-id chip, the one-button empty state, the img-src widening, flat treeitems over nested groups, the decorative avatar, the kit widening, the extensible analytics map, the retired tripwires, and the shared route-path module added during implementation - each with what was chosen, why, and what was rejected; plus ROADMAP.md status board, phase 3 checkboxes and progress log updated in the same change. Two of the nine depart from the mockups and seven from ARCHITECTURE.md or a phase-1 decision. Invariant 185 states the count in three places and requires the three to agree, which is what makes it mechanically checkable. Invariants 185, 186.'; tests: ['the deviation count agrees in PRODUCT.md, the deviations section and the decision log', 'every phase 3 checkbox in ROADMAP.md is ticked and the status board agrees'] -> ['the deviation count agrees in PRODUCT.md, the deviations section and the decision log', 'every phase 3 checkbox in ROADMAP.md is ticked and the status board agrees']",
+    "2026-08-18T17:04:31Z step 52 added (milestone 5): chore: centralize route paths - a new shared/routing module (ROUTE_PATHS) replaces three independently-defined LOGIN_PATH constants (features/hierarchy/HierarchyPage.tsx, features/auth/guard/requireSession.ts, resolveDestination.ts) plus a bare '/login' literal (app/layout/SignedInHeader.tsx) and app/routing/routeDefinitions.ts's own route-registration literals; NotFoundRoute.tsx's home link too. No behavior change. Extends PRODUCT.md invariant 190's shared-surface list and adds deviation 9 (user-approved) since it touches two of phase 2's files beyond the original list.",
+    "2026-08-18T17:04:35Z step 52 -> red",
+    "2026-08-18T17:05:21Z evidence recorded: evidence/step52-red.txt (337d872856c2) - red: the new mock-based derivation test fails against resolveDestination.ts's pre-refactor hardcoded LOGIN_PATH/HIERARCHY_ROUTE literals (git stash of that one file, test still points at the new @shared/routing mock)",
+    "2026-08-18T17:05:21Z evidence recorded: evidence/step52-green-unit.txt (dfcab53af30c) - green: npm run test:coverage after the route-path centralization - 140 files, 632 tests, same coverage numbers",
+    "2026-08-18T17:05:21Z evidence recorded: evidence/step52-green-e2e.txt (88e3e3987968) - green: full Playwright suite (57 tests) including phase 2's own guard/login/header flows, unaffected by the move",
+    "2026-08-18T17:05:21Z step 52 -> green",
+    "2026-08-18T17:05:21Z step 52 -> done",
+    "2026-08-18T17:05:28Z PRODUCT.md amended (user-approved, per the AskUserQuestion decision to extend scope rather than spin off a separate loop): invariant 190's shared-surface list now names the shared/routing module and its touch on features/auth/guard/requireSession.ts + resolveDestination.ts; invariant 185's count moves eight->nine and six->seven with a new deviation 9 in the deviations section. TECH.md's M5 summary and PLAN.md step 38 (amended via loop step amend, still pending) updated to match, keeping the three-way count agreement invariant 185 itself requires."
   ],
   "milestones": [
     {
@@ -2286,6 +2335,36 @@
       "sha": "78e44bd25792",
       "recorded": "2026-08-18T12:27:38Z",
       "note": "same reviewer confirms Codex-21 resolved with no new blocker"
+    },
+    "evidence/step51-red.txt": {
+      "sha": "cc7b89ba0613",
+      "recorded": "2026-08-18T16:34:49Z",
+      "note": "red: the 4 new shared/utils test files fail to resolve their not-yet-created implementation modules"
+    },
+    "evidence/step51-green-unit.txt": {
+      "sha": "3ea33b4798df",
+      "recorded": "2026-08-18T16:34:49Z",
+      "note": "green: npm run test:coverage after the move - 140 files, 631 tests, same coverage numbers as before the move (pure relocation)"
+    },
+    "evidence/step51-green-e2e.txt": {
+      "sha": "9cd1326429d8",
+      "recorded": "2026-08-18T16:34:50Z",
+      "note": "green: full Playwright suite (57 tests) unaffected by the move, including the keyboard contract and mockup layout comparisons"
+    },
+    "evidence/step52-red.txt": {
+      "sha": "337d872856c2",
+      "recorded": "2026-08-18T17:05:21Z",
+      "note": "red: the new mock-based derivation test fails against resolveDestination.ts's pre-refactor hardcoded LOGIN_PATH/HIERARCHY_ROUTE literals (git stash of that one file, test still points at the new @shared/routing mock)"
+    },
+    "evidence/step52-green-unit.txt": {
+      "sha": "dfcab53af30c",
+      "recorded": "2026-08-18T17:05:21Z",
+      "note": "green: npm run test:coverage after the route-path centralization - 140 files, 632 tests, same coverage numbers"
+    },
+    "evidence/step52-green-e2e.txt": {
+      "sha": "88e3e3987968",
+      "recorded": "2026-08-18T17:05:21Z",
+      "note": "green: full Playwright suite (57 tests) including phase 2's own guard/login/header flows, unaffected by the move"
     }
   },
   "test_file_hashes": {
@@ -2428,6 +2507,36 @@
       "step": 19,
       "recorded": "2026-08-17T14:22:04Z",
       "log_index": 272
+    },
+    "src/shared/utils/array/elementAt.test.ts": {
+      "sha": "72c0df541725",
+      "step": 51,
+      "recorded": "2026-08-18T16:30:53Z",
+      "log_index": 520
+    },
+    "src/shared/utils/array/popElement.test.ts": {
+      "sha": "f8c3a7c9341b",
+      "step": 51,
+      "recorded": "2026-08-18T16:30:53Z",
+      "log_index": 520
+    },
+    "src/shared/utils/string/formatCount.test.ts": {
+      "sha": "07a13b0b0fa8",
+      "step": 51,
+      "recorded": "2026-08-18T16:30:53Z",
+      "log_index": 520
+    },
+    "src/shared/utils/string/findTypeAheadMatch.test.ts": {
+      "sha": "8183931888f7",
+      "step": 51,
+      "recorded": "2026-08-18T16:30:53Z",
+      "log_index": 520
+    },
+    "src/features/auth/guard/resolveDestination.test.ts": {
+      "sha": "13bff43a8924",
+      "step": 52,
+      "recorded": "2026-08-18T17:04:35Z",
+      "log_index": 530
     }
   }
 }

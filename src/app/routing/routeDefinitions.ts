@@ -1,6 +1,7 @@
 import { createElement } from 'react';
 import type { LoaderFunctionArgs, RouteObject } from 'react-router';
 import { redirectSignedInVisitor, withSessionGuard } from '@features/auth';
+import { ROUTE_PATHS } from '@shared/routing';
 import type { Runtime } from '../composition';
 import { ApplicationLayout } from '../layout/ApplicationLayout';
 import { RouteErrorBoundary } from '../error-boundary/RouteErrorBoundary';
@@ -64,7 +65,11 @@ export function routeDefinitions(runtime: Runtime): RouteObject[] {
       ],
     },
     {
-      path: 'login',
+      // A route registration is relative to its parent ('/' + 'login' =
+      // '/login'), while ROUTE_PATHS.login is deliberately the absolute
+      // form every other consumer needs - so this is the one place that
+      // strips the leading slash, not the other way around.
+      path: ROUTE_PATHS.login.slice(1),
       // Cannot be lazy: it must run before the login chunk is fetched, or
       // a signed-in visitor would pay for a chunk they never see.
       loader: ({ request }: LoaderFunctionArgs) =>
@@ -106,7 +111,7 @@ export function routeDefinitions(runtime: Runtime): RouteObject[] {
 
   return [
     {
-      path: '/',
+      path: ROUTE_PATHS.home,
       element: createElement(ApplicationLayout),
       ErrorBoundary: RouteErrorBoundary,
       // Every child route is lazy(), so the router needs SOMETHING to

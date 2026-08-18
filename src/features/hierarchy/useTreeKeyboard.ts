@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { CancelTimer, Clock } from '@platform/runtime';
+import { findTypeAheadMatch } from '@shared/utils';
 import {
   findRowIndexById,
   firstChildRowIndex,
@@ -9,7 +10,6 @@ import {
   previousVisibleIndex,
   siblingRowIndices,
 } from './domain/rowNavigation';
-import { findTypeAheadMatch } from './domain/typeAheadMatch';
 import type { VisibleRow } from './domain/flattenVisible';
 import type { PersonIdentifier } from './domain/personIdentifier';
 

@@ -268,9 +268,10 @@ deployed run green post-merge.
 37. `README.md` rewritten - what this project does, how to run and test it, how it deploys,
     where the specs live - with the security gap stated plainly and no sentence of the Vite
     template surviving. Invariants 183, 184.
-38. The **eight** decision-log entries and the `ROADMAP.md` update. Two of the eight depart from
-    the mockups, six from `ARCHITECTURE.md` or a phase-1 decision; invariant 185 states the
-    count in three places and requires the three to agree. Invariants 185, 186.
+38. The **nine** decision-log entries and the `ROADMAP.md` update. Two of the nine depart from
+    the mockups, seven from `ARCHITECTURE.md` or a phase-1 decision (including the
+    shared route-path module added during implementation - deviation 9); invariant 185
+    states the count in three places and requires the three to agree. Invariants 185, 186.
 39. `npm run smoke:live` gains an assertion that the real payload still parses into a forest
     with more than one root, so a shape change in the shared public database is caught by the
     one suite that talks to it. Stays outside `verify`.

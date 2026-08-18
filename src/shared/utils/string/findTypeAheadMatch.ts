@@ -1,14 +1,14 @@
-// A single character repeated ("bbb") is the ARIA cycling gesture, not a
-// literal three-character prefix - collapsed back to its one character so
-// each repeat searches again from the row after the last match.
+// A single character repeated ("bbb") is a cycling gesture, not a literal
+// three-character prefix - collapsed back to its one character so each
+// repeat searches again from the entry after the last match.
 function isRepeatedSingleCharacter(buffer: string): boolean {
   return buffer.length > 1 && [...buffer].every((char) => char === buffer[0]);
 }
 
 // startsWith through Intl.Collator's base sensitivity, not
-// String.startsWith - case and accent both fold away, and it matches
-// exactly the string a screen reader announces (invariant 138), since
-// that string is what the caller passes as `names`.
+// String.startsWith - case and accent both fold away, so this matches
+// exactly the string a screen reader would announce for the caller's names,
+// wrapping past the end of the list back to the start.
 export function findTypeAheadMatch(
   names: readonly string[],
   currentIndex: number,

@@ -1,4 +1,4 @@
-import { elementAt } from './elementAt';
+import { elementAt } from '@shared/utils';
 import type { VisibleRow } from './flattenVisible';
 import type { PersonIdentifier } from './personIdentifier';
 

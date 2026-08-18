@@ -2,11 +2,11 @@ import { memo, useCallback, useMemo } from 'react';
 import type { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '@shared/ui';
+import { formatCount } from '@shared/utils';
 import { personDisplayName } from './domain/personDisplayName';
 import { rowAccessibleName } from './domain/rowAccessibleName';
 import type { EmailAddress } from './domain/emailAddress';
 import type { PersonIdentifier } from './domain/personIdentifier';
-import { formatCount } from './formatCount';
 import { TreeToggle } from './TreeToggle';
 
 const INDENT_PIXELS_PER_DEPTH = 41;

@@ -383,7 +383,7 @@ recovery after a POP, the live region, axe over components and pages. Invariants
 plus the keyboard path of 114-115. Boundary: suite green; e2e driving the tree by keyboard
 alone, key by key; axe clean on all four states.
 
-**M5 - Closing.** README, the eight decision-log entries, the roadmap update, budgets, the
+**M5 - Closing.** README, the nine decision-log entries, the roadmap update, budgets, the
 chunk-graph assertion, console cleanliness, the finished-event-set privacy check, phase 2's
 suite and e2e flows re-run unchanged, and the one check no automated run makes:
 **invariant 98's mixed-content block, verified by hand against the deployed origin** with the

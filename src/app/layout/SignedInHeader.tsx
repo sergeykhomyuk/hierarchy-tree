@@ -1,6 +1,7 @@
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@shared/ui';
+import { ROUTE_PATHS } from '@shared/routing';
 import { clearSession } from '@features/auth';
 import type { SignedInUserView } from '@features/auth';
 import type { ObservabilityFacade } from '@platform/observability';
@@ -36,7 +37,7 @@ export const SignedInHeader = memo(function SignedInHeader({
     dependencies.observability.analytics.track('auth.signed_out', {
       correlationId,
     });
-    dependencies.navigate('/login', { replace: true });
+    dependencies.navigate(ROUTE_PATHS.login, { replace: true });
   }, [dependencies]);
 
   return (

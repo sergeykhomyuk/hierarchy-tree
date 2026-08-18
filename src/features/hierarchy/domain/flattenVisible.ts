@@ -1,5 +1,4 @@
-import { elementAt } from './elementAt';
-import { popElement } from './popElement';
+import { elementAt, popElement } from '@shared/utils';
 import type { Person } from './person';
 import type { PersonIdentifier } from './personIdentifier';
 import type { TreeNode } from './treeNode';

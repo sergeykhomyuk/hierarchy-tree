@@ -1,0 +1,10 @@
+  ✓  34 [chromium] › e2e/login.spec.ts:214:3 › the login card › passes an accessibility scan in each of its five states (3.0s)
+  ✓  52 [chromium] › e2e/accessibility.spec.ts:122:5 › accessibility › the populated tree has zero axe violations, in light (479ms)
+  ✓  51 [development] › e2e/kit-route.spec.ts:29:3 › kit route › has zero axe violations in real light (633ms)
+  ✓  53 [chromium] › e2e/accessibility.spec.ts:122:5 › accessibility › the populated tree has zero axe violations, in dark (467ms)
+  ✓  54 [development] › e2e/kit-route.spec.ts:46:3 › kit route › has zero axe violations in real dark (583ms)
+  ✓  55 [development] › e2e/kit-route.spec.ts:59:3 › kit route › a skeleton box equals the box of the content it stands in for (266ms)
+  ✓  56 [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header (213ms)
+  ✓  57 [development] › e2e/kit-route.spec.ts:103:3 › kit route › mirrors correctly under a forced right-to-left direction (506ms)
+
+  57 passed (8.8s)

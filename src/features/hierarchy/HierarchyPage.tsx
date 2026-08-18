@@ -4,14 +4,13 @@ import { useNavigate } from 'react-router';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { Clock } from '@platform/runtime';
 import { EmptyState, ErrorState } from '@shared/ui';
+import { ROUTE_PATHS } from '@shared/routing';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyResult } from './data/fetchPeople';
 import { HierarchySummary } from './HierarchySummary';
 import { HierarchyTree } from './HierarchyTree';
 import { useExpansion } from './useExpansion';
 import type { TreeNode } from './domain/treeNode';
-
-const LOGIN_PATH = '/login';
 
 // A stable identity for the non-Data states - useExpansion runs
 // unconditionally on every render (a hook cannot be called only inside the
@@ -49,7 +48,7 @@ export const HierarchyPage = memo(function HierarchyPage({
   const { t } = useTranslation('hierarchy');
   const navigate = useNavigate();
   const handleBackToLogin = useCallback(() => {
-    void navigate(LOGIN_PATH);
+    void navigate(ROUTE_PATHS.login);
   }, [navigate]);
   const result = use(hierarchy);
   const { expandedIds, toggleExpanded, expandMany } = useExpansion(

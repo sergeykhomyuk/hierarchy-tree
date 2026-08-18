@@ -592,9 +592,9 @@ means one visible `treeitem`; "a person" means one validated user record.
 184. `README.md` states the security gap plainly - a client-side lookup is not
      authentication and the database is public - rather than leaving a reader to infer it.
 185. Every deviation this phase makes gets a decision-log entry in the same change, with what
-     was chosen, why, and what was rejected. There are **eight**, and they are the eight
+     was chosen, why, and what was rejected. There are **nine**, and they are the nine
      enumerated in the deviations section below - **two** that depart from the mockups, which
-     is the same two the mockup-fidelity invariant names, and six that depart from
+     is the same two the mockup-fidelity invariant names, and seven that depart from
      `ARCHITECTURE.md` or from a phase-1 decision. The count is stated here, in that section
      and in the milestone that lands them, and the three must agree.
 186. `ROADMAP.md`'s status board, phase 3 checkboxes and progress log are updated in the same
@@ -618,11 +618,16 @@ means one visible `treeitem`; "a person" means one validated user record.
      tracker learns to ignore a revalidation-only state change, so a retry does not emit a
      spurious route-viewed event; the home route module grows from a bare re-export into the
      module that assembles the page's dependencies and its retry and refresh callbacks; and
-     the lint policy gains a rule keeping the router's revalidation out of feature code. In
-     phase 2's files: the authenticated loader returns the signed-in id, and the authenticated
-     layout renders the nav rail. Elsewhere: the content security policy's `img-src` widens,
-     and the phase-1 vocabulary tripwires are retired. That is the whole list; anything beyond
-     it is a design finding to raise, not a diff to slip in.
+     the lint policy gains a rule keeping the router's revalidation out of feature code. A new
+     `shared/routing` module holds every route's absolute path, requested during
+     implementation to stop the same `'/login'` from being redeclared independently in three
+     places; `app/routing/routeDefinitions.ts` derives its route registration from it too. In
+     phase 2's files: the authenticated loader returns the signed-in id, the authenticated
+     layout renders the nav rail, and the guard pair (`requireSession.ts`,
+     `resolveDestination.ts`) reads its login and home paths from `shared/routing` instead of
+     its own local constants. Elsewhere: the content security policy's `img-src` widens, and
+     the phase-1 vocabulary tripwires are retired. That is the whole list; anything beyond it
+     is a design finding to raise, not a diff to slip in.
 191. Every one of those additions is generic. No user, no session, no tree node and no
      hierarchy concept enters a kit component's signature or a platform type.
 192. The layer boundaries hold. The hierarchy feature imports no other feature, imports
@@ -691,6 +696,16 @@ perspective; multi-select; drag-to-reparent; exporting.
 8. **The phase-1 vocabulary tripwires are retired.** `assert-domain-vocabulary.mjs` bans the
    identifiers this phase's domain is built from and fails on `role="tree"`. They were built
    to stop phase 1 anticipating phase 3; that purpose expires here.
+9. **A shared route-path module (`shared/routing`) replaces three independently-defined
+   `LOGIN_PATH` constants and one bare `'/login'` literal.** `ARCHITECTURE.md` §"Boundaries
+   and layers" says features own their route module end to end; this phase adds the one
+   cross-feature exception, requested during implementation so a route rename touches one
+   file rather than however many happened to redeclare it. It touches two of phase 2's files
+   (`features/auth/guard/requireSession.ts`, `resolveDestination.ts`) beyond invariant 190's
+   original list, with no behavior change - phase 2's own suite and e2e flows still pass
+   unchanged, per invariant 187. Rejected: leaving the duplication, which is the actual
+   problem being fixed; and a feature-owned map one side imports from the other, which is a
+   cross-feature import invariant 192 already forbids.
 
 ## Decisions taken while specifying
 

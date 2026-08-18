@@ -1,5 +1,5 @@
 import { parsePersonIdentifier } from './personIdentifier';
-import { popElement } from './popElement';
+import { popElement } from '@shared/utils';
 import type { PersonIdentifier } from './personIdentifier';
 import type { TreeNode } from './treeNode';
 

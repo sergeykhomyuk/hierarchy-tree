@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { elementAt } from '@shared/utils';
 import { buildForest } from './buildForest';
-import { elementAt } from './elementAt';
 import { flattenVisible } from './flattenVisible';
 import {
   findRowIndexById,

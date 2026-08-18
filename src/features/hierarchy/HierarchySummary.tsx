@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatCount } from './formatCount';
+import { formatCount } from '@shared/utils';
 import type { ForestSummaryCounts } from './domain/buildForest';
 
 export type HierarchySummaryProps = {

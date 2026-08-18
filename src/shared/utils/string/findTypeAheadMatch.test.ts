@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findTypeAheadMatch } from './typeAheadMatch';
+import { findTypeAheadMatch } from './findTypeAheadMatch';
 
 const NAMES = ['Andrew Crist', 'Bar Refaeli', 'Barak Levi', 'Éric Dupont'];
 
