@@ -19,7 +19,7 @@ function sortedIds(ids: ReadonlySet<PersonIdentifier>): string {
 }
 
 function ExpansionHarness({ roots }: { roots: readonly TreeNode[] }) {
-  const { expandedIds, toggleExpanded } = useExpansion(roots);
+  const { expandedIds, toggleExpanded, expandMany } = useExpansion(roots);
   return (
     <div>
       <p>expanded: {sortedIds(expandedIds)}</p>
@@ -34,6 +34,14 @@ function ExpansionHarness({ roots }: { roots: readonly TreeNode[] }) {
         onClick={() => toggleExpanded(parsePersonIdentifier(2))}
       >
         toggle 2
+      </button>
+      <button
+        type="button"
+        onClick={() =>
+          expandMany([parsePersonIdentifier(1), parsePersonIdentifier(2)])
+        }
+      >
+        expand 1 and 2
       </button>
     </div>
   );
@@ -114,6 +122,35 @@ describe('useExpansion', () => {
     expect(params.get('from')).toBe('/somewhere');
     expect(params.get('flag')).toBe('1');
     expect(params.get('expanded')).toBe('2');
+  });
+
+  it('expandMany opens several branches in one history entry', async () => {
+    const user = userEvent.setup();
+    const { router } = renderExpansion('/?expanded=');
+
+    expect(screen.getByText('expanded:')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'expand 1 and 2' }));
+    expect(screen.getByText('expanded: 1,2')).toBeInTheDocument();
+
+    // One Back undoes the whole action, not one id at a time - proof it
+    // was a single history entry rather than two toggles in sequence.
+    await act(async () => {
+      await router.navigate(-1);
+    });
+    expect(screen.getByText('expanded:')).toBeInTheDocument();
+  });
+
+  it('expandMany that would open nothing writes no history entry', async () => {
+    const user = userEvent.setup();
+    const { router } = renderExpansion();
+
+    expect(screen.getByText('expanded: 1,2')).toBeInTheDocument();
+    const entryCountBefore = router.state.location.key;
+
+    await user.click(screen.getByRole('button', { name: 'expand 1 and 2' }));
+
+    expect(screen.getByText('expanded: 1,2')).toBeInTheDocument();
+    expect(router.state.location.key).toBe(entryCountBefore);
   });
 
   it('expansion writes nothing to local storage, session storage or a cookie', async () => {

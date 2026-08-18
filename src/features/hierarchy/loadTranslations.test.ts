@@ -72,6 +72,8 @@ describe('hierarchy loadTranslations', () => {
         hidden_other: 'page.hidden_other',
         toggleAnnouncedExpanded: 'page.toggleAnnouncedExpanded',
         toggleAnnouncedCollapsed: 'page.toggleAnnouncedCollapsed',
+        siblingsExpandedAnnounced_one: 'page.siblingsExpandedAnnounced_one',
+        siblingsExpandedAnnounced_other: 'page.siblingsExpandedAnnounced_other',
       },
     });
 

@@ -20,6 +20,13 @@ declare module '@platform/observability/analyticsEvents' {
       readonly expanded: boolean;
       readonly depth: number;
     };
+    // One event for the whole `*` action (invariant 141), not one per
+    // branch it opened - the same privacy rule as 'hierarchy.toggled'
+    // (invariant 115): no name, no email, no person id.
+    'hierarchy.siblings_expanded': {
+      readonly count: number;
+      readonly depth: number;
+    };
   }
 }
 

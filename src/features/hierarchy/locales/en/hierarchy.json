@@ -17,6 +17,8 @@
     "hidden_one": "hidden",
     "hidden_other": "hidden",
     "toggleAnnouncedExpanded": "{{name}} expanded",
-    "toggleAnnouncedCollapsed": "{{name}} collapsed"
+    "toggleAnnouncedCollapsed": "{{name}} collapsed",
+    "siblingsExpandedAnnounced_one": "{{count}} branch expanded",
+    "siblingsExpandedAnnounced_other": "{{count}} branches expanded"
   }
 }

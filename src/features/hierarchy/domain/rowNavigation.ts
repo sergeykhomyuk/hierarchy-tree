@@ -60,3 +60,43 @@ export function firstChildRowIndex(
   const child = rows[index + 1];
   return child !== undefined && child.depth === row.depth + 1 ? index + 1 : -1;
 }
+
+// Every row under the same parent as the row at `index`, itself included,
+// in row order - the group invariant 140's `*` opens as one action. The
+// "same parent" boundary is the nearest earlier row exactly one level
+// shallower (root rows share the virtual absence of a parent, boundary
+// depth -1); everything between that boundary and the next row at or
+// above it that sits AT the target depth is a sibling, and anything
+// deeper is a nested subtree skipped rather than collected.
+export function siblingRowIndices(
+  rows: readonly VisibleRow[],
+  index: number,
+): number[] {
+  const row = rows[index];
+  if (row === undefined) return [];
+  const targetDepth = row.depth;
+  const boundaryDepth = targetDepth - 1;
+
+  let start = 0;
+  for (let candidate = index - 1; candidate >= 0; candidate -= 1) {
+    if (rows[candidate]?.depth === boundaryDepth) {
+      start = candidate + 1;
+      break;
+    }
+  }
+
+  let end = rows.length;
+  for (let candidate = start; candidate < rows.length; candidate += 1) {
+    const depth = rows[candidate]?.depth;
+    if (depth !== undefined && depth <= boundaryDepth) {
+      end = candidate;
+      break;
+    }
+  }
+
+  const siblings: number[] = [];
+  for (let candidate = start; candidate < end; candidate += 1) {
+    if (rows[candidate]?.depth === targetDepth) siblings.push(candidate);
+  }
+  return siblings;
+}

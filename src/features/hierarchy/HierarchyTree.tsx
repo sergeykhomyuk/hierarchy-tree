@@ -30,6 +30,9 @@ export type HierarchyTreeProps = {
   // override.
   clock: Clock;
   onToggle: (personId: PersonIdentifier) => void;
+  // The asterisk key's one action (invariant 141) - a single call opening
+  // every id at once, distinct from onToggle's one-id-at-a-time path.
+  onExpandMany: (personIds: readonly PersonIdentifier[]) => void;
 };
 
 // The tree renders every visible row from the row model, in its order,
@@ -43,6 +46,7 @@ export const HierarchyTree = memo(function HierarchyTree({
   observability,
   clock,
   onToggle,
+  onExpandMany,
 }: HierarchyTreeProps) {
   const { t, i18n } = useTranslation('hierarchy');
   const rows = flattenVisible(roots, expandedIds);
@@ -163,12 +167,29 @@ export const HierarchyTree = memo(function HierarchyTree({
     [onToggle, observability, t],
   );
 
+  const handleExpandSiblings = useCallback(
+    (personIds: readonly PersonIdentifier[], depth: number) => {
+      // Count and depth only - the same privacy rule as a single toggle
+      // (invariant 115), extended to this event (invariant 141).
+      observability.analytics.track('hierarchy.siblings_expanded', {
+        count: personIds.length,
+        depth,
+      });
+      setAnnouncement(
+        t('page.siblingsExpandedAnnounced', { count: personIds.length }),
+      );
+      onExpandMany(personIds);
+    },
+    [onExpandMany, observability, t],
+  );
+
   const handleKeyDown = useTreeKeyboard({
     rows,
     accessibleNames,
     tabbableId,
     onFocusRow: focusRow,
     onToggleRow: handleRowToggle,
+    onExpandSiblings: handleExpandSiblings,
     clock,
     language: i18n.language,
   });

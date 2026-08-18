@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T08:27:11Z",
+  "updated": "2026-08-18T09:23:28Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 44,
-      "steps_done": 34
+      "steps_done": 35
     },
     "G3": {
       "status": "pending",
@@ -805,12 +805,17 @@
       "id": 35,
       "desc": "The asterisk key expands every sibling of the focused row under the same parent - not every row at the same depth elsewhere in the forest - leaving deeper levels as they were, as ONE action: one history entry, one live-region announcement naming how many branches opened, one telemetry event. An asterisk that would open nothing does nothing at all. Invariants 140, 141.",
       "tests": [
-        "the asterisk key expands every sibling under the same parent and leaves deeper levels alone",
-        "an asterisk that opens eight branches pushes one history entry and emits one event",
-        "a second asterisk on the same row pushes no history entry and emits no event"
+        "siblingRowIndices finds every row under the same parent, itself included, not rows at the same depth elsewhere",
+        "siblingRowIndices treats the roots as siblings of each other",
+        "siblingRowIndices returns just the row itself when it has no siblings",
+        "expandMany opens several branches in one history entry",
+        "expandMany that would open nothing writes no history entry",
+        "asterisk expands every collapsed sibling under the same parent, including the focused row if it is a collapsed manager",
+        "asterisk that would open nothing does nothing at all - no history entry, no announcement, no telemetry",
+        "asterisk announces how many branches opened and emits one telemetry event"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-18T09:23:24Z evidence/logs/step35-red.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1345,7 +1350,13 @@
     "2026-08-18T08:27:01Z step 34 -> done",
     "2026-08-18T08:27:04Z evidence recorded: evidence/logs/step34-red.txt (e9efea48af62) - step 34 red: rowAccessibleName/typeAheadMatch modules missing, type-ahead component tests failing",
     "2026-08-18T08:27:04Z evidence recorded: evidence/logs/step34-green.txt (6c0b85161972) - step 34 green: 60/60 tests passing across rowAccessibleName, typeAheadMatch, HierarchyTree, TreeRow, HierarchyPage",
-    "2026-08-18T08:27:11Z discovered I had been running 'tsc --noEmit -p .' (checks nothing - tsconfig.json is a solution file with files:[]) instead of the real typecheck 'tsc -b' throughout steps 31-33 - fixed ~20 accumulated noUncheckedIndexedAccess strict-mode errors across rowNavigation.ts, recoverFocusedRowId.ts, typeAheadMatch.ts and useTreeKeyboard.ts as part of step 34, then re-verified npm run typecheck/lint/format:check/test:coverage all green. No further step should skip 'tsc -b'."
+    "2026-08-18T08:27:11Z discovered I had been running 'tsc --noEmit -p .' (checks nothing - tsconfig.json is a solution file with files:[]) instead of the real typecheck 'tsc -b' throughout steps 31-33 - fixed ~20 accumulated noUncheckedIndexedAccess strict-mode errors across rowNavigation.ts, recoverFocusedRowId.ts, typeAheadMatch.ts and useTreeKeyboard.ts as part of step 34, then re-verified npm run typecheck/lint/format:check/test:coverage all green. No further step should skip 'tsc -b'.",
+    "2026-08-18T09:23:20Z step 35 amended: tests: ['the asterisk key expands every sibling under the same parent and leaves deeper levels alone', 'an asterisk that opens eight branches pushes one history entry and emits one event', 'a second asterisk on the same row pushes no history entry and emits no event'] -> ['siblingRowIndices finds every row under the same parent, itself included, not rows at the same depth elsewhere', 'siblingRowIndices treats the roots as siblings of each other', 'siblingRowIndices returns just the row itself when it has no siblings', 'expandMany opens several branches in one history entry', 'expandMany that would open nothing writes no history entry', 'asterisk expands every collapsed sibling under the same parent, including the focused row if it is a collapsed manager', 'asterisk that would open nothing does nothing at all - no history entry, no announcement, no telemetry', 'asterisk announces how many branches opened and emits one telemetry event']",
+    "2026-08-18T09:23:24Z step 35 -> red",
+    "2026-08-18T09:23:24Z step 35 -> green",
+    "2026-08-18T09:23:24Z step 35 -> done",
+    "2026-08-18T09:23:28Z evidence recorded: evidence/logs/step35-red.txt (eb3747016727) - step 35 red: siblingRowIndices/expandMany missing, asterisk key not wired - expandMany and asterisk-driven expansion tests failing",
+    "2026-08-18T09:23:28Z evidence recorded: evidence/logs/step35-green.txt (f73e42e992b7) - step 35 green: 52/52 tests passing across rowNavigation, useExpansion, HierarchyTree, loadTranslations"
   ],
   "milestones": [
     {
@@ -1869,6 +1880,16 @@
       "sha": "6c0b85161972",
       "recorded": "2026-08-18T08:27:04Z",
       "note": "step 34 green: 60/60 tests passing across rowAccessibleName, typeAheadMatch, HierarchyTree, TreeRow, HierarchyPage"
+    },
+    "evidence/logs/step35-red.txt": {
+      "sha": "eb3747016727",
+      "recorded": "2026-08-18T09:23:28Z",
+      "note": "step 35 red: siblingRowIndices/expandMany missing, asterisk key not wired - expandMany and asterisk-driven expansion tests failing"
+    },
+    "evidence/logs/step35-green.txt": {
+      "sha": "f73e42e992b7",
+      "recorded": "2026-08-18T09:23:28Z",
+      "note": "step 35 green: 52/52 tests passing across rowNavigation, useExpansion, HierarchyTree, loadTranslations"
     }
   },
   "test_file_hashes": {

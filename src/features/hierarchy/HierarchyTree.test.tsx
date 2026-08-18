@@ -54,6 +54,16 @@ function StatefulTreeHarness({
       return next;
     });
   }, []);
+  const handleExpandMany = useCallback(
+    (personIds: readonly PersonIdentifier[]) => {
+      setExpandedIds((current) => {
+        const next = new Set(current);
+        for (const personId of personIds) next.add(personId);
+        return next;
+      });
+    },
+    [],
+  );
 
   return (
     <HierarchyTree
@@ -62,6 +72,7 @@ function StatefulTreeHarness({
       observability={observability}
       clock={clock}
       onToggle={handleToggle}
+      onExpandMany={handleExpandMany}
     />
   );
 }
@@ -143,15 +154,20 @@ function brokenPhotoImage(container: HTMLElement): HTMLImageElement {
 }
 
 async function renderTree(
-  props: Omit<HierarchyTreeProps, 'observability' | 'onToggle' | 'clock'> & {
+  props: Omit<
+    HierarchyTreeProps,
+    'observability' | 'onToggle' | 'clock' | 'onExpandMany'
+  > & {
     observability?: ObservabilityFacade;
     onToggle?: (personId: PersonIdentifier) => void;
     clock?: ReturnType<typeof createFakeClock>;
+    onExpandMany?: (personIds: readonly PersonIdentifier[]) => void;
   },
 ) {
   const observability = props.observability ?? createSpyObservability();
   const onToggle = props.onToggle ?? vi.fn();
   const clock = props.clock ?? createFakeClock();
+  const onExpandMany = props.onExpandMany ?? vi.fn();
   const i18n = await createInternationalization({
     resources: { common: {} },
     language: Locale.Test,
@@ -165,10 +181,11 @@ async function renderTree(
         observability={observability}
         onToggle={onToggle}
         clock={clock}
+        onExpandMany={onExpandMany}
       />
     </I18nextProvider>,
   );
-  return { ...view, observability, onToggle, clock, i18n };
+  return { ...view, observability, onToggle, clock, onExpandMany, i18n };
 }
 
 describe('HierarchyTree', () => {
@@ -235,11 +252,18 @@ describe('HierarchyTree', () => {
         photo: photoUrl,
       }),
     ]);
-    const { rerender, container, observability, onToggle, clock, i18n } =
-      await renderTree({
-        roots,
-        expandedIds: new Set([managerId]),
-      });
+    const {
+      rerender,
+      container,
+      observability,
+      onToggle,
+      clock,
+      onExpandMany,
+      i18n,
+    } = await renderTree({
+      roots,
+      expandedIds: new Set([managerId]),
+    });
 
     for (let cycle = 0; cycle < 3; cycle += 1) {
       fireEvent.error(brokenPhotoImage(container));
@@ -254,6 +278,7 @@ describe('HierarchyTree', () => {
             observability={observability}
             clock={clock}
             onToggle={onToggle}
+            onExpandMany={onExpandMany}
           />
         </I18nextProvider>,
       );
@@ -265,6 +290,7 @@ describe('HierarchyTree', () => {
             observability={observability}
             clock={clock}
             onToggle={onToggle}
+            onExpandMany={onExpandMany}
           />
         </I18nextProvider>,
       );
@@ -295,6 +321,7 @@ describe('HierarchyTree', () => {
       observability,
       onToggle,
       clock,
+      onExpandMany,
       i18n,
     } = await renderTree({
       roots: firstLoad.roots,
@@ -319,6 +346,7 @@ describe('HierarchyTree', () => {
           observability={observability}
           clock={clock}
           onToggle={onToggle}
+          onExpandMany={onExpandMany}
         />
       </I18nextProvider>,
     );
@@ -838,6 +866,75 @@ describe('HierarchyTree', () => {
       expect(
         screen.getByRole('treeitem', { name: 'Andrew Crist' }),
       ).toHaveFocus();
+    });
+  });
+
+  describe('asterisk expand', () => {
+    function siblingRoots() {
+      return buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3, { managerId: 1 }),
+        testPerson(4, { managerId: 1 }),
+        testPerson(5, { managerId: 2 }),
+        testPerson(6, { managerId: 3 }),
+      ]).roots;
+    }
+
+    it('asterisk expands every collapsed sibling under the same parent, including the focused row if it is a collapsed manager', async () => {
+      await renderStatefulTree({
+        roots: siblingRoots(),
+        initialExpandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+      focusRow('First2 Last2');
+
+      pressKey('*');
+
+      // 1, 2, 5 (2's child), 3, 6 (3's child), 4 - person4 is a
+      // non-manager sibling, untouched either way.
+      expect(screen.getAllByRole('treeitem')).toHaveLength(6);
+      expect(
+        screen.getByRole('treeitem', { name: 'First5 Last5' }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('treeitem', { name: 'First6 Last6' }),
+      ).toBeVisible();
+    });
+
+    it('asterisk that would open nothing does nothing at all - no history entry, no announcement, no telemetry', async () => {
+      const { observability } = await renderStatefulTree({
+        roots: siblingRoots(),
+        initialExpandedIds: new Set([
+          parsePersonIdentifier(1),
+          parsePersonIdentifier(2),
+          parsePersonIdentifier(3),
+        ]),
+      });
+      focusRow('First2 Last2');
+
+      pressKey('*');
+
+      expect(observability.analytics.track).not.toHaveBeenCalled();
+      expect(screen.getByTestId('tree-announcer')).toHaveTextContent('');
+    });
+
+    it('asterisk announces how many branches opened and emits one telemetry event', async () => {
+      const { observability } = await renderStatefulTree({
+        roots: siblingRoots(),
+        initialExpandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+      focusRow('First2 Last2');
+
+      pressKey('*');
+
+      expect(observability.analytics.track).toHaveBeenCalledTimes(1);
+      const [eventName, payload] =
+        vi.mocked(observability.analytics.track).mock.calls[0] ?? [];
+      expect(eventName).toBe('hierarchy.siblings_expanded');
+      expect(payload).toEqual({ count: 2, depth: 1 });
+      expect(screen.getByTestId('tree-announcer')).toHaveTextContent(
+        'page.siblingsExpandedAnnounced',
+      );
     });
   });
 });

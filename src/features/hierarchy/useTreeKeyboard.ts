@@ -7,6 +7,7 @@ import {
   nextVisibleIndex,
   parentRowIndex,
   previousVisibleIndex,
+  siblingRowIndices,
 } from './domain/rowNavigation';
 import { findTypeAheadMatch } from './domain/typeAheadMatch';
 import type { VisibleRow } from './domain/flattenVisible';
@@ -31,6 +32,13 @@ export type UseTreeKeyboardOptions = {
   // so a keyboard-driven expand/collapse updates the URL, the live
   // region and telemetry identically to a click.
   onToggleRow: (personId: PersonIdentifier) => void;
+  // The asterisk key's one action (invariant 141) - called once with
+  // every id that will actually open, never once per id. depth is the
+  // focused row's own, which every sibling shares by definition.
+  onExpandSiblings: (
+    personIds: readonly PersonIdentifier[],
+    depth: number,
+  ) => void;
   clock: Clock;
   language: string;
 };
@@ -41,6 +49,7 @@ export function useTreeKeyboard({
   tabbableId,
   onFocusRow,
   onToggleRow,
+  onExpandSiblings,
   clock,
   language,
 }: UseTreeKeyboardOptions) {
@@ -112,6 +121,20 @@ export function useTreeKeyboard({
           onToggleRow(row.person.id);
           return;
         }
+        case '*': {
+          event.preventDefault();
+          const idsToOpen = siblingRowIndices(rows, index)
+            .map((siblingIndex) => rows[siblingIndex])
+            .filter(
+              (candidate): candidate is VisibleRow =>
+                candidate !== undefined &&
+                candidate.hasChildren &&
+                !candidate.isExpanded,
+            )
+            .map((candidate) => candidate.person.id);
+          if (idsToOpen.length > 0) onExpandSiblings(idsToOpen, row.depth);
+          return;
+        }
         default: {
           if (
             event.key.length !== 1 ||
@@ -147,6 +170,7 @@ export function useTreeKeyboard({
       tabbableId,
       onFocusRow,
       onToggleRow,
+      onExpandSiblings,
       clock,
       language,
     ],

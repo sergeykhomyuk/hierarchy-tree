@@ -7,6 +7,7 @@ import {
   nextVisibleIndex,
   parentRowIndex,
   previousVisibleIndex,
+  siblingRowIndices,
 } from './rowNavigation';
 import { parsePersonIdentifier } from './personIdentifier';
 import type { PersonIdentifier } from './personIdentifier';
@@ -86,5 +87,49 @@ describe('rowNavigation', () => {
 
     const collapsedRows = flattenVisible(roots, new Set<PersonIdentifier>());
     expect(firstChildRowIndex(collapsedRows, 0)).toBe(-1);
+  });
+
+  it('siblingRowIndices finds every row under the same parent, itself included, not rows at the same depth elsewhere', () => {
+    const { roots } = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+      testPerson(3, { managerId: 1 }),
+      testPerson(4),
+      testPerson(5, { managerId: 4 }),
+    ]);
+    const rows = flattenVisible(
+      roots,
+      new Set<PersonIdentifier>([
+        parsePersonIdentifier(1),
+        parsePersonIdentifier(4),
+      ]),
+    );
+    // rows: 1 (depth 0), 2 (depth 1), 3 (depth 1), 4 (depth 0), 5 (depth 1)
+
+    // 2's siblings under person 1 are itself and 3 - not 5, which shares
+    // depth 1 but sits under a different parent.
+    expect(siblingRowIndices(rows, 1)).toEqual([1, 2]);
+  });
+
+  it('siblingRowIndices treats the roots as siblings of each other', () => {
+    const { roots } = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+      testPerson(3),
+    ]);
+    const rows = flattenVisible(
+      roots,
+      new Set<PersonIdentifier>([parsePersonIdentifier(1)]),
+    );
+    // rows: 1 (depth 0), 2 (depth 1), 3 (depth 0)
+
+    expect(siblingRowIndices(rows, 0)).toEqual([0, 2]);
+  });
+
+  it('siblingRowIndices returns just the row itself when it has no siblings', () => {
+    const { roots } = buildForest([testPerson(1)]);
+    const rows = flattenVisible(roots, new Set<PersonIdentifier>());
+
+    expect(siblingRowIndices(rows, 0)).toEqual([0]);
   });
 });

@@ -10,6 +10,10 @@ const EXPANDED_PARAM = 'expanded';
 export type UseExpansionResult = {
   readonly expandedIds: ReadonlySet<PersonIdentifier>;
   readonly toggleExpanded: (personId: PersonIdentifier) => void;
+  // The asterisk key's one action opening several branches at once
+  // (invariant 141) - a single setSearchParams call, one history entry,
+  // rather than one toggle per id.
+  readonly expandMany: (personIds: readonly PersonIdentifier[]) => void;
 };
 
 function readExpandedIds(
@@ -47,5 +51,23 @@ export function useExpansion(roots: readonly TreeNode[]): UseExpansionResult {
     [roots, setSearchParams],
   );
 
-  return { expandedIds, toggleExpanded };
+  // Checked against the current render's expandedIds, not inside the
+  // setSearchParams updater - a no-op case must skip the call entirely,
+  // since setSearchParams always pushes a history entry regardless of
+  // whether the resulting URL actually differs.
+  const expandMany = useCallback(
+    (personIds: readonly PersonIdentifier[]) => {
+      if (personIds.every((personId) => expandedIds.has(personId))) return;
+      setSearchParams((current) => {
+        const next = new Set(readExpandedIds(current, roots));
+        for (const personId of personIds) next.add(personId);
+        const nextParams = new URLSearchParams(current);
+        nextParams.set(EXPANDED_PARAM, formatExpansion(next));
+        return nextParams;
+      });
+    },
+    [roots, expandedIds, setSearchParams],
+  );
+
+  return { expandedIds, toggleExpanded, expandMany };
 }

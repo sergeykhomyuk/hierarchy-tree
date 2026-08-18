@@ -52,7 +52,7 @@ export const HierarchyPage = memo(function HierarchyPage({
     void navigate(LOGIN_PATH);
   }, [navigate]);
   const result = use(hierarchy);
-  const { expandedIds, toggleExpanded } = useExpansion(
+  const { expandedIds, toggleExpanded, expandMany } = useExpansion(
     result.kind === HierarchyResultKind.Data ? result.roots : EMPTY_ROOTS,
   );
 
@@ -106,6 +106,7 @@ export const HierarchyPage = memo(function HierarchyPage({
             observability={dependencies.observability}
             clock={dependencies.clock}
             onToggle={toggleExpanded}
+            onExpandMany={expandMany}
             {...(userId !== undefined ? { signedInUserId: userId } : {})}
           />
         </div>
