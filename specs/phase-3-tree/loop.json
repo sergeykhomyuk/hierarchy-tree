@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T12:27:47Z",
+  "updated": "2026-08-18T13:18:58Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -263,8 +263,8 @@
     "G2": {
       "status": "pending",
       "attempts": 0,
-      "steps_total": 49,
-      "steps_done": 42
+      "steps_total": 50,
+      "steps_done": 43
     },
     "G3": {
       "status": "pending",
@@ -1028,6 +1028,29 @@
       "red_observed": "2026-08-18T12:23:26Z logs/step49-red.txt: both framed variants incorrectly carried text-[17px] before the fix",
       "status": "done",
       "milestone": 5
+    },
+    {
+      "id": 50,
+      "desc": "Dedicated unit test files closing coverage gaps in useTreeKeyboard, TreeAnnouncer, TreeToggle and formatCount, previously exercised only transitively through HierarchyTree/TreeRow integration tests. useTreeKeyboard's new tests close the null-tabbableId, stale-tabbableId and modifier/non-printable-key branches (invariants 133-139's guard family); the other three add isolated coverage for already-correct, already-implemented rendering behavior.",
+      "tests": [
+        "useTreeKeyboard > moves focus to the next row on ArrowDown",
+        "useTreeKeyboard > does nothing when no row is the current tabbable one",
+        "useTreeKeyboard > does nothing when the tabbable row is no longer in the row list",
+        "useTreeKeyboard > ignores a modifier-held key and never starts the type-ahead reset timer",
+        "useTreeKeyboard > ignores a non-printable key such as Shift with no modifier held",
+        "TreeAnnouncer > is a polite, atomic live region carrying the message",
+        "TreeAnnouncer > stays mounted with an empty message before any toggle happens, rather than being absent",
+        "TreeAnnouncer > is visually hidden rather than shown on screen",
+        "TreeToggle > shows a plus glyph collapsed and a minus glyph expanded",
+        "TreeToggle > is out of the tab sequence and hidden from assistive technology",
+        "TreeToggle > calls onToggle on click",
+        "TreeToggle > prevents a mousedown from ever making it a focus candidate",
+        "formatCount > groups digits per the passed language rather than a hardcoded one",
+        "formatCount > formats a value with no grouping separator unchanged"
+      ],
+      "red_observed": "n/a: case (a): every test in this step adds unit-level coverage for behavior fully implemented and already correct in earlier steps (24, 31-35 for useTreeKeyboard/TreeAnnouncer/TreeToggle; the domain formatting rule from step 29 for formatCount) - no production code changed",
+      "status": "done",
+      "milestone": 5
     }
   ],
   "log": [
@@ -1544,7 +1567,12 @@
     "2026-08-18T12:27:47Z G4 finding Codex-18 dispositioned: fixed: exact loading, empty, and error layout assertions added; same reviewer confirmed resolved",
     "2026-08-18T12:27:47Z G4 finding Codex-19 dispositioned: fixed: responsive indentation capped and 320 px usable text and overflow behavior verified; same reviewer confirmed resolved",
     "2026-08-18T12:27:47Z G4 finding Codex-20 dispositioned: fixed: dedicated 3:1 rail and control contrast tokens registered and tested; same reviewer confirmed resolved",
-    "2026-08-18T12:27:47Z G4 finding Codex-21 dispositioned: fixed: mockup styling limited to unframed hierarchy states and framed shared consumers regression-tested; same reviewer confirmed resolved"
+    "2026-08-18T12:27:47Z G4 finding Codex-21 dispositioned: fixed: mockup styling limited to unframed hierarchy states and framed shared consumers regression-tested; same reviewer confirmed resolved",
+    "2026-08-18T13:18:10Z step 50 added (milestone 5): Dedicated unit test files closing coverage gaps in useTreeKeyboard, TreeAnnouncer, TreeToggle and formatCount, previously exercised only transitively through HierarchyTree/TreeRow integration tests. useTreeKeyboard's new tests close the null-tabbableId, stale-tabbableId and modifier/non-printable-key branches (invariants 133-139's guard family); the other three add isolated coverage for already-correct, already-implemented rendering behavior.",
+    "2026-08-18T13:18:16Z step 50 -> na",
+    "2026-08-18T13:18:54Z step 50 -> green",
+    "2026-08-18T13:18:58Z step 50 -> done",
+    "2026-08-18T13:18:58Z step 50: registered test names as 'Suite > title' rather than 'file.test.tsx::Suite > title', so the CLI could not resolve them to files for G3's tamper-hash baseline (na accepted with a warning, not refused) - process note for future steps, not a functional gap; all 14 tests pass and npm run verify is green."
   ],
   "milestones": [
     {
