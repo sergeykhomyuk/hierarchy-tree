@@ -33,7 +33,7 @@ export const TreeToggle = memo(function TreeToggle({
       aria-hidden="true"
       onMouseDown={preventMouseDownFocus}
       onClick={onToggle}
-      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-toggle border border-border-control text-primary-deep hover:bg-primary-tint-hover"
     >
       {isExpanded ? '−' : '+'}
     </button>

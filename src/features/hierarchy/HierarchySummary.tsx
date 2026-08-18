@@ -18,9 +18,9 @@ export const HierarchySummary = memo(function HierarchySummary({
   const { t, i18n } = useTranslation('hierarchy');
 
   return (
-    <div className="flex items-center justify-between border-b border-border-hairline pb-4">
-      <h1 className="text-lg font-semibold text-ink">{t('page.cardTitle')}</h1>
-      <p className="text-ink-muted">
+    <div className="flex h-[46px] items-center justify-between border-b border-border-hairline px-[18px]">
+      <h1 className="text-sm font-semibold text-ink">{t('page.cardTitle')}</h1>
+      <p className="text-sm text-ink-muted">
         {t('page.summary', {
           people: formatCount(counts.people, i18n.language),
           managers: formatCount(counts.managers, i18n.language),

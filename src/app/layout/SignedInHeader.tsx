@@ -40,7 +40,7 @@ export const SignedInHeader = memo(function SignedInHeader({
   }, [dependencies]);
 
   return (
-    <header className="flex items-center justify-between gap-4 border-b border-border-hairline px-6 py-4">
+    <header className="flex h-[60px] items-center justify-between gap-4 border-b border-border-hairline bg-surface px-[22px]">
       <div>
         <p className="text-sm text-ink-muted">{t('header.eyebrow')}</p>
         <p className="text-lg font-semibold text-ink">

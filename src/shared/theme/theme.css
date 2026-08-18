@@ -23,8 +23,8 @@
   --color-ink-placeholder: #a9a5b8;
   --color-border-hairline: rgb(36 11 78 / 0.08);
   --color-border-field: #8f89a3;
-  --color-border-indent-rail: #eae6f3;
-  --color-border-control: #dcd7ea;
+  --color-border-indent-rail: #8f89a3;
+  --color-border-control: #8f89a3;
   --color-danger: #c81e4a;
   --color-danger-surface: #fde9ee;
   --color-focus-ring: #5b15c4;
@@ -69,8 +69,8 @@
     --color-ink-faint: #847f95;
     --color-ink-placeholder: #66627c;
     --color-border-hairline: rgb(255 255 255 / 0.08);
-    --color-border-indent-rail: #2a2338;
-    --color-border-control: #3a3050;
+    --color-border-indent-rail: #8f89a3;
+    --color-border-control: #8f89a3;
     --color-danger: #ff6b8f;
     --color-danger-surface: #3a1420;
     --color-focus-ring: #9b7bf5;

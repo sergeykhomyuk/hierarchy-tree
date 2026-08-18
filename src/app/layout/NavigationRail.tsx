@@ -15,7 +15,19 @@ export const NavigationRail = memo(function NavigationRail() {
     <div
       aria-hidden="true"
       data-testid="navigation-rail"
-      className="sticky top-0 h-screen w-16 shrink-0 border-e border-border-hairline"
-    />
+      className="sticky top-0 h-screen w-[60px] shrink-0 bg-nav-rail"
+    >
+      <div className="flex h-[60px] items-center justify-center bg-primary">
+        <span className="h-4 w-4 rounded-[5px] bg-on-primary" />
+      </div>
+      <div className="flex flex-col items-center gap-[18px] pt-[22px]">
+        {[0, 1, 2, 3].map((item) => (
+          <span
+            key={item}
+            className="h-[26px] w-[26px] rounded-full bg-white/10 first:bg-white/15"
+          />
+        ))}
+      </div>
+    </div>
   );
 });

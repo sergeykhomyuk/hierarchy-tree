@@ -72,4 +72,33 @@ describe('ErrorState', () => {
       /rounded-card|border-border-hairline/,
     );
   });
+
+  it('keeps hierarchy error-state typography out of the framed kit presentation', () => {
+    const { rerender } = render(
+      <ErrorState
+        title="Something went wrong"
+        message="Try again later"
+        correlationId="abc123"
+        action={{ label: 'Retry', onActivate: () => {} }}
+      />,
+    );
+
+    expect(screen.getByRole('heading')).not.toHaveClass('text-[17px]');
+    expect(screen.getByText('abc123')).not.toHaveClass('bg-surface-hover');
+    expect(screen.getByRole('button')).not.toHaveClass('h-[38px]');
+
+    rerender(
+      <ErrorState
+        title="Something went wrong"
+        message="Try again later"
+        correlationId="abc123"
+        action={{ label: 'Retry', onActivate: () => {} }}
+        framed={false}
+      />,
+    );
+
+    expect(screen.getByRole('heading')).toHaveClass('text-[17px]');
+    expect(screen.getByText('abc123')).toHaveClass('bg-surface-hover');
+    expect(screen.getByRole('button')).toHaveClass('h-[38px]');
+  });
 });

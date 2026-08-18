@@ -74,7 +74,7 @@ export const HomeRoute = memo(function HomeRoute() {
     // merely happen to match (invariant 64).
     <div
       data-testid="hierarchy-card-frame"
-      className="rounded-card border border-border-hairline bg-surface p-6"
+      className="h-[calc(100vh-100px)] overflow-hidden rounded-card border border-border-hairline bg-surface shadow-sm"
     >
       <Suspense fallback={<HierarchySkeleton />}>
         <HierarchyPage

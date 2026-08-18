@@ -4,6 +4,7 @@ import {
   submitSignInForm,
 } from './support/deferredUserMock';
 import {
+  DEEPEST_PERSON_NAME,
   installHierarchyUserMock,
   installPopulatedHierarchyMock,
   populatedHierarchyPayload,
@@ -17,6 +18,111 @@ import { installSignInApiMock, signIn } from './support/signIn';
 // (TECH.md's own note: no other e2e mock in this suite produces the
 // Data state at all, only Error or Empty).
 test.describe('hierarchy layout', () => {
+  test("the loading hierarchy matches mockup 1f's card header and row rhythm", async ({
+    page,
+    baseURL,
+  }) => {
+    await page.setViewportSize({ width: 960, height: 600 });
+    await installRouteMocks(page, baseURL ?? '');
+    await installDeferredUserMock(page);
+    await submitSignInForm(page);
+
+    const title = page.getByRole('heading', { name: 'page.cardTitle' });
+    await expect(title).toBeVisible();
+    expect(await title.locator('..').boundingBox()).toEqual({
+      x: 83,
+      y: 79,
+      width: 854,
+      height: 46,
+    });
+    expect((await title.boundingBox())?.x).toBe(101);
+  });
+
+  test("the empty hierarchy matches mockup 1g's centered card state", async ({
+    page,
+    baseURL,
+  }) => {
+    await page.setViewportSize({ width: 960, height: 600 });
+    await installRouteMocks(page, baseURL ?? '');
+    await installHierarchyUserMock(page, { status: 200, body: [] });
+    await signIn(page);
+
+    const state = page.getByText('page.emptyHeading').locator('..');
+    await expect(state).toHaveCSS('display', 'flex');
+    await expect(state).toHaveCSS('align-items', 'center');
+    await expect(state).toHaveCSS('justify-content', 'center');
+    await expect(state).toHaveCSS('gap', '14px');
+  });
+
+  test("the error hierarchy matches mockup 1h's centered card state", async ({
+    page,
+    baseURL,
+  }) => {
+    await page.setViewportSize({ width: 960, height: 600 });
+    await installRouteMocks(page, baseURL ?? '');
+    await installSignInApiMock(page);
+    await signIn(page);
+
+    const state = page.getByRole('alert');
+    await expect(state).toHaveCSS('display', 'flex');
+    await expect(state).toHaveCSS('align-items', 'center');
+    await expect(state).toHaveCSS('justify-content', 'center');
+    await expect(state).toHaveCSS('gap', '14px');
+  });
+
+  test("the loaded hierarchy matches mockup 1e's shell and row rhythm", async ({
+    page,
+    baseURL,
+  }) => {
+    await page.setViewportSize({ width: 960, height: 600 });
+    await installRouteMocks(page, baseURL ?? '');
+    await installPopulatedHierarchyMock(page);
+    await signIn(page);
+    await expect(page.getByRole('tree')).toBeVisible();
+
+    await expect(page.getByTestId('navigation-rail')).toHaveCSS(
+      'background-color',
+      'rgb(36, 11, 78)',
+    );
+    expect(await page.getByTestId('navigation-rail').boundingBox()).toEqual({
+      x: 0,
+      y: 0,
+      width: 60,
+      height: 600,
+    });
+    expect(await page.locator('header').boundingBox()).toEqual({
+      x: 60,
+      y: 0,
+      width: 900,
+      height: 60,
+    });
+    expect(
+      await page.getByTestId('hierarchy-card-frame').boundingBox(),
+    ).toEqual({
+      x: 82,
+      y: 78,
+      width: 856,
+      height: 500,
+    });
+
+    const firstRow = page.getByRole('treeitem', {
+      name: /Ronnen Gurevitch/,
+    });
+    expect((await firstRow.boundingBox())?.height).toBe(52);
+
+    await page
+      .getByRole('treeitem', { name: /Tal Bergman/ })
+      .locator('button')
+      .click();
+    const signedInRow = page.getByRole('treeitem', {
+      name: new RegExp(`${DEEPEST_PERSON_NAME}.*page.youMarkerLabel`),
+    });
+    await expect(signedInRow).toHaveCSS(
+      'background-color',
+      'rgb(247, 243, 254)',
+    );
+  });
+
   test('the header, nav rail and card frame have identical bounding boxes before and after the data resolves', async ({
     page,
     baseURL,
@@ -53,6 +159,7 @@ test.describe('hierarchy layout', () => {
     page,
     baseURL,
   }) => {
+    await page.setViewportSize({ width: 960, height: 360 });
     await installRouteMocks(page, baseURL ?? '');
     await installPopulatedHierarchyMock(page);
     await signIn(page);
@@ -142,6 +249,32 @@ test.describe('hierarchy layout', () => {
         expect(scrollHeight).toBeLessThanOrEqual(clientHeight);
       }
     }
+  });
+
+  test('the deepest manager retains usable text space without horizontal overflow at 320 px', async ({
+    page,
+    baseURL,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await installRouteMocks(page, baseURL ?? '');
+    await installPopulatedHierarchyMock(page);
+    await signIn(page);
+
+    const tree = page.getByRole('tree');
+    const deepestManagerRow = page.getByRole('treeitem', {
+      name: /Tal Bergman/,
+    });
+    const name = deepestManagerRow.locator('p').first();
+    await expect(deepestManagerRow).toBeVisible();
+
+    expect(
+      await tree.evaluate((element) => element.scrollWidth),
+    ).toBeLessThanOrEqual(
+      await tree.evaluate((element) => element.clientWidth),
+    );
+    expect(
+      await name.evaluate((element) => element.clientWidth),
+    ).toBeGreaterThan(24);
   });
 
   // Not one of the three layout claims above - screenshot evidence for

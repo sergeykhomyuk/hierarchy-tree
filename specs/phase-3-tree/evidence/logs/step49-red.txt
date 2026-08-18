@@ -1,0 +1,50 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/shared/ui/EmptyState.test.tsx (5 tests | 1 failed) 63ms
+     × keeps hierarchy empty-state typography out of the framed kit presentation 5ms
+ ❯ |ui| src/shared/ui/ErrorState.test.tsx (5 tests | 1 failed) 68ms
+     × keeps hierarchy error-state typography out of the framed kit presentation 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/shared/ui/EmptyState.test.tsx > EmptyState > keeps hierarchy empty-state typography out of the framed kit presentation
+Error: expect(element).not.toHaveClass("text-[17px]")
+
+Expected the element not to have class:
+  text-[17px]
+Received:
+  text-[17px] font-semibold text-ink
+ ❯ src/shared/ui/EmptyState.test.tsx:73:45
+     71|     );
+     72|
+     73|     expect(screen.getByRole('heading')).not.toHaveClass('text-[17px]');
+       |                                             ^
+     74|     expect(screen.getByRole('button')).not.toHaveClass('h-[38px]');
+     75|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/shared/ui/ErrorState.test.tsx > ErrorState > keeps hierarchy error-state typography out of the framed kit presentation
+Error: expect(element).not.toHaveClass("text-[17px]")
+
+Expected the element not to have class:
+  text-[17px]
+Received:
+  text-[17px] font-semibold text-ink
+ ❯ src/shared/ui/ErrorState.test.tsx:86:45
+     84|     );
+     85|
+     86|     expect(screen.getByRole('heading')).not.toHaveClass('text-[17px]');
+       |                                             ^
+     87|     expect(screen.getByText('abc123')).not.toHaveClass('bg-surface-hov…
+     88|     expect(screen.getByRole('button')).not.toHaveClass('h-[38px]');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 8 passed (10)
+   Start at  13:23:15
+   Duration  658ms (transform 57ms, setup 240ms, import 44ms, tests 131ms, environment 774ms)
+

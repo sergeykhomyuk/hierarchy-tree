@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import type { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '@shared/ui';
@@ -9,7 +9,18 @@ import type { PersonIdentifier } from './domain/personIdentifier';
 import { formatCount } from './formatCount';
 import { TreeToggle } from './TreeToggle';
 
-const INDENT_REM_PER_DEPTH = 2;
+const INDENT_PIXELS_PER_DEPTH = 41;
+const INDENT_RAIL_OFFSET_PIXELS = 29;
+const NARROW_INDENT_PIXELS_PER_DEPTH = 8;
+const NARROW_INDENT_RAIL_OFFSET_PIXELS = 6;
+
+function responsiveIndent(depth: number): string {
+  return `clamp(${depth * NARROW_INDENT_PIXELS_PER_DEPTH}px, calc(${depth * 5}vw - ${depth * 8}px), ${depth * INDENT_PIXELS_PER_DEPTH}px)`;
+}
+
+function responsiveRailOffset(level: number): string {
+  return `calc(${responsiveIndent(level)} + clamp(${NARROW_INDENT_RAIL_OFFSET_PIXELS}px, calc(3.5vw - 5px), ${INDENT_RAIL_OFFSET_PIXELS}px))`;
+}
 
 export type TreeRowProps = {
   personId: PersonIdentifier;
@@ -81,6 +92,11 @@ export const TreeRow = memo(function TreeRow({
     isSignedInUser,
     t('page.youMarkerLabel'),
   );
+  const indentRailOffsets = useMemo(
+    () =>
+      Array.from({ length: depth }, (_, level) => responsiveRailOffset(level)),
+    [depth],
+  );
   const handleImageError = useCallback(() => {
     onPhotoError(personId);
   }, [onPhotoError, personId]);
@@ -114,15 +130,26 @@ export const TreeRow = memo(function TreeRow({
       // declares itself unselected rather than omitting a required
       // attribute.
       aria-selected="false"
-      className={`flex items-center gap-3 py-3 ${depth > 0 ? 'border-s border-border-hairline' : ''}`}
-      style={{ paddingInlineStart: `${depth * INDENT_REM_PER_DEPTH}rem` }}
+      className={`relative flex items-center gap-1 rounded-control py-[9px] pe-2 text-sm hover:bg-surface-hover sm:gap-[11px] ${isSignedInUser ? 'bg-surface-selected' : ''}`}
+      style={{
+        paddingInlineStart: `calc(8px + ${responsiveIndent(depth)})`,
+      }}
     >
+      {indentRailOffsets.map((offset) => (
+        <span
+          key={offset}
+          aria-hidden="true"
+          data-testid="indent-rail"
+          className="pointer-events-none absolute inset-y-0 w-px bg-border-indent-rail"
+          style={{ insetInlineStart: offset }}
+        />
+      ))}
       {hasChildren ? (
         <TreeToggle isExpanded={isExpanded} onToggle={handleToggle} />
       ) : (
         <span
           aria-hidden="true"
-          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+          className="flex h-5 w-5 shrink-0 items-center justify-center text-sm font-semibold text-ink-placeholder"
         >
           −
         </span>
@@ -135,7 +162,7 @@ export const TreeRow = memo(function TreeRow({
         onImageError={handleImageError}
       />
       <div className="min-w-0 flex-1">
-        <p className="flex items-center gap-2 truncate font-semibold text-ink">
+        <p className="flex items-center gap-2 truncate text-[13.5px] leading-[17px] font-semibold text-ink">
           {displayName}
           {isSignedInUser && (
             <span
@@ -146,10 +173,12 @@ export const TreeRow = memo(function TreeRow({
             </span>
           )}
         </p>
-        <p className="truncate text-ink-muted">{email}</p>
+        <p className="truncate text-xs leading-[17px] text-ink-muted-soft">
+          {email}
+        </p>
       </div>
       {hasChildren && (
-        <p className="shrink-0 text-ink-muted">
+        <p className="max-w-[35%] shrink-0 truncate text-[11px] font-semibold text-ink-muted">
           {formatCount(reportCount, i18n.language)}{' '}
           {t(isExpanded ? 'page.reports' : 'page.hidden', {
             count: reportCount,

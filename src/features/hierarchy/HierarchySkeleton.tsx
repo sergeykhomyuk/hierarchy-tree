@@ -10,12 +10,12 @@ import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
 // 61) via role="status"'s implicit aria-live="polite" - the same
 // technique SignedInNameSkeleton.tsx uses for the header's own skeleton.
 const SKELETON_ROW_INDENT_CLASS = [
-  'ps-0',
-  'ps-8',
-  'ps-16',
-  'ps-16',
-  'ps-8',
-  'ps-0',
+  'ps-2',
+  'ps-[49px]',
+  'ps-[90px]',
+  'ps-[90px]',
+  'ps-[49px]',
+  'ps-2',
 ];
 
 export const HierarchySkeleton = memo(function HierarchySkeleton() {
@@ -23,8 +23,8 @@ export const HierarchySkeleton = memo(function HierarchySkeleton() {
 
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-border-hairline pb-4">
-        <h1 className="text-lg font-semibold text-ink">
+      <div className="flex h-[46px] items-center justify-between border-b border-border-hairline px-[18px]">
+        <h1 className="text-sm font-semibold text-ink">
           {t('page.cardTitle')}
         </h1>
         <span
@@ -48,8 +48,9 @@ export const HierarchySkeleton = memo(function HierarchySkeleton() {
         {SKELETON_ROW_INDENT_CLASS.map((indentClass, index) => (
           <div
             key={index}
-            className={`flex items-center gap-3 py-3 ${indentClass}`}
+            className={`flex items-center gap-[11px] py-[9px] pe-2 ${indentClass}`}
           >
+            <span className="h-5 w-5 shrink-0 rounded-toggle bg-primary-tint" />
             <Skeleton
               shape="circle"
               width={SkeletonSize.avatar}

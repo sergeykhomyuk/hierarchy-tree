@@ -146,4 +146,21 @@ describe('contrastPairs', () => {
     ).toBeDefined();
     expect(focusPair?.minimumRatio).toBeGreaterThanOrEqual(3);
   });
+
+  it('registers the hierarchy indent rail and toggle boundary at the non-text contrast floor', () => {
+    expect(contrastPairs).toEqual(
+      expect.arrayContaining([
+        {
+          foreground: 'border-indent-rail',
+          background: 'surface',
+          minimumRatio: 3,
+        },
+        {
+          foreground: 'border-control',
+          background: 'surface',
+          minimumRatio: 3,
+        },
+      ]),
+    );
+  });
 });

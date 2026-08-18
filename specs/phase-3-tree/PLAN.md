@@ -216,6 +216,20 @@ states, screenshots per state.
     scroll held across a toggle (113), and one line at 320/768/1280px (104). Plus the four
     states against the mockups and both themes at the contrast floor. Invariants 64, 104, 113,
     179-182.
+30a. **Loaded-state alignment correction requested during implementation** - compare the
+    rendered 960x600 shell and row rhythm directly with mockup `1e`, then correct the
+    authenticated-shell composition, canvas/card insets, decorative rail, row density,
+    indent rails and signed-in-row treatment without changing tree behavior. Guarded by
+    Playwright test `the loaded hierarchy matches mockup 1e's shell and row rhythm`.
+30b. **Non-data-state alignment review fix** - assert the loading header geometry and the
+    centered empty/error treatment against mockups `1f`, `1g` and `1h` in Playwright.
+30c. **Narrow-width review fix** - assert that the deepest manager retains usable text
+    width and the tree has no horizontal overflow at 320px, not merely that text does not
+    wrap.
+30d. **Graphical-object contrast review fix** - register the indent-rail and toggle-border
+    token pairs at 3:1 in both themes and make the pair matrix fail for faint tokens.
+30e. **Shared-kit scope review fix** - keep mockup-specific unframed typography, spacing,
+    chip and button classes out of the framed `EmptyState` and `ErrorState` presentation.
 
 **Boundary**: suite green; e2e over all four states, a photo failing to initials, retry with a
 fresh correlation id, refresh/shared-link/back/forward, and the exact telemetry buffer after a

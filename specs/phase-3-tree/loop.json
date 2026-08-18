@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T10:00:29Z",
+  "updated": "2026-08-18T12:27:47Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -263,8 +263,8 @@
     "G2": {
       "status": "pending",
       "attempts": 0,
-      "steps_total": 44,
-      "steps_done": 37
+      "steps_total": 49,
+      "steps_done": 42
     },
     "G3": {
       "status": "pending",
@@ -351,6 +351,36 @@
           "desc": "non-blocking - invariant 84's positive you-marker match (row.person.id === signedInUserId) is only unit-tested via the negative (no-match) case in HierarchyTree.test.tsx; the positive case is only exercised by passing isSignedInUser directly as a TreeRow prop, bypassing the real comparison. Separately, e2e/support/hierarchyFixture.ts's own comment claims its signed-in user carries the you marker on the deepest row, but the secret mock returns String(DEEPEST_PERSON_ID) (a JSON string '7') while person.id is a branded number, so 7 === '7' is always false and the marker never actually renders in that fixture - the comment is inaccurate.",
           "blocking": false,
           "disposition": "fixed"
+        },
+        "Claude-28": {
+          "desc": "useTreeKeyboard's returned onKeyDown depended directly on rows/accessibleNames/tabbableId (all fresh/changing nearly every render), churning its identity on almost every keystroke and silently defeating every TreeRow's memo() bailout - a regression of invariant 91, since the identical hazard handleRowToggle already guards against via rowsRef was not applied when the keyboard hook was wired in.",
+          "blocking": true,
+          "disposition": "fixed",
+          "round": "milestone-4"
+        },
+        "Codex-18": {
+          "desc": "Loading retains the old unpadded header treatment, while unframed empty/error content has no centering, spacing, or full-height layout; screenshot-only tests assert no comparison, so the four states do not satisfy invariants 179 and 182.",
+          "blocking": true,
+          "disposition": "fixed: exact loading, empty, and error layout assertions added; same reviewer confirmed resolved",
+          "round": "milestone-5"
+        },
+        "Codex-19": {
+          "desc": "At 320px, fixed indentation plus toggle/avatar/gaps/count can force the text area to zero and produce horizontal overflow; the existing test checks only no wrapping, so invariant 104 is not honestly discriminated.",
+          "blocking": true,
+          "disposition": "fixed: responsive indentation capped and 320 px usable text and overflow behavior verified; same reviewer confirmed resolved",
+          "round": "milestone-5"
+        },
+        "Codex-20": {
+          "desc": "The indent-rail and toggle-border tokens miss invariant 180's contrast floor and are absent from the contrast-pair test matrix.",
+          "blocking": true,
+          "disposition": "fixed: dedicated 3:1 rail and control contrast tokens registered and tested; same reviewer confirmed resolved",
+          "round": "milestone-5"
+        },
+        "Codex-21": {
+          "desc": "Mockup-specific typography, chip and button styling was applied unconditionally to framed and unframed EmptyState/ErrorState variants, changing shared framed consumers outside hierarchy scope; hierarchy tests covered only framed=false.",
+          "blocking": true,
+          "disposition": "fixed: mockup styling limited to unframed hierarchy states and framed shared consumers regression-tested; same reviewer confirmed resolved",
+          "round": "milestone-5"
         }
       }
     },
@@ -945,6 +975,59 @@
       "red_observed": "n/a: case (a): duplicate step created by mistake immediately after step 31 (identical desc, same milestone, same exact tests) already covered this scope - no new coverage, retiring this duplicate entry rather than leaving it pending",
       "status": "done",
       "milestone": 4
+    },
+    {
+      "id": 45,
+      "desc": "Align the loaded hierarchy shell, card and rows with mockup 1e at 960x600, including the decorative rail and signed-in-row treatment, without changing tree behavior.",
+      "tests": [
+        "the loaded hierarchy matches mockup 1e's shell and row rhythm"
+      ],
+      "red_observed": "2026-08-18T11:47:29Z logs/step45-red.txt: Playwright received a transparent navigation rail instead of mockup 1e's rgb(36, 11, 78), before reaching the geometry and selected-row assertions",
+      "status": "done",
+      "milestone": 5
+    },
+    {
+      "id": 46,
+      "desc": "Align loading, empty and error hierarchy states with mockups 1f, 1g and 1h.",
+      "tests": [
+        "the loading hierarchy matches mockup 1f's card header and row rhythm",
+        "the empty hierarchy matches mockup 1g's centered card state",
+        "the error hierarchy matches mockup 1h's centered card state"
+      ],
+      "red_observed": "2026-08-18T12:15:33Z logs/step46-47-red.txt: loading header was 45px and unpadded; empty/error roots computed display:block",
+      "status": "done",
+      "milestone": 5
+    },
+    {
+      "id": 47,
+      "desc": "Keep the deepest manager usable and prevent horizontal tree overflow at 320px.",
+      "tests": [
+        "the deepest manager retains usable text space without horizontal overflow at 320 px"
+      ],
+      "red_observed": "2026-08-18T12:15:34Z logs/step46-47-red.txt: 320px tree scrollWidth 284 exceeded clientWidth 214",
+      "status": "done",
+      "milestone": 5
+    },
+    {
+      "id": 48,
+      "desc": "Enforce the non-text contrast floor for the indent rail and toggle boundary in both themes.",
+      "tests": [
+        "registers the hierarchy indent rail and toggle boundary at the non-text contrast floor"
+      ],
+      "red_observed": "2026-08-18T12:15:34Z logs/step48-red.txt: registered pair assertion failed for both indent rail and toggle boundary",
+      "status": "done",
+      "milestone": 5
+    },
+    {
+      "id": 49,
+      "desc": "Keep hierarchy-specific unframed state styling out of framed shared kit consumers.",
+      "tests": [
+        "keeps hierarchy empty-state typography out of the framed kit presentation",
+        "keeps hierarchy error-state typography out of the framed kit presentation"
+      ],
+      "red_observed": "2026-08-18T12:23:26Z logs/step49-red.txt: both framed variants incorrectly carried text-[17px] before the fix",
+      "status": "done",
+      "milestone": 5
     }
   ],
   "log": [
@@ -1399,7 +1482,69 @@
     "2026-08-18T10:00:04Z Gap-5 fix: added component-level axe checks for Skeleton (HierarchySkeleton.test.tsx) and Empty (HierarchyPage.test.tsx, rendered inside a real <main> landmark) states; extended the two existing e2e header-pending/cannot-resolve tests with explicit assertions proving they already exercise the hierarchy Loading and Empty states (installDeferredUserMock shares one /users.json response between the header and hierarchy repository), so all four states now get both component and e2e axe coverage.",
     "2026-08-18T10:00:22Z step 44 -> green",
     "2026-08-18T10:00:23Z step 44 -> done",
-    "2026-08-18T10:00:29Z milestone 4 boundary verified: Fresh agentic-loop:loop-verifier ran full npm run verify + e2e (chromium, 44/44) and checked invariants 130-152 plus the keyboard path of 114/115 invariant-by-invariant against source. 2 gaps: Gap-4 (npm run verify failing at test:coverage - rowNavigation.ts below the domain 100% floor) fixed by switching to elementAt() for in-bounds accesses plus 6 new tests; Gap-5 (invariant 151 - Skeleton and Empty states never axe-scanned) fixed with new component-level axe checks and explicit e2e assertions proving the existing header-pending/cannot-resolve tests already exercise those two hierarchy states. Re-verified after fixes: npm run verify exits 0, full e2e 44/44 green."
+    "2026-08-18T10:00:29Z milestone 4 boundary verified: Fresh agentic-loop:loop-verifier ran full npm run verify + e2e (chromium, 44/44) and checked invariants 130-152 plus the keyboard path of 114/115 invariant-by-invariant against source. 2 gaps: Gap-4 (npm run verify failing at test:coverage - rowNavigation.ts below the domain 100% floor) fixed by switching to elementAt() for in-bounds accesses plus 6 new tests; Gap-5 (invariant 151 - Skeleton and Empty states never axe-scanned) fixed with new component-level axe checks and explicit e2e assertions proving the existing header-pending/cannot-resolve tests already exercise those two hierarchy states. Re-verified after fixes: npm run verify exits 0, full e2e 44/44 green.",
+    "2026-08-18T10:16:30Z G4 finding Claude-28 recorded (blocking) [round: milestone-4]: useTreeKeyboard's returned onKeyDown depended directly on rows/accessibleNames/tabbableId (all fresh/changing nearly every render), churning its identity on almost every keystroke and silently defeating every TreeRow's memo() bailout - a regression of invariant 91, since the identical hazard handleRowToggle already guards against via rowsRef was not applied when the keyboard hook was wired in.",
+    "2026-08-18T10:16:30Z Claude-28 fixed: useTreeKeyboard now reads rows/accessibleNames/tabbableId via refs synced in a dependency-less useEffect rather than as direct useCallback deps, so the handler identity depends only on the stable callback props (onFocusRow/onToggleRow/onExpandSiblings/clock/language). Added HierarchyTree.test.tsx regression test 'a keyboard-driven toggle leaves a row under a different root unrendered' - verified via git stash to fail against the pre-fix code. npm run verify exits 0; full e2e suite (44 tests) passes.",
+    "2026-08-18T10:16:30Z G4 finding Claude-28 dispositioned: fixed",
+    "2026-08-18T10:16:33Z milestone 4 reviewed: Fresh-context Claude review found one blocking defect (Claude-28: onKeyDown identity churn defeating TreeRow memoization, invariant 91 regression), fixed and verified with a regression test proven via git-stash to catch it. npm run verify exits 0; full e2e suite (44 tests) passes.",
+    "2026-08-18T11:46:52Z step 45 added (milestone 5): Align the loaded hierarchy shell, card and rows with mockup 1e at 960x600, including the decorative rail and signed-in-row treatment, without changing tree behavior.",
+    "2026-08-18T11:47:29Z step 45 -> red",
+    "2026-08-18T11:47:29Z evidence recorded: evidence/logs/step45-red.txt (97ca7aaca854) - Failing Playwright visual regression for mockup 1e alignment",
+    "2026-08-18T11:49:56Z evidence recorded: evidence/design-compare/loaded-mockup-1e.png (1a5f943d7dc8) - Reference mockup 1e for loaded hierarchy comparison",
+    "2026-08-18T11:49:57Z evidence recorded: evidence/design-compare/loaded-implementation-aligned.png (761578ccfbb8) - Playwright implementation screenshot after mockup 1e alignment",
+    "2026-08-18T11:52:49Z evidence recorded: evidence/logs/step45-e2e-green.txt (ea36744cfc0b) - Full Chromium Playwright suite after alignment: 45 passed",
+    "2026-08-18T11:52:49Z evidence recorded: evidence/logs/step45-verify-green.txt (0087e316106c) - Full npm run verify after alignment: green",
+    "2026-08-18T11:52:49Z user correction: align the tree UI with specs/hierarchy-tree-mockups.html using Playwright; added step 45 and treated mockup 1e shell geometry, row rhythm, continuous indent rails and selected-row treatment as binding visual evidence",
+    "2026-08-18T11:52:49Z step 45 -> green",
+    "2026-08-18T11:52:49Z step 45 -> done",
+    "2026-08-18T11:53:16Z evidence recorded: evidence/reviews/alignment-step45-diff.txt (8a002dc9cac8) - Exact step 45 diff supplied to fresh reviewers",
+    "2026-08-18T11:53:50Z claude unavailable for step 45 review: policy-blocked transport: This action was rejected due to unacceptable risk. Reason: This sends the repository diff and potentially sensitive source context to an external Claude service, but the user did not authorize that specific destination or payload. The agent must not attempt to achieve the same outcome via workaround, indirect execution, or policy circumvention. Proceed only with a materially safer alternative, or if the user explicitly approves the action after being informed of the risk. Otherwise, stop and request user input.",
+    "2026-08-18T11:57:17Z evidence recorded: evidence/reviews/alignment-step45-codex.md (a5e26a51c90e) - Fresh Codex review of alignment correction: 3 blocking findings",
+    "2026-08-18T11:57:17Z G4 finding Codex-18 recorded (blocking) [round: milestone-5]: Loading retains the old unpadded header treatment, while unframed empty/error content has no centering, spacing, or full-height layout; screenshot-only tests assert no comparison, so the four states do not satisfy invariants 179 and 182.",
+    "2026-08-18T11:57:17Z G4 finding Codex-19 recorded (blocking) [round: milestone-5]: At 320px, fixed indentation plus toggle/avatar/gaps/count can force the text area to zero and produce horizontal overflow; the existing test checks only no wrapping, so invariant 104 is not honestly discriminated.",
+    "2026-08-18T11:57:17Z G4 finding Codex-20 recorded (blocking) [round: milestone-5]: The indent-rail and toggle-border tokens miss invariant 180's contrast floor and are absent from the contrast-pair test matrix.",
+    "2026-08-18T12:14:51Z step 46 added (milestone 5): Align loading, empty and error hierarchy states with mockups 1f, 1g and 1h.",
+    "2026-08-18T12:14:52Z step 47 added (milestone 5): Keep the deepest manager usable and prevent horizontal tree overflow at 320px.",
+    "2026-08-18T12:14:52Z step 48 added (milestone 5): Enforce the non-text contrast floor for the indent rail and toggle boundary in both themes.",
+    "2026-08-18T12:15:33Z evidence recorded: evidence/logs/step46-47-red.txt (515c65fd3d2d) - Playwright red: all three non-data states mismatched and 320px tree overflowed 284px into 214px",
+    "2026-08-18T12:15:33Z evidence recorded: evidence/logs/step48-red.txt (b45c9e4caaaa) - Vitest red: hierarchy graphical contrast pairs absent",
+    "2026-08-18T12:15:33Z step 46 -> red",
+    "2026-08-18T12:15:34Z step 47 -> red",
+    "2026-08-18T12:15:34Z step 48 -> red",
+    "2026-08-18T12:17:58Z evidence recorded: evidence/design-compare/loading-mockup-1f.png (c7ac4f5e62e8) - Reference mockup 1f",
+    "2026-08-18T12:17:58Z evidence recorded: evidence/design-compare/empty-mockup-1g.png (c132a7737943) - Reference mockup 1g",
+    "2026-08-18T12:17:58Z evidence recorded: evidence/design-compare/error-mockup-1h.png (af96ccdec81f) - Reference mockup 1h",
+    "2026-08-18T12:17:58Z evidence recorded: evidence/design-compare/loaded-implementation-reviewed.png (c38e31b97953) - Final reviewed loaded-state Playwright screenshot",
+    "2026-08-18T12:17:59Z evidence recorded: evidence/design-compare/loading-implementation-reviewed.png (89cd8c83aec2) - Final reviewed loading-state Playwright screenshot",
+    "2026-08-18T12:17:59Z evidence recorded: evidence/design-compare/empty-implementation-reviewed.png (d66c3c3d86b1) - Final reviewed empty-state Playwright screenshot",
+    "2026-08-18T12:17:59Z evidence recorded: evidence/design-compare/error-implementation-reviewed.png (36f80621dc75) - Final reviewed error-state Playwright screenshot",
+    "2026-08-18T12:20:23Z evidence recorded: evidence/reviews/alignment-step45-fixes-diff.txt (8f7c1f928456) - Exact post-fix diff supplied to the raising Codex reviewer",
+    "2026-08-18T12:20:23Z evidence recorded: evidence/logs/step46-48-e2e-green.txt (193306563d89) - Full Chromium suite after review fixes: 49 passed",
+    "2026-08-18T12:20:24Z evidence recorded: evidence/logs/step46-48-verify-green.txt (e15c9cd24f21) - Full npm run verify after review fixes: 615 tests and all budgets green",
+    "2026-08-18T12:20:24Z step 46 -> green",
+    "2026-08-18T12:20:24Z step 46 -> done",
+    "2026-08-18T12:20:24Z step 47 -> green",
+    "2026-08-18T12:20:24Z step 47 -> done",
+    "2026-08-18T12:20:24Z step 48 -> green",
+    "2026-08-18T12:20:24Z step 48 -> done",
+    "2026-08-18T12:23:00Z step 49 added (milestone 5): Keep hierarchy-specific unframed state styling out of framed shared kit consumers.",
+    "2026-08-18T12:23:00Z approved-change: src/shared/ui/EmptyState.test.tsx and src/shared/ui/ErrorState.test.tsx - user requested mockup alignment and the fresh review required a regression check proving framed shared-kit consumers remain unchanged",
+    "2026-08-18T12:23:09Z approved-change: src/shared/ui/EmptyState.test.tsx - user's explicit mockup-alignment request plus Codex-21 requires framed-versus-unframed regression coverage",
+    "2026-08-18T12:23:09Z approved-change: src/shared/ui/ErrorState.test.tsx - user's explicit mockup-alignment request plus Codex-21 requires framed-versus-unframed regression coverage",
+    "2026-08-18T12:23:10Z step 17 hash rebased (src/shared/ui/ErrorState.test.tsx, src/shared/ui/EmptyState.test.tsx): User's explicit mockup-alignment request plus Codex-21 review fix required framed-versus-unframed regression coverage",
+    "2026-08-18T12:23:25Z G4 finding Codex-21 recorded (blocking) [round: milestone-5]: Mockup-specific typography, chip and button styling was applied unconditionally to framed and unframed EmptyState/ErrorState variants, changing shared framed consumers outside hierarchy scope; hierarchy tests covered only framed=false.",
+    "2026-08-18T12:23:25Z evidence recorded: evidence/logs/step49-red.txt (d400323baf4c) - Vitest red: framed EmptyState and ErrorState inherited hierarchy-only classes",
+    "2026-08-18T12:23:26Z step 49 -> red",
+    "2026-08-18T12:27:38Z evidence recorded: evidence/logs/step49-verify-green.txt (ab9f5b61a670) - npm run verify after shared feedback regression fix: 617 tests, coverage, build, and budgets green",
+    "2026-08-18T12:27:38Z evidence recorded: evidence/logs/step49-e2e-green.txt (0f64ed3d2220) - full Chromium Playwright suite after final alignment fixes: 49 passed",
+    "2026-08-18T12:27:38Z evidence recorded: evidence/reviews/alignment-step45-confirmation-codex.md (047f3852e18b) - same reviewer confirms Codex-18 through Codex-20 resolved and identifies Codex-21",
+    "2026-08-18T12:27:38Z evidence recorded: evidence/reviews/alignment-step49-confirmation-codex.md (78e44bd25792) - same reviewer confirms Codex-21 resolved with no new blocker",
+    "2026-08-18T12:27:38Z step 49 -> green",
+    "2026-08-18T12:27:38Z step 49 -> done",
+    "2026-08-18T12:27:47Z G4 finding Codex-18 dispositioned: fixed: exact loading, empty, and error layout assertions added; same reviewer confirmed resolved",
+    "2026-08-18T12:27:47Z G4 finding Codex-19 dispositioned: fixed: responsive indentation capped and 320 px usable text and overflow behavior verified; same reviewer confirmed resolved",
+    "2026-08-18T12:27:47Z G4 finding Codex-20 dispositioned: fixed: dedicated 3:1 rail and control contrast tokens registered and tested; same reviewer confirmed resolved",
+    "2026-08-18T12:27:47Z G4 finding Codex-21 dispositioned: fixed: mockup styling limited to unframed hierarchy states and framed shared consumers regression-tested; same reviewer confirmed resolved"
   ],
   "milestones": [
     {
@@ -1424,7 +1569,7 @@
       "id": 4,
       "title": "The keyboard and the ARIA contract",
       "verified": "2026-08-18T10:00:29Z Fresh agentic-loop:loop-verifier ran full npm run verify + e2e (chromium, 44/44) and checked invariants 130-152 plus the keyboard path of 114/115 invariant-by-invariant against source. 2 gaps: Gap-4 (npm run verify failing at test:coverage - rowNavigation.ts below the domain 100% floor) fixed by switching to elementAt() for in-bounds accesses plus 6 new tests; Gap-5 (invariant 151 - Skeleton and Empty states never axe-scanned) fixed with new component-level axe checks and explicit e2e assertions proving the existing header-pending/cannot-resolve tests already exercise those two hierarchy states. Re-verified after fixes: npm run verify exits 0, full e2e 44/44 green.",
-      "reviewed": null
+      "reviewed": "2026-08-18T10:16:33Z Fresh-context Claude review found one blocking defect (Claude-28: onKeyDown identity churn defeating TreeRow memoization, invariant 91 regression), fixed and verified with a regression test proven via git-stash to catch it. npm run verify exits 0; full e2e suite (44 tests) passes."
     },
     {
       "id": 5,
@@ -1993,6 +2138,126 @@
       "sha": "828b53165231",
       "recorded": "2026-08-18T09:59:25Z",
       "note": "M4 milestone verify: hierarchy-keyboard-reduced-motion-g3verify-20260818T104525Z.zip"
+    },
+    "evidence/logs/step45-red.txt": {
+      "sha": "97ca7aaca854",
+      "recorded": "2026-08-18T11:47:29Z",
+      "note": "Failing Playwright visual regression for mockup 1e alignment"
+    },
+    "evidence/design-compare/loaded-mockup-1e.png": {
+      "sha": "1a5f943d7dc8",
+      "recorded": "2026-08-18T11:49:56Z",
+      "note": "Reference mockup 1e for loaded hierarchy comparison"
+    },
+    "evidence/design-compare/loaded-implementation-aligned.png": {
+      "sha": "761578ccfbb8",
+      "recorded": "2026-08-18T11:49:57Z",
+      "note": "Playwright implementation screenshot after mockup 1e alignment"
+    },
+    "evidence/logs/step45-e2e-green.txt": {
+      "sha": "ea36744cfc0b",
+      "recorded": "2026-08-18T11:52:49Z",
+      "note": "Full Chromium Playwright suite after alignment: 45 passed"
+    },
+    "evidence/logs/step45-verify-green.txt": {
+      "sha": "0087e316106c",
+      "recorded": "2026-08-18T11:52:49Z",
+      "note": "Full npm run verify after alignment: green"
+    },
+    "evidence/reviews/alignment-step45-diff.txt": {
+      "sha": "8a002dc9cac8",
+      "recorded": "2026-08-18T11:53:16Z",
+      "note": "Exact step 45 diff supplied to fresh reviewers"
+    },
+    "evidence/reviews/alignment-step45-codex.md": {
+      "sha": "a5e26a51c90e",
+      "recorded": "2026-08-18T11:57:16Z",
+      "note": "Fresh Codex review of alignment correction: 3 blocking findings"
+    },
+    "evidence/logs/step46-47-red.txt": {
+      "sha": "515c65fd3d2d",
+      "recorded": "2026-08-18T12:15:33Z",
+      "note": "Playwright red: all three non-data states mismatched and 320px tree overflowed 284px into 214px"
+    },
+    "evidence/logs/step48-red.txt": {
+      "sha": "b45c9e4caaaa",
+      "recorded": "2026-08-18T12:15:33Z",
+      "note": "Vitest red: hierarchy graphical contrast pairs absent"
+    },
+    "evidence/design-compare/loading-mockup-1f.png": {
+      "sha": "c7ac4f5e62e8",
+      "recorded": "2026-08-18T12:17:58Z",
+      "note": "Reference mockup 1f"
+    },
+    "evidence/design-compare/empty-mockup-1g.png": {
+      "sha": "c132a7737943",
+      "recorded": "2026-08-18T12:17:58Z",
+      "note": "Reference mockup 1g"
+    },
+    "evidence/design-compare/error-mockup-1h.png": {
+      "sha": "af96ccdec81f",
+      "recorded": "2026-08-18T12:17:58Z",
+      "note": "Reference mockup 1h"
+    },
+    "evidence/design-compare/loaded-implementation-reviewed.png": {
+      "sha": "c38e31b97953",
+      "recorded": "2026-08-18T12:17:58Z",
+      "note": "Final reviewed loaded-state Playwright screenshot"
+    },
+    "evidence/design-compare/loading-implementation-reviewed.png": {
+      "sha": "89cd8c83aec2",
+      "recorded": "2026-08-18T12:17:59Z",
+      "note": "Final reviewed loading-state Playwright screenshot"
+    },
+    "evidence/design-compare/empty-implementation-reviewed.png": {
+      "sha": "d66c3c3d86b1",
+      "recorded": "2026-08-18T12:17:59Z",
+      "note": "Final reviewed empty-state Playwright screenshot"
+    },
+    "evidence/design-compare/error-implementation-reviewed.png": {
+      "sha": "36f80621dc75",
+      "recorded": "2026-08-18T12:17:59Z",
+      "note": "Final reviewed error-state Playwright screenshot"
+    },
+    "evidence/reviews/alignment-step45-fixes-diff.txt": {
+      "sha": "8f7c1f928456",
+      "recorded": "2026-08-18T12:20:23Z",
+      "note": "Exact post-fix diff supplied to the raising Codex reviewer"
+    },
+    "evidence/logs/step46-48-e2e-green.txt": {
+      "sha": "193306563d89",
+      "recorded": "2026-08-18T12:20:23Z",
+      "note": "Full Chromium suite after review fixes: 49 passed"
+    },
+    "evidence/logs/step46-48-verify-green.txt": {
+      "sha": "e15c9cd24f21",
+      "recorded": "2026-08-18T12:20:24Z",
+      "note": "Full npm run verify after review fixes: 615 tests and all budgets green"
+    },
+    "evidence/logs/step49-red.txt": {
+      "sha": "d400323baf4c",
+      "recorded": "2026-08-18T12:23:25Z",
+      "note": "Vitest red: framed EmptyState and ErrorState inherited hierarchy-only classes"
+    },
+    "evidence/logs/step49-verify-green.txt": {
+      "sha": "ab9f5b61a670",
+      "recorded": "2026-08-18T12:27:38Z",
+      "note": "npm run verify after shared feedback regression fix: 617 tests, coverage, build, and budgets green"
+    },
+    "evidence/logs/step49-e2e-green.txt": {
+      "sha": "0f64ed3d2220",
+      "recorded": "2026-08-18T12:27:38Z",
+      "note": "full Chromium Playwright suite after final alignment fixes: 49 passed"
+    },
+    "evidence/reviews/alignment-step45-confirmation-codex.md": {
+      "sha": "047f3852e18b",
+      "recorded": "2026-08-18T12:27:38Z",
+      "note": "same reviewer confirms Codex-18 through Codex-20 resolved and identifies Codex-21"
+    },
+    "evidence/reviews/alignment-step49-confirmation-codex.md": {
+      "sha": "78e44bd25792",
+      "recorded": "2026-08-18T12:27:38Z",
+      "note": "same reviewer confirms Codex-21 resolved with no new blocker"
     }
   },
   "test_file_hashes": {
@@ -2093,16 +2358,18 @@
       "log_index": 246
     },
     "src/shared/ui/ErrorState.test.tsx": {
-      "sha": "d98f76ec72f8",
+      "sha": "e3fb62727809",
       "step": 17,
-      "recorded": "2026-08-17T14:09:39Z",
-      "log_index": 262
+      "recorded": "2026-08-18T12:23:10Z",
+      "log_index": 500,
+      "rebased": "User's explicit mockup-alignment request plus Codex-21 review fix required framed-versus-unframed regression coverage"
     },
     "src/shared/ui/EmptyState.test.tsx": {
-      "sha": "c4931af73b01",
+      "sha": "78637e9e0800",
       "step": 17,
-      "recorded": "2026-08-17T14:09:39Z",
-      "log_index": 262
+      "recorded": "2026-08-18T12:23:10Z",
+      "log_index": 500,
+      "rebased": "User's explicit mockup-alignment request plus Codex-21 review fix required framed-versus-unframed regression coverage"
     },
     "src/shared/ui/Avatar.test.tsx": {
       "sha": "48453ab1460c",

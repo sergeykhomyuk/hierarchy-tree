@@ -11,6 +11,12 @@ export const contrastPairs: readonly ContrastPair[] = [
   { foreground: 'on-primary', background: 'primary', minimumRatio: 4.5 },
   { foreground: 'focus-ring', background: 'surface', minimumRatio: 3 },
   { foreground: 'border-field', background: 'surface', minimumRatio: 3 },
+  {
+    foreground: 'border-indent-rail',
+    background: 'surface',
+    minimumRatio: 3,
+  },
+  { foreground: 'border-control', background: 'surface', minimumRatio: 3 },
   { foreground: 'danger', background: 'danger-surface', minimumRatio: 4.5 },
   // Button's busy fill (invariant 41): unconditional rather than a hover
   // state, so it needs its own registered pair.
