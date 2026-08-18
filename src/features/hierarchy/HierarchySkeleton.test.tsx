@@ -5,6 +5,7 @@ import {
   createInternationalization,
   Locale,
 } from '@platform/internationalization';
+import '@shared/testing/toHaveNoAxeViolations';
 import { loadTranslations } from './loadTranslations';
 import { HierarchySkeleton } from './HierarchySkeleton';
 
@@ -40,5 +41,11 @@ describe('HierarchySkeleton', () => {
     expect(statuses).toHaveLength(1);
     expect(statuses[0]).toHaveAttribute('aria-busy', 'true');
     expect(statuses[0]).toHaveAccessibleName('page.loadingLabel');
+  });
+
+  it('has zero axe violations', async () => {
+    const { container } = await renderSkeleton();
+
+    await expect(container).toHaveNoAxeViolations();
   });
 });

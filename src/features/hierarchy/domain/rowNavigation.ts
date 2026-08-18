@@ -1,3 +1,4 @@
+import { elementAt } from './elementAt';
 import type { VisibleRow } from './flattenVisible';
 import type { PersonIdentifier } from './personIdentifier';
 
@@ -21,8 +22,12 @@ export function parentRowIndex(
   if (row === undefined) return -1;
   const parentDepth = row.depth - 1;
   if (parentDepth < 0) return -1;
+  // candidate is always < index, and rows[index] is already confirmed
+  // defined, so elementAt never throws here - it is chosen over `?.`
+  // precisely so this stays true rather than leaving an "undefined"
+  // branch that can never actually occur for the coverage floor to chase.
   for (let candidate = index - 1; candidate >= 0; candidate -= 1) {
-    if (rows[candidate]?.depth === parentDepth) return candidate;
+    if (elementAt(rows, candidate).depth === parentDepth) return candidate;
   }
   return -1;
 }
@@ -77,9 +82,12 @@ export function siblingRowIndices(
   const targetDepth = row.depth;
   const boundaryDepth = targetDepth - 1;
 
+  // Every candidate below is bounded by index or rows.length, both
+  // already known valid, so elementAt never throws in any of the three
+  // loops - the same reasoning as parentRowIndex's own use of it.
   let start = 0;
   for (let candidate = index - 1; candidate >= 0; candidate -= 1) {
-    if (rows[candidate]?.depth === boundaryDepth) {
+    if (elementAt(rows, candidate).depth === boundaryDepth) {
       start = candidate + 1;
       break;
     }
@@ -87,8 +95,7 @@ export function siblingRowIndices(
 
   let end = rows.length;
   for (let candidate = start; candidate < rows.length; candidate += 1) {
-    const depth = rows[candidate]?.depth;
-    if (depth !== undefined && depth <= boundaryDepth) {
+    if (elementAt(rows, candidate).depth <= boundaryDepth) {
       end = candidate;
       break;
     }
@@ -96,7 +103,8 @@ export function siblingRowIndices(
 
   const siblings: number[] = [];
   for (let candidate = start; candidate < end; candidate += 1) {
-    if (rows[candidate]?.depth === targetDepth) siblings.push(candidate);
+    if (elementAt(rows, candidate).depth === targetDepth)
+      siblings.push(candidate);
   }
   return siblings;
 }

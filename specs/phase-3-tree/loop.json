@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T09:39:49Z",
+  "updated": "2026-08-18T10:00:29Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 44,
-      "steps_done": 36
+      "steps_done": 37
     },
     "G3": {
       "status": "pending",
@@ -283,6 +283,16 @@
         "Gap-3": {
           "desc": "invariant 180: no contrast-floor (axe or manual) check exists anywhere for the populated tree Data state in either light or dark theme. Coincides with the M4-deferred gap (role=tree has no focusable content until roving tabindex lands), but 180 itself (row hover, indent rail, toggle border, report-count text contrast) is separable from focus-order concerns and currently has zero evidence.",
           "blocking": false,
+          "disposition": "covered"
+        },
+        "Gap-4": {
+          "desc": "npm run verify failed at test:coverage: rowNavigation.ts breached the domain 100% coverage floor (parentRowIndex's fallback return and the elementAt undefined-guard branches went untested).",
+          "blocking": true,
+          "disposition": "covered"
+        },
+        "Gap-5": {
+          "desc": "Invariant 151 gap: Skeleton and Empty states were never axe-scanned, component or e2e - only Data and Error were.",
+          "blocking": true,
           "disposition": "covered"
         }
       }
@@ -933,7 +943,7 @@
         "collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable"
       ],
       "red_observed": "n/a: case (a): duplicate step created by mistake immediately after step 31 (identical desc, same milestone, same exact tests) already covered this scope - no new coverage, retiring this duplicate entry rather than leaving it pending",
-      "status": "red",
+      "status": "done",
       "milestone": 4
     }
   ],
@@ -1371,7 +1381,25 @@
     "2026-08-18T09:39:26Z step 36 -> done",
     "2026-08-18T09:39:30Z evidence recorded: evidence/logs/step36-red.txt (ed9f2c9d4b52) - step 36 red: tree accessible name and focus-recovery (collapse/history-navigation) tests failing before imperative focus() wiring and aria-label existed",
     "2026-08-18T09:39:30Z evidence recorded: evidence/logs/step36-green.txt (180a2f6587a0) - step 36 green: 55/55 tests passing across HierarchyTree, TreeRow, loadTranslations",
-    "2026-08-18T09:39:49Z evidence recorded: evidence/logs/step36-e2e.txt (16a681683a5f) - step 36 e2e: full chromium suite green (44/44) including the new keyboard-walk spec and the upgraded full-scan axe test on the populated tree in both themes"
+    "2026-08-18T09:39:49Z evidence recorded: evidence/logs/step36-e2e.txt (16a681683a5f) - step 36 e2e: full chromium suite green (44/44) including the new keyboard-walk spec and the upgraded full-scan axe test on the populated tree in both themes",
+    "2026-08-18T09:59:24Z evidence recorded: evidence/milestones/m4-build-g3verify-20260818T104525Z.txt (add23ccbe22d) - M4 milestone verify: m4-build-g3verify-20260818T104525Z.txt",
+    "2026-08-18T09:59:24Z evidence recorded: evidence/milestones/m4-e2e-fix-20260818T105800Z.txt (07ed2aa74351) - M4 milestone verify: m4-e2e-fix-20260818T105800Z.txt",
+    "2026-08-18T09:59:25Z evidence recorded: evidence/milestones/m4-e2e-g3verify-20260818T104525Z.txt (98bd0b830eea) - M4 milestone verify: m4-e2e-g3verify-20260818T104525Z.txt",
+    "2026-08-18T09:59:25Z evidence recorded: evidence/milestones/m4-suite-g3verify-20260818T104525Z.txt (a7f993367c97) - M4 milestone verify: m4-suite-g3verify-20260818T104525Z.txt",
+    "2026-08-18T09:59:25Z evidence recorded: evidence/milestones/m4-verify-fix-20260818T105800Z.txt (6c6766342d60) - M4 milestone verify: m4-verify-fix-20260818T105800Z.txt",
+    "2026-08-18T09:59:25Z evidence recorded: evidence/traces/accessibility-populated-tree-dark-g3verify-20260818T104525Z.zip (f9f4edcac760) - M4 milestone verify: accessibility-populated-tree-dark-g3verify-20260818T104525Z.zip",
+    "2026-08-18T09:59:25Z evidence recorded: evidence/traces/accessibility-populated-tree-light-g3verify-20260818T104525Z.zip (95b9ebaeb7c6) - M4 milestone verify: accessibility-populated-tree-light-g3verify-20260818T104525Z.zip",
+    "2026-08-18T09:59:25Z evidence recorded: evidence/traces/hierarchy-keyboard-full-contract-g3verify-20260818T104525Z.zip (94b589c87b6b) - M4 milestone verify: hierarchy-keyboard-full-contract-g3verify-20260818T104525Z.zip",
+    "2026-08-18T09:59:25Z evidence recorded: evidence/traces/hierarchy-keyboard-reduced-motion-g3verify-20260818T104525Z.zip (828b53165231) - M4 milestone verify: hierarchy-keyboard-reduced-motion-g3verify-20260818T104525Z.zip",
+    "2026-08-18T09:59:43Z G3 finding Gap-4 recorded (blocking): npm run verify failed at test:coverage: rowNavigation.ts breached the domain 100% coverage floor (parentRowIndex's fallback return and the elementAt undefined-guard branches went untested).",
+    "2026-08-18T09:59:47Z G3 finding Gap-5 recorded (blocking): Invariant 151 gap: Skeleton and Empty states were never axe-scanned, component or e2e - only Data and Error were.",
+    "2026-08-18T10:00:03Z G3 finding Gap-4 dispositioned: covered",
+    "2026-08-18T10:00:03Z G3 finding Gap-5 dispositioned: covered",
+    "2026-08-18T10:00:04Z Gap-4 fix: rowNavigation.ts's parentRowIndex/firstChildRowIndex/siblingRowIndices switched from optional chaining to elementAt() for in-bounds accesses (eliminating unreachable branches under noUncheckedIndexedAccess), plus 6 new tests covering the genuine defensive fallbacks and multi-hop backward-scan cases. npm run verify now exits 0.",
+    "2026-08-18T10:00:04Z Gap-5 fix: added component-level axe checks for Skeleton (HierarchySkeleton.test.tsx) and Empty (HierarchyPage.test.tsx, rendered inside a real <main> landmark) states; extended the two existing e2e header-pending/cannot-resolve tests with explicit assertions proving they already exercise the hierarchy Loading and Empty states (installDeferredUserMock shares one /users.json response between the header and hierarchy repository), so all four states now get both component and e2e axe coverage.",
+    "2026-08-18T10:00:22Z step 44 -> green",
+    "2026-08-18T10:00:23Z step 44 -> done",
+    "2026-08-18T10:00:29Z milestone 4 boundary verified: Fresh agentic-loop:loop-verifier ran full npm run verify + e2e (chromium, 44/44) and checked invariants 130-152 plus the keyboard path of 114/115 invariant-by-invariant against source. 2 gaps: Gap-4 (npm run verify failing at test:coverage - rowNavigation.ts below the domain 100% floor) fixed by switching to elementAt() for in-bounds accesses plus 6 new tests; Gap-5 (invariant 151 - Skeleton and Empty states never axe-scanned) fixed with new component-level axe checks and explicit e2e assertions proving the existing header-pending/cannot-resolve tests already exercise those two hierarchy states. Re-verified after fixes: npm run verify exits 0, full e2e 44/44 green."
   ],
   "milestones": [
     {
@@ -1395,7 +1423,7 @@
     {
       "id": 4,
       "title": "The keyboard and the ARIA contract",
-      "verified": null,
+      "verified": "2026-08-18T10:00:29Z Fresh agentic-loop:loop-verifier ran full npm run verify + e2e (chromium, 44/44) and checked invariants 130-152 plus the keyboard path of 114/115 invariant-by-invariant against source. 2 gaps: Gap-4 (npm run verify failing at test:coverage - rowNavigation.ts below the domain 100% floor) fixed by switching to elementAt() for in-bounds accesses plus 6 new tests; Gap-5 (invariant 151 - Skeleton and Empty states never axe-scanned) fixed with new component-level axe checks and explicit e2e assertions proving the existing header-pending/cannot-resolve tests already exercise those two hierarchy states. Re-verified after fixes: npm run verify exits 0, full e2e 44/44 green.",
       "reviewed": null
     },
     {
@@ -1920,6 +1948,51 @@
       "sha": "16a681683a5f",
       "recorded": "2026-08-18T09:39:49Z",
       "note": "step 36 e2e: full chromium suite green (44/44) including the new keyboard-walk spec and the upgraded full-scan axe test on the populated tree in both themes"
+    },
+    "evidence/milestones/m4-build-g3verify-20260818T104525Z.txt": {
+      "sha": "add23ccbe22d",
+      "recorded": "2026-08-18T09:59:24Z",
+      "note": "M4 milestone verify: m4-build-g3verify-20260818T104525Z.txt"
+    },
+    "evidence/milestones/m4-e2e-fix-20260818T105800Z.txt": {
+      "sha": "07ed2aa74351",
+      "recorded": "2026-08-18T09:59:24Z",
+      "note": "M4 milestone verify: m4-e2e-fix-20260818T105800Z.txt"
+    },
+    "evidence/milestones/m4-e2e-g3verify-20260818T104525Z.txt": {
+      "sha": "98bd0b830eea",
+      "recorded": "2026-08-18T09:59:25Z",
+      "note": "M4 milestone verify: m4-e2e-g3verify-20260818T104525Z.txt"
+    },
+    "evidence/milestones/m4-suite-g3verify-20260818T104525Z.txt": {
+      "sha": "a7f993367c97",
+      "recorded": "2026-08-18T09:59:25Z",
+      "note": "M4 milestone verify: m4-suite-g3verify-20260818T104525Z.txt"
+    },
+    "evidence/milestones/m4-verify-fix-20260818T105800Z.txt": {
+      "sha": "6c6766342d60",
+      "recorded": "2026-08-18T09:59:25Z",
+      "note": "M4 milestone verify: m4-verify-fix-20260818T105800Z.txt"
+    },
+    "evidence/traces/accessibility-populated-tree-dark-g3verify-20260818T104525Z.zip": {
+      "sha": "f9f4edcac760",
+      "recorded": "2026-08-18T09:59:25Z",
+      "note": "M4 milestone verify: accessibility-populated-tree-dark-g3verify-20260818T104525Z.zip"
+    },
+    "evidence/traces/accessibility-populated-tree-light-g3verify-20260818T104525Z.zip": {
+      "sha": "95b9ebaeb7c6",
+      "recorded": "2026-08-18T09:59:25Z",
+      "note": "M4 milestone verify: accessibility-populated-tree-light-g3verify-20260818T104525Z.zip"
+    },
+    "evidence/traces/hierarchy-keyboard-full-contract-g3verify-20260818T104525Z.zip": {
+      "sha": "94b589c87b6b",
+      "recorded": "2026-08-18T09:59:25Z",
+      "note": "M4 milestone verify: hierarchy-keyboard-full-contract-g3verify-20260818T104525Z.zip"
+    },
+    "evidence/traces/hierarchy-keyboard-reduced-motion-g3verify-20260818T104525Z.zip": {
+      "sha": "828b53165231",
+      "recorded": "2026-08-18T09:59:25Z",
+      "note": "M4 milestone verify: hierarchy-keyboard-reduced-motion-g3verify-20260818T104525Z.zip"
     }
   },
   "test_file_hashes": {

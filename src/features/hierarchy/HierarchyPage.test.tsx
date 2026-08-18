@@ -11,6 +11,7 @@ import {
 } from '@platform/internationalization';
 import type { ObservabilityFacade } from '@platform/observability';
 import { createFakeClock } from '@shared/testing';
+import '@shared/testing/toHaveNoAxeViolations';
 import { loadTranslations } from './loadTranslations';
 import { HierarchyPage } from './HierarchyPage';
 import { HierarchySkeleton } from './HierarchySkeleton';
@@ -259,6 +260,48 @@ describe('HierarchyPage', () => {
     expect(
       screen.getByRole('button', { name: 'page.refreshLabel' }),
     ).toBeInTheDocument();
+  });
+
+  it('the empty state has zero axe violations', async () => {
+    // A dedicated render rather than renderIsolated: the real app always
+    // renders this page inside AuthenticatedLayout's <main> (asserted by
+    // app/features.test.tsx's real-stack render), which renderIsolated's
+    // own bare route harness has no reason to reproduce - axe's "region"
+    // rule would otherwise flag the harness's own LocationSearchProbe
+    // debug element as content outside a landmark, a harness artifact
+    // rather than a real violation.
+    const i18n = await createInternationalization({
+      resources: { common: {} },
+      language: Locale.Test,
+      observability: { logger: { error: vi.fn() } },
+    });
+    await loadTranslations(i18n);
+    // eslint-disable-next-line testing-library/no-unnecessary-act, @typescript-eslint/require-await -- act() must wrap the initial render itself for a component that suspends synchronously on mount.
+    await act(async () => {
+      render(
+        <I18nextProvider i18n={i18n}>
+          <MemoryRouter>
+            <main>
+              <Suspense fallback={<HierarchySkeleton />}>
+                <HierarchyPage
+                  hierarchy={Promise.resolve({
+                    kind: HierarchyResultKind.Empty,
+                  })}
+                  onRetry={vi.fn()}
+                  onRefresh={vi.fn()}
+                  dependencies={{
+                    observability: createSpyObservability(),
+                    clock: createFakeClock(),
+                  }}
+                />
+              </Suspense>
+            </main>
+          </MemoryRouter>
+        </I18nextProvider>,
+      );
+    });
+
+    await expect(document.body).toHaveNoAxeViolations();
   });
 
   it('a payload of 33 records containing one duplicate id reads 32 people', async () => {

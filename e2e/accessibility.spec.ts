@@ -78,6 +78,13 @@ test.describe('accessibility', () => {
 
       await submitSignInForm(page);
       await expect(page.getByLabel('header.nameLoading')).toBeVisible();
+      // installDeferredUserMock defers the SAME /users.json request the
+      // header's own lookup and the hierarchy repository both make, so
+      // this scan also covers the hierarchy Skeleton state - not just the
+      // header's own pending presentation (invariant 151).
+      await expect(
+        page.getByRole('status', { name: 'page.loadingLabel' }),
+      ).toBeVisible();
 
       const results = await createAxeBuilder(page).analyze();
       expect(results.violations).toEqual([]);
@@ -94,6 +101,11 @@ test.describe('accessibility', () => {
       await submitSignInForm(page);
       getResolveUser()({ status: 200, body: [] });
       await expect(page.getByText('header.signedInFallback')).toBeVisible();
+      // The same empty-array response also resolves the hierarchy
+      // repository's own fetch (same shared mock), landing it on the
+      // Empty state - this scan covers both, not just the header
+      // (invariant 151).
+      await expect(page.getByText('page.emptyHeading')).toBeVisible();
 
       const results = await createAxeBuilder(page).analyze();
       expect(results.violations).toEqual([]);
