@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { CancelTimer, Clock } from '@platform/runtime';
 import {
@@ -60,8 +60,32 @@ export function useTreeKeyboard({
   const bufferRef = useRef('');
   const cancelResetRef = useRef<CancelTimer | null>(null);
 
+  // rows and accessibleNames are fresh every render (flattenVisible never
+  // reuses the previous call's array, and accessibleNames is derived from
+  // it the same way), and tabbableId changes on every focus move - as
+  // direct dependencies, any of the three would give this hook's returned
+  // callback a new identity on every render or every arrow keypress,
+  // handed to every TreeRow as its onKeyDown prop and defeating every
+  // row's memo bailout regardless of whether that row's own data changed
+  // (the exact hazard handleRowToggle's own rowsRef already guards
+  // against in HierarchyTree.tsx - invariant 91). Synced through an
+  // effect rather than a direct assignment in the render body - a plain
+  // `ref.current = value` during render is exactly what react-hooks/refs
+  // flags inside a custom hook (unlike a component's own render body,
+  // where HierarchyTree.tsx's own rowsRef does this directly).
+  const rowsRef = useRef(rows);
+  const accessibleNamesRef = useRef(accessibleNames);
+  const tabbableIdRef = useRef(tabbableId);
+  useEffect(() => {
+    rowsRef.current = rows;
+    accessibleNamesRef.current = accessibleNames;
+    tabbableIdRef.current = tabbableId;
+  });
+
   return useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
+      const rows = rowsRef.current;
+      const tabbableId = tabbableIdRef.current;
       if (tabbableId === null) return;
       const index = findRowIndexById(rows, tabbableId);
       const row = rows[index];
@@ -154,7 +178,7 @@ export function useTreeKeyboard({
             },
           );
           const match = findTypeAheadMatch(
-            accessibleNames,
+            accessibleNamesRef.current,
             index,
             bufferRef.current,
             language,
@@ -164,15 +188,6 @@ export function useTreeKeyboard({
         }
       }
     },
-    [
-      rows,
-      accessibleNames,
-      tabbableId,
-      onFocusRow,
-      onToggleRow,
-      onExpandSiblings,
-      clock,
-      language,
-    ],
+    [onFocusRow, onToggleRow, onExpandSiblings, clock, language],
   );
 }

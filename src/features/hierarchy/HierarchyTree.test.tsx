@@ -22,6 +22,7 @@ import { HierarchyTree } from './HierarchyTree';
 import type { HierarchyTreeProps } from './HierarchyTree';
 import { buildForest } from './domain/buildForest';
 import * as buildForestModule from './domain/buildForest';
+import * as personDisplayNameModule from './domain/personDisplayName';
 import { parsePersonIdentifier } from './domain/personIdentifier';
 import type { PersonIdentifier } from './domain/personIdentifier';
 import type { TreeNode } from './domain/treeNode';
@@ -794,6 +795,38 @@ describe('HierarchyTree', () => {
 
       expect(onToggle).not.toHaveBeenCalled();
       expect(observability.analytics.track).not.toHaveBeenCalled();
+    });
+
+    it('a keyboard-driven toggle leaves a row under a different root unrendered', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3, { firstName: 'Untouched', lastName: 'Person' }),
+      ]);
+      const displayNameSpy = vi.spyOn(
+        personDisplayNameModule,
+        'personDisplayName',
+      );
+
+      await renderStatefulTree({ roots, initialExpandedIds: new Set() });
+      focusRow('First1 Last1');
+      const callsBefore = displayNameSpy.mock.calls.filter(
+        ([person]) => person.firstName === 'Untouched',
+      ).length;
+
+      // Toggles person 1's own branch through the keyboard path -
+      // person 3 shares nothing with it (a different root entirely).
+      pressKey('Enter');
+
+      const callsAfter = displayNameSpy.mock.calls.filter(
+        ([person]) => person.firstName === 'Untouched',
+      ).length;
+      // Exactly one more call: HierarchyTree's own accessibleNames pass
+      // recomputes this for every visible row on every render
+      // unconditionally, but person 3's own TreeRow must not re-render
+      // at all - a second call here would mean onKeyDown's identity
+      // churned and defeated every row's memo bailout (invariant 91).
+      expect(callsAfter - callsBefore).toBe(1);
     });
   });
 
