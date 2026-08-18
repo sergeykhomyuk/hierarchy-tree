@@ -6,9 +6,10 @@ import { SIGN_IN_EMAIL, SIGN_IN_PASSWORD } from './signIn';
 
 const MATCHING_SECRET = deriveSecret(SIGN_IN_EMAIL, SIGN_IN_PASSWORD);
 
-// The signed-in user IS the deepest person the fixture below produces -
-// the row the responsive one-line assertions target already carries the
-// you marker, rather than needing a second identity just to reach it.
+// The signed-in user is the deepest LEAF the fixture below produces - a
+// leaf never shows a count (TreeRow.tsx renders one only for hasChildren
+// rows), so the responsive one-line assertions target Tal Bergman (its
+// manager, one level shallower) instead, which is not the same identity.
 export const DEEPEST_PERSON_ID = 7;
 export const DEEPEST_PERSON_NAME = 'Persephone Okonkwo-Villanueva';
 
@@ -100,9 +101,15 @@ export async function installHierarchyUserMock(
   userResponse: ApiMockResponse,
 ): Promise<void> {
   await installApiMocks(page, {
+    // A raw integer, not a stringified one: lookupResultSchema accepts
+    // z.int() directly, and userIdentifier() preserves whichever type the
+    // secrets endpoint returns - stringifying here would make the
+    // session's userId a string that can never strictly equal a
+    // PersonIdentifier (a branded number), so the you marker would never
+    // render on any row this fixture produces.
     secret: (secret) => ({
       status: 200,
-      body: secret === MATCHING_SECRET ? String(DEEPEST_PERSON_ID) : null,
+      body: secret === MATCHING_SECRET ? DEEPEST_PERSON_ID : null,
     }),
     user: () => userResponse,
   });

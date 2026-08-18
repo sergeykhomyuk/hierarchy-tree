@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-17T21:53:08Z",
+  "updated": "2026-08-18T07:23:48Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -335,12 +335,12 @@
         "Claude-8": {
           "desc": "non-blocking - invariant 155 vs 157 tension: HierarchySummary's single composed catalogue string hardcodes plural nouns (people/managers/roots) with no per-count pluralization, so counts=1 would render grammatically-invalid '1 managers'/'1 roots'. i18next's own interpolation mechanism cannot independently pluralize 3 nested nouns inside one template string without nested t() calls, which would violate invariant 157's 'one catalogue string' requirement. Untested with count=1 (fixture only exercises managers:4/roots:2).",
           "blocking": false,
-          "disposition": null
+          "disposition": "accepted"
         },
         "Claude-9": {
           "desc": "non-blocking - invariant 84's positive you-marker match (row.person.id === signedInUserId) is only unit-tested via the negative (no-match) case in HierarchyTree.test.tsx; the positive case is only exercised by passing isSignedInUser directly as a TreeRow prop, bypassing the real comparison. Separately, e2e/support/hierarchyFixture.ts's own comment claims its signed-in user carries the you marker on the deepest row, but the secret mock returns String(DEEPEST_PERSON_ID) (a JSON string '7') while person.id is a branded number, so 7 === '7' is always false and the marker never actually renders in that fixture - the comment is inaccurate.",
           "blocking": false,
-          "disposition": null
+          "disposition": "fixed"
         }
       }
     },
@@ -1269,7 +1269,13 @@
     "2026-08-17T21:52:58Z evidence recorded: evidence/logs/claude6-7-fix-e2e.txt (dfe2186ddb76) - Claude-6/7 fix: full playwright suite 50/50 pass (one flaky scroll-position failure under parallel load reproduced as passing 3/3 in isolation and on full re-run)",
     "2026-08-17T21:53:08Z Claude-6 fix (blocking): added hierarchy.toggled analytics event (expanded, depth - no name/email/id) and a persistent aria-live/aria-atomic TreeAnnouncer (not role=status, to avoid colliding with the loading indicator's own status role) inside HierarchyTree.tsx, wrapped around onToggle via a ref-stabilized handleRowToggle that preserves the existing per-row memoization (invariant 91 test still passes). Claude-7 fix: page.hiddenLabel replaced with page.hidden_one/hidden_other, now genuinely pluralizing through the catalogue like its reports sibling. Both new component tests are non-vacuous (assert exact analytics payload with no name/email leakage; assert the live region's text switches between the two catalogue keys across two toggles). Full suite 550/550, full e2e 50/50.",
     "2026-08-17T21:53:08Z G4 finding Claude-6 dispositioned: fixed",
-    "2026-08-17T21:53:08Z G4 finding Claude-7 dispositioned: fixed"
+    "2026-08-17T21:53:08Z G4 finding Claude-7 dispositioned: fixed",
+    "2026-08-17T21:53:29Z Claude-8 disposition: accepted. Same class as the already-accepted Gap-2: HierarchySummary's single composed catalogue string cannot independently pluralize 3 nested nouns (people/managers/roots) without either violating invariant 157's 'one string' requirement (nested t() calls) or losing the single-string composition. Latent with the real 33/16/3 dataset; a genuine gap for the general case (counts of 1) that the spec itself doesn't visibly resolve. Revisit alongside Gap-2 later.",
+    "2026-08-17T21:53:30Z G4 finding Claude-8 dispositioned: accepted",
+    "2026-08-18T07:23:38Z evidence recorded: evidence/logs/claude9-fix-suite.txt (744d79292ba7) - Claude-9 fix: full vitest suite 551/551 pass",
+    "2026-08-18T07:23:38Z evidence recorded: evidence/logs/claude9-fix-e2e.txt (70e908d23e4b) - Claude-9 fix: full playwright suite 50/50 pass, 5 consecutive clean runs confirming the scroll-position test's real fix (retargeted from Noa Shani to Roni Yashar - collapsing the last branch in a scrolled list was triggering genuine browser scroll-clamping, misread as app flakiness)",
+    "2026-08-18T07:23:48Z Claude-9 fix: hierarchyFixture.ts's secret mock returned String(DEEPEST_PERSON_ID) - a JSON string - as the session userId, which could never strictly equal a PersonIdentifier (a branded number), so the you marker never rendered in this fixture despite the fixture's own comment claiming it did. Fixed to return the raw integer (lookupResultSchema explicitly accepts z.int()). Added a genuine positive-match unit test in HierarchyTree.test.tsx exercising the real === comparison (not a prop handed straight to TreeRow). While investigating, also discovered and fixed a real e2e test-design bug in hierarchy-layout.spec.ts's scroll-position test: it targeted Noa Shani, the second root near the very end of the row list, whose collapse (removing the LAST row, Uri Barak) shrank the scrollable content below the already-captured scrollTop - a genuine browser auto-clamp behavior, not an app bug, that was intermittently failing under parallel load and then failing deterministically. Retargeted to Roni Yashar, which has enough remaining content below it (Tal Bergman, then the whole second root) that collapsing it never triggers the clamp; confirmed with 5 consecutive clean full-suite e2e runs plus a scrollHeight/maxScroll debug trace proving the mechanism. Full suite 551/551, full e2e 50/50.",
+    "2026-08-18T07:23:48Z G4 finding Claude-9 dispositioned: fixed"
   ],
   "milestones": [
     {
@@ -1743,6 +1749,16 @@
       "sha": "dfe2186ddb76",
       "recorded": "2026-08-17T21:52:58Z",
       "note": "Claude-6/7 fix: full playwright suite 50/50 pass (one flaky scroll-position failure under parallel load reproduced as passing 3/3 in isolation and on full re-run)"
+    },
+    "evidence/logs/claude9-fix-suite.txt": {
+      "sha": "744d79292ba7",
+      "recorded": "2026-08-18T07:23:38Z",
+      "note": "Claude-9 fix: full vitest suite 551/551 pass"
+    },
+    "evidence/logs/claude9-fix-e2e.txt": {
+      "sha": "70e908d23e4b",
+      "recorded": "2026-08-18T07:23:38Z",
+      "note": "Claude-9 fix: full playwright suite 50/50 pass, 5 consecutive clean runs confirming the scroll-position test's real fix (retargeted from Noa Shani to Roni Yashar - collapsing the last branch in a scrolled list was triggering genuine browser scroll-clamping, misread as app flakiness)"
     }
   },
   "test_file_hashes": {

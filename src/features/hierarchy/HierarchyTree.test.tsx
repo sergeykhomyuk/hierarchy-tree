@@ -161,6 +161,26 @@ describe('HierarchyTree', () => {
     expect(rows[0]).toHaveAccessibleName('First1 Last1');
   });
 
+  it('a signed-in identifier matching a person id marks exactly that row', async () => {
+    const { roots } = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+    ]);
+
+    await renderTree({
+      roots,
+      expandedIds: new Set([parsePersonIdentifier(1)]),
+      // The real === comparison HierarchyTree.tsx makes, not a prop
+      // handed straight to TreeRow - proves the id actually matches
+      // through the row model rather than only through a test double.
+      signedInUserId: parsePersonIdentifier(2),
+    });
+
+    const rows = screen.getAllByRole('treeitem');
+    expect(rows[0]).toHaveAccessibleName('First1 Last1');
+    expect(rows[1]).toHaveAccessibleName('First2 Last2, page.youMarkerLabel');
+  });
+
   it('collapsing and re-expanding a branch three times produces one photo-failure report for that person', async () => {
     const photoUrl = 'https://example.test/broken-photo.jpg';
     const managerId = parsePersonIdentifier(1);

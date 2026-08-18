@@ -66,11 +66,16 @@ test.describe('hierarchy layout', () => {
     // The very first row - above every other row in the list, so nothing
     // toggled below it should ever move it.
     const anchorRow = page.getByRole('treeitem', { name: /Ronnen Gurevitch/ });
-    // Noa Shani is the second root, near the end of the row list -
-    // definitely below the fold of the capped row list, so reaching its
-    // toggle needs a real scroll. Collapsing it (it has its own child,
-    // Uri Barak) changes only the rows beneath it.
-    const targetRow = page.getByRole('treeitem', { name: /Noa Shani/ });
+    // Roni Yashar sits below the anchor with enough of the row list still
+    // remaining beneath it (Tal Bergman, then the whole second root
+    // branch) that collapsing it - hiding only Tal - never shrinks the
+    // scrollable content below the current scroll position. Noa Shani,
+    // the very last branch, was tried first and rejected: collapsing the
+    // last rows in a scrolled list can shrink content below the browser's
+    // own scrollTop, which the browser then clamps down on its own - a
+    // real browser behaviour, not a bug this test should be reporting as
+    // one, and it produced exactly that false failure here.
+    const targetRow = page.getByRole('treeitem', { name: /Roni Yashar/ });
     const targetToggle = targetRow.locator('button');
 
     // scrollIntoViewIfNeeded() scrolls the row list's own container, not
@@ -91,6 +96,13 @@ test.describe('hierarchy layout', () => {
     expect(beforeScrollTop).toBeGreaterThan(0);
 
     await targetToggle.click();
+    // Waits for the collapse itself to actually commit (Roni Yashar's own
+    // child, Tal Bergman, leaving the row list) before measuring anything
+    // else - click() only guarantees the DOM event fired, not that
+    // React's resulting re-render has flushed.
+    await expect(
+      page.getByRole('treeitem', { name: /Tal Bergman/ }),
+    ).toBeHidden();
 
     expect(await treeList.evaluate((element) => element.scrollTop)).toBe(
       beforeScrollTop,
