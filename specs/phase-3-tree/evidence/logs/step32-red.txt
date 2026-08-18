@@ -1,0 +1,1078 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (23 tests | 7 failed) 194ms
+       × ArrowDown moves focus to the next visible row and ArrowUp to the previous, crossing branch boundaries 5ms
+       × ArrowDown and ArrowUp do nothing at the ends of the list 2ms
+       × ArrowRight on a collapsed manager expands it and leaves focus in place 6ms
+       × ArrowRight on an expanded manager moves focus to its first child 3ms
+       × ArrowLeft on an expanded manager collapses it and leaves focus in place 3ms
+       × ArrowLeft on a collapsed manager, or on any non-manager, moves focus to its parent 4ms
+       × Home moves focus to the first visible row and End to the last 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > keyboard navigation > ArrowDown moves focus to the next visible row and ArrowUp to the previous, crossing branch boundaries
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<div
+  aria-label="First2 Last2"
+  aria-level="2"
+  aria-posinset="1"
+  aria-selected="false"
+  aria-setsize="1"
+  class="flex items-center gap-3 py-3 border-s border-border-hairline"
+  role="treeitem"
+  style="padding-inline-start: 2rem;"
+  tabindex="-1"
+>
+  <span
+    aria-hidden="true"
+    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+  >
+    −
+  </span>
+  <span
+    aria-hidden="true"
+    class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+  >
+    FL
+  </span>
+  <div
+    class="min-w-0 flex-1"
+  >
+    <p
+      class="flex items-center gap-2 truncate font-semibold text-ink"
+    >
+      First2 Last2
+    </p>
+    <p
+      class="truncate text-ink-muted"
+    >
+      person2@example.test
+    </p>
+  </div>
+</div>[39m
+Received element with focus:
+  [31m<body>
+  <div>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="sr-only"
+      data-testid="tree-announcer"
+    />
+    <div
+      class="max-h-48 overflow-y-auto"
+      role="tree"
+    >
+      <div
+        aria-expanded="true"
+        aria-label="First1 Last1"
+        aria-level="1"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="0"
+      >
+        <button
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+          tabindex="-1"
+          type="button"
+        >
+          −
+        </button>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First1 Last1
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person1@example.test
+          </p>
+        </div>
+        <p
+          class="shrink-0 text-ink-muted"
+        >
+          1············
+          page.reports_one
+        </p>
+      </div>
+      <div
+        aria-label="First2 Last2"
+        aria-level="2"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="1"
+        class="flex items-center gap-3 py-3 border-s border-border-hairline"
+        role="treeitem"
+        style="padding-inline-start: 2rem;"
+        tabindex="-1"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First2 Last2
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person2@example.test
+          </p>
+        </div>
+      </div>
+      <div
+        aria-label="First3 Last3"
+        aria-level="1"
+        aria-posinset="2"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="-1"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First3 Last3
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person3@example.test
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:491:70
+    489|
+    490|       pressKey('ArrowDown');
+    491|       expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).t…
+       |                                                                      ^
+    492|       pressKey('ArrowDown');
+    493|       expect(screen.getByRole('treeitem', { name: 'First3 Last3' })).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > keyboard navigation > ArrowDown and ArrowUp do nothing at the ends of the list
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<div
+  aria-label="First1 Last1"
+  aria-level="1"
+  aria-posinset="1"
+  aria-selected="false"
+  aria-setsize="2"
+  class="flex items-center gap-3 py-3 "
+  role="treeitem"
+  style="padding-inline-start: 0rem;"
+  tabindex="0"
+>
+  <span
+    aria-hidden="true"
+    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+  >
+    −
+  </span>
+  <span
+    aria-hidden="true"
+    class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+  >
+    FL
+  </span>
+  <div
+    class="min-w-0 flex-1"
+  >
+    <p
+      class="flex items-center gap-2 truncate font-semibold text-ink"
+    >
+      First1 Last1
+    </p>
+    <p
+      class="truncate text-ink-muted"
+    >
+      person1@example.test
+    </p>
+  </div>
+</div>[39m
+Received element with focus:
+  [31m<body>
+  <div>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="sr-only"
+      data-testid="tree-announcer"
+    />
+    <div
+      class="max-h-48 overflow-y-auto"
+      role="tree"
+    >
+      <div
+        aria-label="First1 Last1"
+        aria-level="1"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="0"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First1 Last1
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person1@example.test
+          </p>
+        </div>
+      </div>
+      <div
+        aria-label="First2 Last2"
+        aria-level="1"
+        aria-posinset="2"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="-1"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First2 Last2
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person2@example.test
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:503:70
+    501|       await renderTree({ roots, expandedIds: new Set() });
+    502|       pressKey('ArrowUp');
+    503|       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).t…
+       |                                                                      ^
+    504|
+    505|       fireEvent.focus(screen.getByRole('treeitem', { name: 'First2 Las…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > keyboard navigation > ArrowRight on a collapsed manager expands it and leaves focus in place
+TestingLibraryElementError: Unable to find an accessible element with the role "treeitem" and name "First2 Last2"
+
+Here are the accessible roles:
+
+  tree:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"max-h-48 overflow-y-auto"[39m
+    [33mrole[39m=[32m"tree"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  treeitem:
+
+  Name "First1 Last1":
+  [36m<div[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"First1 Last1"[39m
+    [33maria-level[39m=[32m"1"[39m
+    [33maria-posinset[39m=[32m"1"[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33maria-setsize[39m=[32m"1"[39m
+    [33mclass[39m=[32m"flex items-center gap-3 py-3 "[39m
+    [33mrole[39m=[32m"treeitem"[39m
+    [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"truncate text-ink-muted"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33maria-atomic[39m=[32m"true"[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"sr-only"[39m
+      [33mdata-testid[39m=[32m"tree-announcer"[39m
+    [36m/>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"max-h-48 overflow-y-auto"[39m
+      [33mrole[39m=[32m"tree"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-expanded[39m=[32m"false"[39m
+        [33maria-label[39m=[32m"First1 Last1"[39m
+        [33maria-level[39m=[32m"1"[39m
+        [33maria-posinset[39m=[32m"1"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33maria-setsize[39m=[32m"1"[39m
+        [33mclass[39m=[32m"flex items-center gap-3 py-3 "[39m
+        [33mrole[39m=[32m"treeitem"[39m
+        [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+        [33mtabindex[39m=[32m"0"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m+[0m
+        [36m</button>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+        [36m>[39m
+          [0mFL[0m
+        [36m</span>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"min-w-0 flex-1"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+          [36m>[39m
+            [0mFirst1 Last1[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"truncate text-ink-muted"[39m
+          [36m>[39m
+            [0mperson1@example.test[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+        [36m>[39m
+          [0m1[0m
+          [0m [0m
+          [0mpage.hidden_one[0m
+        [36m</p>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:521:21
+    519|
+    520|       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).t…
+    521|       expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).t…
+       |                     ^
+    522|     });
+    523|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > keyboard navigation > ArrowRight on an expanded manager moves focus to its first child
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<div
+  aria-label="First2 Last2"
+  aria-level="2"
+  aria-posinset="1"
+  aria-selected="false"
+  aria-setsize="1"
+  class="flex items-center gap-3 py-3 border-s border-border-hairline"
+  role="treeitem"
+  style="padding-inline-start: 2rem;"
+  tabindex="-1"
+>
+  <span
+    aria-hidden="true"
+    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+  >
+    −
+  </span>
+  <span
+    aria-hidden="true"
+    class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+  >
+    FL
+  </span>
+  <div
+    class="min-w-0 flex-1"
+  >
+    <p
+      class="flex items-center gap-2 truncate font-semibold text-ink"
+    >
+      First2 Last2
+    </p>
+    <p
+      class="truncate text-ink-muted"
+    >
+      person2@example.test
+    </p>
+  </div>
+</div>[39m
+Received element with focus:
+  [31m<body>
+  <div>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="sr-only"
+      data-testid="tree-announcer"
+    />
+    <div
+      class="max-h-48 overflow-y-auto"
+      role="tree"
+    >
+      <div
+        aria-expanded="true"
+        aria-label="First1 Last1"
+        aria-level="1"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="1"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="0"
+      >
+        <button
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+          tabindex="-1"
+          type="button"
+        >
+          −
+        </button>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First1 Last1
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person1@example.test
+          </p>
+        </div>
+        <p
+          class="shrink-0 text-ink-muted"
+        >
+          1············
+          page.reports_one
+        </p>
+      </div>
+      <div
+        aria-label="First2 Last2"
+        aria-level="2"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="1"
+        class="flex items-center gap-3 py-3 border-s border-border-hairline"
+        role="treeitem"
+        style="padding-inline-start: 2rem;"
+        tabindex="-1"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First2 Last2
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person2@example.test
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:536:70
+    534|       pressKey('ArrowRight');
+    535|
+    536|       expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).t…
+       |                                                                      ^
+    537|     });
+    538|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > keyboard navigation > ArrowLeft on an expanded manager collapses it and leaves focus in place
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <div
+  aria-label="First2 Last2"
+  aria-level="2"
+  aria-posinset="1"
+  aria-selected="false"
+  aria-setsize="1"
+  class="flex items-center gap-3 py-3 border-s border-border-hairline"
+  role="treeitem"
+  style="padding-inline-start: 2rem;"
+  tabindex="-1"
+>
+  <span
+    aria-hidden="true"
+    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+  >
+    −
+  </span>
+  <span
+    aria-hidden="true"
+    class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+  >
+    FL
+  </span>
+  <div
+    class="min-w-0 flex-1"
+  >
+    <p
+      class="flex items-center gap-2 truncate font-semibold text-ink"
+    >
+      First2 Last2
+    </p>
+    <p
+      class="truncate text-ink-muted"
+    >
+      person2@example.test
+    </p>
+  </div>
+</div> instead[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:565:13
+    563|       expect(
+    564|         screen.queryByRole('treeitem', { name: 'First2 Last2' }),
+    565|       ).not.toBeInTheDocument();
+       |             ^
+    566|     });
+    567|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > keyboard navigation > ArrowLeft on a collapsed manager, or on any non-manager, moves focus to its parent
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<div
+  aria-expanded="true"
+  aria-label="First1 Last1"
+  aria-level="1"
+  aria-posinset="1"
+  aria-selected="false"
+  aria-setsize="1"
+  class="flex items-center gap-3 py-3 "
+  role="treeitem"
+  style="padding-inline-start: 0rem;"
+  tabindex="-1"
+>
+  <button
+    aria-hidden="true"
+    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+    tabindex="-1"
+    type="button"
+  >
+    −
+  </button>
+  <span
+    aria-hidden="true"
+    class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+  >
+    FL
+  </span>
+  <div
+    class="min-w-0 flex-1"
+  >
+    <p
+      class="flex items-center gap-2 truncate font-semibold text-ink"
+    >
+      First1 Last1
+    </p>
+    <p
+      class="truncate text-ink-muted"
+    >
+      person1@example.test
+    </p>
+  </div>
+  <p
+    class="shrink-0 text-ink-muted"
+  >
+    2······
+    page.reports_other
+  </p>
+</div>[39m
+Received element with focus:
+  [31m<body>
+  <div>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="sr-only"
+      data-testid="tree-announcer"
+    />
+    <div
+      class="max-h-48 overflow-y-auto"
+      role="tree"
+    >
+      <div
+        aria-expanded="true"
+        aria-label="First1 Last1"
+        aria-level="1"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="1"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="-1"
+      >
+        <button
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+          tabindex="-1"
+          type="button"
+        >
+          −
+        </button>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First1 Last1
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person1@example.test
+          </p>
+        </div>
+        <p
+          class="shrink-0 text-ink-muted"
+        >
+          2············
+          page.reports_other
+        </p>
+      </div>
+      <div
+        aria-label="First2 Last2"
+        aria-level="2"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 border-s border-border-hairline"
+        role="treeitem"
+        style="padding-inline-start: 2rem;"
+        tabindex="-1"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First2 Last2
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person2@example.test
+          </p>
+        </div>
+      </div>
+      <div
+        aria-label="First3 Last3"
+        aria-level="2"
+        aria-posinset="2"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 border-s border-border-hairline"
+        role="treeitem"
+        style="padding-inline-start: 2rem;"
+        tabindex="0"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First3 Last3
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person3@example.test
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:582:70
+    580|       pressKey('ArrowLeft');
+    581|
+    582|       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).t…
+       |                                                                      ^
+    583|     });
+    584|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > keyboard navigation > Home moves focus to the first visible row and End to the last
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+
+Expected element with focus:
+  [32m<div
+  aria-label="First3 Last3"
+  aria-level="1"
+  aria-posinset="2"
+  aria-selected="false"
+  aria-setsize="2"
+  class="flex items-center gap-3 py-3 "
+  role="treeitem"
+  style="padding-inline-start: 0rem;"
+  tabindex="-1"
+>
+  <span
+    aria-hidden="true"
+    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+  >
+    −
+  </span>
+  <span
+    aria-hidden="true"
+    class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+  >
+    FL
+  </span>
+  <div
+    class="min-w-0 flex-1"
+  >
+    <p
+      class="flex items-center gap-2 truncate font-semibold text-ink"
+    >
+      First3 Last3
+    </p>
+    <p
+      class="truncate text-ink-muted"
+    >
+      person3@example.test
+    </p>
+  </div>
+</div>[39m
+Received element with focus:
+  [31m<body>
+  <div>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="sr-only"
+      data-testid="tree-announcer"
+    />
+    <div
+      class="max-h-48 overflow-y-auto"
+      role="tree"
+    >
+      <div
+        aria-expanded="true"
+        aria-label="First1 Last1"
+        aria-level="1"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="0"
+      >
+        <button
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+          tabindex="-1"
+          type="button"
+        >
+          −
+        </button>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First1 Last1
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person1@example.test
+          </p>
+        </div>
+        <p
+          class="shrink-0 text-ink-muted"
+        >
+          1············
+          page.reports_one
+        </p>
+      </div>
+      <div
+        aria-label="First2 Last2"
+        aria-level="2"
+        aria-posinset="1"
+        aria-selected="false"
+        aria-setsize="1"
+        class="flex items-center gap-3 py-3 border-s border-border-hairline"
+        role="treeitem"
+        style="padding-inline-start: 2rem;"
+        tabindex="-1"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First2 Last2
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person2@example.test
+          </p>
+        </div>
+      </div>
+      <div
+        aria-label="First3 Last3"
+        aria-level="1"
+        aria-posinset="2"
+        aria-selected="false"
+        aria-setsize="2"
+        class="flex items-center gap-3 py-3 "
+        role="treeitem"
+        style="padding-inline-start: 0rem;"
+        tabindex="-1"
+      >
+        <span
+          aria-hidden="true"
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
+        >
+          −
+        </span>
+        <span
+          aria-hidden="true"
+          class="h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"
+        >
+          FL
+        </span>
+        <div
+          class="min-w-0 flex-1"
+        >
+          <p
+            class="flex items-center gap-2 truncate font-semibold text-ink"
+          >
+            First3 Last3
+          </p>
+          <p
+            class="truncate text-ink-muted"
+          >
+            person3@example.test
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>[39m
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:607:70
+    605|       });
+    606|       pressKey('End');
+    607|       expect(screen.getByRole('treeitem', { name: 'First3 Last3' })).t…
+       |                                                                      ^
+    608|       pressKey('Home');
+    609|       expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  7 failed | 31 passed (38)
+   Start at  09:10:02
+   Duration  613ms (transform 151ms, setup 234ms, import 123ms, tests 291ms, environment 687ms)
+

@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T08:04:07Z",
+  "updated": "2026-08-18T08:10:31Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 44,
-      "steps_done": 31
+      "steps_done": 32
     },
     "G3": {
       "status": "pending",
@@ -754,13 +754,20 @@
       "id": 32,
       "desc": "Arrow, Home and End movement: Down and Up to the next and previous visible row crossing branch boundaries and inert at the ends; Right expanding a collapsed manager in place and descending to the first child of an expanded one and inert on a non-manager; Left collapsing an expanded manager in place, ascending to the parent otherwise, and inert on an already-collapsed root; Home and End to the first and last visible rows. Invariants 133, 134, 135, 136.",
       "tests": [
-        "Down and Up cross branch boundaries and do nothing at the ends of the list",
-        "Right expands a collapsed manager in place and moves to the first child of an expanded one",
-        "Left collapses an expanded manager in place and moves to the parent otherwise",
-        "Home and End move to the first and last visible rows"
+        "nextVisibleIndex and previousVisibleIndex cross branch boundaries and stay put at the ends",
+        "firstChildRowIndex finds the row immediately after an expanded manager, and -1 for a collapsed manager or a non-manager",
+        "ArrowDown moves focus to the next visible row and ArrowUp to the previous, crossing branch boundaries",
+        "ArrowDown and ArrowUp do nothing at the ends of the list",
+        "ArrowRight on a collapsed manager expands it and leaves focus in place",
+        "ArrowRight on an expanded manager moves focus to its first child",
+        "ArrowRight on a non-manager does nothing",
+        "ArrowLeft on an expanded manager collapses it and leaves focus in place",
+        "ArrowLeft on a collapsed manager, or on any non-manager, moves focus to its parent",
+        "ArrowLeft on an already-collapsed root does nothing",
+        "Home moves focus to the first visible row and End to the last"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-18T08:10:27Z evidence/logs/step32-red.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1313,7 +1320,13 @@
     "2026-08-18T08:03:56Z step 44 -> na",
     "2026-08-18T08:04:01Z mistake: 'step add' for the roving-tabindex work created a duplicate of the pre-existing plan step 31 (same desc/milestone) as new step 44 - amended step 31 with the real test names and drove it red/green/done there instead; retired step 44 as na case (a), same exact tests, no new coverage.",
     "2026-08-18T08:04:07Z evidence recorded: evidence/logs/step31-red.txt (83ce6acd8100) - step 31 red: rowNavigation/recoverFocusedRowId modules missing, 3 roving-tabindex component tests failing (tabIndex hardcoded -1)",
-    "2026-08-18T08:04:07Z evidence recorded: evidence/logs/step31-green.txt (732894842d40) - step 31 green: 31/31 tests passing across rowNavigation, recoverFocusedRowId, HierarchyTree, TreeRow"
+    "2026-08-18T08:04:07Z evidence recorded: evidence/logs/step31-green.txt (732894842d40) - step 31 green: 31/31 tests passing across rowNavigation, recoverFocusedRowId, HierarchyTree, TreeRow",
+    "2026-08-18T08:10:24Z step 32 amended: tests: ['Down and Up cross branch boundaries and do nothing at the ends of the list', 'Right expands a collapsed manager in place and moves to the first child of an expanded one', 'Left collapses an expanded manager in place and moves to the parent otherwise', 'Home and End move to the first and last visible rows'] -> ['nextVisibleIndex and previousVisibleIndex cross branch boundaries and stay put at the ends', 'firstChildRowIndex finds the row immediately after an expanded manager, and -1 for a collapsed manager or a non-manager', 'ArrowDown moves focus to the next visible row and ArrowUp to the previous, crossing branch boundaries', 'ArrowDown and ArrowUp do nothing at the ends of the list', 'ArrowRight on a collapsed manager expands it and leaves focus in place', 'ArrowRight on an expanded manager moves focus to its first child', 'ArrowRight on a non-manager does nothing', 'ArrowLeft on an expanded manager collapses it and leaves focus in place', 'ArrowLeft on a collapsed manager, or on any non-manager, moves focus to its parent', 'ArrowLeft on an already-collapsed root does nothing', 'Home moves focus to the first visible row and End to the last']",
+    "2026-08-18T08:10:27Z step 32 -> red",
+    "2026-08-18T08:10:27Z step 32 -> green",
+    "2026-08-18T08:10:27Z step 32 -> done",
+    "2026-08-18T08:10:31Z evidence recorded: evidence/logs/step32-red.txt (cd72d9ff4a2c) - step 32 red: 7 keyboard-navigation component tests failing, no keydown handler exists yet (rowNavigation's nextVisibleIndex/firstChildRowIndex were separately observed red before implementation earlier in this session)",
+    "2026-08-18T08:10:31Z evidence recorded: evidence/logs/step32-green.txt (20c1b7444a0e) - step 32 green: 38/38 tests passing across rowNavigation, HierarchyTree, TreeRow"
   ],
   "milestones": [
     {
@@ -1807,6 +1820,16 @@
       "sha": "732894842d40",
       "recorded": "2026-08-18T08:04:07Z",
       "note": "step 31 green: 31/31 tests passing across rowNavigation, recoverFocusedRowId, HierarchyTree, TreeRow"
+    },
+    "evidence/logs/step32-red.txt": {
+      "sha": "cd72d9ff4a2c",
+      "recorded": "2026-08-18T08:10:31Z",
+      "note": "step 32 red: 7 keyboard-navigation component tests failing, no keydown handler exists yet (rowNavigation's nextVisibleIndex/firstChildRowIndex were separately observed red before implementation earlier in this session)"
+    },
+    "evidence/logs/step32-green.txt": {
+      "sha": "20c1b7444a0e",
+      "recorded": "2026-08-18T08:10:31Z",
+      "note": "step 32 green: 38/38 tests passing across rowNavigation, HierarchyTree, TreeRow"
     }
   },
   "test_file_hashes": {

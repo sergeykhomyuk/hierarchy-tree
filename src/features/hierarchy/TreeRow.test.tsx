@@ -49,6 +49,8 @@ const MANAGER_PROPS: TreeRowProps = {
   onPhotoError: vi.fn(),
   onToggle: vi.fn(),
   onRowFocus: vi.fn(),
+  onKeyDown: vi.fn(),
+  registerElement: vi.fn(),
 };
 
 describe('TreeRow', () => {

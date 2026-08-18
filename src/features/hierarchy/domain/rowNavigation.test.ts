@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { buildForest } from './buildForest';
 import { flattenVisible } from './flattenVisible';
-import { findRowIndexById, parentRowIndex } from './rowNavigation';
+import {
+  findRowIndexById,
+  firstChildRowIndex,
+  nextVisibleIndex,
+  parentRowIndex,
+  previousVisibleIndex,
+} from './rowNavigation';
 import { parsePersonIdentifier } from './personIdentifier';
 import type { PersonIdentifier } from './personIdentifier';
 import { testPerson } from '../testing/testPerson';
@@ -41,5 +47,44 @@ describe('rowNavigation', () => {
     const rows = flattenVisible(roots, new Set<PersonIdentifier>());
 
     expect(parentRowIndex(rows, 5)).toBe(-1);
+  });
+
+  it('nextVisibleIndex and previousVisibleIndex cross branch boundaries and stay put at the ends', () => {
+    const { roots } = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+      testPerson(3),
+    ]);
+    const rows = flattenVisible(
+      roots,
+      new Set<PersonIdentifier>([parsePersonIdentifier(1)]),
+    );
+    // rows: 1, 2, 3 - three rows, no gaps between the branch boundaries.
+
+    expect(nextVisibleIndex(rows, 0)).toBe(1);
+    expect(nextVisibleIndex(rows, 1)).toBe(2);
+    expect(nextVisibleIndex(rows, 2)).toBe(2);
+    expect(previousVisibleIndex(rows, 2)).toBe(1);
+    expect(previousVisibleIndex(rows, 1)).toBe(0);
+    expect(previousVisibleIndex(rows, 0)).toBe(0);
+  });
+
+  it('firstChildRowIndex finds the row immediately after an expanded manager, and -1 for a collapsed manager or a non-manager', () => {
+    const { roots } = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+      testPerson(3),
+    ]);
+    const rows = flattenVisible(
+      roots,
+      new Set<PersonIdentifier>([parsePersonIdentifier(1)]),
+    );
+    // rows: 1 (expanded manager, depth 0), 2 (its child, depth 1), 3 (childless root, depth 0)
+
+    expect(firstChildRowIndex(rows, 0)).toBe(1);
+    expect(firstChildRowIndex(rows, 2)).toBe(-1);
+
+    const collapsedRows = flattenVisible(roots, new Set<PersonIdentifier>());
+    expect(firstChildRowIndex(collapsedRows, 0)).toBe(-1);
   });
 });

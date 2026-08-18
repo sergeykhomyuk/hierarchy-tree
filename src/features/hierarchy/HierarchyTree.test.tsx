@@ -459,4 +459,154 @@ describe('HierarchyTree', () => {
       expect(rows[0].tabIndex).toBe(0);
     });
   });
+
+  describe('keyboard navigation', () => {
+    // A real keydown only ever fires on the element that actually has DOM
+    // focus - the tabbable row, per the roving-tabindex contract these
+    // tests exercise - never on the tree container itself, which holds no
+    // tab stop of its own.
+    function pressKey(key: string) {
+      const tabbableRow = screen
+        .getAllByRole('treeitem')
+        .find((row) => row.tabIndex === 0);
+      if (tabbableRow === undefined) {
+        throw new Error('expected exactly one tabbable row');
+      }
+      fireEvent.keyDown(tabbableRow, { key });
+    }
+
+    it('ArrowDown moves focus to the next visible row and ArrowUp to the previous, crossing branch boundaries', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3),
+      ]);
+
+      await renderTree({
+        roots,
+        expandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+
+      pressKey('ArrowDown');
+      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toHaveFocus();
+      pressKey('ArrowDown');
+      expect(screen.getByRole('treeitem', { name: 'First3 Last3' })).toHaveFocus();
+      pressKey('ArrowUp');
+      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toHaveFocus();
+    });
+
+    it('ArrowDown and ArrowUp do nothing at the ends of the list', async () => {
+      const { roots } = buildForest([testPerson(1), testPerson(2)]);
+
+      await renderTree({ roots, expandedIds: new Set() });
+      pressKey('ArrowUp');
+      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+
+      fireEvent.focus(screen.getByRole('treeitem', { name: 'First2 Last2' }));
+      pressKey('ArrowDown');
+      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toHaveFocus();
+    });
+
+    it('ArrowRight on a collapsed manager expands it and leaves focus in place', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+      ]);
+
+      await renderStatefulTree({ roots, initialExpandedIds: new Set() });
+      screen.getByRole('treeitem', { name: 'First1 Last1' }).focus();
+      pressKey('ArrowRight');
+
+      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toBeVisible();
+    });
+
+    it('ArrowRight on an expanded manager moves focus to its first child', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+      ]);
+
+      await renderTree({
+        roots,
+        expandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+      pressKey('ArrowRight');
+
+      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toHaveFocus();
+    });
+
+    it('ArrowRight on a non-manager does nothing', async () => {
+      const { roots } = buildForest([testPerson(1)]);
+
+      await renderTree({ roots, expandedIds: new Set() });
+      screen.getByRole('treeitem', { name: 'First1 Last1' }).focus();
+      pressKey('ArrowRight');
+
+      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+    });
+
+    it('ArrowLeft on an expanded manager collapses it and leaves focus in place', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+      ]);
+
+      await renderStatefulTree({
+        roots,
+        initialExpandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+      screen.getByRole('treeitem', { name: 'First1 Last1' }).focus();
+      pressKey('ArrowLeft');
+
+      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+      expect(
+        screen.queryByRole('treeitem', { name: 'First2 Last2' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('ArrowLeft on a collapsed manager, or on any non-manager, moves focus to its parent', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3, { managerId: 1 }),
+      ]);
+
+      await renderTree({
+        roots,
+        expandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+      fireEvent.focus(screen.getByRole('treeitem', { name: 'First3 Last3' }));
+      pressKey('ArrowLeft');
+
+      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+    });
+
+    it('ArrowLeft on an already-collapsed root does nothing', async () => {
+      const { roots } = buildForest([testPerson(1)]);
+
+      await renderTree({ roots, expandedIds: new Set() });
+      screen.getByRole('treeitem', { name: 'First1 Last1' }).focus();
+      pressKey('ArrowLeft');
+
+      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+    });
+
+    it('Home moves focus to the first visible row and End to the last', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+        testPerson(3),
+      ]);
+
+      await renderTree({
+        roots,
+        expandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+      pressKey('End');
+      expect(screen.getByRole('treeitem', { name: 'First3 Last3' })).toHaveFocus();
+      pressKey('Home');
+      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+    });
+  });
 });

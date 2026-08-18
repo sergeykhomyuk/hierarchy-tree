@@ -26,3 +26,36 @@ export function parentRowIndex(
   }
   return -1;
 }
+
+// Inert at the ends (invariant 133) - both return the same index rather
+// than -1, so a caller can always focus rows[nextVisibleIndex(...)]
+// unconditionally without a bounds check of its own.
+export function nextVisibleIndex(
+  rows: readonly VisibleRow[],
+  index: number,
+): number {
+  return index + 1 < rows.length ? index + 1 : index;
+}
+
+export function previousVisibleIndex(
+  rows: readonly VisibleRow[],
+  index: number,
+): number {
+  return index > 0 ? index - 1 : index;
+}
+
+// The row immediately after an EXPANDED manager, in pre-order, is always
+// its first child - -1 for a collapsed manager (nothing to descend into)
+// or a non-manager (invariant 134's "Right on a non-manager does
+// nothing").
+export function firstChildRowIndex(
+  rows: readonly VisibleRow[],
+  index: number,
+): number {
+  const row = rows[index];
+  if (row === undefined || !row.isExpanded) return -1;
+  const child = rows[index + 1];
+  return child !== undefined && child.depth === row.depth + 1
+    ? index + 1
+    : -1;
+}

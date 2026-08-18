@@ -1,4 +1,5 @@
 import { memo, useCallback } from 'react';
+import type { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '@shared/ui';
 import { personDisplayName } from './domain/personDisplayName';
@@ -31,6 +32,15 @@ export type TreeRowProps = {
   onPhotoError: (personId: PersonIdentifier) => void;
   onToggle: (personId: PersonIdentifier) => void;
   onRowFocus: (personId: PersonIdentifier) => void;
+  // Attached here rather than on the tree container: the container has
+  // no tab stop of its own (every row does, via roving tabindex), and
+  // jsx-a11y's interactive-supports-focus rule requires a keydown handler
+  // to sit on a focusable element - the row this event actually targets.
+  onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void;
+  // Lets HierarchyTree call element.focus() imperatively for arrow/Home/
+  // End/type-ahead movement (invariants 133-139) without this row owning
+  // any navigation logic of its own.
+  registerElement: (personId: PersonIdentifier, element: HTMLDivElement | null) => void;
 };
 
 // Every prop here is a primitive - flattenVisible returns a fresh
@@ -57,6 +67,8 @@ export const TreeRow = memo(function TreeRow({
   onPhotoError,
   onToggle,
   onRowFocus,
+  onKeyDown,
+  registerElement,
 }: TreeRowProps) {
   const { t, i18n } = useTranslation('hierarchy');
   const displayName = personDisplayName({ firstName, lastName, email });
@@ -72,12 +84,20 @@ export const TreeRow = memo(function TreeRow({
   const handleFocus = useCallback(() => {
     onRowFocus(personId);
   }, [onRowFocus, personId]);
+  const handleRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      registerElement(personId, element);
+    },
+    [registerElement, personId],
+  );
 
   return (
     <div
+      ref={handleRef}
       role="treeitem"
       tabIndex={isTabbable ? 0 : -1}
       onFocus={handleFocus}
+      onKeyDown={onKeyDown}
       aria-label={accessibleName}
       aria-level={depth + 1}
       aria-posinset={posInSet}

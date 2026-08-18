@@ -9,6 +9,7 @@ import type { TreeNode } from './domain/treeNode';
 import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
 import { TreeAnnouncer } from './TreeAnnouncer';
 import { TreeRow } from './TreeRow';
+import { useTreeKeyboard } from './useTreeKeyboard';
 
 export type HierarchyTreeProps = {
   roots: readonly TreeNode[];
@@ -96,6 +97,26 @@ export const HierarchyTree = memo(function HierarchyTree({
   const handleRowFocus = useCallback((personId: PersonIdentifier) => {
     setTabbableId(personId);
   }, []);
+
+  // Element refs, keyed by person id, so arrow/Home/End movement can call
+  // .focus() directly - a native focus event is what actually moves the
+  // roving tab stop (via TreeRow's own onFocus -> handleRowFocus), so
+  // this hook never sets tabbableId itself.
+  const rowElementsRef = useRef(new Map<PersonIdentifier, HTMLDivElement>());
+  const registerRowElement = useCallback(
+    (personId: PersonIdentifier, element: HTMLDivElement | null) => {
+      if (element === null) {
+        rowElementsRef.current.delete(personId);
+      } else {
+        rowElementsRef.current.set(personId, element);
+      }
+    },
+    [],
+  );
+  const focusRow = useCallback((personId: PersonIdentifier) => {
+    rowElementsRef.current.get(personId)?.focus();
+  }, []);
+
   const handleRowToggle = useCallback(
     (personId: PersonIdentifier) => {
       const row = rowsRef.current.find(
@@ -123,6 +144,13 @@ export const HierarchyTree = memo(function HierarchyTree({
     [onToggle, observability, t],
   );
 
+  const handleKeyDown = useTreeKeyboard({
+    rows,
+    tabbableId,
+    onFocusRow: focusRow,
+    onToggleRow: handleRowToggle,
+  });
+
   return (
     <>
       <TreeAnnouncer message={announcement} />
@@ -148,6 +176,8 @@ export const HierarchyTree = memo(function HierarchyTree({
             onPhotoError={handlePhotoError}
             onToggle={handleRowToggle}
             onRowFocus={handleRowFocus}
+            onKeyDown={handleKeyDown}
+            registerElement={registerRowElement}
           />
         ))}
       </div>
