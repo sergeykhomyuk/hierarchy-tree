@@ -54,7 +54,7 @@
    3.34:1 light / 4.31:1 dark against AA's 4.5:1 body-text floor. Both
    deviations are recorded here rather than in docs/reference.md because
    the mockup's literal values are what is being knowingly overridden. */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --color-primary-tint: #2f2350;
     --color-primary-tint-hover: #362a5c;
@@ -75,7 +75,7 @@
     --color-danger-surface: #3a1420;
     --color-focus-ring: #9b7bf5;
   }
-}
+} */
 
 /* The one place default text and page colour are set from the token
    layer - without it, plain text with no explicit text-* class (Card's

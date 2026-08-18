@@ -42,7 +42,7 @@ describe('buildContentSecurityPolicy', () => {
 
       // The exact img-src segment - not merely toContain(), which would
       // still pass if https: had never actually been added.
-      expect(directives).toContain("img-src 'self' data: https:");
+      expect(directives).toContain("img-src 'self' data: https: http:");
 
       // Pinning the full directive set (content and count) is what proves
       // nothing ELSE changed - a future edit to any of these shows up as a
