@@ -404,4 +404,59 @@ describe('HierarchyTree', () => {
       'page.toggleAnnouncedExpanded',
     );
   });
+
+  describe('roving tabindex', () => {
+    it('exactly one row is tabbable, and on first render it is the first visible row', async () => {
+      const { roots } = buildForest([testPerson(1), testPerson(2)]);
+
+      await renderTree({ roots, expandedIds: new Set() });
+
+      const rows = screen.getAllByRole('treeitem');
+      expect(rows.map((row) => row.tabIndex)).toEqual([0, -1]);
+    });
+
+    it('the toggle control is never part of the tab sequence', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+      ]);
+
+      await renderTree({
+        roots,
+        expandedIds: new Set([parsePersonIdentifier(1)]),
+      });
+
+      expect(rowToggle('First1 Last1').tabIndex).toBe(-1);
+    });
+
+    it('the row that receives focus becomes the tabbable row, and the rest fall out of the tab sequence', async () => {
+      const { roots } = buildForest([testPerson(1), testPerson(2)]);
+
+      await renderTree({ roots, expandedIds: new Set() });
+      const rows = screen.getAllByRole('treeitem');
+      fireEvent.focus(rows[1]);
+
+      expect(screen.getAllByRole('treeitem').map((row) => row.tabIndex)).toEqual(
+        [-1, 0],
+      );
+    });
+
+    it('collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable', async () => {
+      const { roots } = buildForest([
+        testPerson(1),
+        testPerson(2, { managerId: 1 }),
+      ]);
+      const rootId = parsePersonIdentifier(1);
+      const user = userEvent.setup();
+
+      await renderStatefulTree({ roots, initialExpandedIds: new Set([rootId]) });
+      fireEvent.focus(screen.getByRole('treeitem', { name: 'First2 Last2' }));
+
+      await user.click(rowToggle('First1 Last1'));
+
+      const rows = screen.getAllByRole('treeitem');
+      expect(rows).toHaveLength(1);
+      expect(rows[0].tabIndex).toBe(0);
+    });
+  });
 });

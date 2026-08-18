@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import type { ObservabilityFacade } from '@platform/observability';
 import { flattenVisible } from './domain/flattenVisible';
 import { personDisplayName } from './domain/personDisplayName';
+import { recoverFocusedRowId } from './domain/recoverFocusedRowId';
 import type { PersonIdentifier } from './domain/personIdentifier';
 import type { TreeNode } from './domain/treeNode';
 import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
@@ -69,6 +70,32 @@ export const HierarchyTree = memo(function HierarchyTree({
   const rowsRef = useRef(rows);
   rowsRef.current = rows;
   const [announcement, setAnnouncement] = useState('');
+
+  // Roving tabindex (invariants 130-132): one row is the tab stop, kept in
+  // React state rather than read straight off the DOM so a render can
+  // decide every row's tabIndex in one pass. Recovery runs only when
+  // expandedIds actually changes identity (a toggle or a Back/Forward),
+  // never on a render caused by something unrelated - rows is read via a
+  // ref precisely so it is not a dependency itself, since flattenVisible
+  // never reuses the previous call's array (the same reasoning as
+  // rowsRef above).
+  const [tabbableId, setTabbableId] = useState<PersonIdentifier | null>(
+    () => rows[0]?.person.id ?? null,
+  );
+  const previousRowsForFocusRef = useRef(rows);
+  useEffect(() => {
+    const previousRows = previousRowsForFocusRef.current;
+    const currentRows = rowsRef.current;
+    previousRowsForFocusRef.current = currentRows;
+    setTabbableId((current) =>
+      current === null
+        ? (currentRows[0]?.person.id ?? null)
+        : recoverFocusedRowId(previousRows, currentRows, current),
+    );
+  }, [expandedIds]);
+  const handleRowFocus = useCallback((personId: PersonIdentifier) => {
+    setTabbableId(personId);
+  }, []);
   const handleRowToggle = useCallback(
     (personId: PersonIdentifier) => {
       const row = rowsRef.current.find(
@@ -117,8 +144,10 @@ export const HierarchyTree = memo(function HierarchyTree({
             setSize={row.setSize}
             posInSet={row.posInSet}
             isSignedInUser={row.person.id === signedInUserId}
+            isTabbable={row.person.id === tabbableId}
             onPhotoError={handlePhotoError}
             onToggle={handleRowToggle}
+            onRowFocus={handleRowFocus}
           />
         ))}
       </div>

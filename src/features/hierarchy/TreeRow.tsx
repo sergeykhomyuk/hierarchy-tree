@@ -22,8 +22,15 @@ export type TreeRowProps = {
   setSize: number;
   posInSet: number;
   isSignedInUser: boolean;
+  // Roving tabindex (invariant 130-132): exactly one row is a tab stop at
+  // a time, and it becomes tabbable the moment it receives DOM focus -
+  // however that focus arrived, Tab or an imperative move the tree makes
+  // itself - so there is one source of truth rather than two pieces of
+  // state that could drift apart.
+  isTabbable: boolean;
   onPhotoError: (personId: PersonIdentifier) => void;
   onToggle: (personId: PersonIdentifier) => void;
+  onRowFocus: (personId: PersonIdentifier) => void;
 };
 
 // Every prop here is a primitive - flattenVisible returns a fresh
@@ -46,8 +53,10 @@ export const TreeRow = memo(function TreeRow({
   setSize,
   posInSet,
   isSignedInUser,
+  isTabbable,
   onPhotoError,
   onToggle,
+  onRowFocus,
 }: TreeRowProps) {
   const { t, i18n } = useTranslation('hierarchy');
   const displayName = personDisplayName({ firstName, lastName, email });
@@ -60,11 +69,15 @@ export const TreeRow = memo(function TreeRow({
   const handleToggle = useCallback(() => {
     onToggle(personId);
   }, [onToggle, personId]);
+  const handleFocus = useCallback(() => {
+    onRowFocus(personId);
+  }, [onRowFocus, personId]);
 
   return (
     <div
       role="treeitem"
-      tabIndex={-1}
+      tabIndex={isTabbable ? 0 : -1}
+      onFocus={handleFocus}
       aria-label={accessibleName}
       aria-level={depth + 1}
       aria-posinset={posInSet}

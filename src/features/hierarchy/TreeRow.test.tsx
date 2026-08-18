@@ -45,8 +45,10 @@ const MANAGER_PROPS: TreeRowProps = {
   setSize: 2,
   posInSet: 1,
   isSignedInUser: false,
+  isTabbable: false,
   onPhotoError: vi.fn(),
   onToggle: vi.fn(),
+  onRowFocus: vi.fn(),
 };
 
 describe('TreeRow', () => {

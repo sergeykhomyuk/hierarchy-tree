@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T07:24:20Z",
+  "updated": "2026-08-18T08:04:07Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -263,8 +263,8 @@
     "G2": {
       "status": "pending",
       "attempts": 0,
-      "steps_total": 43,
-      "steps_done": 30
+      "steps_total": 44,
+      "steps_done": 31
     },
     "G3": {
       "status": "pending",
@@ -734,12 +734,20 @@
       "id": 31,
       "desc": "Roving tabindex: the tree is a single tab stop, the first Tab into a freshly loaded tree lands on the first visible row, exactly one row is tabbable at a time, and returning with Tab restores the row that last had focus - falling back to the first visible row when that row is no longer in the list. The toggle control assertion from M3 is re-asserted here as part of the tab sequence. Invariants 107, 130, 131, 132.",
       "tests": [
-        "Tab enters the tree once and the next Tab leaves it entirely",
-        "the first Tab into a freshly loaded tree lands on the first visible row",
-        "returning to the tree restores the row that last had focus and falls back to the first when it is gone"
+        "findRowIndexById finds the row at its position and -1 when the id names no visible row",
+        "parentRowIndex finds the nearest preceding row exactly one level shallower, and -1 for a root row",
+        "parentRowIndex returns -1 for an out-of-range index",
+        "a focused id still present in the next rows is returned unchanged",
+        "a focused id no longer present falls back to its nearest still-visible ancestor",
+        "a focused id no longer present with no surviving ancestor falls back to the first visible row",
+        "an empty next row list returns null",
+        "exactly one row is tabbable, and on first render it is the first visible row",
+        "the toggle control is never part of the tab sequence",
+        "the row that receives focus becomes the tabbable row, and the rest fall out of the tab sequence",
+        "collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-18T08:03:50Z evidence/logs/step31-red.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -882,6 +890,26 @@
       "red_observed": null,
       "status": "pending",
       "milestone": 5
+    },
+    {
+      "id": 44,
+      "desc": "Roving tabindex: the tree is a single tab stop, the first Tab into a freshly loaded tree lands on the first visible row, exactly one row is tabbable at a time, and returning with Tab restores the row that last had focus - falling back to the first visible row when that row is no longer in the list. The toggle control assertion from M3 is re-asserted here as part of the tab sequence. Invariants 107, 130, 131, 132.",
+      "tests": [
+        "findRowIndexById finds the row at its position and -1 when the id names no visible row",
+        "parentRowIndex finds the nearest preceding row exactly one level shallower, and -1 for a root row",
+        "parentRowIndex returns -1 for an out-of-range index",
+        "a focused id still present in the next rows is returned unchanged",
+        "a focused id no longer present falls back to its nearest still-visible ancestor",
+        "a focused id no longer present with no surviving ancestor falls back to the first visible row",
+        "an empty next row list returns null",
+        "exactly one row is tabbable, and on first render it is the first visible row",
+        "the toggle control is never part of the tab sequence",
+        "the row that receives focus becomes the tabbable row, and the rest fall out of the tab sequence",
+        "collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable"
+      ],
+      "red_observed": "n/a: case (a): duplicate step created by mistake immediately after step 31 (identical desc, same milestone, same exact tests) already covered this scope - no new coverage, retiring this duplicate entry rather than leaving it pending",
+      "status": "red",
+      "milestone": 4
     }
   ],
   "log": [
@@ -1276,7 +1304,16 @@
     "2026-08-18T07:23:38Z evidence recorded: evidence/logs/claude9-fix-e2e.txt (70e908d23e4b) - Claude-9 fix: full playwright suite 50/50 pass, 5 consecutive clean runs confirming the scroll-position test's real fix (retargeted from Noa Shani to Roni Yashar - collapsing the last branch in a scrolled list was triggering genuine browser scroll-clamping, misread as app flakiness)",
     "2026-08-18T07:23:48Z Claude-9 fix: hierarchyFixture.ts's secret mock returned String(DEEPEST_PERSON_ID) - a JSON string - as the session userId, which could never strictly equal a PersonIdentifier (a branded number), so the you marker never rendered in this fixture despite the fixture's own comment claiming it did. Fixed to return the raw integer (lookupResultSchema explicitly accepts z.int()). Added a genuine positive-match unit test in HierarchyTree.test.tsx exercising the real === comparison (not a prop handed straight to TreeRow). While investigating, also discovered and fixed a real e2e test-design bug in hierarchy-layout.spec.ts's scroll-position test: it targeted Noa Shani, the second root near the very end of the row list, whose collapse (removing the LAST row, Uri Barak) shrank the scrollable content below the already-captured scrollTop - a genuine browser auto-clamp behavior, not an app bug, that was intermittently failing under parallel load and then failing deterministically. Retargeted to Roni Yashar, which has enough remaining content below it (Tal Bergman, then the whole second root) that collapsing it never triggers the clamp; confirmed with 5 consecutive clean full-suite e2e runs plus a scrollHeight/maxScroll debug trace proving the mechanism. Full suite 551/551, full e2e 50/50.",
     "2026-08-18T07:23:48Z G4 finding Claude-9 dispositioned: fixed",
-    "2026-08-18T07:24:20Z milestone 3 reviewed: Fresh agentic-loop:loop-reviewer reviewed the full M3 diff (ba67fcb..HEAD). 4 findings: Claude-6 (BLOCKING - toggle telemetry event and live-region announcement entirely unimplemented despite step 26 explicitly claiming the mouse path of invariants 114/115 done) fixed; Claude-7 (page.hiddenLabel never pluralized through the catalogue) fixed; Claude-8 (HierarchySummary's composed string can't independently pluralize 3 nested nouns - real tension with invariant 157) accepted, same class as the already-accepted Gap-2; Claude-9 (you-marker fixture bug: String(id) never strictly equals a branded PersonIdentifier, plus an untested positive-match path) fixed, which also surfaced and fixed a genuine e2e test-design bug (browser scroll-clamping misread as flakiness). All fixes verified with full vitest (551/551) and full playwright (50/50, 5 consecutive clean runs) after each change."
+    "2026-08-18T07:24:20Z milestone 3 reviewed: Fresh agentic-loop:loop-reviewer reviewed the full M3 diff (ba67fcb..HEAD). 4 findings: Claude-6 (BLOCKING - toggle telemetry event and live-region announcement entirely unimplemented despite step 26 explicitly claiming the mouse path of invariants 114/115 done) fixed; Claude-7 (page.hiddenLabel never pluralized through the catalogue) fixed; Claude-8 (HierarchySummary's composed string can't independently pluralize 3 nested nouns - real tension with invariant 157) accepted, same class as the already-accepted Gap-2; Claude-9 (you-marker fixture bug: String(id) never strictly equals a branded PersonIdentifier, plus an untested positive-match path) fixed, which also surfaced and fixed a genuine e2e test-design bug (browser scroll-clamping misread as flakiness). All fixes verified with full vitest (551/551) and full playwright (50/50, 5 consecutive clean runs) after each change.",
+    "2026-08-18T08:02:30Z step 44 added (milestone 4): Roving tabindex: the tree is a single tab stop, the first Tab into a freshly loaded tree lands on the first visible row, exactly one row is tabbable at a time, and returning with Tab restores the row that last had focus - falling back to the first visible row when that row is no longer in the list. The toggle control assertion from M3 is re-asserted here as part of the tab sequence. Invariants 107, 130, 131, 132.",
+    "2026-08-18T08:03:47Z step 31 amended: desc: 'Roving tabindex: the tree is a single tab stop, the first Tab into a freshly loaded tree lands on the first visible row, exactly one row is tabbable at a time, and returning with Tab restores the row that last had focus - falling back to the first visible row when that row is no longer in the list. The toggle control assertion from M3 is re-asserted here as part of the tab sequence. Invariants 107, 130, 131, 132.' -> 'Roving tabindex: the tree is a single tab stop, the first Tab into a freshly loaded tree lands on the first visible row, exactly one row is tabbable at a time, and returning with Tab restores the row that last had focus - falling back to the first visible row when that row is no longer in the list. The toggle control assertion from M3 is re-asserted here as part of the tab sequence. Invariants 107, 130, 131, 132.'; tests: ['Tab enters the tree once and the next Tab leaves it entirely', 'the first Tab into a freshly loaded tree lands on the first visible row', 'returning to the tree restores the row that last had focus and falls back to the first when it is gone'] -> ['findRowIndexById finds the row at its position and -1 when the id names no visible row', 'parentRowIndex finds the nearest preceding row exactly one level shallower, and -1 for a root row', 'parentRowIndex returns -1 for an out-of-range index', 'a focused id still present in the next rows is returned unchanged', 'a focused id no longer present falls back to its nearest still-visible ancestor', 'a focused id no longer present with no surviving ancestor falls back to the first visible row', 'an empty next row list returns null', 'exactly one row is tabbable, and on first render it is the first visible row', 'the toggle control is never part of the tab sequence', 'the row that receives focus becomes the tabbable row, and the rest fall out of the tab sequence', 'collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable']",
+    "2026-08-18T08:03:50Z step 31 -> red",
+    "2026-08-18T08:03:50Z step 31 -> green",
+    "2026-08-18T08:03:50Z step 31 -> done",
+    "2026-08-18T08:03:56Z step 44 -> na",
+    "2026-08-18T08:04:01Z mistake: 'step add' for the roving-tabindex work created a duplicate of the pre-existing plan step 31 (same desc/milestone) as new step 44 - amended step 31 with the real test names and drove it red/green/done there instead; retired step 44 as na case (a), same exact tests, no new coverage.",
+    "2026-08-18T08:04:07Z evidence recorded: evidence/logs/step31-red.txt (83ce6acd8100) - step 31 red: rowNavigation/recoverFocusedRowId modules missing, 3 roving-tabindex component tests failing (tabIndex hardcoded -1)",
+    "2026-08-18T08:04:07Z evidence recorded: evidence/logs/step31-green.txt (732894842d40) - step 31 green: 31/31 tests passing across rowNavigation, recoverFocusedRowId, HierarchyTree, TreeRow"
   ],
   "milestones": [
     {
@@ -1760,6 +1797,16 @@
       "sha": "70e908d23e4b",
       "recorded": "2026-08-18T07:23:38Z",
       "note": "Claude-9 fix: full playwright suite 50/50 pass, 5 consecutive clean runs confirming the scroll-position test's real fix (retargeted from Noa Shani to Roni Yashar - collapsing the last branch in a scrolled list was triggering genuine browser scroll-clamping, misread as app flakiness)"
+    },
+    "evidence/logs/step31-red.txt": {
+      "sha": "83ce6acd8100",
+      "recorded": "2026-08-18T08:04:07Z",
+      "note": "step 31 red: rowNavigation/recoverFocusedRowId modules missing, 3 roving-tabindex component tests failing (tabIndex hardcoded -1)"
+    },
+    "evidence/logs/step31-green.txt": {
+      "sha": "732894842d40",
+      "recorded": "2026-08-18T08:04:07Z",
+      "note": "step 31 green: 31/31 tests passing across rowNavigation, recoverFocusedRowId, HierarchyTree, TreeRow"
     }
   },
   "test_file_hashes": {
