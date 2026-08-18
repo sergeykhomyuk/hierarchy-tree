@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T08:16:00Z",
+  "updated": "2026-08-18T08:27:11Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 44,
-      "steps_done": 33
+      "steps_done": 34
     },
     "G3": {
       "status": "pending",
@@ -787,13 +787,18 @@
       "id": 34,
       "desc": "Type-ahead against the row accessible name - which for the nameless-person row is their email - matching case-insensitively and accent-insensitively through a locale-aware comparison, wrapping to the top, with the buffer reset driven by the injected Clock rather than setTimeout, which the lint config bans across src with no feature override. A repeated single character cycles; two or more distinct characters match as a prefix. Invariants 138, 139.",
       "tests": [
-        "typing moves focus to the next row whose accessible name starts with what was typed and wraps to the top",
-        "type-ahead matching is case-insensitive and accent-insensitive",
-        "the type-ahead buffer resets after a second of no typing",
-        "a repeated single character cycles and two distinct characters match as a prefix"
+        "appends the you marker only for the signed-in user's row",
+        "two or more distinct characters match by prefix, case-insensitively",
+        "matches accent-insensitively through a locale-aware comparison",
+        "a single repeated character cycles through every row starting with it",
+        "wraps to the top when no match remains after the current row",
+        "returns null when nothing matches",
+        "returns null for an empty row list",
+        "typing a character moves focus to the next visible row whose accessible name starts with it, case-insensitively",
+        "the type-ahead buffer resets after a second of no typing"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-18T08:27:01Z evidence/logs/step34-red.txt",
+      "status": "done",
       "milestone": 4
     },
     {
@@ -1333,7 +1338,14 @@
     "2026-08-18T08:15:57Z step 33 -> green",
     "2026-08-18T08:15:57Z step 33 -> done",
     "2026-08-18T08:16:00Z evidence recorded: evidence/logs/step33-red.txt (28e8d8ebb7be) - step 33 red: 3 Enter/Space toggle-parity tests failing before Enter/Space case existed",
-    "2026-08-18T08:16:00Z evidence recorded: evidence/logs/step33-green.txt (c2c9f4a93d09) - step 33 green: 27/27 HierarchyTree tests passing"
+    "2026-08-18T08:16:00Z evidence recorded: evidence/logs/step33-green.txt (c2c9f4a93d09) - step 33 green: 27/27 HierarchyTree tests passing",
+    "2026-08-18T08:26:58Z step 34 amended: tests: ['typing moves focus to the next row whose accessible name starts with what was typed and wraps to the top', 'type-ahead matching is case-insensitive and accent-insensitive', 'the type-ahead buffer resets after a second of no typing', 'a repeated single character cycles and two distinct characters match as a prefix'] -> [\"appends the you marker only for the signed-in user's row\", 'two or more distinct characters match by prefix, case-insensitively', 'matches accent-insensitively through a locale-aware comparison', 'a single repeated character cycles through every row starting with it', 'wraps to the top when no match remains after the current row', 'returns null when nothing matches', 'returns null for an empty row list', 'typing a character moves focus to the next visible row whose accessible name starts with it, case-insensitively', 'the type-ahead buffer resets after a second of no typing']",
+    "2026-08-18T08:27:01Z step 34 -> red",
+    "2026-08-18T08:27:01Z step 34 -> green",
+    "2026-08-18T08:27:01Z step 34 -> done",
+    "2026-08-18T08:27:04Z evidence recorded: evidence/logs/step34-red.txt (e9efea48af62) - step 34 red: rowAccessibleName/typeAheadMatch modules missing, type-ahead component tests failing",
+    "2026-08-18T08:27:04Z evidence recorded: evidence/logs/step34-green.txt (6c0b85161972) - step 34 green: 60/60 tests passing across rowAccessibleName, typeAheadMatch, HierarchyTree, TreeRow, HierarchyPage",
+    "2026-08-18T08:27:11Z discovered I had been running 'tsc --noEmit -p .' (checks nothing - tsconfig.json is a solution file with files:[]) instead of the real typecheck 'tsc -b' throughout steps 31-33 - fixed ~20 accumulated noUncheckedIndexedAccess strict-mode errors across rowNavigation.ts, recoverFocusedRowId.ts, typeAheadMatch.ts and useTreeKeyboard.ts as part of step 34, then re-verified npm run typecheck/lint/format:check/test:coverage all green. No further step should skip 'tsc -b'."
   ],
   "milestones": [
     {
@@ -1847,6 +1859,16 @@
       "sha": "c2c9f4a93d09",
       "recorded": "2026-08-18T08:16:00Z",
       "note": "step 33 green: 27/27 HierarchyTree tests passing"
+    },
+    "evidence/logs/step34-red.txt": {
+      "sha": "e9efea48af62",
+      "recorded": "2026-08-18T08:27:04Z",
+      "note": "step 34 red: rowAccessibleName/typeAheadMatch modules missing, type-ahead component tests failing"
+    },
+    "evidence/logs/step34-green.txt": {
+      "sha": "6c0b85161972",
+      "recorded": "2026-08-18T08:27:04Z",
+      "note": "step 34 green: 60/60 tests passing across rowAccessibleName, typeAheadMatch, HierarchyTree, TreeRow, HierarchyPage"
     }
   },
   "test_file_hashes": {

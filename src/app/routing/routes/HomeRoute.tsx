@@ -61,8 +61,8 @@ export const HomeRoute = memo(function HomeRoute() {
   // memo comparison every time HomeRoute re-renders for an unrelated
   // reason.
   const dependencies = useMemo(
-    () => ({ observability: runtime.observability }),
-    [runtime.observability],
+    () => ({ observability: runtime.observability, clock: runtime.clock }),
+    [runtime.observability, runtime.clock],
   );
 
   return (

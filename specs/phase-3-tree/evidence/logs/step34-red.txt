@@ -1,0 +1,95 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/domain/rowAccessibleName.test.ts (0 test)
+ ❯ |ui| src/features/hierarchy/domain/typeAheadMatch.test.ts (0 test)
+ ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (0 test)
+ ❯ |ui| src/features/hierarchy/HierarchyPage.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx [ src/features/hierarchy/HierarchyPage.test.tsx ]
+Error: Failed to resolve import "./domain/rowAccessibleName" from "src/features/hierarchy/HierarchyTree.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchyTree.tsx:8:34
+  4  |  import { personDisplayName } from "./domain/personDisplayName";
+  5  |  import { recoverFocusedRowId } from "./domain/recoverFocusedRowId";
+  6  |  import { rowAccessibleName } from "./domain/rowAccessibleName";
+     |                                     ^
+  7  |  import { ROW_LIST_MAX_HEIGHT_CLASS } from "./rowListMaxHeightClass";
+  8  |  import { TreeAnnouncer } from "./TreeAnnouncer";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+ ❯ fetchModule node_modules/vite/dist/node/chunks/node.js:34251:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx [ src/features/hierarchy/HierarchyTree.test.tsx ]
+Error: Failed to resolve import "./domain/rowAccessibleName" from "src/features/hierarchy/HierarchyTree.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchyTree.tsx:8:34
+  4  |  import { personDisplayName } from "./domain/personDisplayName";
+  5  |  import { recoverFocusedRowId } from "./domain/recoverFocusedRowId";
+  6  |  import { rowAccessibleName } from "./domain/rowAccessibleName";
+     |                                     ^
+  7  |  import { ROW_LIST_MAX_HEIGHT_CLASS } from "./rowListMaxHeightClass";
+  8  |  import { TreeAnnouncer } from "./TreeAnnouncer";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |ui| src/features/hierarchy/domain/rowAccessibleName.test.ts [ src/features/hierarchy/domain/rowAccessibleName.test.ts ]
+Error: Failed to resolve import "./rowAccessibleName" from "src/features/hierarchy/domain/rowAccessibleName.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/rowAccessibleName.test.ts:2:34
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { rowAccessibleName } from "./rowAccessibleName";
+     |                                     ^
+  3  |  describe("rowAccessibleName", () => {
+  4  |  	it("appends the you marker only for the signed-in user's row", () => {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |ui| src/features/hierarchy/domain/typeAheadMatch.test.ts [ src/features/hierarchy/domain/typeAheadMatch.test.ts ]
+Error: Failed to resolve import "./typeAheadMatch" from "src/features/hierarchy/domain/typeAheadMatch.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/typeAheadMatch.test.ts:2:35
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { findTypeAheadMatch } from "./typeAheadMatch";
+     |                                      ^
+  3  |  const NAMES = [
+  4  |  	"Andrew Crist",
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  4 failed | 1 passed (5)
+      Tests  10 passed (10)
+   Start at  09:26:20
+   Duration  761ms (transform 375ms, setup 687ms, import 120ms, tests 114ms, environment 1.60s)
+

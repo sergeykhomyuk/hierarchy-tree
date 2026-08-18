@@ -1,7 +1,13 @@
 import { act, useCallback, useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-// eslint-disable-next-line testing-library/no-manual-cleanup -- the keyboard/mouse-parity test renders twice in one test (once per key) and needs each isolated from the last.
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import {
+  // eslint-disable-next-line testing-library/no-manual-cleanup -- the keyboard/mouse-parity test renders twice in one test (once per key) and needs each isolated from the last.
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import {
@@ -9,6 +15,7 @@ import {
   Locale,
 } from '@platform/internationalization';
 import type { ObservabilityFacade } from '@platform/observability';
+import { createFakeClock } from '@shared/testing';
 import { loadTranslations } from './loadTranslations';
 import { HierarchyTree } from './HierarchyTree';
 import type { HierarchyTreeProps } from './HierarchyTree';
@@ -28,10 +35,12 @@ function StatefulTreeHarness({
   roots,
   initialExpandedIds,
   observability,
+  clock,
 }: {
   roots: readonly TreeNode[];
   initialExpandedIds: ReadonlySet<PersonIdentifier>;
   observability: ObservabilityFacade;
+  clock: ReturnType<typeof createFakeClock>;
 }) {
   const [expandedIds, setExpandedIds] = useState(initialExpandedIds);
   const handleToggle = useCallback((personId: PersonIdentifier) => {
@@ -51,6 +60,7 @@ function StatefulTreeHarness({
       roots={roots}
       expandedIds={expandedIds}
       observability={observability}
+      clock={clock}
       onToggle={handleToggle}
     />
   );
@@ -61,6 +71,7 @@ async function renderStatefulTree(props: {
   initialExpandedIds: ReadonlySet<PersonIdentifier>;
 }) {
   const observability = createSpyObservability();
+  const clock = createFakeClock();
   const i18n = await createInternationalization({
     resources: { common: {} },
     language: Locale.Test,
@@ -73,10 +84,11 @@ async function renderStatefulTree(props: {
         roots={props.roots}
         initialExpandedIds={props.initialExpandedIds}
         observability={observability}
+        clock={clock}
       />
     </I18nextProvider>,
   );
-  return { ...view, observability };
+  return { ...view, observability, clock };
 }
 
 function rowToggle(rowName: string): HTMLElement {
@@ -98,6 +110,20 @@ function focusRow(name: string) {
   });
 }
 
+// A real keydown only ever fires on the element that actually has DOM
+// focus - the tabbable row, per the roving-tabindex contract these tests
+// exercise - never on the tree container itself, which holds no tab stop
+// of its own.
+function pressKey(key: string) {
+  const tabbableRow = screen
+    .getAllByRole('treeitem')
+    .find((row) => row.tabIndex === 0);
+  if (tabbableRow === undefined) {
+    throw new Error('expected exactly one tabbable row');
+  }
+  fireEvent.keyDown(tabbableRow, { key });
+}
+
 function createSpyObservability(): ObservabilityFacade {
   return {
     logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
@@ -117,13 +143,15 @@ function brokenPhotoImage(container: HTMLElement): HTMLImageElement {
 }
 
 async function renderTree(
-  props: Omit<HierarchyTreeProps, 'observability' | 'onToggle'> & {
+  props: Omit<HierarchyTreeProps, 'observability' | 'onToggle' | 'clock'> & {
     observability?: ObservabilityFacade;
     onToggle?: (personId: PersonIdentifier) => void;
+    clock?: ReturnType<typeof createFakeClock>;
   },
 ) {
   const observability = props.observability ?? createSpyObservability();
   const onToggle = props.onToggle ?? vi.fn();
+  const clock = props.clock ?? createFakeClock();
   const i18n = await createInternationalization({
     resources: { common: {} },
     language: Locale.Test,
@@ -136,10 +164,11 @@ async function renderTree(
         {...props}
         observability={observability}
         onToggle={onToggle}
+        clock={clock}
       />
     </I18nextProvider>,
   );
-  return { ...view, observability, onToggle, i18n };
+  return { ...view, observability, onToggle, clock, i18n };
 }
 
 describe('HierarchyTree', () => {
@@ -206,7 +235,7 @@ describe('HierarchyTree', () => {
         photo: photoUrl,
       }),
     ]);
-    const { rerender, container, observability, onToggle, i18n } =
+    const { rerender, container, observability, onToggle, clock, i18n } =
       await renderTree({
         roots,
         expandedIds: new Set([managerId]),
@@ -223,6 +252,7 @@ describe('HierarchyTree', () => {
             roots={roots}
             expandedIds={new Set()}
             observability={observability}
+            clock={clock}
             onToggle={onToggle}
           />
         </I18nextProvider>,
@@ -233,6 +263,7 @@ describe('HierarchyTree', () => {
             roots={roots}
             expandedIds={new Set([managerId])}
             observability={observability}
+            clock={clock}
             onToggle={onToggle}
           />
         </I18nextProvider>,
@@ -263,6 +294,7 @@ describe('HierarchyTree', () => {
       container: firstContainer,
       observability,
       onToggle,
+      clock,
       i18n,
     } = await renderTree({
       roots: firstLoad.roots,
@@ -285,6 +317,7 @@ describe('HierarchyTree', () => {
           roots={secondLoad.roots}
           expandedIds={new Set()}
           observability={observability}
+          clock={clock}
           onToggle={onToggle}
         />
       </I18nextProvider>,
@@ -446,12 +479,11 @@ describe('HierarchyTree', () => {
       const { roots } = buildForest([testPerson(1), testPerson(2)]);
 
       await renderTree({ roots, expandedIds: new Set() });
-      const rows = screen.getAllByRole('treeitem');
-      fireEvent.focus(rows[1]);
+      fireEvent.focus(screen.getByRole('treeitem', { name: 'First2 Last2' }));
 
-      expect(screen.getAllByRole('treeitem').map((row) => row.tabIndex)).toEqual(
-        [-1, 0],
-      );
+      expect(
+        screen.getAllByRole('treeitem').map((row) => row.tabIndex),
+      ).toEqual([-1, 0]);
     });
 
     it('collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable', async () => {
@@ -462,32 +494,21 @@ describe('HierarchyTree', () => {
       const rootId = parsePersonIdentifier(1);
       const user = userEvent.setup();
 
-      await renderStatefulTree({ roots, initialExpandedIds: new Set([rootId]) });
+      await renderStatefulTree({
+        roots,
+        initialExpandedIds: new Set([rootId]),
+      });
       focusRow('First2 Last2');
 
       await user.click(rowToggle('First1 Last1'));
 
       const rows = screen.getAllByRole('treeitem');
       expect(rows).toHaveLength(1);
-      expect(rows[0].tabIndex).toBe(0);
+      expect(rows[0]).toHaveAttribute('tabindex', '0');
     });
   });
 
   describe('keyboard navigation', () => {
-    // A real keydown only ever fires on the element that actually has DOM
-    // focus - the tabbable row, per the roving-tabindex contract these
-    // tests exercise - never on the tree container itself, which holds no
-    // tab stop of its own.
-    function pressKey(key: string) {
-      const tabbableRow = screen
-        .getAllByRole('treeitem')
-        .find((row) => row.tabIndex === 0);
-      if (tabbableRow === undefined) {
-        throw new Error('expected exactly one tabbable row');
-      }
-      fireEvent.keyDown(tabbableRow, { key });
-    }
-
     it('ArrowDown moves focus to the next visible row and ArrowUp to the previous, crossing branch boundaries', async () => {
       const { roots } = buildForest([
         testPerson(1),
@@ -501,11 +522,17 @@ describe('HierarchyTree', () => {
       });
 
       pressKey('ArrowDown');
-      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First2 Last2' }),
+      ).toHaveFocus();
       pressKey('ArrowDown');
-      expect(screen.getByRole('treeitem', { name: 'First3 Last3' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First3 Last3' }),
+      ).toHaveFocus();
       pressKey('ArrowUp');
-      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First2 Last2' }),
+      ).toHaveFocus();
     });
 
     it('ArrowDown and ArrowUp do nothing at the ends of the list', async () => {
@@ -513,11 +540,15 @@ describe('HierarchyTree', () => {
 
       await renderTree({ roots, expandedIds: new Set() });
       pressKey('ArrowUp');
-      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First1 Last1' }),
+      ).toHaveFocus();
 
       focusRow('First2 Last2');
       pressKey('ArrowDown');
-      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First2 Last2' }),
+      ).toHaveFocus();
     });
 
     it('ArrowRight on a collapsed manager expands it and leaves focus in place', async () => {
@@ -530,8 +561,12 @@ describe('HierarchyTree', () => {
       focusRow('First1 Last1');
       pressKey('ArrowRight');
 
-      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
-      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toBeVisible();
+      expect(
+        screen.getByRole('treeitem', { name: 'First1 Last1' }),
+      ).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First2 Last2' }),
+      ).toBeVisible();
     });
 
     it('ArrowRight on an expanded manager moves focus to its first child', async () => {
@@ -546,7 +581,9 @@ describe('HierarchyTree', () => {
       });
       pressKey('ArrowRight');
 
-      expect(screen.getByRole('treeitem', { name: 'First2 Last2' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First2 Last2' }),
+      ).toHaveFocus();
     });
 
     it('ArrowRight on a non-manager does nothing', async () => {
@@ -556,7 +593,9 @@ describe('HierarchyTree', () => {
       focusRow('First1 Last1');
       pressKey('ArrowRight');
 
-      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First1 Last1' }),
+      ).toHaveFocus();
     });
 
     it('ArrowLeft on an expanded manager collapses it and leaves focus in place', async () => {
@@ -572,7 +611,9 @@ describe('HierarchyTree', () => {
       focusRow('First1 Last1');
       pressKey('ArrowLeft');
 
-      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First1 Last1' }),
+      ).toHaveFocus();
       expect(
         screen.queryByRole('treeitem', { name: 'First2 Last2' }),
       ).not.toBeInTheDocument();
@@ -592,7 +633,9 @@ describe('HierarchyTree', () => {
       focusRow('First3 Last3');
       pressKey('ArrowLeft');
 
-      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First1 Last1' }),
+      ).toHaveFocus();
     });
 
     it('ArrowLeft on an already-collapsed root does nothing', async () => {
@@ -602,7 +645,9 @@ describe('HierarchyTree', () => {
       focusRow('First1 Last1');
       pressKey('ArrowLeft');
 
-      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First1 Last1' }),
+      ).toHaveFocus();
     });
 
     it('Home moves focus to the first visible row and End to the last', async () => {
@@ -617,12 +662,16 @@ describe('HierarchyTree', () => {
         expandedIds: new Set([parsePersonIdentifier(1)]),
       });
       pressKey('End');
-      expect(screen.getByRole('treeitem', { name: 'First3 Last3' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First3 Last3' }),
+      ).toHaveFocus();
       pressKey('Home');
-      expect(screen.getByRole('treeitem', { name: 'First1 Last1' })).toHaveFocus();
+      expect(
+        screen.getByRole('treeitem', { name: 'First1 Last1' }),
+      ).toHaveFocus();
     });
 
-    it('Enter toggles the focused manager\'s branch and does nothing on a non-manager row', async () => {
+    it("Enter toggles the focused manager's branch and does nothing on a non-manager row", async () => {
       const { roots } = buildForest([
         testPerson(1),
         testPerson(2, { managerId: 1 }),
@@ -716,6 +765,79 @@ describe('HierarchyTree', () => {
 
       expect(onToggle).not.toHaveBeenCalled();
       expect(observability.analytics.track).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('type-ahead', () => {
+    function typeAheadRoots() {
+      return buildForest([
+        testPerson(1, { firstName: 'Andrew', lastName: 'Crist' }),
+        testPerson(2, { firstName: 'Bar', lastName: 'Refaeli' }),
+        testPerson(3, { firstName: 'Barak', lastName: 'Levi' }),
+        testPerson(4, { firstName: 'Éric', lastName: 'Dupont' }),
+      ]).roots;
+    }
+
+    it('typing a character moves focus to the next visible row whose accessible name starts with it, case-insensitively', async () => {
+      await renderTree({ roots: typeAheadRoots(), expandedIds: new Set() });
+
+      pressKey('B');
+
+      expect(
+        screen.getByRole('treeitem', { name: 'Bar Refaeli' }),
+      ).toHaveFocus();
+    });
+
+    it('matches accent-insensitively through a locale-aware comparison', async () => {
+      await renderTree({ roots: typeAheadRoots(), expandedIds: new Set() });
+
+      pressKey('e');
+
+      expect(
+        screen.getByRole('treeitem', { name: 'Éric Dupont' }),
+      ).toHaveFocus();
+    });
+
+    it('a repeated single character cycles through the rows starting with it', async () => {
+      await renderTree({ roots: typeAheadRoots(), expandedIds: new Set() });
+
+      pressKey('b');
+      expect(
+        screen.getByRole('treeitem', { name: 'Bar Refaeli' }),
+      ).toHaveFocus();
+      pressKey('b');
+      expect(
+        screen.getByRole('treeitem', { name: 'Barak Levi' }),
+      ).toHaveFocus();
+      pressKey('b');
+      expect(
+        screen.getByRole('treeitem', { name: 'Bar Refaeli' }),
+      ).toHaveFocus();
+    });
+
+    it('the type-ahead buffer resets after a second of no typing', async () => {
+      const clock = createFakeClock();
+      await renderTree({
+        roots: typeAheadRoots(),
+        expandedIds: new Set(),
+        clock,
+      });
+
+      pressKey('b');
+      expect(
+        screen.getByRole('treeitem', { name: 'Bar Refaeli' }),
+      ).toHaveFocus();
+
+      await act(async () => {
+        await clock.advance(1000);
+      });
+
+      // A stale, unreset buffer would search for "ba" and land on Barak
+      // Levi instead - the distinguishing case this test exists to catch.
+      pressKey('a');
+      expect(
+        screen.getByRole('treeitem', { name: 'Andrew Crist' }),
+      ).toHaveFocus();
     });
   });
 });

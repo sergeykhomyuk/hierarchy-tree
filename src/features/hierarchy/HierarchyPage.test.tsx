@@ -10,6 +10,7 @@ import {
   Locale,
 } from '@platform/internationalization';
 import type { ObservabilityFacade } from '@platform/observability';
+import { createFakeClock } from '@shared/testing';
 import { loadTranslations } from './loadTranslations';
 import { HierarchyPage } from './HierarchyPage';
 import { HierarchySkeleton } from './HierarchySkeleton';
@@ -83,7 +84,10 @@ async function renderIsolated(
                       hierarchy={hierarchy}
                       onRetry={onRetry}
                       onRefresh={onRefresh}
-                      dependencies={{ observability: createSpyObservability() }}
+                      dependencies={{
+                        observability: createSpyObservability(),
+                        clock: createFakeClock(),
+                      }}
                     />
                   </Suspense>
                 </>

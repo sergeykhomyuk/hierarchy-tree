@@ -3,6 +3,7 @@ import type { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '@shared/ui';
 import { personDisplayName } from './domain/personDisplayName';
+import { rowAccessibleName } from './domain/rowAccessibleName';
 import type { EmailAddress } from './domain/emailAddress';
 import type { PersonIdentifier } from './domain/personIdentifier';
 import { formatCount } from './formatCount';
@@ -40,7 +41,10 @@ export type TreeRowProps = {
   // Lets HierarchyTree call element.focus() imperatively for arrow/Home/
   // End/type-ahead movement (invariants 133-139) without this row owning
   // any navigation logic of its own.
-  registerElement: (personId: PersonIdentifier, element: HTMLDivElement | null) => void;
+  registerElement: (
+    personId: PersonIdentifier,
+    element: HTMLDivElement | null,
+  ) => void;
 };
 
 // Every prop here is a primitive - flattenVisible returns a fresh
@@ -72,9 +76,11 @@ export const TreeRow = memo(function TreeRow({
 }: TreeRowProps) {
   const { t, i18n } = useTranslation('hierarchy');
   const displayName = personDisplayName({ firstName, lastName, email });
-  const accessibleName = isSignedInUser
-    ? `${displayName}, ${t('page.youMarkerLabel')}`
-    : displayName;
+  const accessibleName = rowAccessibleName(
+    displayName,
+    isSignedInUser,
+    t('page.youMarkerLabel'),
+  );
   const handleImageError = useCallback(() => {
     onPhotoError(personId);
   }, [onPhotoError, personId]);

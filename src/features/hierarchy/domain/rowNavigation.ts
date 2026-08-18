@@ -22,7 +22,7 @@ export function parentRowIndex(
   const parentDepth = row.depth - 1;
   if (parentDepth < 0) return -1;
   for (let candidate = index - 1; candidate >= 0; candidate -= 1) {
-    if (rows[candidate].depth === parentDepth) return candidate;
+    if (rows[candidate]?.depth === parentDepth) return candidate;
   }
   return -1;
 }
@@ -37,8 +37,11 @@ export function nextVisibleIndex(
   return index + 1 < rows.length ? index + 1 : index;
 }
 
+// Takes rows only for signature symmetry with nextVisibleIndex, so both
+// are safe to call the same way at a call site - the previous index never
+// depends on the row count.
 export function previousVisibleIndex(
-  rows: readonly VisibleRow[],
+  _rows: readonly VisibleRow[],
   index: number,
 ): number {
   return index > 0 ? index - 1 : index;
@@ -55,7 +58,5 @@ export function firstChildRowIndex(
   const row = rows[index];
   if (row === undefined || !row.isExpanded) return -1;
   const child = rows[index + 1];
-  return child !== undefined && child.depth === row.depth + 1
-    ? index + 1
-    : -1;
+  return child !== undefined && child.depth === row.depth + 1 ? index + 1 : -1;
 }

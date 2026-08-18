@@ -1,5 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import type { KeyboardEvent } from 'react';
+import type { CancelTimer, Clock } from '@platform/runtime';
 import {
   findRowIndexById,
   firstChildRowIndex,
@@ -7,11 +8,19 @@ import {
   parentRowIndex,
   previousVisibleIndex,
 } from './domain/rowNavigation';
+import { findTypeAheadMatch } from './domain/typeAheadMatch';
 import type { VisibleRow } from './domain/flattenVisible';
 import type { PersonIdentifier } from './domain/personIdentifier';
 
+// Invariant 139.
+const TYPE_AHEAD_RESET_DELAY_MILLISECONDS = 1000;
+
 export type UseTreeKeyboardOptions = {
   rows: readonly VisibleRow[];
+  // Parallel to rows, same order - the exact string each row's aria-label
+  // carries (invariant 138: type-ahead "matches the same string a screen
+  // reader announces").
+  accessibleNames: readonly string[];
   tabbableId: PersonIdentifier | null;
   // Imperative DOM focus - the ONLY thing that moves the roving tab stop
   // (TreeRow's own onFocus handler updates tabbableId in response, so
@@ -22,32 +31,47 @@ export type UseTreeKeyboardOptions = {
   // so a keyboard-driven expand/collapse updates the URL, the live
   // region and telemetry identically to a click.
   onToggleRow: (personId: PersonIdentifier) => void;
+  clock: Clock;
+  language: string;
 };
 
-// Arrow, Home and End movement (invariants 133-136). Enter/Space toggling
-// and type-ahead are later M4 steps layered onto this same handler.
 export function useTreeKeyboard({
   rows,
+  accessibleNames,
   tabbableId,
   onFocusRow,
   onToggleRow,
+  clock,
+  language,
 }: UseTreeKeyboardOptions) {
+  // Internal bookkeeping only - never rendered, so refs rather than state
+  // (invariant 139's buffer, and the timer that clears it after an idle
+  // second, driven by the injected Clock rather than setTimeout, which
+  // eslint.config.js bans across src with no feature override).
+  const bufferRef = useRef('');
+  const cancelResetRef = useRef<CancelTimer | null>(null);
+
   return useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (tabbableId === null) return;
       const index = findRowIndexById(rows, tabbableId);
-      if (index === -1) return;
       const row = rows[index];
+      if (row === undefined) return;
+
+      const focusIndex = (targetIndex: number) => {
+        const target = rows[targetIndex];
+        if (target !== undefined) onFocusRow(target.person.id);
+      };
 
       switch (event.key) {
         case 'ArrowDown': {
           event.preventDefault();
-          onFocusRow(rows[nextVisibleIndex(rows, index)].person.id);
+          focusIndex(nextVisibleIndex(rows, index));
           return;
         }
         case 'ArrowUp': {
           event.preventDefault();
-          onFocusRow(rows[previousVisibleIndex(rows, index)].person.id);
+          focusIndex(previousVisibleIndex(rows, index));
           return;
         }
         case 'ArrowRight': {
@@ -57,8 +81,7 @@ export function useTreeKeyboard({
             onToggleRow(row.person.id);
             return;
           }
-          const child = firstChildRowIndex(rows, index);
-          if (child !== -1) onFocusRow(rows[child].person.id);
+          focusIndex(firstChildRowIndex(rows, index));
           return;
         }
         case 'ArrowLeft': {
@@ -67,20 +90,19 @@ export function useTreeKeyboard({
             onToggleRow(row.person.id);
             return;
           }
-          const parent = parentRowIndex(rows, index);
-          if (parent !== -1) onFocusRow(rows[parent].person.id);
+          focusIndex(parentRowIndex(rows, index));
           return;
         }
         case 'Home': {
           if (rows.length === 0) return;
           event.preventDefault();
-          onFocusRow(rows[0].person.id);
+          focusIndex(0);
           return;
         }
         case 'End': {
           if (rows.length === 0) return;
           event.preventDefault();
-          onFocusRow(rows[rows.length - 1].person.id);
+          focusIndex(rows.length - 1);
           return;
         }
         case 'Enter':
@@ -90,10 +112,43 @@ export function useTreeKeyboard({
           onToggleRow(row.person.id);
           return;
         }
-        default:
+        default: {
+          if (
+            event.key.length !== 1 ||
+            event.ctrlKey ||
+            event.metaKey ||
+            event.altKey
+          ) {
+            return;
+          }
+          event.preventDefault();
+          cancelResetRef.current?.();
+          bufferRef.current += event.key;
+          cancelResetRef.current = clock.setTimer(
+            TYPE_AHEAD_RESET_DELAY_MILLISECONDS,
+            () => {
+              bufferRef.current = '';
+            },
+          );
+          const match = findTypeAheadMatch(
+            accessibleNames,
+            index,
+            bufferRef.current,
+            language,
+          );
+          if (match !== null) focusIndex(match);
           return;
+        }
       }
     },
-    [rows, tabbableId, onFocusRow, onToggleRow],
+    [
+      rows,
+      accessibleNames,
+      tabbableId,
+      onFocusRow,
+      onToggleRow,
+      clock,
+      language,
+    ],
   );
 }

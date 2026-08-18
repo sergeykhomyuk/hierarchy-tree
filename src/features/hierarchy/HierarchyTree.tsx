@@ -1,9 +1,11 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ObservabilityFacade } from '@platform/observability';
+import type { Clock } from '@platform/runtime';
 import { flattenVisible } from './domain/flattenVisible';
 import { personDisplayName } from './domain/personDisplayName';
 import { recoverFocusedRowId } from './domain/recoverFocusedRowId';
+import { rowAccessibleName } from './domain/rowAccessibleName';
 import type { PersonIdentifier } from './domain/personIdentifier';
 import type { TreeNode } from './domain/treeNode';
 import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
@@ -23,6 +25,10 @@ export type HierarchyTreeProps = {
   // (invariant 85).
   signedInUserId?: string | number;
   observability: ObservabilityFacade;
+  // The type-ahead reset timer (invariant 139) - injected rather than
+  // setTimeout, which eslint.config.js bans across src with no feature
+  // override.
+  clock: Clock;
   onToggle: (personId: PersonIdentifier) => void;
 };
 
@@ -35,10 +41,23 @@ export const HierarchyTree = memo(function HierarchyTree({
   expandedIds,
   signedInUserId,
   observability,
+  clock,
   onToggle,
 }: HierarchyTreeProps) {
-  const { t } = useTranslation('hierarchy');
+  const { t, i18n } = useTranslation('hierarchy');
   const rows = flattenVisible(roots, expandedIds);
+  const youMarkerLabel = t('page.youMarkerLabel');
+  // Parallel to rows, in the same order - the exact string each row's
+  // aria-label carries, so type-ahead matches "the same string a screen
+  // reader announces" (invariant 138) rather than a second, independently
+  // computed name that could drift from TreeRow's own.
+  const accessibleNames = rows.map((row) =>
+    rowAccessibleName(
+      personDisplayName(row.person),
+      row.person.id === signedInUserId,
+      youMarkerLabel,
+    ),
+  );
 
   // Held here rather than by a row: collapsing and re-expanding a branch
   // remounts its rows, and a fresh mount must not produce a second report
@@ -146,9 +165,12 @@ export const HierarchyTree = memo(function HierarchyTree({
 
   const handleKeyDown = useTreeKeyboard({
     rows,
+    accessibleNames,
     tabbableId,
     onFocusRow: focusRow,
     onToggleRow: handleRowToggle,
+    clock,
+    language: i18n.language,
   });
 
   return (

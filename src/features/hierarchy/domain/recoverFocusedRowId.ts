@@ -19,9 +19,9 @@ export function recoverFocusedRowId(
   let index = findRowIndexById(previousRows, focusedId);
   while (index !== -1) {
     index = parentRowIndex(previousRows, index);
-    if (index === -1) break;
-    const candidateId = previousRows[index].person.id;
-    if (nextIds.has(candidateId)) return candidateId;
+    const candidate = index === -1 ? undefined : previousRows[index];
+    if (candidate === undefined) break;
+    if (nextIds.has(candidate.person.id)) return candidate.person.id;
   }
 
   return nextRows[0]?.person.id ?? null;

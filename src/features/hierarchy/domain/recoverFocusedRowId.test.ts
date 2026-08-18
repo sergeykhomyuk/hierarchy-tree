@@ -11,9 +11,7 @@ describe('recoverFocusedRowId', () => {
     const { roots } = buildForest([testPerson(1), testPerson(2)]);
     const rows = flattenVisible(roots, new Set<PersonIdentifier>());
 
-    expect(
-      recoverFocusedRowId(rows, rows, parsePersonIdentifier(2)),
-    ).toBe(2);
+    expect(recoverFocusedRowId(rows, rows, parsePersonIdentifier(2))).toBe(2);
   });
 
   it('a focused id no longer present falls back to its nearest still-visible ancestor', () => {

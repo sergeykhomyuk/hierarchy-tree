@@ -2,6 +2,7 @@ import { memo, use, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import type { ObservabilityFacade } from '@platform/observability';
+import type { Clock } from '@platform/runtime';
 import { EmptyState, ErrorState } from '@shared/ui';
 import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyResult } from './data/fetchPeople';
@@ -20,6 +21,7 @@ const EMPTY_ROOTS: readonly TreeNode[] = [];
 
 export type HierarchyPageDependencies = {
   observability: ObservabilityFacade;
+  clock: Clock;
 };
 
 export type HierarchyPageProps = {
@@ -102,6 +104,7 @@ export const HierarchyPage = memo(function HierarchyPage({
             roots={result.roots}
             expandedIds={expandedIds}
             observability={dependencies.observability}
+            clock={dependencies.clock}
             onToggle={toggleExpanded}
             {...(userId !== undefined ? { signedInUserId: userId } : {})}
           />
