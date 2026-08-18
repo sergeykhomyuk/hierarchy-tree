@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T07:23:48Z",
+  "updated": "2026-08-18T07:24:20Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -1275,7 +1275,8 @@
     "2026-08-18T07:23:38Z evidence recorded: evidence/logs/claude9-fix-suite.txt (744d79292ba7) - Claude-9 fix: full vitest suite 551/551 pass",
     "2026-08-18T07:23:38Z evidence recorded: evidence/logs/claude9-fix-e2e.txt (70e908d23e4b) - Claude-9 fix: full playwright suite 50/50 pass, 5 consecutive clean runs confirming the scroll-position test's real fix (retargeted from Noa Shani to Roni Yashar - collapsing the last branch in a scrolled list was triggering genuine browser scroll-clamping, misread as app flakiness)",
     "2026-08-18T07:23:48Z Claude-9 fix: hierarchyFixture.ts's secret mock returned String(DEEPEST_PERSON_ID) - a JSON string - as the session userId, which could never strictly equal a PersonIdentifier (a branded number), so the you marker never rendered in this fixture despite the fixture's own comment claiming it did. Fixed to return the raw integer (lookupResultSchema explicitly accepts z.int()). Added a genuine positive-match unit test in HierarchyTree.test.tsx exercising the real === comparison (not a prop handed straight to TreeRow). While investigating, also discovered and fixed a real e2e test-design bug in hierarchy-layout.spec.ts's scroll-position test: it targeted Noa Shani, the second root near the very end of the row list, whose collapse (removing the LAST row, Uri Barak) shrank the scrollable content below the already-captured scrollTop - a genuine browser auto-clamp behavior, not an app bug, that was intermittently failing under parallel load and then failing deterministically. Retargeted to Roni Yashar, which has enough remaining content below it (Tal Bergman, then the whole second root) that collapsing it never triggers the clamp; confirmed with 5 consecutive clean full-suite e2e runs plus a scrollHeight/maxScroll debug trace proving the mechanism. Full suite 551/551, full e2e 50/50.",
-    "2026-08-18T07:23:48Z G4 finding Claude-9 dispositioned: fixed"
+    "2026-08-18T07:23:48Z G4 finding Claude-9 dispositioned: fixed",
+    "2026-08-18T07:24:20Z milestone 3 reviewed: Fresh agentic-loop:loop-reviewer reviewed the full M3 diff (ba67fcb..HEAD). 4 findings: Claude-6 (BLOCKING - toggle telemetry event and live-region announcement entirely unimplemented despite step 26 explicitly claiming the mouse path of invariants 114/115 done) fixed; Claude-7 (page.hiddenLabel never pluralized through the catalogue) fixed; Claude-8 (HierarchySummary's composed string can't independently pluralize 3 nested nouns - real tension with invariant 157) accepted, same class as the already-accepted Gap-2; Claude-9 (you-marker fixture bug: String(id) never strictly equals a branded PersonIdentifier, plus an untested positive-match path) fixed, which also surfaced and fixed a genuine e2e test-design bug (browser scroll-clamping misread as flakiness). All fixes verified with full vitest (551/551) and full playwright (50/50, 5 consecutive clean runs) after each change."
   ],
   "milestones": [
     {
@@ -1294,7 +1295,7 @@
       "id": 3,
       "title": "The page: four states, the tree, and expansion",
       "verified": "2026-08-17T21:11:41Z Fresh agentic-loop:loop-verifier ran npm run verify (green, 97%+ coverage) and full npx playwright test --trace on (48/48 green) against the built preview, then checked every M3 invariant (steps 17-30) against source, not just tests. Found 2 genuine gaps: Gap-1 (invariant 90, missing-space template-literal bug dropping the indent rail) fixed with a regression test; Gap-3 (invariant 180, no contrast check for the populated tree) fixed with a color-contrast-scoped axe scan in both themes, sanity-checked non-vacuously. Gap-2 (invariant 102, person names not catalogue-interpolated) dispositioned accepted - a known limitation given the test-suite ripple fixing it properly would cause. Evidence: evidence/milestones/m3-suite-g3verify-20260817T195951Z.txt, evidence/milestones/m3-e2e-g3verify-20260817T195951Z.txt, evidence/logs/gap1-fix-*.txt, evidence/logs/gap3-fix-*.txt, evidence/screenshots/, evidence/traces/.",
-      "reviewed": null
+      "reviewed": "2026-08-18T07:24:20Z Fresh agentic-loop:loop-reviewer reviewed the full M3 diff (ba67fcb..HEAD). 4 findings: Claude-6 (BLOCKING - toggle telemetry event and live-region announcement entirely unimplemented despite step 26 explicitly claiming the mouse path of invariants 114/115 done) fixed; Claude-7 (page.hiddenLabel never pluralized through the catalogue) fixed; Claude-8 (HierarchySummary's composed string can't independently pluralize 3 nested nouns - real tension with invariant 157) accepted, same class as the already-accepted Gap-2; Claude-9 (you-marker fixture bug: String(id) never strictly equals a branded PersonIdentifier, plus an untested positive-match path) fixed, which also surfaced and fixed a genuine e2e test-design bug (browser scroll-clamping misread as flakiness). All fixes verified with full vitest (551/551) and full playwright (50/50, 5 consecutive clean runs) after each change."
     },
     {
       "id": 4,
