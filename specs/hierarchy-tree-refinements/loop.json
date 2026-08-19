@@ -3,11 +3,11 @@
   "title": "Hierarchy tree refinements",
   "type": "refactor",
   "size": "S",
-  "status": "active",
-  "phase": "implement",
-  "phase_entered": "2026-08-19T12:08:32Z",
+  "status": "done",
+  "phase": "done",
+  "phase_entered": "2026-08-19T13:34:34Z",
   "created": "2026-08-19",
-  "updated": "2026-08-19T13:20:18Z",
+  "updated": "2026-08-19T13:34:34Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -26,7 +26,7 @@
     "spec": null,
     "plan": "PLAN.md",
     "design": null,
-    "proof": null,
+    "proof": "PROOF.md",
     "evidence": "evidence/"
   },
   "gates": {
@@ -35,26 +35,55 @@
       "attempts": 0
     },
     "G2": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "steps_total": 5,
-      "steps_done": 5
+      "steps_done": 5,
+      "note": "All 5 plan steps done: named tests defined before implementation, red/na observed with valid case reasons, green after change, no previously passing test broken (144 files / 653 tests green after each step)"
     },
     "G3": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "Full suite green (653/653) and e2e green (60/60, --trace on) post-commit; zero new console errors/warnings across verified flows; behavior-preservation contract holds (rendered rows, accessible names, keyboard, focus, telemetry, expansion semantics unchanged) for steps 1-3, and steps 4-5's structural moves verified via traces evidence/e2e-traces/*.zip"
     },
     "G4": {
-      "status": "pending",
-      "attempts": 0,
-      "security_pass": null
+      "status": "passed",
+      "attempts": 1,
+      "security_pass": null,
+      "findings": {
+        "Codex-1": {
+          "desc": "commit 5beceba bundles an out-of-scope behavior change (skipped-segments telemetry dedup guard switches from string-identity to parse-object-identity, changing how often hierarchy.expansion_segments_skipped fires on a revisited stale URL) into this refactor loop's diff - not one of the 5 declared plan steps, no red/green evidence in this loop",
+          "blocking": true,
+          "disposition": "accepted: not new/ungated work - this is phase-3-tree's own G4 finding Codex-25 (parseExpansion's skipped-segment count silently discarded), already fixed with a self-verified red/green test and explicitly user-approved 2026-08-19 per specs/phase-3-tree/loop.json (that loop, still open at phase retro, is what this branch was cut from). User confirmed accepting this disposition 2026-08-19."
+        },
+        "Codex-2": {
+          "desc": "src/features/hierarchy/domain/defaultExpansion.ts:4 and flattenVisible.ts:23 gained WHAT-only comments unrelated to this diff, against CLAUDE.md's comment guidance",
+          "blocking": false,
+          "disposition": "accepted: user explicitly chose to include these two WHAT-comments in this PR earlier in this session (AskUserQuestion: 'Include them in this PR')."
+        },
+        "Claude-1": {
+          "desc": "restates Codex-1 with independent confirmation: same commit 5beceba, same file/line citations, same conclusion that it's ungated behavior change riding in a behavior-preservation-contract refactor diff",
+          "blocking": true,
+          "disposition": "accepted: same reasoning as Codex-1 - restates the same already-vetted phase-3-tree finding; user confirmed 2026-08-19."
+        },
+        "Claude-2": {
+          "desc": "restates Codex-2: same two files/lines flagged for WHAT-only comments",
+          "blocking": false,
+          "disposition": "accepted: same as Codex-2 - user already decided to include these WHAT-comments in this PR."
+        }
+      },
+      "note": "4 findings: 0 fixed, 4 accepted (Codex-1/Claude-1: pre-existing phase-3-tree Codex-25 fix riding along from branch ancestry, already vetted there; Codex-2/Claude-2: WHAT-comments the user already chose to include this session); reviews: evidence/reviews/g4-codex-full-diff.md, evidence/reviews/g4-claude-full-diff.md"
     },
     "G5": {
-      "status": "pending",
-      "attempts": 0
+      "status": "passed",
+      "attempts": 1,
+      "note": "PROOF.md complete: 8 acceptance criteria mapped to evidence (tests + red/green + e2e traces); both G4 reviews referenced with outcomes; npm run verify (653/653) and full e2e (60/60) green post-commit; all applicable gates G2-G4 passed, G1 skipped (S refactor)"
     }
   },
-  "retro": null,
+  "retro": {
+    "outcome": "What did the user correct? Nothing about the implementation approach itself - both tweaks (auth analytics relocation, hierarchy barrels) were scoped via AskUserQuestion up front (auth: confirmed the architectural read against ARCHITECTURE.md's decision log before coding; hierarchy barrels: confirmed scope to features/* only, not app/routing/routes or platform/observability/sinks, which have documented single-import-site/single-reader invariants that a blind 'barrel everything' pass would have broken). The one real correction was procedural: I initially registered step 5's tests with a synthetic, non-verbatim description instead of real grep-able test titles, which loop step na would have accepted incorrectly if not caught - amended to real titles before recording na.\n\nWhat did G4 reviewers catch that an earlier phase should have? Both reviewers independently caught that this loop's branch carries a commit (5beceba) from a different, still-open loop (phase-3-tree) whose own G4 finding it resolves - not a defect in this loop's own steps, but a diff-scope hygiene gap: a loop branched from another loop's still-open tip inherits that loop's uncommitted-to-main history, and 'the full diff' (main..HEAD) is not the same thing as 'this loop's own changes' when that's true. Neither Frame nor Plan flagged this branch ancestry as something to check before Review. A cheaper catch: at Frame or Plan time, diffing this loop's own step commits against the branch's merge-base with main (or just noting which upstream loop the branch was cut from) would have surfaced this before G4 spent two reviewer passes re-deriving the same provenance question.\n\nWhere did this playbook not answer? s-path.md's Phase 7 (Review) doesn't say what to do when a loop's branch was cut from another loop's tip rather than from main directly - it assumes 'the full diff' cleanly scopes to this loop's own work. When that assumption is false, reviewers correctly flag the foreign commit as an out-of-scope behavior change, and the orchestrator has to reconstruct provenance (whose finding was this, was it vetted, by whom) from scratch by reading the other loop's log - work the playbook doesn't guide. Durable lesson proposed: at triage/Frame, when a new loop is created with 'loop init --parent' or cut from a non-main branch tip, record which upstream loop/commit the branch diverged from in loop.json (or at minimum log it), so G4 diffs can be scoped correctly (this loop's own commits only) and, if the full-branch diff is reviewed anyway, provenance for any foreign commit is one lookup instead of a log-mining exercise. Proposed as a diff to loops/conventions.md or state.md for the user to review, not yet applied.",
+    "date": "2026-08-19T13:34:17Z"
+  },
   "plan_steps": [
     {
       "id": 1,
@@ -157,7 +186,38 @@
     "2026-08-19T13:20:18Z evidence recorded: evidence/step5-green-and-verify.txt (e96be3843fa5) - Step 5 green and full npm run verify passed: 144 test files, 653 tests, typecheck/lint/format/build/size all passing; route chunk graph unaffected",
     "2026-08-19T13:20:18Z step 5 -> green",
     "2026-08-19T13:20:18Z step 5 -> done",
-    "2026-08-19T13:20:18Z step 5 verified: hierarchy/data/index.ts, hierarchy/domain/index.ts (filled out), hierarchy/testing/index.ts added; ~15 files across the feature now import via './data', './domain', './testing' instead of deep individual files (e.g. HierarchyPage.tsx's './data/fetchPeople' -> './data'); namespace imports used only for vi.spyOn (buildForestModule, flattenVisibleModule, personDisplayNameModule) deliberately left pointing at the defining file; npm run verify passed 653/653 with all build/size gates; loop remains active in implement"
+    "2026-08-19T13:20:18Z step 5 verified: hierarchy/data/index.ts, hierarchy/domain/index.ts (filled out), hierarchy/testing/index.ts added; ~15 files across the feature now import via './data', './domain', './testing' instead of deep individual files (e.g. HierarchyPage.tsx's './data/fetchPeople' -> './data'); namespace imports used only for vi.spyOn (buildForestModule, flattenVisibleModule, personDisplayNameModule) deliberately left pointing at the defining file; npm run verify passed 653/653 with all build/size gates; loop remains active in implement",
+    "2026-08-19T13:23:17Z G2 -> passed (All 5 plan steps done: named tests defined before implementation, red/na observed with valid case reasons, green after change, no previously passing test broken (144 files / 653 tests green after each step))",
+    "2026-08-19T13:23:20Z phase -> verify",
+    "2026-08-19T13:24:51Z evidence recorded: evidence/g3-full-verify.txt (60fa19028e71) - G3 full npm run verify post-commit: 144 test files, 653 tests, typecheck/lint/format/coverage/build/verify:build/size all green",
+    "2026-08-19T13:24:51Z evidence recorded: evidence/g3-e2e-run.txt (144aa2a0af84) - G3 e2e: npm run e2e --trace on, 60/60 Playwright tests passed covering auth login/logout, hierarchy keyboard, telemetry, layout, accessibility flows - zero console errors/warnings, no regressions from steps 4-5",
+    "2026-08-19T13:24:51Z evidence recorded: evidence/e2e-traces/hierarchy-keyboard-contract.zip (df8c666ae3ee) - Playwright trace: hierarchy tree keyboard contract (Tab/arrows/Home/End/type-ahead/Enter/Space/asterisk) unaffected by the interaction-hook and barrel refactors",
+    "2026-08-19T13:24:51Z evidence recorded: evidence/e2e-traces/hierarchy-telemetry-buffer.zip (fbb5807bd81a) - Playwright trace: hierarchy telemetry buffer records route_viewed/toggle events correctly after the analyticsEvents relocation",
+    "2026-08-19T13:24:52Z evidence recorded: evidence/e2e-traces/hierarchy-telemetry-privacy.zip (78481e053ecc) - Playwright trace: no credential/PII leakage in the telemetry buffer, confirming the privacy invariant survived the analyticsEvents move",
+    "2026-08-19T13:24:52Z evidence recorded: evidence/e2e-traces/auth-login-flow.zip (952e4b761b81) - Playwright trace: sign-in with a real-shaped credential lands on the hierarchy page - confirms auth.sign_in_started/settled tracking still fires correctly after moving out of platform",
+    "2026-08-19T13:24:52Z evidence recorded: evidence/e2e-traces/auth-signed-out-flow.zip (30fd7e4c8d7d) - Playwright trace: sign in and out entirely from the keyboard - confirms auth.signed_out tracking from SignedInHeader.tsx (app layer) still resolves the feature-owned analytics event type",
+    "2026-08-19T13:25:10Z approved-change: src/features/auth/data/analyticsEvents.test.ts - implementer self-corrected a compile error right after red (import type { AnalyticsPayloads } from './analyticsEvents' does not exist there; the ambient declare-module augmentation isn't a local export) to import AnalyticsPayloads from '@platform/observability' instead - no assertion changed, user reviewed and accepted the resulting step 4 diff in this session",
+    "2026-08-19T13:25:10Z step 4 hash rebased (src/features/auth/data/analyticsEvents.test.ts): user reviewed and accepted the step 4 diff (analyticsEvents.test.ts import fix) in this session before moving to verify",
+    "2026-08-19T13:25:13Z G3 -> passed (Full suite green (653/653) and e2e green (60/60, --trace on) post-commit; zero new console errors/warnings across verified flows; behavior-preservation contract holds (rendered rows, accessible names, keyboard, focus, telemetry, expansion semantics unchanged) for steps 1-3, and steps 4-5's structural moves verified via traces evidence/e2e-traces/*.zip)",
+    "2026-08-19T13:25:19Z phase -> review",
+    "2026-08-19T13:31:33Z evidence recorded: evidence/reviews/g4-codex-full-diff.md (85ba92f2c5c5) - Codex G4 review of main..HEAD full diff: 2 findings, 1 blocking (out-of-scope telemetry behavior change bundled in commit 5beceba)",
+    "2026-08-19T13:31:33Z evidence recorded: evidence/reviews/g4-claude-full-diff.md (5e21a4af0e85) - Claude fresh-context G4 review of main..HEAD full diff: 2 findings, 1 blocking (same telemetry behavior change flagged independently)",
+    "2026-08-19T13:31:33Z G4 finding Codex-1 recorded (blocking): commit 5beceba bundles an out-of-scope behavior change (skipped-segments telemetry dedup guard switches from string-identity to parse-object-identity, changing how often hierarchy.expansion_segments_skipped fires on a revisited stale URL) into this refactor loop's diff - not one of the 5 declared plan steps, no red/green evidence in this loop",
+    "2026-08-19T13:31:34Z G4 finding Codex-2 recorded: src/features/hierarchy/domain/defaultExpansion.ts:4 and flattenVisible.ts:23 gained WHAT-only comments unrelated to this diff, against CLAUDE.md's comment guidance",
+    "2026-08-19T13:31:34Z G4 finding Claude-1 recorded (blocking): restates Codex-1 with independent confirmation: same commit 5beceba, same file/line citations, same conclusion that it's ungated behavior change riding in a behavior-preservation-contract refactor diff",
+    "2026-08-19T13:31:34Z G4 finding Claude-2 recorded: restates Codex-2: same two files/lines flagged for WHAT-only comments",
+    "2026-08-19T13:32:56Z G4 finding Codex-1 dispositioned: accepted: not new/ungated work - this is phase-3-tree's own G4 finding Codex-25 (parseExpansion's skipped-segment count silently discarded), already fixed with a self-verified red/green test and explicitly user-approved 2026-08-19 per specs/phase-3-tree/loop.json (that loop, still open at phase retro, is what this branch was cut from). User confirmed accepting this disposition 2026-08-19.",
+    "2026-08-19T13:32:56Z G4 finding Claude-1 dispositioned: accepted: same reasoning as Codex-1 - restates the same already-vetted phase-3-tree finding; user confirmed 2026-08-19.",
+    "2026-08-19T13:32:57Z G4 finding Codex-2 dispositioned: accepted: user explicitly chose to include these two WHAT-comments in this PR earlier in this session (AskUserQuestion: 'Include them in this PR').",
+    "2026-08-19T13:32:57Z G4 finding Claude-2 dispositioned: accepted: same as Codex-2 - user already decided to include these WHAT-comments in this PR.",
+    "2026-08-19T13:33:00Z G4 -> passed (4 findings: 0 fixed, 4 accepted (Codex-1/Claude-1: pre-existing phase-3-tree Codex-25 fix riding along from branch ancestry, already vetted there; Codex-2/Claude-2: WHAT-comments the user already chose to include this session); reviews: evidence/reviews/g4-codex-full-diff.md, evidence/reviews/g4-claude-full-diff.md)",
+    "2026-08-19T13:33:03Z phase -> prove",
+    "2026-08-19T13:34:03Z set proof = PROOF.md",
+    "2026-08-19T13:34:17Z set retro = What did the user correct? Nothing about the implementation approach itself - both tweaks (auth analytics relocation, hierarchy barrels) were scoped via AskUserQuestion up front (auth: confirmed the architectural read against ARCHITECTURE.md's decision log before coding; hierarchy barrels: confirmed scope to features/* only, not app/routing/routes or platform/observability/sinks, which have documented single-import-site/single-reader invariants that a blind 'barrel everything' pass would have broken). The one real correction was procedural: I initially registered step 5's tests with a synthetic, non-verbatim description instead of real grep-able test titles, which loop step na would have accepted incorrectly if not caught - amended to real titles before recording na.\n\nWhat did G4 reviewers catch that an earlier phase should have? Both reviewers independently caught that this loop's branch carries a commit (5beceba) from a different, still-open loop (phase-3-tree) whose own G4 finding it resolves - not a defect in this loop's own steps, but a diff-scope hygiene gap: a loop branched from another loop's still-open tip inherits that loop's uncommitted-to-main history, and 'the full diff' (main..HEAD) is not the same thing as 'this loop's own changes' when that's true. Neither Frame nor Plan flagged this branch ancestry as something to check before Review. A cheaper catch: at Frame or Plan time, diffing this loop's own step commits against the branch's merge-base with main (or just noting which upstream loop the branch was cut from) would have surfaced this before G4 spent two reviewer passes re-deriving the same provenance question.\n\nWhere did this playbook not answer? s-path.md's Phase 7 (Review) doesn't say what to do when a loop's branch was cut from another loop's tip rather than from main directly - it assumes 'the full diff' cleanly scopes to this loop's own work. When that assumption is false, reviewers correctly flag the foreign commit as an out-of-scope behavior change, and the orchestrator has to reconstruct provenance (whose finding was this, was it vetted, by whom) from scratch by reading the other loop's log - work the playbook doesn't guide. Durable lesson proposed: at triage/Frame, when a new loop is created with 'loop init --parent' or cut from a non-main branch tip, record which upstream loop/commit the branch diverged from in loop.json (or at minimum log it), so G4 diffs can be scoped correctly (this loop's own commits only) and, if the full-branch diff is reviewed anyway, provenance for any foreign commit is one lookup instead of a log-mining exercise. Proposed as a diff to loops/conventions.md or state.md for the user to review, not yet applied.",
+    "2026-08-19T13:34:22Z G5 -> passed (PROOF.md complete: 8 acceptance criteria mapped to evidence (tests + red/green + e2e traces); both G4 reviews referenced with outcomes; npm run verify (653/653) and full e2e (60/60) green post-commit; all applicable gates G2-G4 passed, G1 skipped (S refactor))",
+    "2026-08-19T13:34:26Z phase -> retro",
+    "2026-08-19T13:34:33Z closing: G2-G5 passed, both reviews recorded and dispositioned, PROOF.md complete, retro recorded; committing verify/review/prove evidence and transitioning to done",
+    "2026-08-19T13:34:34Z phase -> done"
   ],
   "evidence_hashes": {
     "evidence/baseline-hierarchy-tree.txt": {
@@ -204,6 +264,51 @@
       "sha": "e96be3843fa5",
       "recorded": "2026-08-19T13:20:18Z",
       "note": "Step 5 green and full npm run verify passed: 144 test files, 653 tests, typecheck/lint/format/build/size all passing; route chunk graph unaffected"
+    },
+    "evidence/g3-full-verify.txt": {
+      "sha": "60fa19028e71",
+      "recorded": "2026-08-19T13:24:51Z",
+      "note": "G3 full npm run verify post-commit: 144 test files, 653 tests, typecheck/lint/format/coverage/build/verify:build/size all green"
+    },
+    "evidence/g3-e2e-run.txt": {
+      "sha": "144aa2a0af84",
+      "recorded": "2026-08-19T13:24:51Z",
+      "note": "G3 e2e: npm run e2e --trace on, 60/60 Playwright tests passed covering auth login/logout, hierarchy keyboard, telemetry, layout, accessibility flows - zero console errors/warnings, no regressions from steps 4-5"
+    },
+    "evidence/e2e-traces/hierarchy-keyboard-contract.zip": {
+      "sha": "df8c666ae3ee",
+      "recorded": "2026-08-19T13:24:51Z",
+      "note": "Playwright trace: hierarchy tree keyboard contract (Tab/arrows/Home/End/type-ahead/Enter/Space/asterisk) unaffected by the interaction-hook and barrel refactors"
+    },
+    "evidence/e2e-traces/hierarchy-telemetry-buffer.zip": {
+      "sha": "fbb5807bd81a",
+      "recorded": "2026-08-19T13:24:51Z",
+      "note": "Playwright trace: hierarchy telemetry buffer records route_viewed/toggle events correctly after the analyticsEvents relocation"
+    },
+    "evidence/e2e-traces/hierarchy-telemetry-privacy.zip": {
+      "sha": "78481e053ecc",
+      "recorded": "2026-08-19T13:24:52Z",
+      "note": "Playwright trace: no credential/PII leakage in the telemetry buffer, confirming the privacy invariant survived the analyticsEvents move"
+    },
+    "evidence/e2e-traces/auth-login-flow.zip": {
+      "sha": "952e4b761b81",
+      "recorded": "2026-08-19T13:24:52Z",
+      "note": "Playwright trace: sign-in with a real-shaped credential lands on the hierarchy page - confirms auth.sign_in_started/settled tracking still fires correctly after moving out of platform"
+    },
+    "evidence/e2e-traces/auth-signed-out-flow.zip": {
+      "sha": "30fd7e4c8d7d",
+      "recorded": "2026-08-19T13:24:52Z",
+      "note": "Playwright trace: sign in and out entirely from the keyboard - confirms auth.signed_out tracking from SignedInHeader.tsx (app layer) still resolves the feature-owned analytics event type"
+    },
+    "evidence/reviews/g4-codex-full-diff.md": {
+      "sha": "85ba92f2c5c5",
+      "recorded": "2026-08-19T13:31:33Z",
+      "note": "Codex G4 review of main..HEAD full diff: 2 findings, 1 blocking (out-of-scope telemetry behavior change bundled in commit 5beceba)"
+    },
+    "evidence/reviews/g4-claude-full-diff.md": {
+      "sha": "5e21a4af0e85",
+      "recorded": "2026-08-19T13:31:33Z",
+      "note": "Claude fresh-context G4 review of main..HEAD full diff: 2 findings, 1 blocking (same telemetry behavior change flagged independently)"
     }
   },
   "test_file_hashes": {
@@ -220,10 +325,11 @@
       "log_index": 40
     },
     "src/features/auth/data/analyticsEvents.test.ts": {
-      "sha": "c1366965f294",
+      "sha": "1cc0572cc5ec",
       "step": 4,
-      "recorded": "2026-08-19T13:04:36Z",
-      "log_index": 32
+      "recorded": "2026-08-19T13:25:10Z",
+      "log_index": 55,
+      "rebased": "user reviewed and accepted the step 4 diff (analyticsEvents.test.ts import fix) in this session before moving to verify"
     },
     "src/features/hierarchy/HierarchyPage.test.tsx": {
       "sha": "8cfd8615e3a5",
