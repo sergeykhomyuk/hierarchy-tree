@@ -7,13 +7,10 @@ import {
 } from 'react';
 import type { FormEvent } from 'react';
 import type { HttpClient } from '@platform/http';
-import {
-  SignInOutcome,
-  type ObservabilityFacade,
-} from '@platform/observability';
+import type { ObservabilityFacade } from '@platform/observability';
 import type { KeyValueStorage } from '@platform/runtime';
 import { deriveSecret } from './domain';
-import { lookupUserIdentifier, LookupOutcomeKind } from './data';
+import { lookupUserIdentifier, LookupOutcomeKind, SignInOutcome } from './data';
 import { LoginResultOutcome, type LoginResult } from './loginCardState';
 import { writeSession } from './session';
 
