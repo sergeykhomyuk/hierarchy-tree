@@ -9,7 +9,7 @@ import type { ForestAnomalies } from '../domain/forestAnomaly';
 import type { ForestSummaryCounts } from '../domain/buildForest';
 import type { TreeNode } from '../domain/treeNode';
 import './analyticsEvents';
-import { parsePeople } from './parsePeople';
+import { INVALID_ENVELOPE, parsePeople } from './parsePeople';
 import { USERS_RESOURCE_PATH } from './usersResourcePath';
 
 export const HierarchyResultKind = {
@@ -43,14 +43,11 @@ export type HierarchyResult =
 // Iterates every ForestAnomalies field rather than a hardcoded list, so a
 // future anomaly kind is reported automatically instead of silently going
 // unreported until someone remembers to add it here (invariant 164).
-// skippedExpansionSegment belongs to expansionParameter.ts, not a load's
-// buildForest result, and is always 0 from this call path.
 function reportAnomalies(
   observability: ObservabilityFacade,
   anomalies: ForestAnomalies,
 ): void {
   for (const [kind, count] of Object.entries(anomalies)) {
-    if (kind === 'skippedExpansionSegment') continue;
     if (count > 0) {
       observability.logger.warn('hierarchy.anomaly_detected', {
         kind,
@@ -75,7 +72,7 @@ export async function fetchPeople(
     ...(signal !== undefined ? { signal } : {}),
     parse: (payload) => {
       const parsed = parsePeople(payload);
-      if (parsed === 'invalidEnvelope') {
+      if (parsed === INVALID_ENVELOPE) {
         throw new Error('invalid users envelope');
       }
       return parsed;

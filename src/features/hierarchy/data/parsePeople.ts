@@ -3,6 +3,8 @@ import { parsePersonIdentifier } from '../domain/personIdentifier';
 import type { Person } from '../domain/person';
 import { personSchema } from './personSchema';
 
+export const INVALID_ENVELOPE = 'invalidEnvelope';
+
 export type ParsePeopleResult =
   | {
       readonly people: readonly Person[];
@@ -11,7 +13,7 @@ export type ParsePeopleResult =
       // value (invariant 53).
       readonly droppedFields: readonly string[];
     }
-  | 'invalidEnvelope';
+  | typeof INVALID_ENVELOPE;
 
 // Firebase's REST API renders the same collection as an array (with `null`
 // holes at deleted indices) or as an object depending on key sparsity - both
@@ -31,7 +33,7 @@ function normalizeEnvelope(payload: unknown): readonly unknown[] | null {
 
 export function parsePeople(payload: unknown): ParsePeopleResult {
   const rawEntries = normalizeEnvelope(payload);
-  if (rawEntries === null) return 'invalidEnvelope';
+  if (rawEntries === null) return INVALID_ENVELOPE;
 
   let dropped = 0;
   const droppedFields = new Set<string>();

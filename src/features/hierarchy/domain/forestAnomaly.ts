@@ -5,5 +5,4 @@ export type ForestAnomalies = {
   readonly danglingManager: number;
   readonly selfManaged: number;
   readonly cycleBroken: number;
-  readonly skippedExpansionSegment: number;
 };
