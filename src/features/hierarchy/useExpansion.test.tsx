@@ -5,11 +5,13 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import type { ObservabilityFacade } from '@platform/observability';
 import { useExpansion } from './useExpansion';
-import { buildForest } from './domain/buildForest';
-import { parsePersonIdentifier } from './domain/personIdentifier';
-import type { PersonIdentifier } from './domain/personIdentifier';
-import type { TreeNode } from './domain/treeNode';
-import { testPerson } from './testing/testPerson';
+import {
+  buildForest,
+  parsePersonIdentifier,
+  type PersonIdentifier,
+  type TreeNode,
+} from './domain';
+import { testPerson } from './testing';
 
 function createSpyObservability(): ObservabilityFacade {
   return {
@@ -262,6 +264,25 @@ describe('useExpansion', () => {
     });
 
     expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+  });
+
+  it('reports again on a genuine second visit to the same stale link, not only the StrictMode duplicate', async () => {
+    const { observability, router } = renderExpansion('/?expanded=abc');
+
+    expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+
+    // A real intervening navigation - not the same render StrictMode
+    // re-invokes - so the guard that dedupes StrictMode's duplicate must
+    // not also dedupe this.
+    await act(async () => {
+      await router.navigate('/?expanded=2');
+    });
+    expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      await router.navigate('/?expanded=abc');
+    });
+    expect(observability.logger.warn).toHaveBeenCalledTimes(2);
   });
 
   it('a childless root never reaches the URL even though it is part of the default expansion', async () => {

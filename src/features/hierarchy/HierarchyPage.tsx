@@ -5,13 +5,13 @@ import type { ObservabilityFacade } from '@platform/observability';
 import type { Clock } from '@platform/runtime';
 import { EmptyState, ErrorState } from '@shared/ui';
 import { ROUTE_PATHS } from '@shared/routing';
-import { HierarchyResultKind } from './data/fetchPeople';
-import type { HierarchyResult } from './data/fetchPeople';
+import { HierarchyResultKind } from './data';
+import type { HierarchyResult } from './data';
+import type { TreeNode } from './domain';
 import { HierarchySummary } from './HierarchySummary';
 import { HierarchyTree } from './HierarchyTree';
 import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 import { useExpansion } from './useExpansion';
-import type { TreeNode } from './domain/treeNode';
 
 // A stable identity for the non-Data states - useExpansion runs
 // unconditionally on every render (a hook cannot be called only inside the

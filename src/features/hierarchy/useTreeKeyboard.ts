@@ -9,9 +9,9 @@ import {
   parentRowIndex,
   previousVisibleIndex,
   siblingRowIndices,
-} from './domain/rowNavigation';
-import type { VisibleRow } from './domain/flattenVisible';
-import type { PersonIdentifier } from './domain/personIdentifier';
+  type PersonIdentifier,
+  type VisibleRow,
+} from './domain';
 
 // Invariant 139.
 const TYPE_AHEAD_RESET_DELAY_MILLISECONDS = 1000;
@@ -60,19 +60,17 @@ export function useTreeKeyboard({
   const bufferRef = useRef('');
   const cancelResetRef = useRef<CancelTimer | null>(null);
 
-  // rows and accessibleNames are fresh every render (flattenVisible never
-  // reuses the previous call's array, and accessibleNames is derived from
-  // it the same way), and tabbableId changes on every focus move - as
-  // direct dependencies, any of the three would give this hook's returned
-  // callback a new identity on every render or every arrow keypress,
-  // handed to every TreeRow as its onKeyDown prop and defeating every
-  // row's memo bailout regardless of whether that row's own data changed
-  // (the exact hazard handleRowToggle's own rowsRef already guards
-  // against in HierarchyTree.tsx - invariant 91). Synced through an
-  // effect rather than a direct assignment in the render body - a plain
+  // rows and accessibleNames change on genuine tree or naming updates, and
+  // tabbableId changes on every focus move - as direct dependencies, any of
+  // the three would give this hook's returned callback a new identity on
+  // those updates, handed to every TreeRow as its onKeyDown prop and
+  // defeating every row's memo bailout regardless of whether that row's own
+  // data changed (the exact hazard handleRowToggle's own rowsRef already
+  // guards against in useHierarchyTreeInteractions - invariant 91).
+  // Synced through an effect rather than a direct assignment in the render
+  // body - a plain
   // `ref.current = value` during render is exactly what react-hooks/refs
-  // flags inside a custom hook (unlike a component's own render body,
-  // where HierarchyTree.tsx's own rowsRef does this directly).
+  // flags inside a custom hook.
   const rowsRef = useRef(rows);
   const accessibleNamesRef = useRef(accessibleNames);
   const tabbableIdRef = useRef(tabbableId);

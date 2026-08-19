@@ -15,11 +15,10 @@ import '@shared/testing/toHaveNoAxeViolations';
 import { loadTranslations } from './loadTranslations';
 import { HierarchyPage } from './HierarchyPage';
 import { HierarchySkeleton } from './HierarchySkeleton';
-import { HierarchyResultKind } from './data/fetchPeople';
-import type { HierarchyFailureKind, HierarchyResult } from './data/fetchPeople';
-import { parsePeople } from './data/parsePeople';
-import { buildForest } from './domain/buildForest';
-import { testPerson } from './testing/testPerson';
+import { HierarchyResultKind, parsePeople } from './data';
+import type { HierarchyFailureKind, HierarchyResult } from './data';
+import { buildForest } from './domain';
+import { testPerson } from './testing';
 
 const EMPTY_ANOMALIES = {
   duplicateId: 0,

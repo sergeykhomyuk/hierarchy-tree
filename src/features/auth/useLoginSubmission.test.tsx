@@ -3,9 +3,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createFakeClock, createFakeRandomness } from '@shared/testing';
 import { createHttpClient } from '@platform/http';
 import type { Transport } from '@platform/http';
-import { SignInOutcome } from '@platform/observability';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { KeyValueStorage } from '@platform/runtime';
+import { SignInOutcome } from './data';
 import { useLoginSubmission } from './useLoginSubmission';
 import type { UseLoginSubmissionDependencies } from './useLoginSubmission';
 

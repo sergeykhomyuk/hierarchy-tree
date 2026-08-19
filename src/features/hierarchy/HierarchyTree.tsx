@@ -1,18 +1,19 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { Clock } from '@platform/runtime';
-import { flattenVisible } from './domain/flattenVisible';
-import { personDisplayName } from './domain/personDisplayName';
-import { recoverFocusedRowId } from './domain/recoverFocusedRowId';
-import { rowAccessibleName } from './domain/rowAccessibleName';
-import type { PersonIdentifier } from './domain/personIdentifier';
-import type { TreeNode } from './domain/treeNode';
+import {
+  flattenVisible,
+  personDisplayName,
+  rowAccessibleName,
+  type PersonIdentifier,
+  type TreeNode,
+} from './domain';
 import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
 import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 import { TreeAnnouncer } from './TreeAnnouncer';
 import { TreeRow } from './TreeRow';
-import { useTreeKeyboard } from './useTreeKeyboard';
+import { useHierarchyTreeInteractions } from './useHierarchyTreeInteractions';
 
 export type HierarchyTreeProps = {
   roots: readonly TreeNode[];
@@ -49,19 +50,26 @@ export const HierarchyTree = memo(function HierarchyTree({
   onToggle,
   onExpandMany,
 }: HierarchyTreeProps) {
-  const { t, i18n } = useTranslation(HIERARCHY_TRANSLATION_NAMESPACE);
-  const rows = flattenVisible(roots, expandedIds);
+  const { t } = useTranslation(HIERARCHY_TRANSLATION_NAMESPACE);
+  const rows = useMemo(
+    () => flattenVisible(roots, expandedIds),
+    [roots, expandedIds],
+  );
   const youMarkerLabel = t('page.youMarkerLabel');
   // Parallel to rows, in the same order - the exact string each row's
   // aria-label carries, so type-ahead matches "the same string a screen
   // reader announces" (invariant 138) rather than a second, independently
   // computed name that could drift from TreeRow's own.
-  const accessibleNames = rows.map((row) =>
-    rowAccessibleName(
-      personDisplayName(row.person),
-      row.person.id === signedInUserId,
-      youMarkerLabel,
-    ),
+  const accessibleNames = useMemo(
+    () =>
+      rows.map((row) =>
+        rowAccessibleName(
+          personDisplayName(row.person),
+          row.person.id === signedInUserId,
+          youMarkerLabel,
+        ),
+      ),
+    [rows, signedInUserId, youMarkerLabel],
   );
 
   // Held here rather than by a row: collapsing and re-expanding a branch
@@ -87,128 +95,21 @@ export const HierarchyTree = memo(function HierarchyTree({
     [observability],
   );
 
-  // rows is a fresh array every render (flattenVisible never reuses the
-  // previous call's objects), so a ref rather than a dependency keeps
-  // handleRowToggle's own identity stable across toggles - otherwise every
-  // row's memo would bail out on nothing, since a new onToggle prop would
-  // look like a change on every single one (invariant 91).
-  const rowsRef = useRef(rows);
-  rowsRef.current = rows;
-  const [announcement, setAnnouncement] = useState('');
-
-  // Roving tabindex (invariants 130-132): one row is the tab stop, kept in
-  // React state rather than read straight off the DOM so a render can
-  // decide every row's tabIndex in one pass. Recovery runs only when
-  // expandedIds actually changes identity (a toggle or a Back/Forward),
-  // never on a render caused by something unrelated - rows is read via a
-  // ref precisely so it is not a dependency itself, since flattenVisible
-  // never reuses the previous call's array (the same reasoning as
-  // rowsRef above).
-  const [tabbableId, setTabbableId] = useState<PersonIdentifier | null>(
-    () => rows[0]?.person.id ?? null,
-  );
-  // Element refs, keyed by person id, so arrow/Home/End movement - and the
-  // recovery effect below - can call .focus() directly. A native focus
-  // event is what actually moves the roving tab stop (via TreeRow's own
-  // onFocus -> handleRowFocus) for every OTHER path; this ref exists
-  // precisely so recovery can do the same thing rather than owning a
-  // second way to decide what's tabbable.
-  const rowElementsRef = useRef(new Map<PersonIdentifier, HTMLDivElement>());
-  const registerRowElement = useCallback(
-    (personId: PersonIdentifier, element: HTMLDivElement | null) => {
-      if (element === null) {
-        rowElementsRef.current.delete(personId);
-      } else {
-        rowElementsRef.current.set(personId, element);
-      }
-    },
-    [],
-  );
-  const focusRow = useCallback((personId: PersonIdentifier) => {
-    rowElementsRef.current.get(personId)?.focus();
-  }, []);
-
-  // Read via a ref rather than closed over directly - a setState updater
-  // must stay a pure reducer, so the side effect (focusRow, a real DOM
-  // .focus() call) happens as a plain statement in the effect body, after
-  // the recovered value is known, never inside the updater itself.
-  const tabbableIdRef = useRef(tabbableId);
-  tabbableIdRef.current = tabbableId;
-  const previousRowsForFocusRef = useRef(rows);
-  useEffect(() => {
-    const previousRows = previousRowsForFocusRef.current;
-    const currentRows = rowsRef.current;
-    previousRowsForFocusRef.current = currentRows;
-    const current = tabbableIdRef.current;
-    const recovered =
-      current === null
-        ? (currentRows[0]?.person.id ?? null)
-        : recoverFocusedRowId(previousRows, currentRows, current);
-    if (recovered === current) return;
-    setTabbableId(recovered);
-    // Only a genuine recovery - the previously-tabbable row is actually
-    // gone - moves real DOM focus. Collapsing a branch that contains the
-    // focused row (invariant 143) and a Back/Forward that removes it
-    // (invariant 144) both land here; an ordinary toggle elsewhere in the
-    // tree, which never changes who was focused, does not.
-    if (recovered !== null) focusRow(recovered);
-  }, [expandedIds, focusRow]);
-  const handleRowFocus = useCallback((personId: PersonIdentifier) => {
-    setTabbableId(personId);
-  }, []);
-
-  const handleRowToggle = useCallback(
-    (personId: PersonIdentifier) => {
-      const row = rowsRef.current.find(
-        (candidate) => candidate.person.id === personId,
-      );
-      if (row !== undefined) {
-        const willBeExpanded = !row.isExpanded;
-        // Depth and the new state only - no name, no email, no person id
-        // (invariant 115).
-        observability.analytics.track('hierarchy.toggled', {
-          expanded: willBeExpanded,
-          depth: row.depth,
-        });
-        setAnnouncement(
-          t(
-            willBeExpanded
-              ? 'page.toggleAnnouncedExpanded'
-              : 'page.toggleAnnouncedCollapsed',
-            { name: personDisplayName(row.person) },
-          ),
-        );
-      }
-      onToggle(personId);
-    },
-    [onToggle, observability, t],
-  );
-
-  const handleExpandSiblings = useCallback(
-    (personIds: readonly PersonIdentifier[], depth: number) => {
-      // Count and depth only - the same privacy rule as a single toggle
-      // (invariant 115), extended to this event (invariant 141).
-      observability.analytics.track('hierarchy.siblings_expanded', {
-        count: personIds.length,
-        depth,
-      });
-      setAnnouncement(
-        t('page.siblingsExpandedAnnounced', { count: personIds.length }),
-      );
-      onExpandMany(personIds);
-    },
-    [onExpandMany, observability, t],
-  );
-
-  const handleKeyDown = useTreeKeyboard({
+  const {
+    announcement,
+    tabbableId,
+    handleRowFocus,
+    handleRowToggle,
+    handleKeyDown,
+    registerRowElement,
+  } = useHierarchyTreeInteractions({
     rows,
     accessibleNames,
-    tabbableId,
-    onFocusRow: focusRow,
-    onToggleRow: handleRowToggle,
-    onExpandSiblings: handleExpandSiblings,
+    expandedIds,
+    observability,
     clock,
-    language: i18n.language,
+    onToggle,
+    onExpandMany,
   });
 
   return (

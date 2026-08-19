@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router';
 import type { ObservabilityFacade } from '@platform/observability';
-import { defaultExpansion } from './domain/defaultExpansion';
 import {
   collectManagerIds,
+  defaultExpansion,
   formatExpansion,
   parseExpansion,
-} from './domain/expansionParameter';
-import type { PersonIdentifier } from './domain/personIdentifier';
-import type { TreeNode } from './domain/treeNode';
+  type PersonIdentifier,
+  type TreeNode,
+} from './domain';
 
 const EXPANDED_PARAM = 'expanded';
 
@@ -90,28 +90,30 @@ export function useExpansion(
   const expandedIdsRef = useRef(expandedIds);
   useEffect(() => {
     expandedIdsRef.current = expandedIds;
-  });
+  }, [expandedIds]);
 
-  // Reported once per parse (invariant 121) - the effect's own dependency
-  // array is what makes "once per parse" hold across genuinely distinct
-  // parses: it re-runs only when the raw parameter or the roots actually
-  // change, never on an unrelated render, and a second parse that happens
-  // to skip the same COUNT of segments as the first still re-fires because
-  // expandedParam itself changed too. The ref guard on top of that is for
-  // React StrictMode's development-only double-invoke (bootstrap.ts wraps
-  // the app in StrictMode): it re-runs this exact effect body a second
-  // time, with the identical closure, immediately after the first - the
-  // dependency array alone cannot distinguish that from a real second
-  // parse, since nothing in it changed either time.
-  const lastReportedParamRef = useRef<string | null | undefined>(undefined);
+  // Reported once per parse (invariant 121) - guarded by parsed's own
+  // OBJECT IDENTITY, not the raw param string: useMemo recomputes parsed
+  // exactly when expandedParam or roots actually change, so two visits to
+  // the same stale URL with a different one in between are two distinct
+  // parsed objects (the memo cache is invalidated by the render in
+  // between) and both correctly report - a string-keyed guard would wrongly
+  // suppress the second visit, since the string itself repeats even though
+  // it is a genuinely new parse. The one case this DOES dedupe - the
+  // identical parsed reference seen twice - is exactly React StrictMode's
+  // development-only double-invoke (bootstrap.ts wraps the app in
+  // StrictMode): it re-runs this effect a second time with the SAME
+  // render's SAME parsed object, immediately after the first, which a
+  // dependency array alone cannot distinguish from a real second parse.
+  const lastReportedParsedRef = useRef<typeof parsed | undefined>(undefined);
   useEffect(() => {
-    if (parsed.skipped > 0 && lastReportedParamRef.current !== expandedParam) {
-      lastReportedParamRef.current = expandedParam;
+    if (parsed.skipped > 0 && lastReportedParsedRef.current !== parsed) {
+      lastReportedParsedRef.current = parsed;
       observability.logger.warn('hierarchy.expansion_segments_skipped', {
         skipped: parsed.skipped,
       });
     }
-  }, [expandedParam, roots, parsed.skipped, observability]);
+  }, [parsed, observability]);
 
   const toggleExpanded = useCallback(
     (personId: PersonIdentifier) => {

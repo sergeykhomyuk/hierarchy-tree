@@ -1,0 +1,8 @@
+Command: npm run test -- src/features/hierarchy/HierarchyTree.test.tsx -t "memoizes visible rows and accessible names across a focus-only render"
+Result: FAIL before implementation, as expected
+
+AssertionError: expected "flattenVisible" to be called 1 times, but got 2 times
+Location: src/features/hierarchy/HierarchyTree.test.tsx:859
+
+Test Files  1 failed (1)
+Tests       1 failed | 41 skipped (42)

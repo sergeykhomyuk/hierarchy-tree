@@ -10,8 +10,7 @@ import {
 import { loadTranslations } from './loadTranslations';
 import { TreeRow } from './TreeRow';
 import type { TreeRowProps } from './TreeRow';
-import { parseEmailAddress } from './domain/emailAddress';
-import { parsePersonIdentifier } from './domain/personIdentifier';
+import { parseEmailAddress, parsePersonIdentifier } from './domain';
 import * as personDisplayNameModule from './domain/personDisplayName';
 
 async function createTestI18n() {

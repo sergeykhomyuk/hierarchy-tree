@@ -1,0 +1,12 @@
+Commands:
+- npm run test -- src/features/hierarchy/useHierarchyTreeInteractions.test.tsx
+- npm run verify
+- jq coverage counter inspection for useHierarchyTreeInteractions.ts
+
+Results:
+- Focused hook tests: 2 passed (2)
+- Full coverage suite: 144 files passed, 651 tests passed
+- useHierarchyTreeInteractions.ts: 100% statements, branches, functions, and lines; every generated coverage counter is non-zero
+- Repository coverage: 97.51% statements, 96.69% branches, 96.39% functions, 97.58% lines
+- Typecheck, lint, source guards, Prettier, production build, build-output verification, and size limits: passed
+- npm run verify exit code: 0

@@ -4,10 +4,12 @@ import {
   type HttpFailure,
 } from '@platform/http';
 import type { ObservabilityFacade } from '@platform/observability';
-import { buildForest } from '../domain/buildForest';
-import type { ForestAnomalies } from '../domain/forestAnomaly';
-import type { ForestSummaryCounts } from '../domain/buildForest';
-import type { TreeNode } from '../domain/treeNode';
+import {
+  buildForest,
+  type ForestAnomalies,
+  type ForestSummaryCounts,
+  type TreeNode,
+} from '../domain';
 import './analyticsEvents';
 import { INVALID_ENVELOPE, parsePeople } from './parsePeople';
 import { USERS_RESOURCE_PATH } from './usersResourcePath';

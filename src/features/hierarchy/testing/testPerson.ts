@@ -1,6 +1,8 @@
-import { parseEmailAddress } from '../domain/emailAddress';
-import { parsePersonIdentifier } from '../domain/personIdentifier';
-import type { Person } from '../domain/person';
+import {
+  parseEmailAddress,
+  parsePersonIdentifier,
+  type Person,
+} from '../domain';
 
 export function testPerson(
   id: number,

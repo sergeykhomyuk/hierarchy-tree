@@ -20,6 +20,7 @@ type StackEntry = {
   readonly posInSet: number;
 };
 
+// Turn the tree into a flat list of visible rows, in pre-order, with depth and position information.
 export function flattenVisible(
   roots: readonly TreeNode[],
   expandedIds: ReadonlySet<PersonIdentifier>,

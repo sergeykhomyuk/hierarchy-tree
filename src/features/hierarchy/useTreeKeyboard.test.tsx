@@ -4,10 +4,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { createFakeClock } from '@shared/testing';
 import { useTreeKeyboard } from './useTreeKeyboard';
 import type { UseTreeKeyboardOptions } from './useTreeKeyboard';
-import { buildForest } from './domain/buildForest';
-import { flattenVisible } from './domain/flattenVisible';
-import { parsePersonIdentifier } from './domain/personIdentifier';
-import { testPerson } from './testing/testPerson';
+import { buildForest, flattenVisible, parsePersonIdentifier } from './domain';
+import { testPerson } from './testing';
 
 type HarnessProps = Omit<
   UseTreeKeyboardOptions,

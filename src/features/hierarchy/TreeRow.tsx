@@ -3,10 +3,12 @@ import type { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '@shared/ui';
 import { formatCount } from '@shared/utils';
-import { personDisplayName } from './domain/personDisplayName';
-import { rowAccessibleName } from './domain/rowAccessibleName';
-import type { EmailAddress } from './domain/emailAddress';
-import type { PersonIdentifier } from './domain/personIdentifier';
+import {
+  personDisplayName,
+  rowAccessibleName,
+  type EmailAddress,
+  type PersonIdentifier,
+} from './domain';
 import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 import { TreeToggle } from './TreeToggle';
 

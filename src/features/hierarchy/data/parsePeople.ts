@@ -1,6 +1,8 @@
-import { parseEmailAddress } from '../domain/emailAddress';
-import { parsePersonIdentifier } from '../domain/personIdentifier';
-import type { Person } from '../domain/person';
+import {
+  parseEmailAddress,
+  parsePersonIdentifier,
+  type Person,
+} from '../domain';
 import { personSchema } from './personSchema';
 
 export const INVALID_ENVELOPE = 'invalidEnvelope';
