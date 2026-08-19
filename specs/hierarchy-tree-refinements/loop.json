@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-19T12:08:32Z",
   "created": "2026-08-19",
-  "updated": "2026-08-19T12:10:59Z",
+  "updated": "2026-08-19T12:17:12Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -37,7 +37,7 @@
     "G2": {
       "status": "pending",
       "attempts": 0,
-      "steps_total": 1,
+      "steps_total": 2,
       "steps_done": 1
     },
     "G3": {
@@ -64,6 +64,18 @@
       ],
       "red_observed": "2026-08-19T12:09:14Z evidence/step1-red.txt: focus-only render called flattenVisible twice",
       "status": "done"
+    },
+    {
+      "id": 2,
+      "desc": "Extract hierarchy-tree focus, toggle, announcement, and keyboard orchestration into a feature hook",
+      "tests": [
+        "src/features/hierarchy/HierarchyTree.test.tsx::the row that receives focus becomes the tabbable row, and the rest fall out of the tab sequence",
+        "src/features/hierarchy/HierarchyTree.test.tsx::collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable",
+        "src/features/hierarchy/HierarchyTree.test.tsx::clicking a toggle emits one telemetry event carrying the new state and the row's depth, with no name, email or person id",
+        "src/features/hierarchy/HierarchyTree.test.tsx::a keyboard-driven toggle leaves a row under a different root unrendered"
+      ],
+      "red_observed": null,
+      "status": "pending"
     }
   ],
   "log": [
@@ -82,7 +94,8 @@
     "2026-08-19T12:10:58Z evidence recorded: evidence/step1-green-and-verify.txt (c5b6503dd08d) - Step 1 green and full npm run verify passed",
     "2026-08-19T12:10:59Z step 1 -> green",
     "2026-08-19T12:10:59Z step 1 -> done",
-    "2026-08-19T12:10:59Z step 1 verified: HierarchyTree 42/42; npm run verify exit 0 with coverage 649/649 and all build/size gates passing; loop intentionally remains active in implement for further tweaks"
+    "2026-08-19T12:10:59Z step 1 verified: HierarchyTree 42/42; npm run verify exit 0 with coverage 649/649 and all build/size gates passing; loop intentionally remains active in implement for further tweaks",
+    "2026-08-19T12:17:12Z step 2 added: Extract hierarchy-tree focus, toggle, announcement, and keyboard orchestration into a feature hook"
   ],
   "evidence_hashes": {
     "evidence/baseline-hierarchy-tree.txt": {
