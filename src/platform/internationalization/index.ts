@@ -1,5 +1,6 @@
 export { createInternationalization } from './createInternationalization';
 export type { InternationalizationDependencies } from './createInternationalization';
+export { COMMON_TRANSLATION_NAMESPACE } from './commonTranslationNamespace';
 export { localeDirection } from './localeDirection';
 export { Locale } from './locale';
 export { detectLocale } from './detectLocale';

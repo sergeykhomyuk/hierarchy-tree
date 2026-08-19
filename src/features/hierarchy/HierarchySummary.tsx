@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCount } from '@shared/utils';
 import type { ForestSummaryCounts } from './domain/buildForest';
+import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 
 export type HierarchySummaryProps = {
   counts: ForestSummaryCounts;
@@ -15,7 +16,7 @@ export type HierarchySummaryProps = {
 export const HierarchySummary = memo(function HierarchySummary({
   counts,
 }: HierarchySummaryProps) {
-  const { t, i18n } = useTranslation('hierarchy');
+  const { t, i18n } = useTranslation(HIERARCHY_TRANSLATION_NAMESPACE);
 
   return (
     <div className="flex h-[46px] items-center justify-between border-b border-border-hairline px-[18px]">

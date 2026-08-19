@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Skeleton, SkeletonSize } from '@shared/ui';
 import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
+import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 
 // Shaped like tree rows at varying indents (invariant 59), decorative in
 // full: no rows, no tree role, no interactive element and no text in the
@@ -19,7 +20,7 @@ const SKELETON_ROW_INDENT_CLASS = [
 ];
 
 export const HierarchySkeleton = memo(function HierarchySkeleton() {
-  const { t } = useTranslation('hierarchy');
+  const { t } = useTranslation(HIERARCHY_TRANSLATION_NAMESPACE);
 
   return (
     <div>

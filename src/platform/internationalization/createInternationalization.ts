@@ -1,11 +1,15 @@
 import { createInstance, type i18n } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import type { ObservabilityFacade } from '@platform/observability';
+import { COMMON_TRANSLATION_NAMESPACE } from './commonTranslationNamespace';
 import { formatMissingKey } from './formatMissingKey';
 import { createMissingKeyHandler } from './reportMissingKey';
 
 export type InternationalizationDependencies = {
-  resources: { common: Record<string, unknown> };
+  resources: Record<
+    typeof COMMON_TRANSLATION_NAMESPACE,
+    Record<string, unknown>
+  >;
   language: string;
   observability: { logger: Pick<ObservabilityFacade['logger'], 'error'> };
 };
@@ -17,10 +21,13 @@ export async function createInternationalization(
   await instance.use(initReactI18next).init({
     lng: dependencies.language,
     fallbackLng: false,
-    defaultNS: 'common',
-    ns: ['common'],
+    defaultNS: COMMON_TRANSLATION_NAMESPACE,
+    ns: [COMMON_TRANSLATION_NAMESPACE],
     resources: {
-      [dependencies.language]: { common: dependencies.resources.common },
+      [dependencies.language]: {
+        [COMMON_TRANSLATION_NAMESPACE]:
+          dependencies.resources[COMMON_TRANSLATION_NAMESPACE],
+      },
     },
     interpolation: { escapeValue: false },
     returnNull: false,

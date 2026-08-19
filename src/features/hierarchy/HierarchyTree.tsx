@@ -9,6 +9,7 @@ import { rowAccessibleName } from './domain/rowAccessibleName';
 import type { PersonIdentifier } from './domain/personIdentifier';
 import type { TreeNode } from './domain/treeNode';
 import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
+import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 import { TreeAnnouncer } from './TreeAnnouncer';
 import { TreeRow } from './TreeRow';
 import { useTreeKeyboard } from './useTreeKeyboard';
@@ -48,7 +49,7 @@ export const HierarchyTree = memo(function HierarchyTree({
   onToggle,
   onExpandMany,
 }: HierarchyTreeProps) {
-  const { t, i18n } = useTranslation('hierarchy');
+  const { t, i18n } = useTranslation(HIERARCHY_TRANSLATION_NAMESPACE);
   const rows = flattenVisible(roots, expandedIds);
   const youMarkerLabel = t('page.youMarkerLabel');
   // Parallel to rows, in the same order - the exact string each row's

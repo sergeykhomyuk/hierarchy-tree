@@ -7,6 +7,7 @@ import { personDisplayName } from './domain/personDisplayName';
 import { rowAccessibleName } from './domain/rowAccessibleName';
 import type { EmailAddress } from './domain/emailAddress';
 import type { PersonIdentifier } from './domain/personIdentifier';
+import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 import { TreeToggle } from './TreeToggle';
 
 const INDENT_PIXELS_PER_DEPTH = 41;
@@ -85,7 +86,7 @@ export const TreeRow = memo(function TreeRow({
   onKeyDown,
   registerElement,
 }: TreeRowProps) {
-  const { t, i18n } = useTranslation('hierarchy');
+  const { t, i18n } = useTranslation(HIERARCHY_TRANSLATION_NAMESPACE);
   const displayName = personDisplayName({ firstName, lastName, email });
   const accessibleName = rowAccessibleName(
     displayName,

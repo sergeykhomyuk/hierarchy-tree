@@ -5,6 +5,7 @@ import type { Clock, KeyValueStorage } from '@platform/runtime';
 import type { Transport } from '@platform/http';
 import { createObservability } from '@platform/observability';
 import {
+  COMMON_TRANSLATION_NAMESPACE,
   createInternationalization,
   createKeyEchoCatalogue,
   Locale,
@@ -74,7 +75,9 @@ export async function buildTestRuntime(
       interactionTracker.currentCorrelationId() ?? 'test-correlation-id',
   });
   const i18n = await createInternationalization({
-    resources: { common: createKeyEchoCatalogue(commonCatalogue) },
+    resources: {
+      [COMMON_TRANSLATION_NAMESPACE]: createKeyEchoCatalogue(commonCatalogue),
+    },
     language: Locale.Test,
     observability,
   });

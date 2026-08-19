@@ -9,6 +9,7 @@ import { HierarchyResultKind } from './data/fetchPeople';
 import type { HierarchyResult } from './data/fetchPeople';
 import { HierarchySummary } from './HierarchySummary';
 import { HierarchyTree } from './HierarchyTree';
+import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 import { useExpansion } from './useExpansion';
 import type { TreeNode } from './domain/treeNode';
 
@@ -45,7 +46,7 @@ export const HierarchyPage = memo(function HierarchyPage({
   userId,
   dependencies,
 }: HierarchyPageProps) {
-  const { t } = useTranslation('hierarchy');
+  const { t } = useTranslation(HIERARCHY_TRANSLATION_NAMESPACE);
   const navigate = useNavigate();
   const handleBackToLogin = useCallback(() => {
     void navigate(ROUTE_PATHS.login);

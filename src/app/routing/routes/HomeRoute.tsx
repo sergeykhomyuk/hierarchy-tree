@@ -5,7 +5,11 @@ import {
   useRevalidator,
   useRouteLoaderData,
 } from 'react-router';
-import { HierarchyPage, HierarchySkeleton } from '@features/hierarchy';
+import {
+  HIERARCHY_TRANSLATION_NAMESPACE,
+  HierarchyPage,
+  HierarchySkeleton,
+} from '@features/hierarchy';
 import { useDocumentTitle } from '@shared/hooks';
 import type { HierarchyLoaderData } from '../createHierarchyLoader';
 import type { AuthenticatedLoaderData } from '../../layout/createAuthenticatedLoader';
@@ -27,7 +31,7 @@ export { loadTranslations } from '@features/hierarchy';
 // code path to keep in sync (invariant 70, 79).
 export const HomeRoute = memo(function HomeRoute() {
   const runtime = useRuntime();
-  const { t } = useTranslation('hierarchy');
+  const { t } = useTranslation(HIERARCHY_TRANSLATION_NAMESPACE);
   useDocumentTitle(t('page.documentTitle'));
   const { hierarchy } = useLoaderData<HierarchyRouteLoader>();
   const authenticatedData =
