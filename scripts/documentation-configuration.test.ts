@@ -48,7 +48,11 @@ describe('README.md', () => {
   });
 });
 
-const DEVIATION_COUNT_WORDS: Record<string, number> = { nine: 9, ten: 10 };
+const DEVIATION_COUNT_WORDS: Record<string, number> = {
+  nine: 9,
+  ten: 10,
+  eleven: 11,
+};
 
 function sectionBody(
   content: string,

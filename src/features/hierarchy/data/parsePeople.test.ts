@@ -47,7 +47,7 @@ describe('parsePeople', () => {
     expect(parsePeople(true)).toBe('invalidEnvelope');
   });
 
-  it("a dropped row's failing field names are collected, deduped, and never a value", () => {
+  it("each dropped row's position and failing field names are reported, deduped within that row, and never a value (invariant 53)", () => {
     const result = parsePeople([
       validRecord(1),
       {
@@ -62,8 +62,14 @@ describe('parsePeople', () => {
     expect(result).not.toBe('invalidEnvelope');
     if (result === 'invalidEnvelope') return;
     expect(result.dropped).toBe(2);
-    expect([...result.droppedFields].sort()).toEqual(['email', 'id']);
-    expect(JSON.stringify(result.droppedFields)).not.toContain('not-a-number');
+    // Position, not just which field kinds failed somewhere in the whole
+    // payload - the previous shape (a single envelope-wide deduped field
+    // set) could not say WHICH element failed, only that something did.
+    expect(result.failures).toEqual([
+      { position: 1, fields: ['id'] },
+      { position: 2, fields: ['email'] },
+    ]);
+    expect(JSON.stringify(result.failures)).not.toContain('not-a-number');
   });
 
   it('which envelope arrived never changes the surviving records or their order', () => {

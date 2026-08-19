@@ -165,7 +165,7 @@ describe('fetchPeople', () => {
     );
   });
 
-  it('dropped rows are reported once per load with the count and the failing field names', async () => {
+  it('dropped rows are reported once per load with the count, the failing field names and each position (invariant 53)', async () => {
     const observability = createSpyObservability();
     const transport: Transport = () =>
       Promise.resolve(
@@ -183,9 +183,32 @@ describe('fetchPeople', () => {
 
     expect(observability.logger.warn).toHaveBeenCalledWith(
       'hierarchy.rows_dropped',
-      { count: 1, fields: ['id'] },
+      { count: 1, failures: [{ position: 1, fields: ['id'] }] },
     );
     expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+  });
+
+  it('an all-invalid payload also reports the count and each failing position and field names', async () => {
+    const observability = createSpyObservability();
+    const transport: Transport = () =>
+      Promise.resolve(
+        new Response(JSON.stringify([{ id: 'not-a-number' }]), {
+          status: 200,
+        }),
+      );
+    const client = createTestClient(transport, observability);
+
+    await fetchPeople(client, 'a'.repeat(32), observability);
+
+    expect(observability.logger.warn).toHaveBeenCalledWith(
+      'hierarchy.rows_dropped',
+      {
+        count: 1,
+        failures: [
+          { position: 0, fields: ['id', 'firstName', 'lastName', 'email'] },
+        ],
+      },
+    );
   });
 
   it('each anomaly kind is reported with its count', async () => {

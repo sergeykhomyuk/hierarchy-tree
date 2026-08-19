@@ -233,7 +233,7 @@ describe('live smoke', () => {
     }
     expect(
       parsed.people.length,
-      `every row was dropped; failing fields were: [${parsed.droppedFields.join(', ')}]`,
+      `every row was dropped; failures were: ${JSON.stringify(parsed.failures)}`,
     ).toBeGreaterThan(0);
 
     const forest = buildForest(parsed.people);

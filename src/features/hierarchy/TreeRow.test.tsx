@@ -45,6 +45,7 @@ const MANAGER_PROPS: TreeRowProps = {
   setSize: 2,
   posInSet: 1,
   isSignedInUser: false,
+  photoResetToken: undefined,
   isTabbable: false,
   onPhotoError: vi.fn(),
   onToggle: vi.fn(),

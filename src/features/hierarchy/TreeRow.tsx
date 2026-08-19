@@ -36,6 +36,11 @@ export type TreeRowProps = {
   setSize: number;
   posInSet: number;
   isSignedInUser: boolean;
+  // Forwarded to Avatar's resetToken (invariant 97): stable across a
+  // toggle, so it never defeats this row's own memoization, and changes
+  // only when a new payload resolves - HierarchyTree passes its roots
+  // reference through unchanged.
+  photoResetToken: unknown;
   // Roving tabindex (invariant 130-132): exactly one row is a tab stop at
   // a time, and it becomes tabbable the moment it receives DOM focus -
   // however that focus arrived, Tab or an imperative move the tree makes
@@ -59,10 +64,16 @@ export type TreeRowProps = {
   ) => void;
 };
 
-// Every prop here is a primitive - flattenVisible returns a fresh
-// VisibleRow object on every recompute, so a memo comparing that object
-// would re-render all 33 rows on every toggle instead of only the ones
-// whose values actually changed (invariant 91). The row's accessible
+// Every prop is a primitive, with one deliberate exception -
+// photoResetToken: flattenVisible returns a fresh VisibleRow object on
+// every recompute, so a memo comparing that object would re-render all 33
+// rows on every toggle instead of only the ones whose values actually
+// changed (invariant 91). photoResetToken carries HierarchyTree's roots
+// reference through unchanged rather than a value derived from it, so it
+// stays referentially stable across a toggle (buildForest runs once per
+// payload, not per render) and only changes identity on a genuine new
+// payload - which is exactly the render every row SHOULD take, not a
+// violation of the invariant above. The row's accessible
 // name is built explicitly rather than left to the default - a treeitem
 // otherwise takes its name from everything inside it, the email, the
 // report count and the toggle glyph included (invariant 94).
@@ -79,6 +90,7 @@ export const TreeRow = memo(function TreeRow({
   setSize,
   posInSet,
   isSignedInUser,
+  photoResetToken,
   isTabbable,
   onPhotoError,
   onToggle,
@@ -161,6 +173,7 @@ export const TreeRow = memo(function TreeRow({
         size="medium"
         decorative
         onImageError={handleImageError}
+        resetToken={photoResetToken}
       />
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-2 truncate text-[13.5px] leading-[17px] font-semibold text-ink">

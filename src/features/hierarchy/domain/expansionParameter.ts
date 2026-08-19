@@ -13,7 +13,13 @@ export type ParsedExpansion = {
 
 const SAFE_POSITIVE_INTEGER_SEGMENT = /^[0-9]+$/;
 
-function collectManagerIds(
+// Exported for useExpansion.ts, which filters the set it writes to the URL
+// down to manager ids only - invariant 116 says the expanded parameter
+// holds "the ids of the expanded manager rows," and defaultExpansion (by
+// its own invariant 87/88 contract) includes every root regardless of
+// whether it has children, so the write side needs this same filter the
+// read side already applies.
+export function collectManagerIds(
   roots: readonly TreeNode[],
 ): ReadonlySet<PersonIdentifier> {
   const managerIds = new Set<PersonIdentifier>();

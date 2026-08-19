@@ -5,13 +5,21 @@ import { personSchema } from './personSchema';
 
 export const INVALID_ENVELOPE = 'invalidEnvelope';
 
+// One entry per dropped element: its position in the normalized envelope
+// and the failing field names - never a value (invariant 53). Position is
+// what a deduped, envelope-wide field-name set (this file's previous
+// shape) cannot express: which element failed, not only what kind of
+// failure occurred somewhere in the payload.
+export type ParsePeopleFailure = {
+  readonly position: number;
+  readonly fields: readonly string[];
+};
+
 export type ParsePeopleResult =
   | {
       readonly people: readonly Person[];
       readonly dropped: number;
-      // The field names behind every drop in this call, deduped - never a
-      // value (invariant 53).
-      readonly droppedFields: readonly string[];
+      readonly failures: readonly ParsePeopleFailure[];
     }
   | typeof INVALID_ENVELOPE;
 
@@ -35,16 +43,17 @@ export function parsePeople(payload: unknown): ParsePeopleResult {
   const rawEntries = normalizeEnvelope(payload);
   if (rawEntries === null) return INVALID_ENVELOPE;
 
-  let dropped = 0;
-  const droppedFields = new Set<string>();
+  const failures: ParsePeopleFailure[] = [];
   const people: Person[] = [];
-  for (const entry of rawEntries) {
+  for (const [position, entry] of rawEntries.entries()) {
     const result = personSchema.safeParse(entry);
     if (!result.success) {
-      dropped += 1;
-      for (const issue of result.error.issues) {
-        droppedFields.add(issue.path.join('.'));
-      }
+      failures.push({
+        position,
+        fields: [
+          ...new Set(result.error.issues.map((issue) => issue.path.join('.'))),
+        ],
+      });
       continue;
     }
 
@@ -61,5 +70,5 @@ export function parsePeople(payload: unknown): ParsePeopleResult {
     });
   }
 
-  return { people, dropped, droppedFields: [...droppedFields] };
+  return { people, dropped: failures.length, failures };
 }

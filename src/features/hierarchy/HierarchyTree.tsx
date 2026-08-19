@@ -236,6 +236,7 @@ export const HierarchyTree = memo(function HierarchyTree({
             setSize={row.setSize}
             posInSet={row.posInSet}
             isSignedInUser={row.person.id === signedInUserId}
+            photoResetToken={roots}
             isTabbable={row.person.id === tabbableId}
             onPhotoError={handlePhotoError}
             onToggle={handleRowToggle}

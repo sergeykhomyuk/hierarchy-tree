@@ -54,6 +54,7 @@ export const HierarchyPage = memo(function HierarchyPage({
   const result = use(hierarchy);
   const { expandedIds, toggleExpanded, expandMany } = useExpansion(
     result.kind === HierarchyResultKind.Data ? result.roots : EMPTY_ROOTS,
+    dependencies.observability,
   );
 
   switch (result.kind) {

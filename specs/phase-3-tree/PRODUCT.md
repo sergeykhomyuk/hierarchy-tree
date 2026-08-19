@@ -594,9 +594,9 @@ means one visible `treeitem`; "a person" means one validated user record.
 184. `README.md` states the security gap plainly - a client-side lookup is not
      authentication and the database is public - rather than leaving a reader to infer it.
 185. Every deviation this phase makes gets a decision-log entry in the same change, with what
-     was chosen, why, and what was rejected. There are **ten**, and they are the ten
+     was chosen, why, and what was rejected. There are **eleven**, and they are the eleven
      enumerated in the deviations section below - **two** that depart from the mockups, which
-     is the same two the mockup-fidelity invariant names, and eight that depart from
+     is the same two the mockup-fidelity invariant names, and nine that depart from
      `ARCHITECTURE.md` or from a phase-1 decision. The count is stated here, in that section
      and in the milestone that lands them, and the three must agree.
 186. `ROADMAP.md`'s status board, phase 3 checkboxes and progress log are updated in the same
@@ -721,6 +721,18 @@ perspective; multi-select; drag-to-reparent; exporting.
     say the block happens everywhere, which is factually wrong (mixed-content protection is
     an https-page-only browser behavior, not a CSP one) and would misrepresent what the
     by-hand deployed check in step 43 actually proves.
+11. **The signed-in header's own styling changes** - a fixed `h-[60px]` height, `bg-surface`
+    and `px-[22px]` replacing phase 2's intrinsic-padding `py-4 px-6` - to align the header
+    with mockup `1e`'s exact treatment now that the hierarchy page sits beneath it. Touches
+    `app/layout/SignedInHeader.tsx`, a phase-2 file, beyond invariant 190's original list and
+    beyond deviation 9's two-file addendum - discovered during the final G4 review, having
+    shipped and been tested (`e2e/hierarchy-layout.spec.ts`'s header-bounding-box assertions)
+    without its own decision-log entry. No behavior changed - invariant 187 holds, verified by
+    phase 2's own suite and e2e flows passing unchanged - only the header's visual geometry.
+    Rejected: leaving phase 2's original padding, which would ship the hierarchy page under a
+    header mockup `1e` does not actually draw; and reverting the styling now that it is
+    already built, tested and reviewed, which would trade real, verified polish for a
+    process technicality this entry exists to close instead.
 
 ## Decisions taken while specifying
 

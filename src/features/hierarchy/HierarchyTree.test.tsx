@@ -318,8 +318,8 @@ describe('HierarchyTree', () => {
       }),
     ]);
     const {
-      unmount,
-      container: firstContainer,
+      rerender,
+      container,
       observability,
       onToggle,
       clock,
@@ -330,17 +330,20 @@ describe('HierarchyTree', () => {
       expandedIds: new Set(),
     });
 
-    fireEvent.error(brokenPhotoImage(firstContainer));
+    fireEvent.error(brokenPhotoImage(container));
     expect(observability.logger.warn).toHaveBeenCalledTimes(1);
 
-    // Unmount and mount fresh rather than rerender(): a retry's new
-    // payload reaches this component through a NEW Suspense commit (the
-    // loader's new promise makes HierarchyPage suspend again, discarding
-    // the whole subtree while the fallback shows), not a prop update on
-    // the same instance - Avatar's own imageFailed state would otherwise
-    // survive a mere rerender() and never show an <img> to fail again.
-    unmount();
-    const { container: secondContainer } = render(
+    // rerender() on the SAME instance, not unmount()+render(): a
+    // revalidation-driven retry keeps HierarchyTree/TreeRow/Avatar mounted
+    // (react-router wraps navigation state updates in a transition, so
+    // React reconciles the new tree against the old one rather than
+    // discarding it) - the previous version of this test unmounted and
+    // remounted fresh, which cannot fail even when Avatar's imageFailed
+    // state wrongly survives a real retry (invariant 97), because a fresh
+    // mount always starts imageFailed at false regardless. Avatar's
+    // resetToken prop (keyed off roots, a fresh object every buildForest
+    // call) is what actually has to do this work now.
+    rerender(
       <I18nextProvider i18n={i18n}>
         <HierarchyTree
           roots={secondLoad.roots}
@@ -352,7 +355,7 @@ describe('HierarchyTree', () => {
         />
       </I18nextProvider>,
     );
-    fireEvent.error(brokenPhotoImage(secondContainer));
+    fireEvent.error(brokenPhotoImage(container));
 
     expect(observability.logger.warn).toHaveBeenCalledTimes(2);
   });

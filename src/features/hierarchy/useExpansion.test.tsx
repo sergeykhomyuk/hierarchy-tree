@@ -2,12 +2,24 @@ import { describe, expect, it, vi } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
+import type { ObservabilityFacade } from '@platform/observability';
 import { useExpansion } from './useExpansion';
 import { buildForest } from './domain/buildForest';
 import { parsePersonIdentifier } from './domain/personIdentifier';
 import type { PersonIdentifier } from './domain/personIdentifier';
 import type { TreeNode } from './domain/treeNode';
 import { testPerson } from './testing/testPerson';
+
+function createSpyObservability(): ObservabilityFacade {
+  return {
+    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    tracer: {
+      recordTiming: vi.fn(),
+      startInteraction: vi.fn(() => 'a'.repeat(32)),
+    },
+    analytics: { track: vi.fn() },
+  };
+}
 
 // Sorted so the assertion does not depend on Set insertion order surviving
 // a round trip through the URL and back.
@@ -18,8 +30,17 @@ function sortedIds(ids: ReadonlySet<PersonIdentifier>): string {
     .join(',');
 }
 
-function ExpansionHarness({ roots }: { roots: readonly TreeNode[] }) {
-  const { expandedIds, toggleExpanded, expandMany } = useExpansion(roots);
+function ExpansionHarness({
+  roots,
+  observability,
+}: {
+  roots: readonly TreeNode[];
+  observability: ObservabilityFacade;
+}) {
+  const { expandedIds, toggleExpanded, expandMany } = useExpansion(
+    roots,
+    observability,
+  );
   return (
     <div>
       <p>expanded: {sortedIds(expandedIds)}</p>
@@ -58,14 +79,24 @@ function threeGenerationRoots(): readonly TreeNode[] {
   ]).roots;
 }
 
-function renderExpansion(initialPath = '/') {
-  const roots = threeGenerationRoots();
+function renderExpansion(
+  initialPath = '/',
+  roots: readonly TreeNode[] = threeGenerationRoots(),
+) {
+  const observability = createSpyObservability();
   const router = createMemoryRouter(
-    [{ path: '/', element: <ExpansionHarness roots={roots} /> }],
+    [
+      {
+        path: '/',
+        element: (
+          <ExpansionHarness roots={roots} observability={observability} />
+        ),
+      },
+    ],
     { initialEntries: [initialPath] },
   );
   render(<RouterProvider router={router} />);
-  return { router, roots };
+  return { router, roots, observability };
 }
 
 describe('useExpansion', () => {
@@ -164,5 +195,45 @@ describe('useExpansion', () => {
 
     expect(setItemSpy).not.toHaveBeenCalled();
     expect(document.cookie).toBe(cookieBefore);
+  });
+
+  it('reports skipped segments once per parse', () => {
+    const { observability } = renderExpansion('/?expanded=abc,3,2217873750');
+
+    // segment "abc" (not a safe positive integer) and "3" (a real person
+    // who is not a manager) are both skipped; "2217873750" names nobody
+    // and is skipped too - three skips from one parse, one report
+    // (invariant 121).
+    expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+    expect(observability.logger.warn).toHaveBeenCalledWith(
+      'hierarchy.expansion_segments_skipped',
+      { skipped: 3 },
+    );
+  });
+
+  it('reports nothing when no segment is skipped', () => {
+    const { observability } = renderExpansion('/?expanded=2');
+
+    expect(observability.logger.warn).not.toHaveBeenCalled();
+  });
+
+  it('a childless root never reaches the URL even though it is part of the default expansion', async () => {
+    const user = userEvent.setup();
+    // Two roots: 1 is a manager (has child 2), 5 is a leaf with no
+    // children - defaultExpansion includes both (invariant 87/88), but
+    // invariant 116 restricts the URL to manager ids only.
+    const roots = buildForest([
+      testPerson(1),
+      testPerson(2, { managerId: 1 }),
+      testPerson(5),
+    ]).roots;
+    const { router } = renderExpansion('/', roots);
+
+    expect(screen.getByText('expanded: 1,5')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'toggle 1' }));
+
+    const params = new URLSearchParams(router.state.location.search);
+    expect(params.get('expanded')).toBe('');
   });
 });

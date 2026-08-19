@@ -95,10 +95,18 @@ export async function fetchPeople(
     };
   }
 
-  const { people, dropped, droppedFields } = result.value;
+  const { people, dropped, failures } = result.value;
 
   if (people.length === 0) {
     if (dropped > 0) {
+      // Reported here too (invariant 53), not only in the partial-drop
+      // branch below: an all-invalid payload is still a set of validation
+      // failures, each with its own position and field names, and
+      // allRowsInvalid's own telemetry carries neither.
+      observability.logger.warn('hierarchy.rows_dropped', {
+        count: dropped,
+        failures,
+      });
       observability.analytics.track('hierarchy.load_failed', {
         failureKind: 'allRowsInvalid',
         correlationId,
@@ -123,7 +131,7 @@ export async function fetchPeople(
   if (dropped > 0) {
     observability.logger.warn('hierarchy.rows_dropped', {
       count: dropped,
-      fields: droppedFields,
+      failures,
     });
   }
   reportAnomalies(observability, anomalies);
