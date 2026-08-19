@@ -5,11 +5,13 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import type { ObservabilityFacade } from '@platform/observability';
 import { useExpansion } from './useExpansion';
-import { buildForest } from './domain/buildForest';
-import { parsePersonIdentifier } from './domain/personIdentifier';
-import type { PersonIdentifier } from './domain/personIdentifier';
-import type { TreeNode } from './domain/treeNode';
-import { testPerson } from './testing/testPerson';
+import {
+  buildForest,
+  parsePersonIdentifier,
+  type PersonIdentifier,
+  type TreeNode,
+} from './domain';
+import { testPerson } from './testing';
 
 function createSpyObservability(): ObservabilityFacade {
   return {

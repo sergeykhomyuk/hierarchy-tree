@@ -2,11 +2,13 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { Clock } from '@platform/runtime';
-import { flattenVisible } from './domain/flattenVisible';
-import { personDisplayName } from './domain/personDisplayName';
-import { rowAccessibleName } from './domain/rowAccessibleName';
-import type { PersonIdentifier } from './domain/personIdentifier';
-import type { TreeNode } from './domain/treeNode';
+import {
+  flattenVisible,
+  personDisplayName,
+  rowAccessibleName,
+  type PersonIdentifier,
+  type TreeNode,
+} from './domain';
 import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
 import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 import { TreeAnnouncer } from './TreeAnnouncer';

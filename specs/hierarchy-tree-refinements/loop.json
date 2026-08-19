@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-19T12:08:32Z",
   "created": "2026-08-19",
-  "updated": "2026-08-19T12:26:32Z",
+  "updated": "2026-08-19T13:20:18Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -37,8 +37,8 @@
     "G2": {
       "status": "pending",
       "attempts": 0,
-      "steps_total": 3,
-      "steps_done": 3
+      "steps_total": 5,
+      "steps_done": 5
     },
     "G3": {
       "status": "pending",
@@ -86,6 +86,30 @@
       ],
       "red_observed": "n/a: case (a): test-only coverage of the already-correct interaction hook extracted in step 2; both focused tests pass without source changes",
       "status": "done"
+    },
+    {
+      "id": 4,
+      "desc": "Move auth's analytics event declarations and SignInOutcome out of the domain-free platform layer into a feature-owned analyticsEvents.ts via declaration merging, mirroring hierarchy's pattern",
+      "tests": [
+        "src/features/auth/data/analyticsEvents.test.ts::the auth analytics augmentation > the auth events are visible to the observability facade through declaration merging",
+        "src/features/auth/data/analyticsEvents.test.ts::the auth analytics augmentation > no auth vocabulary appears in an exported platform identifier"
+      ],
+      "red_observed": "2026-08-19T13:04:36Z evidence/step4-red.txt",
+      "status": "done"
+    },
+    {
+      "id": 5,
+      "desc": "Add index.ts barrels to hierarchy's data/, domain/ and testing/ subfolders and route all within-feature deep imports through them, mirroring auth's existing pattern",
+      "tests": [
+        "src/features/hierarchy/HierarchyTree.test.tsx::renders every visible row from the row model, in order, and nothing else",
+        "src/features/hierarchy/HierarchyPage.test.tsx::the loading state announces itself busy once and stops when data arrives",
+        "src/features/hierarchy/TreeRow.test.tsx::the row accessible name is the person name plus the you marker and not the email, the count or the toggle glyph",
+        "src/features/hierarchy/useExpansion.test.tsx::a URL carrying expanded renders exactly those branches open and ignores the default expansion",
+        "src/features/hierarchy/useTreeKeyboard.test.tsx::moves focus to the next row on ArrowDown",
+        "src/features/hierarchy/useHierarchyTreeInteractions.test.tsx::delegates a missing-row toggle without telemetry or an announcement"
+      ],
+      "red_observed": "n/a: case (c): behavior-preserving refactor - only import paths change (deep file imports -> folder barrel re-exports), no runtime or assertion changes; guarded by the pre-existing full suite (144 files, 653 tests) plus targeted namespace-spy imports left untouched where vi.spyOn needs the defining module directly",
+      "status": "done"
     }
   ],
   "log": [
@@ -117,7 +141,23 @@
     "2026-08-19T12:26:31Z evidence recorded: evidence/step3-hook-coverage-and-verify.txt (9c7f39edd1ed) - Step 3 focused hook tests and full verification; hook reached 100 percent coverage in every metric",
     "2026-08-19T12:26:32Z step 3 -> green",
     "2026-08-19T12:26:32Z step 3 -> done",
-    "2026-08-19T12:26:32Z step 3 verified: two focused hook boundary tests pass; useHierarchyTreeInteractions reached 100 percent statements, branches, functions, and lines; npm run verify passed 651/651; loop remains active"
+    "2026-08-19T12:26:32Z step 3 verified: two focused hook boundary tests pass; useHierarchyTreeInteractions reached 100 percent statements, branches, functions, and lines; npm run verify passed 651/651; loop remains active",
+    "2026-08-19T13:04:16Z tweak: auth.sign_in_started/settled, auth.signed_out and SignInOutcome are declared directly in the domain-free platform/observability layer instead of via feature-owned declaration merging, unlike hierarchy's pattern (ARCHITECTURE.md decision log 2026-08-19 phase-3-tree) - moving them into features/auth mirrors that pattern",
+    "2026-08-19T13:04:19Z step 4 added: Move auth's analytics event declarations and SignInOutcome out of the domain-free platform layer into a feature-owned analyticsEvents.ts via declaration merging, mirroring hierarchy's pattern",
+    "2026-08-19T13:04:36Z evidence recorded: evidence/step4-red.txt (ec989d879468) - Step 4 red: new auth analyticsEvents test fails to resolve ./signInOutcome and ./analyticsEvents, which don't exist yet",
+    "2026-08-19T13:04:36Z step 4 -> red",
+    "2026-08-19T13:07:10Z evidence recorded: evidence/step4-green-and-verify.txt (aa772d589418) - Step 4 green and full npm run verify passed: 144 test files, 653 tests, typecheck/lint/format/build/size all passing",
+    "2026-08-19T13:07:10Z step 4 -> green",
+    "2026-08-19T13:07:10Z step 4 -> done",
+    "2026-08-19T13:07:13Z step 4 verified: auth.sign_in_started, auth.sign_in_settled, auth.signed_out and SignInOutcome moved from src/platform/observability into src/features/auth/data (analyticsEvents.ts declaration-merges onto AnalyticsPayloads, signInOutcome.ts owns the enum); platform's analyticsEvents.ts now only carries app.* events; npm run verify passed 653/653 with coverage and all build/size gates; loop remains active in implement for further tweaks",
+    "2026-08-19T13:19:15Z tweak: hierarchy feature's data/, domain/ and testing/ subfolders were missing index.ts barrels (auth already had them for data/domain/guard/session), forcing ~15 files to deep-import individual files like './data/fetchPeople' and './domain/buildForest' instead of './data' and './domain' - user confirmed scope is features/* subfolders only, excluding app/routing/routes and platform/observability/sinks which have documented single-import-site/single-reader invariants",
+    "2026-08-19T13:19:15Z step 5 added: Add index.ts barrels to hierarchy's data/, domain/ and testing/ subfolders and route all within-feature deep imports through them, mirroring auth's existing pattern",
+    "2026-08-19T13:19:33Z step 5 amended: desc: \"Add index.ts barrels to hierarchy's data/, domain/ and testing/ subfolders and route all within-feature deep imports through them, mirroring auth's existing pattern\" -> \"Add index.ts barrels to hierarchy's data/, domain/ and testing/ subfolders and route all within-feature deep imports through them, mirroring auth's existing pattern\"; tests: ['src/features/hierarchy/HierarchyTree.test.tsx (existing 42-test suite, unchanged assertions)', 'src/features/hierarchy/HierarchyPage.test.tsx (existing suite, unchanged assertions)'] -> ['src/features/hierarchy/HierarchyTree.test.tsx::renders every visible row from the row model, in order, and nothing else', 'src/features/hierarchy/HierarchyPage.test.tsx::the loading state announces itself busy once and stops when data arrives', 'src/features/hierarchy/TreeRow.test.tsx::the row accessible name is the person name plus the you marker and not the email, the count or the toggle glyph', 'src/features/hierarchy/useExpansion.test.tsx::a URL carrying expanded renders exactly those branches open and ignores the default expansion', 'src/features/hierarchy/useTreeKeyboard.test.tsx::moves focus to the next row on ArrowDown', 'src/features/hierarchy/useHierarchyTreeInteractions.test.tsx::delegates a missing-row toggle without telemetry or an announcement']",
+    "2026-08-19T13:19:37Z step 5 -> na",
+    "2026-08-19T13:20:18Z evidence recorded: evidence/step5-green-and-verify.txt (e96be3843fa5) - Step 5 green and full npm run verify passed: 144 test files, 653 tests, typecheck/lint/format/build/size all passing; route chunk graph unaffected",
+    "2026-08-19T13:20:18Z step 5 -> green",
+    "2026-08-19T13:20:18Z step 5 -> done",
+    "2026-08-19T13:20:18Z step 5 verified: hierarchy/data/index.ts, hierarchy/domain/index.ts (filled out), hierarchy/testing/index.ts added; ~15 files across the feature now import via './data', './domain', './testing' instead of deep individual files (e.g. HierarchyPage.tsx's './data/fetchPeople' -> './data'); namespace imports used only for vi.spyOn (buildForestModule, flattenVisibleModule, personDisplayNameModule) deliberately left pointing at the defining file; npm run verify passed 653/653 with all build/size gates; loop remains active in implement"
   ],
   "evidence_hashes": {
     "evidence/baseline-hierarchy-tree.txt": {
@@ -149,20 +189,65 @@
       "sha": "9c7f39edd1ed",
       "recorded": "2026-08-19T12:26:31Z",
       "note": "Step 3 focused hook tests and full verification; hook reached 100 percent coverage in every metric"
+    },
+    "evidence/step4-red.txt": {
+      "sha": "ec989d879468",
+      "recorded": "2026-08-19T13:04:36Z",
+      "note": "Step 4 red: new auth analyticsEvents test fails to resolve ./signInOutcome and ./analyticsEvents, which don't exist yet"
+    },
+    "evidence/step4-green-and-verify.txt": {
+      "sha": "aa772d589418",
+      "recorded": "2026-08-19T13:07:10Z",
+      "note": "Step 4 green and full npm run verify passed: 144 test files, 653 tests, typecheck/lint/format/build/size all passing"
+    },
+    "evidence/step5-green-and-verify.txt": {
+      "sha": "e96be3843fa5",
+      "recorded": "2026-08-19T13:20:18Z",
+      "note": "Step 5 green and full npm run verify passed: 144 test files, 653 tests, typecheck/lint/format/build/size all passing; route chunk graph unaffected"
     }
   },
   "test_file_hashes": {
     "src/features/hierarchy/HierarchyTree.test.tsx": {
-      "sha": "f0ade4a843a7",
-      "step": 2,
-      "recorded": "2026-08-19T12:17:54Z",
-      "log_index": 18
+      "sha": "378901ce1ff7",
+      "step": 5,
+      "recorded": "2026-08-19T13:19:37Z",
+      "log_index": 40
     },
     "src/features/hierarchy/useHierarchyTreeInteractions.test.tsx": {
-      "sha": "a4a58a746ec2",
-      "step": 3,
-      "recorded": "2026-08-19T12:25:23Z",
-      "log_index": 24
+      "sha": "08a1355b0b0f",
+      "step": 5,
+      "recorded": "2026-08-19T13:19:37Z",
+      "log_index": 40
+    },
+    "src/features/auth/data/analyticsEvents.test.ts": {
+      "sha": "c1366965f294",
+      "step": 4,
+      "recorded": "2026-08-19T13:04:36Z",
+      "log_index": 32
+    },
+    "src/features/hierarchy/HierarchyPage.test.tsx": {
+      "sha": "8cfd8615e3a5",
+      "step": 5,
+      "recorded": "2026-08-19T13:19:37Z",
+      "log_index": 40
+    },
+    "src/features/hierarchy/TreeRow.test.tsx": {
+      "sha": "d5e684c647be",
+      "step": 5,
+      "recorded": "2026-08-19T13:19:37Z",
+      "log_index": 40
+    },
+    "src/features/hierarchy/useExpansion.test.tsx": {
+      "sha": "7e33f6220830",
+      "step": 5,
+      "recorded": "2026-08-19T13:19:37Z",
+      "log_index": 40
+    },
+    "src/features/hierarchy/useTreeKeyboard.test.tsx": {
+      "sha": "3fdc5b91e397",
+      "step": 5,
+      "recorded": "2026-08-19T13:19:37Z",
+      "log_index": 40
     }
   }
 }

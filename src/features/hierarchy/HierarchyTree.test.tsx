@@ -20,14 +20,16 @@ import '@shared/testing/toHaveNoAxeViolations';
 import { loadTranslations } from './loadTranslations';
 import { HierarchyTree } from './HierarchyTree';
 import type { HierarchyTreeProps } from './HierarchyTree';
-import { buildForest } from './domain/buildForest';
+import {
+  buildForest,
+  parsePersonIdentifier,
+  type PersonIdentifier,
+  type TreeNode,
+} from './domain';
 import * as buildForestModule from './domain/buildForest';
 import * as flattenVisibleModule from './domain/flattenVisible';
 import * as personDisplayNameModule from './domain/personDisplayName';
-import { parsePersonIdentifier } from './domain/personIdentifier';
-import type { PersonIdentifier } from './domain/personIdentifier';
-import type { TreeNode } from './domain/treeNode';
-import { testPerson } from './testing/testPerson';
+import { testPerson } from './testing';
 
 // A stand-in for the state HierarchyPage owns in the meantime
 // (defaultExpansion until useExpansion lands at step 27) - HierarchyTree

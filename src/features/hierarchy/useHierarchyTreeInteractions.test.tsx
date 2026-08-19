@@ -9,13 +9,15 @@ import {
 } from '@platform/internationalization';
 import type { ObservabilityFacade } from '@platform/observability';
 import { createFakeClock } from '@shared/testing';
-import { buildForest } from './domain/buildForest';
-import { flattenVisible } from './domain/flattenVisible';
-import type { VisibleRow } from './domain/flattenVisible';
-import { parsePersonIdentifier } from './domain/personIdentifier';
-import type { PersonIdentifier } from './domain/personIdentifier';
+import {
+  buildForest,
+  flattenVisible,
+  parsePersonIdentifier,
+  type PersonIdentifier,
+  type VisibleRow,
+} from './domain';
 import { loadTranslations } from './loadTranslations';
-import { testPerson } from './testing/testPerson';
+import { testPerson } from './testing';
 import { useHierarchyTreeInteractions } from './useHierarchyTreeInteractions';
 
 type HookWrapper = (props: PropsWithChildren) => ReactElement;

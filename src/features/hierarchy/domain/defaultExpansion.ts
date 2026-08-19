@@ -1,6 +1,7 @@
 import type { PersonIdentifier } from './personIdentifier';
 import type { TreeNode } from './treeNode';
 
+// Expand all roots and their immediate children by default
 export function defaultExpansion(
   roots: readonly TreeNode[],
 ): ReadonlySet<PersonIdentifier> {

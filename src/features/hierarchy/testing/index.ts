@@ -1,0 +1,1 @@
+export { testPerson } from './testPerson';

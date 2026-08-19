@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router';
 import type { ObservabilityFacade } from '@platform/observability';
-import { defaultExpansion } from './domain/defaultExpansion';
 import {
   collectManagerIds,
+  defaultExpansion,
   formatExpansion,
   parseExpansion,
-} from './domain/expansionParameter';
-import type { PersonIdentifier } from './domain/personIdentifier';
-import type { TreeNode } from './domain/treeNode';
+  type PersonIdentifier,
+  type TreeNode,
+} from './domain';
 
 const EXPANDED_PARAM = 'expanded';
 
@@ -90,7 +90,7 @@ export function useExpansion(
   const expandedIdsRef = useRef(expandedIds);
   useEffect(() => {
     expandedIdsRef.current = expandedIds;
-  });
+  }, [expandedIds]);
 
   // Reported once per parse (invariant 121) - guarded by parsed's own
   // OBJECT IDENTITY, not the raw param string: useMemo recomputes parsed

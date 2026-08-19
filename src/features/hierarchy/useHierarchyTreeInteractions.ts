@@ -3,10 +3,12 @@ import type { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { Clock } from '@platform/runtime';
-import type { VisibleRow } from './domain/flattenVisible';
-import { personDisplayName } from './domain/personDisplayName';
-import type { PersonIdentifier } from './domain/personIdentifier';
-import { recoverFocusedRowId } from './domain/recoverFocusedRowId';
+import {
+  personDisplayName,
+  recoverFocusedRowId,
+  type PersonIdentifier,
+  type VisibleRow,
+} from './domain';
 import { HIERARCHY_TRANSLATION_NAMESPACE } from './translationNamespace';
 import { useTreeKeyboard } from './useTreeKeyboard';
 

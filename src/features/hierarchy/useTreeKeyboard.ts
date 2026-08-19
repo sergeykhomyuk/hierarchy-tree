@@ -9,9 +9,9 @@ import {
   parentRowIndex,
   previousVisibleIndex,
   siblingRowIndices,
-} from './domain/rowNavigation';
-import type { VisibleRow } from './domain/flattenVisible';
-import type { PersonIdentifier } from './domain/personIdentifier';
+  type PersonIdentifier,
+  type VisibleRow,
+} from './domain';
 
 // Invariant 139.
 const TYPE_AHEAD_RESET_DELAY_MILLISECONDS = 1000;
