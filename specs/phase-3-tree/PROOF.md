@@ -286,7 +286,10 @@ and approved by the user before the rebase).
   statements/96.38% branches/96.34% functions/97.57% lines overall (domain packages at
   100%), all size budgets inside their ceiling (app entry 128.45 kB / 150 kB gzipped).
 - e2e: `npx playwright test --project=chromium` -> 52/52 green, re-run after the same fixes,
-  including phase 2's own suite re-run unchanged.
+  including phase 2's own suite re-run unchanged. `npm run e2e` - the full command CI actually
+  runs, chromium plus the `development` project's 8 dev-server-only specs - is 60/60 green
+  (see "Post-PR fix" below: this full run surfaced one gap this loop's own verify/review
+  passes had missed by checking `--project=chromium` alone).
 - e2e flows exercised: all four hierarchy states (skeleton, error, empty, data); mouse and
   keyboard toggle; the full ARIA keyboard contract (Tab, arrows, Home/End, type-ahead,
   Enter/Space, `*`); URL-driven expansion surviving reload/link/back; telemetry buffer
@@ -316,6 +319,25 @@ and approved by the user before the rebase).
 - Security pass: not separately flagged (`security_review: false`) - the credential/session
   surface belongs to phase 2, unchanged here (invariant 187) and re-verified by phase 2's
   own suite in every full e2e run above.
+
+## Post-PR fix
+
+After PR #7 opened, `npm run e2e` (the full command CI runs - `chromium` plus the
+`development` project's dev-server-only specs) surfaced a failure this loop's own verify/
+review passes never exercised: every G3/G4 e2e run in this loop's history used
+`npx playwright test --project=chromium` directly rather than the full `npm run e2e`, so
+the `development` project's 8 specs went unrun. `development-console.spec.ts`'s
+"`/` produces no console error or warning, signed in" test used `installSignInApiMock`'s
+`/users.json` fixture - a bare `{id, firstName, lastName}` shape with a string id and no
+email - which satisfies the header's `signedInUserSchema` but not the stricter
+`personSchema` the hierarchy loader has validated the same resource against since M3.
+It read as a fully invalid payload and (correctly, per invariant 53's design) logged a
+`hierarchy.rows_dropped` console warning, which the test's "no console output at all"
+assertion treated as a failure - a false positive in the test's own fixture choice, not a
+defect in the application. Fixed by switching the test to `installPopulatedHierarchyMock`,
+the same valid-payload fixture already used by the hierarchy-content specs (commit
+`21289b6`). `npm run e2e` is now 60/60 green. Lesson carried into the retro: this loop's
+own e2e verification command should have matched the CI command verbatim from the start.
 
 ## Known limitations / accepted findings
 
