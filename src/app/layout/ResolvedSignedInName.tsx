@@ -28,7 +28,12 @@ export const ResolvedSignedInName = memo(function ResolvedSignedInName({
 
   return (
     <span className="flex items-center gap-2">
-      <Avatar displayName={view.displayName} size="medium" decorative />
+      <Avatar
+        displayName={view.displayName}
+        size="medium"
+        decorative
+        {...(view.photo !== undefined ? { imageSource: view.photo } : {})}
+      />
       <span>{view.displayName}</span>
     </span>
   );

@@ -27,4 +27,36 @@ describe('signedInUserSchema', () => {
 
     expect(parsed.id).toBe('user_1');
   });
+
+  it('keeps the photo field when present', () => {
+    const parsed = signedInUserSchema.parse({
+      id: 'user_1',
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      photo: 'https://example.com/ada.jpg',
+    });
+
+    expect(parsed.photo).toBe('https://example.com/ada.jpg');
+  });
+
+  it('parses successfully when photo is absent', () => {
+    const parsed = signedInUserSchema.parse({
+      id: 'user_1',
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+    });
+
+    expect(parsed.photo).toBeUndefined();
+  });
+
+  it('drops the row when photo is mistyped', () => {
+    expect(
+      signedInUserSchema.safeParse({
+        id: 'user_1',
+        firstName: 'Ada',
+        lastName: 'Lovelace',
+        photo: 42,
+      }).success,
+    ).toBe(false);
+  });
 });
