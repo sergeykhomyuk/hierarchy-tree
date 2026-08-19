@@ -154,9 +154,9 @@ outstanding item.
 - Step 37 (183, 184): `README.md` rewritten - what the app does, how to run/test/deploy, the
   security gap stated plainly, no Vite-template sentence surviving. Guarded by
   `scripts/documentation-configuration.test.ts`.
-- Step 38 (185, 186): the decision-log entries (ten, after the M5-verify Gap-6 fix - see
-  below) and `ROADMAP.md`'s status board/checkboxes/progress log, mechanically agreement-
-  checked in the same test file.
+- Step 38 (185, 186): the decision-log entries (eleven, after the M5-verify Gap-6 fix and the
+  final-review Codex-27 fix - see below) and `ROADMAP.md`'s status board/checkboxes/progress
+  log, mechanically agreement-checked in the same test file.
 - Step 39: `npm run smoke:live` gains an assertion that the real payload parses into a
   forest with more than one root (`scripts/live-smoke/live-smoke.test.ts`).
 - Step 40 (175-178): build-output assertions - the login chunk carries no hierarchy
@@ -209,13 +209,84 @@ outstanding item.
   additive/mechanical, verified by re-running the affected suites; Claude-29 (blocking) is
   confirmed by this same reviewer thread below.
 
+### Final whole-branch review (post-M5, before `done`)
+
+A last fresh-context Claude review plus Codex ran across the *entire* branch diff (not one
+milestone), after the eleven-file guarded-test-hash rebase and the deviation-count/decision-
+log updates settled. 7 findings, 6 blocking:
+
+- **Claude-34 / Codex-23** (found independently, same bug, **blocking**): `expandMany`
+  depended on `expandedIds` (a fresh `Set` every render) and, one layer deeper, on
+  react-router's own `setSearchParams` - itself unstable across a URL change, since it closes
+  over the `searchParams` object `useSearchParams()` recomputes from `location.search` on
+  every navigation. Both cascaded through `handleExpandSiblings` -> `useTreeKeyboard`'s
+  `handleKeyDown` -> every `TreeRow`'s `onKeyDown`, defeating memoization on every real toggle
+  - the same invariant-91 bug class as the earlier Claude-28 finding, through a different
+  path. Fixed: both `toggleExpanded` and `expandMany` now read `expandedIds` and
+  `setSearchParams` through refs updated in dependency-free `useEffect`s, so their own
+  identity depends only on `roots` (stable across a toggle). A new render-count test against
+  the real `useExpansion`/`useSearchParams` composition proves stability across two real
+  toggles, verified red-then-green. Confirmed by the raising Claude thread, which independently
+  re-derived the dependency chain rather than trusting the description; Codex's confirmation
+  pass hit its own API session rate limit before it could re-check this specific fix (see
+  "Codex availability" below).
+- **Codex-22** (**blocking**): `Avatar`'s `imageFailed` state survived a revalidation-driven
+  retry - react-router keeps the same component instances mounted through a
+  transition-wrapped navigation - so Retry neither re-attempted a fixed photo nor re-reported
+  a still-broken one (invariant 97). The existing test masked this by unmounting+remounting
+  instead of rerendering the same instance. Fixed: `Avatar` gains a `resetToken` prop (`roots`,
+  threaded through `TreeRow`), resetting `imageFailed` via React's adjust-state-during-render
+  pattern whenever a new payload resolves; `HierarchyTree.test.tsx`'s retry test rewritten to
+  `rerender()` the same instance. Confirmed by Codex's own re-check pass.
+- **Codex-24** (**blocking**): `parsePeople` discarded each malformed row's position, keeping
+  only a deduped envelope-wide field-name set, and the all-invalid path reported no
+  field-level detail at all (invariant 53). Fixed: `parsePeople` now returns
+  `failures: {position, fields}[]`; `fetchPeople` reports it on both the partial-drop and
+  all-invalid paths. Confirmed by Codex's own re-check pass.
+- **Codex-25** (**blocking**): `parseExpansion`'s skipped-segment count was computed and
+  silently discarded - never reported to telemetry, so a stale shared link produced no signal
+  (invariant 121). Fixed: a `lastReportedParamRef` guard reports once per genuine parse, not
+  twice under React StrictMode's development-only double-invoke; verified red-then-green
+  (fails at 2 calls without the guard, passes at 1 with it) under a StrictMode-wrapped test.
+  Self-verified and confirmed by the independent Claude-34 thread's re-derivation of the same
+  code path; Codex's own confirmation pass hit its rate limit first (see below).
+- **Codex-26** (**blocking**): `defaultExpansion`'s childless-root ids (legitimate per
+  invariants 87/88) leaked into the `expanded` URL parameter on write, contradicting
+  invariant 116's "ids of the expanded manager rows" - and would have produced false-positive
+  skip reports once Codex-25 was fixed. Fixed: `expansionParameter.ts` exports
+  `collectManagerIds`; `useExpansion.ts` filters to manager ids only before `formatExpansion`
+  in both write paths, with a regression test. Confirmed by Codex's own re-check pass.
+- **Codex-27** (non-blocking): `SignedInHeader`'s own visual restyling (fixed height,
+  background, padding) shipped and was tested but had no decision-log entry, contradicting
+  invariants 2/3/187/190's "header is phase 2's, unchanged here" framing. Fixed:
+  `PRODUCT.md` invariants 2 and 3 now reference deviation 11's styling-only exception instead
+  of claiming the header is unconditionally unchanged; `ARCHITECTURE.md`'s decision log gains
+  the eleventh entry. Self-verified (wording-only change).
+
+**Codex availability**: Codex's confirmation subagent hit its own Claude API session rate
+limit twice (reset ~13:30 Europe/Dublin) partway through re-checking Codex-23/25/27. Per
+`codex-contract.md`'s unavailability fallback, the user was asked explicitly whether to wait
+or proceed single-reviewer; the user chose to proceed now (2026-08-19, recorded in
+`loop.json`'s log). Codex-22, Codex-24 and Codex-26 completed their own re-check pass before
+the limit hit and are Codex-confirmed as usual. Codex-23, Codex-25 and Codex-27 are
+dispositioned on self-verification (a red-then-green test for each code fix; a mechanical
+grep-checkable agreement test for the wording fix) plus, for Codex-23 specifically,
+independent confirmation from the Claude-34 thread, which re-derived the identical dependency
+chain from source rather than trusting either finding's description. All six blocking
+findings' fixes are covered by the full suite (`npm run verify` exit 0) and full e2e
+(`npx playwright test --project=chromium`) re-run clean after every fix, per the guarded-test
+hash rebase covering the eleven affected files (all with their real, reviewed diffs shown to
+and approved by the user before the rebase).
+
 ## Verification summary
 
 - Full suite: `npm run verify` (typecheck, lint, format:check, test:coverage, build,
-  verify:build, size) -> green, exit 0. 642 unit/component tests, 18 verify:build tests, all
-  size budgets inside their ceiling (app entry 128.45 kB / 150 kB gzipped).
-- e2e: `npx playwright test --project=chromium` -> 52/52 green, including phase 2's own
-  suite re-run unchanged.
+  verify:build, size) -> green, exit 0, re-run after the final whole-branch review's fixes.
+  648 unit/component tests (143 files), 18 verify:build tests, coverage 97.5%
+  statements/96.38% branches/96.34% functions/97.57% lines overall (domain packages at
+  100%), all size budgets inside their ceiling (app entry 128.45 kB / 150 kB gzipped).
+- e2e: `npx playwright test --project=chromium` -> 52/52 green, re-run after the same fixes,
+  including phase 2's own suite re-run unchanged.
 - e2e flows exercised: all four hierarchy states (skeleton, error, empty, data); mouse and
   keyboard toggle; the full ARIA keyboard contract (Tab, arrows, Home/End, type-ahead,
   Enter/Space, `*`); URL-driven expansion surviving reload/link/back; telemetry buffer
@@ -238,11 +309,10 @@ outstanding item.
   M3 (4: 3 fixed, 1 accepted), M4 (1 fixed) plus its design-follow-on Codex pass (4 fixed),
   M5 (5: 4 fixed, 1 blocking fixed and self-confirmed) - see each milestone's Review line
   above.
-- **Final review**: the milestone-by-milestone reviews above ARE this loop's G4 record -
-  every commit on this branch was reviewed at its own milestone boundary, and M5's review
-  covers the closing diff. No separate whole-branch pass was run beyond the milestone
-  reviews, consistent with the L-path's "findings live in the same G4 ledger... presented
-  for disposition at each milestone boundary rather than batched."
+- **Final whole-branch review**: one more fresh-context Claude pass plus Codex across the
+  entire branch diff, after the milestone-by-milestone reviews closed - 7 findings, 6
+  blocking, all fixed; see "Final whole-branch review" above for the full account, including
+  the Codex-availability fallback the user approved.
 - Security pass: not separately flagged (`security_review: false`) - the credential/session
   surface belongs to phase 2, unchanged here (invariant 187) and re-verified by phase 2's
   own suite in every full e2e run above.

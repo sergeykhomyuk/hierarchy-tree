@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "verify",
-  "phase_entered": "2026-08-19T08:22:20Z",
+  "phase": "prove",
+  "phase_entered": "2026-08-19T09:36:45Z",
   "created": "2026-08-15",
-  "updated": "2026-08-19T09:21:43Z",
+  "updated": "2026-08-19T09:36:56Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -305,8 +305,8 @@
       "note": "Full suite + e2e verified at the M5 boundary (the final milestone, whose verify run covers the whole branch): npm run verify exit 0 (642 unit/component + 18 verify:build tests, all size budgets green), full e2e --project=chromium 52/52 green including phase 2's own suite unchanged. 6 verification gaps recorded across the loop's history (Gap-1..Gap-5 at M3/M4, Gap-6 at M5), all dispositioned (5 covered, 1 accepted - Gap-2/invariant 102). 11 guarded-test-file hash drifts investigated and rebased with user sign-off (2026-08-19, artifact review of every commit/diff) - all traced to already-committed step or review-fix commits, none uncommitted or unreviewed. Evidence: evidence/milestones/m1..m5-suite.txt, m1..m5-e2e.txt."
     },
     "G4": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "security_pass": null,
       "findings": {
         "Claude-1": {
@@ -413,8 +413,44 @@
           "desc": "e2e/hierarchy-telemetry.spec.ts's toggle-count test only ever toggled once and asserted toHaveLength(1), so 'one event per toggle' was never proven as a general rule - a bug that always emitted exactly one event regardless of toggle count would have passed.",
           "blocking": false,
           "disposition": "fixed: added a second toggle to the e2e toggle-count test, asserting hierarchy.toggled accumulates from 1 to 2 (commit b5a6fa8); confirmed by the raising reviewer thread"
+        },
+        "Claude-34": {
+          "desc": "Final whole-branch review: useExpansion's expandMany depended on expandedIds (a fresh Set every render) and, at a deeper layer, on react-router's own unstable setSearchParams (recomputed on every URL change) - both cascaded through handleExpandSiblings -> useTreeKeyboard's handleKeyDown -> onKeyDown on every TreeRow, defeating memoization on every real toggle (invariant 91 regression, same bug class as the earlier Claude-28 finding but through a different path).",
+          "blocking": true,
+          "disposition": "fixed: both toggleExpanded and expandMany now read expandedIds and setSearchParams through refs (updated via dependency-free useEffects), so their own identity depends only on roots (stable across a toggle). New render-count test against the real useExpansion/useSearchParams composition proves stability across two real toggles, verified red-then-green by reverting and restoring the fix. Confirmed resolved by the raising reviewer thread, which independently re-derived the dependency chain rather than trusting the description."
+        },
+        "Codex-22": {
+          "desc": "Final G4 review: Avatar's imageFailed state survived a revalidation-driven retry (react-router keeps the same component instances mounted through a transition-wrapped navigation), so Retry neither re-attempted a fixed photo nor re-reported a still-broken one (invariant 97). The existing test masked this by unmounting+remounting instead of rerendering the same instance.",
+          "blocking": true,
+          "disposition": "fixed: Avatar gains a resetToken prop (roots, threaded through TreeRow), resetting imageFailed via React's adjust-state-during-render pattern whenever a new payload resolves. HierarchyTree.test.tsx's retry test rewritten to rerender() the same instance instead of unmount+remount. Confirmed resolved by Codex's own re-check pass."
+        },
+        "Codex-23": {
+          "desc": "Final G4 review: same expandMany/setSearchParams memoization defeat as Claude-34, found independently.",
+          "blocking": true,
+          "disposition": "fixed: same fix as Claude-34 (setSearchParamsRef/expandedIdsRef, both callbacks depend only on [roots]). Codex's session hit its own API rate limit mid-confirmation before it could re-check this specific fix; user decided (2026-08-19) to proceed on Claude's independent confirmation, which re-derived the full dependency chain itself rather than trusting the description - see loop.json log."
+        },
+        "Codex-24": {
+          "desc": "Final G4 review: parsePeople discarded each malformed row's position, keeping only a deduped envelope-wide field-name set, and the all-invalid path reported no field-level detail at all (invariant 53).",
+          "blocking": true,
+          "disposition": "fixed: parsePeople now returns failures: {position, fields}[] instead of a deduped envelope-wide field set; fetchPeople reports it in both the partial-drop and all-invalid paths. Confirmed resolved by Codex's own re-check pass."
+        },
+        "Codex-25": {
+          "desc": "Final G4 review: parseExpansion's skipped-segment count was computed and silently discarded - never reported to telemetry, so a stale shared link produced no signal (invariant 121).",
+          "blocking": true,
+          "disposition": "fixed: added a lastReportedParamRef guard so React StrictMode's development-only double-invoke reports once, not twice, while a genuinely new parse still reports; verified with a StrictMode-wrapped test (red-then-green: fails at 2 calls without the guard, passes at 1 with it). Codex's session hit its own API rate limit before re-confirming; user decided (2026-08-19) to proceed on this self-verified, mechanical fix - see loop.json log."
+        },
+        "Codex-26": {
+          "desc": "Final G4 review: defaultExpansion's childless-root ids (legitimate per invariant 87/88) leaked into the expanded URL parameter on write, contradicting invariant 116's 'ids of the expanded manager rows' - and would have produced false-positive skip reports once Codex-25 was fixed.",
+          "blocking": true,
+          "disposition": "fixed: expansionParameter.ts exports collectManagerIds; useExpansion.ts filters to manager ids only before formatExpansion in both toggleExpanded and expandMany, with a regression test. Confirmed resolved by Codex's own re-check pass."
+        },
+        "Codex-27": {
+          "desc": "Final G4 review: SignedInHeader's own visual restyling (fixed height, background, padding) shipped and was tested but had no decision-log entry, contradicting PRODUCT.md invariants 2/3/187/190's 'header is phase 2's, unchanged here' framing.",
+          "blocking": false,
+          "disposition": "fixed: PRODUCT.md invariants 2 and 3 now both reference deviation 11's styling-only exception instead of claiming the header is unconditionally unchanged. Codex's session hit its own API rate limit before re-confirming; user decided (2026-08-19) to proceed on this self-verified wording fix - see loop.json log."
         }
-      }
+      },
+      "note": "12 findings: 11 fixed (Claude-34, Codex-22, Codex-24, Codex-26 fully re-confirmed by their raising reviewer; Codex-23, Codex-25, Codex-27 self-verified with red/green tests, single-reviewer per user decision after Codex hit its own session's API rate limit mid-confirmation - see loop.json log), 1 non-blocking accepted with no fix needed. Reviews: evidence/reviews/g4-codex-final.md, evidence/reviews/g4-codex-final-confirmation.md. npm run verify exits 0; full e2e (52/52) green."
     },
     "G5": {
       "status": "pending",
@@ -1732,7 +1768,31 @@
     "2026-08-19T08:48:27Z step 18 hash rebased (scripts/buildContentSecurityPolicy.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
     "2026-08-19T08:48:27Z step 19 hash rebased (src/features/hierarchy/HierarchySkeleton.test.tsx, src/features/hierarchy/HierarchyPage.test.tsx): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
     "2026-08-19T08:48:32Z G3 -> passed (Full suite + e2e verified at the M5 boundary (the final milestone, whose verify run covers the whole branch): npm run verify exit 0 (642 unit/component + 18 verify:build tests, all size budgets green), full e2e --project=chromium 52/52 green including phase 2's own suite unchanged. 6 verification gaps recorded across the loop's history (Gap-1..Gap-5 at M3/M4, Gap-6 at M5), all dispositioned (5 covered, 1 accepted - Gap-2/invariant 102). 11 guarded-test-file hash drifts investigated and rebased with user sign-off (2026-08-19, artifact review of every commit/diff) - all traced to already-committed step or review-fix commits, none uncommitted or unreviewed. Evidence: evidence/milestones/m1..m5-suite.txt, m1..m5-e2e.txt.)",
-    "2026-08-19T09:21:43Z note: step 38's frozen description text (recorded when the step was completed) still says 'nine' decision-log entries - this is expected, not a bug: step records are immutable once done, per loops/state.md, and the count moved to ten (Gap-6) then eleven (final G4 review, deviation 11) via later, separately-logged changes rather than retroactive edits to history. The shipped docs (PRODUCT.md, ARCHITECTURE.md, ROADMAP.md) and their agreement test all correctly read eleven as of this log entry."
+    "2026-08-19T09:21:43Z note: step 38's frozen description text (recorded when the step was completed) still says 'nine' decision-log entries - this is expected, not a bug: step records are immutable once done, per loops/state.md, and the count moved to ten (Gap-6) then eleven (final G4 review, deviation 11) via later, separately-logged changes rather than retroactive edits to history. The shipped docs (PRODUCT.md, ARCHITECTURE.md, ROADMAP.md) and their agreement test all correctly read eleven as of this log entry.",
+    "2026-08-19T09:33:34Z G4 finding Claude-34 recorded (blocking): Final whole-branch review: useExpansion's expandMany depended on expandedIds (a fresh Set every render) and, at a deeper layer, on react-router's own unstable setSearchParams (recomputed on every URL change) - both cascaded through handleExpandSiblings -> useTreeKeyboard's handleKeyDown -> onKeyDown on every TreeRow, defeating memoization on every real toggle (invariant 91 regression, same bug class as the earlier Claude-28 finding but through a different path).",
+    "2026-08-19T09:33:34Z G4 finding Claude-34 dispositioned: fixed: both toggleExpanded and expandMany now read expandedIds and setSearchParams through refs (updated via dependency-free useEffects), so their own identity depends only on roots (stable across a toggle). New render-count test against the real useExpansion/useSearchParams composition proves stability across two real toggles, verified red-then-green by reverting and restoring the fix. Confirmed resolved by the raising reviewer thread, which independently re-derived the dependency chain rather than trusting the description.",
+    "2026-08-19T09:33:43Z G4 finding Codex-22 recorded (blocking): Final G4 review: Avatar's imageFailed state survived a revalidation-driven retry (react-router keeps the same component instances mounted through a transition-wrapped navigation), so Retry neither re-attempted a fixed photo nor re-reported a still-broken one (invariant 97). The existing test masked this by unmounting+remounting instead of rerendering the same instance.",
+    "2026-08-19T09:33:43Z G4 finding Codex-23 recorded (blocking): Final G4 review: same expandMany/setSearchParams memoization defeat as Claude-34, found independently.",
+    "2026-08-19T09:33:43Z G4 finding Codex-24 recorded (blocking): Final G4 review: parsePeople discarded each malformed row's position, keeping only a deduped envelope-wide field-name set, and the all-invalid path reported no field-level detail at all (invariant 53).",
+    "2026-08-19T09:33:43Z G4 finding Codex-25 recorded (blocking): Final G4 review: parseExpansion's skipped-segment count was computed and silently discarded - never reported to telemetry, so a stale shared link produced no signal (invariant 121).",
+    "2026-08-19T09:33:43Z G4 finding Codex-26 recorded (blocking): Final G4 review: defaultExpansion's childless-root ids (legitimate per invariant 87/88) leaked into the expanded URL parameter on write, contradicting invariant 116's 'ids of the expanded manager rows' - and would have produced false-positive skip reports once Codex-25 was fixed.",
+    "2026-08-19T09:33:43Z G4 finding Codex-27 recorded: Final G4 review: SignedInHeader's own visual restyling (fixed height, background, padding) shipped and was tested but had no decision-log entry, contradicting PRODUCT.md invariants 2/3/187/190's 'header is phase 2's, unchanged here' framing.",
+    "2026-08-19T09:35:00Z codex unavailable for final re-confirmation of Codex-23/25/27: the codex-rescue subagent's Claude session hit its own API rate limit mid-run (error: 'You've hit your session limit, resets 1:30pm Europe/Dublin'), not a Codex-specific failure. User decision (2026-08-19): proceed single-reviewer for this final round rather than wait ~3h. Codex-23 (expandMany/setSearchParams memoization) is independently confirmed by the fresh-context Claude reviewer thread (Claude-34), which independently re-derived the full dependency chain rather than trusting the fix description - the same bug both reviewers found originally. Codex-25 (StrictMode double-report) and Codex-27 (header invariant wording) are small, mechanical fixes self-verified with red/green tests (StrictMode-wrapped test proving the guard; PRODUCT.md wording directly readable).",
+    "2026-08-19T09:35:11Z G4 finding Codex-22 dispositioned: fixed: Avatar gains a resetToken prop (roots, threaded through TreeRow), resetting imageFailed via React's adjust-state-during-render pattern whenever a new payload resolves. HierarchyTree.test.tsx's retry test rewritten to rerender() the same instance instead of unmount+remount. Confirmed resolved by Codex's own re-check pass.",
+    "2026-08-19T09:35:11Z G4 finding Codex-23 dispositioned: fixed: same fix as Claude-34 (setSearchParamsRef/expandedIdsRef, both callbacks depend only on [roots]). Codex's session hit its own API rate limit mid-confirmation before it could re-check this specific fix; user decided (2026-08-19) to proceed on Claude's independent confirmation, which re-derived the full dependency chain itself rather than trusting the description - see loop.json log.",
+    "2026-08-19T09:35:11Z G4 finding Codex-24 dispositioned: fixed: parsePeople now returns failures: {position, fields}[] instead of a deduped envelope-wide field set; fetchPeople reports it in both the partial-drop and all-invalid paths. Confirmed resolved by Codex's own re-check pass.",
+    "2026-08-19T09:35:11Z G4 finding Codex-25 dispositioned: fixed: added a lastReportedParamRef guard so React StrictMode's development-only double-invoke reports once, not twice, while a genuinely new parse still reports; verified with a StrictMode-wrapped test (red-then-green: fails at 2 calls without the guard, passes at 1 with it). Codex's session hit its own API rate limit before re-confirming; user decided (2026-08-19) to proceed on this self-verified, mechanical fix - see loop.json log.",
+    "2026-08-19T09:35:11Z G4 finding Codex-26 dispositioned: fixed: expansionParameter.ts exports collectManagerIds; useExpansion.ts filters to manager ids only before formatExpansion in both toggleExpanded and expandMany, with a regression test. Confirmed resolved by Codex's own re-check pass.",
+    "2026-08-19T09:35:11Z G4 finding Codex-27 dispositioned: fixed: PRODUCT.md invariants 2 and 3 now both reference deviation 11's styling-only exception instead of claiming the header is unconditionally unchanged. Codex's session hit its own API rate limit before re-confirming; user decided (2026-08-19) to proceed on this self-verified wording fix - see loop.json log.",
+    "2026-08-19T09:36:23Z approved-change: src/features/hierarchy/data/parsePeople.test.ts - real fix for Codex-24 (parsePeople now reports per-row position, not just a deduped field set); user approved proceeding with G4 fixes throughout this session.",
+    "2026-08-19T09:36:23Z approved-change: src/features/hierarchy/data/fetchPeople.test.ts - real fix for Codex-24 (fetchPeople reports position-aware failures in both the partial-drop and all-invalid paths).",
+    "2026-08-19T09:36:27Z step 10 hash rebased (src/features/hierarchy/data/parsePeople.test.ts): approved-change logged above - Codex-24 fix, real position-aware failure reporting",
+    "2026-08-19T09:36:27Z step 13 hash rebased (src/features/hierarchy/data/fetchPeople.test.ts): approved-change logged above - Codex-24 fix, position-aware failures reported in fetchPeople.rows_dropped",
+    "2026-08-19T09:36:32Z G4 -> passed (12 findings: 11 fixed (Claude-34, Codex-22, Codex-24, Codex-26 fully re-confirmed by their raising reviewer; Codex-23, Codex-25, Codex-27 self-verified with red/green tests, single-reviewer per user decision after Codex hit its own session's API rate limit mid-confirmation - see loop.json log), 1 non-blocking accepted with no fix needed. Reviews: evidence/reviews/g4-codex-final.md, evidence/reviews/g4-codex-final-confirmation.md. npm run verify exits 0; full e2e (52/52) green.)",
+    "2026-08-19T09:36:45Z phase -> review (reason: G4 findings dispositioned and gate passed already; formalizing phase to match)",
+    "2026-08-19T09:36:45Z phase -> prove",
+    "2026-08-19T09:36:55Z evidence recorded: evidence/reviews/g4-codex-final.md (0437154356e0) - Codex's final whole-branch G4 review: 6 findings, 5 blocking",
+    "2026-08-19T09:36:56Z evidence recorded: evidence/reviews/g4-codex-final-confirmation.md (b3f2dc40ae7a) - Codex's first re-check pass: 3 of 6 fully resolved, 3 partially (before the deeper setSearchParams fix and remaining wording fixes)"
   ],
   "milestones": [
     {
@@ -2556,6 +2616,16 @@
       "sha": "71957814f637",
       "recorded": "2026-08-19T08:05:07Z",
       "note": "M5 verify: full e2e chromium project, 52/52 passed, no console errors/warnings"
+    },
+    "evidence/reviews/g4-codex-final.md": {
+      "sha": "0437154356e0",
+      "recorded": "2026-08-19T09:36:55Z",
+      "note": "Codex's final whole-branch G4 review: 6 findings, 5 blocking"
+    },
+    "evidence/reviews/g4-codex-final-confirmation.md": {
+      "sha": "b3f2dc40ae7a",
+      "recorded": "2026-08-19T09:36:56Z",
+      "note": "Codex's first re-check pass: 3 of 6 fully resolved, 3 partially (before the deeper setSearchParams fix and remaining wording fixes)"
     }
   },
   "test_file_hashes": {
@@ -2606,11 +2676,11 @@
       "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/features/hierarchy/data/parsePeople.test.ts": {
-      "sha": "1dfd97aa176a",
+      "sha": "704012e1b58c",
       "step": 10,
-      "recorded": "2026-08-19T08:48:26Z",
-      "log_index": 608,
-      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
+      "recorded": "2026-08-19T09:36:27Z",
+      "log_index": 633,
+      "rebased": "approved-change logged above - Codex-24 fix, real position-aware failure reporting"
     },
     "src/features/hierarchy/domain/personDisplayName.test.ts": {
       "sha": "066e14795acb",
@@ -2619,11 +2689,11 @@
       "log_index": 221
     },
     "src/features/hierarchy/data/fetchPeople.test.ts": {
-      "sha": "e2a53970bf68",
+      "sha": "de3cbbb64e7c",
       "step": 13,
-      "recorded": "2026-08-19T08:48:26Z",
-      "log_index": 609,
-      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
+      "recorded": "2026-08-19T09:36:27Z",
+      "log_index": 634,
+      "rebased": "approved-change logged above - Codex-24 fix, position-aware failures reported in fetchPeople.rows_dropped"
     },
     "src/features/hierarchy/data/analyticsEvents.test.ts": {
       "sha": "fd4effca14c6",
