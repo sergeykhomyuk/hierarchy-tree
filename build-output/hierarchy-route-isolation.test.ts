@@ -17,10 +17,34 @@ function readChunk(pattern: string): string {
   return readFileSync(match as string, 'utf-8');
 }
 
+type ManifestChunk = { file: string; src?: string; dynamicImports?: string[] };
+type Manifest = Record<string, ManifestChunk>;
+
+function readManifest(): Manifest {
+  return JSON.parse(
+    readFileSync('dist/.vite/manifest.json', 'utf-8'),
+  ) as Manifest;
+}
+
 describe('hierarchy route isolation and budget', () => {
   it('the login route chunk imports no hierarchy module and no hierarchy catalogue', () => {
     const loginChunk = readChunk('dist/assets/LoginRoute-*.js');
     expect(loginChunk).not.toContain(HIERARCHY_SIGNATURE);
+
+    // The module-content check above proves no hierarchy CODE reached the
+    // login chunk; this proves LoginRoute's own manifest entry declares no
+    // dynamic import of the hierarchy catalogue either - the "no hierarchy
+    // catalogue" half of this test's title, checked directly rather than
+    // only implied by the code-signature absence above.
+    const manifest = readManifest();
+    const loginRouteEntry = manifest['src/app/routing/routes/LoginRoute.tsx'];
+    expect(
+      loginRouteEntry,
+      'LoginRoute missing from the build manifest',
+    ).toBeDefined();
+    expect(loginRouteEntry?.dynamicImports ?? []).not.toEqual(
+      expect.arrayContaining([expect.stringContaining('hierarchy.json')]),
+    );
 
     const catalogueChunks = globSync('dist/assets/hierarchy-*.js');
     expect(

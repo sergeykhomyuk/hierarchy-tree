@@ -81,13 +81,39 @@ test.describe('hierarchy telemetry and privacy', () => {
       page.getByRole('treeitem', { name: /Persephone/ }),
     ).toBeVisible();
 
-    const records = await readBuffer(page);
+    const recordsAfterFirstToggle = await readBuffer(page);
 
-    expect(analyticsNamed(records, 'app.route_viewed')).toHaveLength(
-      routeViewedBeforeToggle,
-    );
-    expect(analyticsNamed(records, 'hierarchy.viewed')).toHaveLength(1);
-    expect(analyticsNamed(records, 'hierarchy.toggled')).toHaveLength(1);
+    expect(
+      analyticsNamed(recordsAfterFirstToggle, 'app.route_viewed'),
+    ).toHaveLength(routeViewedBeforeToggle);
+    expect(
+      analyticsNamed(recordsAfterFirstToggle, 'hierarchy.viewed'),
+    ).toHaveLength(1);
+    expect(
+      analyticsNamed(recordsAfterFirstToggle, 'hierarchy.toggled'),
+    ).toHaveLength(1);
+
+    // A second toggle (collapsing Tal Bergman back) proves "one event PER
+    // toggle" as a general rule, not just that a single toggle produces a
+    // single event - a bug that always pushed exactly one event
+    // regardless of how many toggles happened would pass the assertions
+    // above but fail these.
+    await page.keyboard.press('Enter');
+    await expect(
+      page.getByRole('treeitem', { name: /Persephone/ }),
+    ).toBeHidden();
+
+    const recordsAfterSecondToggle = await readBuffer(page);
+
+    expect(
+      analyticsNamed(recordsAfterSecondToggle, 'app.route_viewed'),
+    ).toHaveLength(routeViewedBeforeToggle);
+    expect(
+      analyticsNamed(recordsAfterSecondToggle, 'hierarchy.viewed'),
+    ).toHaveLength(1);
+    expect(
+      analyticsNamed(recordsAfterSecondToggle, 'hierarchy.toggled'),
+    ).toHaveLength(2);
   });
 
   test('no event in the buffer carries a password, an email, a person name or a photo URL', async ({
@@ -135,7 +161,9 @@ test.describe('hierarchy telemetry and privacy', () => {
     expect(serialized).not.toContain('another-not-real-password');
     expect(serialized).not.toContain('ronnen.gurevitch@example.com');
     expect(serialized).not.toContain('dorit.nuhum@example.com');
+    expect(serialized.toLowerCase()).not.toContain('ronnen');
     expect(serialized.toLowerCase()).not.toContain('gurevitch');
+    expect(serialized.toLowerCase()).not.toContain('dorit');
     expect(serialized.toLowerCase()).not.toContain('nuhum');
     expect(serialized).not.toContain(photoUrl);
   });
