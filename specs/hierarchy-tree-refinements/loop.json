@@ -4,10 +4,10 @@
   "type": "refactor",
   "size": "S",
   "status": "active",
-  "phase": "plan",
-  "phase_entered": "2026-08-19T12:07:47Z",
+  "phase": "implement",
+  "phase_entered": "2026-08-19T12:08:32Z",
   "created": "2026-08-19",
-  "updated": "2026-08-19T12:07:47Z",
+  "updated": "2026-08-19T12:10:59Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 1,
-      "steps_done": 0
+      "steps_done": 1
     },
     "G3": {
       "status": "pending",
@@ -62,8 +62,8 @@
       "tests": [
         "src/features/hierarchy/HierarchyTree.test.tsx::memoizes visible rows and accessible names across a focus-only render"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "2026-08-19T12:09:14Z evidence/step1-red.txt: focus-only render called flattenVisible twice",
+      "status": "done"
     }
   ],
   "log": [
@@ -75,13 +75,38 @@
     "2026-08-19T12:07:17Z coverage audit: existing HierarchyTree component tests cover rendering, accessible names, focus, keyboard navigation, expansion, telemetry, memoized row rendering, and axe; targeted baseline passed 41 tests before source changes",
     "2026-08-19T12:07:40Z evidence recorded: evidence/baseline-hierarchy-tree.txt (9120be477aba) - Pre-refactor HierarchyTree component baseline: 41 tests passed",
     "2026-08-19T12:07:47Z phase -> plan",
-    "2026-08-19T12:07:47Z step 1 added: Memoize visible rows and accessible names across unrelated local-state renders"
+    "2026-08-19T12:07:47Z step 1 added: Memoize visible rows and accessible names across unrelated local-state renders",
+    "2026-08-19T12:08:32Z phase -> implement",
+    "2026-08-19T12:09:14Z evidence recorded: evidence/step1-red.txt (2429465b25b4) - Step 1 red: focus-only render called flattenVisible twice",
+    "2026-08-19T12:09:14Z step 1 -> red",
+    "2026-08-19T12:10:58Z evidence recorded: evidence/step1-green-and-verify.txt (c5b6503dd08d) - Step 1 green and full npm run verify passed",
+    "2026-08-19T12:10:59Z step 1 -> green",
+    "2026-08-19T12:10:59Z step 1 -> done",
+    "2026-08-19T12:10:59Z step 1 verified: HierarchyTree 42/42; npm run verify exit 0 with coverage 649/649 and all build/size gates passing; loop intentionally remains active in implement for further tweaks"
   ],
   "evidence_hashes": {
     "evidence/baseline-hierarchy-tree.txt": {
       "sha": "9120be477aba",
       "recorded": "2026-08-19T12:07:40Z",
       "note": "Pre-refactor HierarchyTree component baseline: 41 tests passed"
+    },
+    "evidence/step1-red.txt": {
+      "sha": "2429465b25b4",
+      "recorded": "2026-08-19T12:09:14Z",
+      "note": "Step 1 red: focus-only render called flattenVisible twice"
+    },
+    "evidence/step1-green-and-verify.txt": {
+      "sha": "c5b6503dd08d",
+      "recorded": "2026-08-19T12:10:58Z",
+      "note": "Step 1 green and full npm run verify passed"
+    }
+  },
+  "test_file_hashes": {
+    "src/features/hierarchy/HierarchyTree.test.tsx": {
+      "sha": "f0ade4a843a7",
+      "step": 1,
+      "recorded": "2026-08-19T12:09:14Z",
+      "log_index": 11
     }
   }
 }

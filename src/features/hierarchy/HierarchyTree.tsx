@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ObservabilityFacade } from '@platform/observability';
 import type { Clock } from '@platform/runtime';
@@ -50,18 +50,25 @@ export const HierarchyTree = memo(function HierarchyTree({
   onExpandMany,
 }: HierarchyTreeProps) {
   const { t, i18n } = useTranslation(HIERARCHY_TRANSLATION_NAMESPACE);
-  const rows = flattenVisible(roots, expandedIds);
+  const rows = useMemo(
+    () => flattenVisible(roots, expandedIds),
+    [roots, expandedIds],
+  );
   const youMarkerLabel = t('page.youMarkerLabel');
   // Parallel to rows, in the same order - the exact string each row's
   // aria-label carries, so type-ahead matches "the same string a screen
   // reader announces" (invariant 138) rather than a second, independently
   // computed name that could drift from TreeRow's own.
-  const accessibleNames = rows.map((row) =>
-    rowAccessibleName(
-      personDisplayName(row.person),
-      row.person.id === signedInUserId,
-      youMarkerLabel,
-    ),
+  const accessibleNames = useMemo(
+    () =>
+      rows.map((row) =>
+        rowAccessibleName(
+          personDisplayName(row.person),
+          row.person.id === signedInUserId,
+          youMarkerLabel,
+        ),
+      ),
+    [rows, signedInUserId, youMarkerLabel],
   );
 
   // Held here rather than by a row: collapsing and re-expanding a branch
@@ -87,11 +94,10 @@ export const HierarchyTree = memo(function HierarchyTree({
     [observability],
   );
 
-  // rows is a fresh array every render (flattenVisible never reuses the
-  // previous call's objects), so a ref rather than a dependency keeps
-  // handleRowToggle's own identity stable across toggles - otherwise every
-  // row's memo would bail out on nothing, since a new onToggle prop would
-  // look like a change on every single one (invariant 91).
+  // rows changes on every genuine expansion update, so a ref rather than a
+  // dependency keeps handleRowToggle's own identity stable across toggles -
+  // otherwise every row's memo would bail out on nothing, since a new
+  // onToggle prop would look like a change on every single one (invariant 91).
   const rowsRef = useRef(rows);
   rowsRef.current = rows;
   const [announcement, setAnnouncement] = useState('');
@@ -101,9 +107,9 @@ export const HierarchyTree = memo(function HierarchyTree({
   // decide every row's tabIndex in one pass. Recovery runs only when
   // expandedIds actually changes identity (a toggle or a Back/Forward),
   // never on a render caused by something unrelated - rows is read via a
-  // ref precisely so it is not a dependency itself, since flattenVisible
-  // never reuses the previous call's array (the same reasoning as
-  // rowsRef above).
+  // ref precisely so it is not a dependency itself: its identity changes on
+  // the same expansion updates this effect already observes (the same
+  // reasoning as rowsRef above).
   const [tabbableId, setTabbableId] = useState<PersonIdentifier | null>(
     () => rows[0]?.person.id ?? null,
   );
