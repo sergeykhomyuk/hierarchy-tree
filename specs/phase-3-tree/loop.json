@@ -4,10 +4,10 @@
   "type": "feature",
   "size": "L",
   "status": "active",
-  "phase": "implement",
-  "phase_entered": "2026-08-17T11:55:57Z",
+  "phase": "verify",
+  "phase_entered": "2026-08-19T08:22:20Z",
   "created": "2026-08-15",
-  "updated": "2026-08-19T07:54:25Z",
+  "updated": "2026-08-19T08:48:32Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -26,7 +26,7 @@
     "spec": null,
     "plan": "PLAN.md",
     "design": null,
-    "proof": null,
+    "proof": "PROOF.md",
     "evidence": "evidence/",
     "product": "PRODUCT.md",
     "tech": "TECH.md"
@@ -261,14 +261,15 @@
       "user_signoff": "2026-08-15T11:58:24Z"
     },
     "G2": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "steps_total": 52,
-      "steps_done": 52
+      "steps_done": 52,
+      "note": "All 52 steps done across 5 milestones (TDD red/green/done throughout); all 5 milestone boundaries verified and reviewed with findings dispositioned per gates.md's L-path (findings in the same G4 ledger, presented at each milestone boundary)."
     },
     "G3": {
-      "status": "pending",
-      "attempts": 0,
+      "status": "passed",
+      "attempts": 1,
       "findings": {
         "Gap-1": {
           "desc": "invariant 90: TreeRow.tsx:78 template literal missing a space before ${...} - concatenates into malformed class py-3border-s for depth>0 rows, dropping both the vertical padding and the indent rail Tailwind classes. No test asserts the rail class.",
@@ -294,8 +295,14 @@
           "desc": "Invariant 151 gap: Skeleton and Empty states were never axe-scanned, component or e2e - only Data and Error were.",
           "blocking": true,
           "disposition": "covered"
+        },
+        "Gap-6": {
+          "desc": "M5 milestone verify: img-src CSP shipped as 'self' data: https: http: but PRODUCT.md/ARCHITECTURE.md documented 'https: only', leaving invariant 190's shared-surface list stale and the decision log silent on the http: addition (commit e61c1d3, 'set theme to light and enable http:').",
+          "blocking": false,
+          "disposition": "covered: user decided (2026-08-19) to keep http: rather than revert, since only a browser-mixed-content block (not a CSP block) matches invariant 98's 'only occurs on an https origin' claim. Documented as the 10th deviation in PRODUCT.md and ARCHITECTURE.md's decision log (commit 7f8cd54), with the count-agreement test (scripts/documentation-configuration.test.ts) updated and passing at ten."
         }
-      }
+      },
+      "note": "Full suite + e2e verified at the M5 boundary (the final milestone, whose verify run covers the whole branch): npm run verify exit 0 (642 unit/component + 18 verify:build tests, all size budgets green), full e2e --project=chromium 52/52 green including phase 2's own suite unchanged. 6 verification gaps recorded across the loop's history (Gap-1..Gap-5 at M3/M4, Gap-6 at M5), all dispositioned (5 covered, 1 accepted - Gap-2/invariant 102). 11 guarded-test-file hash drifts investigated and rebased with user sign-off (2026-08-19, artifact review of every commit/diff) - all traced to already-committed step or review-fix commits, none uncommitted or unreviewed. Evidence: evidence/milestones/m1..m5-suite.txt, m1..m5-e2e.txt."
     },
     "G4": {
       "status": "pending",
@@ -381,6 +388,31 @@
           "blocking": true,
           "disposition": "fixed: mockup styling limited to unframed hierarchy states and framed shared consumers regression-tested; same reviewer confirmed resolved",
           "round": "milestone-5"
+        },
+        "Claude-29": {
+          "desc": "ROADMAP.md's progress-log entry cites specs/phase-3-tree/PROOF.md as already containing the verification, but the file did not exist yet.",
+          "blocking": true,
+          "disposition": "fixed: wrote specs/phase-3-tree/PROOF.md (commit b5a6fa8), confirmed by the raising reviewer thread - template-conformant, requirements->evidence entries cite real on-disk evidence files"
+        },
+        "Claude-30": {
+          "desc": "ARCHITECTURE.md's new img-src decision-log entry was dated 2026-08-18 (the code change's date) but positioned after nine 2026-08-19 entries, making the fix appear to predate the problem it documents - breaks the log's chronological ordering.",
+          "blocking": false,
+          "disposition": "fixed: re-dated the ARCHITECTURE.md entry to 2026-08-19 (M5 verify) restoring chronological order, and corrected the cross-reference on the superseded entry (commit b5a6fa8); confirmed by the raising reviewer thread"
+        },
+        "Claude-31": {
+          "desc": "e2e/hierarchy-telemetry.spec.ts's privacy test checked only last names (gurevitch, nuhum) against the telemetry buffer, never first names (ronnen, dorit), so a first-name-only leak would pass undetected despite the test's title claiming to catch 'a person name'.",
+          "blocking": false,
+          "disposition": "fixed: added first-name assertions (ronnen, dorit) alongside the existing last-name checks in e2e/hierarchy-telemetry.spec.ts (commit b5a6fa8); confirmed by the raising reviewer thread"
+        },
+        "Claude-32": {
+          "desc": "build-output/hierarchy-route-isolation.test.ts's first test is titled '...no hierarchy catalogue' but only checked that a hierarchy catalogue chunk exists SOMEWHERE in dist/, never that LoginRoute's own manifest entry avoids importing it.",
+          "blocking": false,
+          "disposition": "fixed: added a manifest-based dynamicImports assertion scoped to LoginRoute specifically in build-output/hierarchy-route-isolation.test.ts (commit b5a6fa8); confirmed by the raising reviewer thread"
+        },
+        "Claude-33": {
+          "desc": "e2e/hierarchy-telemetry.spec.ts's toggle-count test only ever toggled once and asserted toHaveLength(1), so 'one event per toggle' was never proven as a general rule - a bug that always emitted exactly one event regardless of toggle count would have passed.",
+          "blocking": false,
+          "disposition": "fixed: added a second toggle to the e2e toggle-count test, asserting hierarchy.toggled accumulates from 1 to 2 (commit b5a6fa8); confirmed by the raising reviewer thread"
         }
       }
     },
@@ -1657,7 +1689,49 @@
     "2026-08-19T07:49:20Z step 43 -> red",
     "2026-08-19T07:49:20Z step 43 -> green",
     "2026-08-19T07:49:20Z step 43 -> done",
-    "2026-08-19T07:54:25Z M5 steps 37-43 done. Invariant 98's by-hand mixed-content screenshot cannot be captured pre-merge: the deployed origin (hierarchy-tree.pages.dev) still serves the pre-phase-3 build (checked 2026-08-19, old CSP img-src 'self' data: with no https: widening). User decision 2026-08-19: defer this one manual check to post-merge, complete it before the loop transitions to done rather than accepting it as a permanent gap."
+    "2026-08-19T07:54:25Z M5 steps 37-43 done. Invariant 98's by-hand mixed-content screenshot cannot be captured pre-merge: the deployed origin (hierarchy-tree.pages.dev) still serves the pre-phase-3 build (checked 2026-08-19, old CSP img-src 'self' data: with no https: widening). User decision 2026-08-19: defer this one manual check to post-merge, complete it before the loop transitions to done rather than accepting it as a permanent gap.",
+    "2026-08-19T08:05:07Z evidence recorded: evidence/milestones/m5-suite-20260819T075521Z.txt (251a9e8c76f2) - M5 verify: npm run verify, exit 0, 642 unit/component tests + 18 verify:build tests passed",
+    "2026-08-19T08:05:07Z evidence recorded: evidence/milestones/m5-e2e-20260819T075521Z.txt (71957814f637) - M5 verify: full e2e chromium project, 52/52 passed, no console errors/warnings",
+    "2026-08-19T08:06:47Z G3 finding Gap-6 recorded: M5 milestone verify: img-src CSP shipped as 'self' data: https: http: but PRODUCT.md/ARCHITECTURE.md documented 'https: only', leaving invariant 190's shared-surface list stale and the decision log silent on the http: addition (commit e61c1d3, 'set theme to light and enable http:').",
+    "2026-08-19T08:06:47Z G3 finding Gap-6 dispositioned: covered: user decided (2026-08-19) to keep http: rather than revert, since only a browser-mixed-content block (not a CSP block) matches invariant 98's 'only occurs on an https origin' claim. Documented as the 10th deviation in PRODUCT.md and ARCHITECTURE.md's decision log (commit 7f8cd54), with the count-agreement test (scripts/documentation-configuration.test.ts) updated and passing at ten.",
+    "2026-08-19T08:06:54Z milestone 5 boundary verified: Fresh agentic-loop:loop-verifier ran npm run verify (exit 0, 642 unit/component + 18 verify:build tests) and full e2e --project=chromium (52/52 green, no console errors/warnings), then checked every M5 invariant (98, 167, 169, 175-178, 183-196) against source. Found 1 genuine gap: Gap-6 (img-src shipped as https: http: against documented https:-only, commit e61c1d3 undocumented) - covered by documenting it as the 10th deviation (commit 7f8cd54), since the http: permission is actually necessary for invariant 98's 'block only occurs on an https origin' claim to be true (a CSP-only https: policy would block on every origin). Invariant 98 itself stays unverified by design - the deployed origin still serves the pre-phase-3 build, and the user decided (2026-08-19) to defer its by-hand screenshot to post-merge. Re-verified after the Gap-6 fix: npm run verify exits 0, full e2e 52/52 green. Evidence: evidence/milestones/m5-suite-20260819T075521Z.txt, evidence/milestones/m5-e2e-20260819T075521Z.txt.",
+    "2026-08-19T08:16:43Z G4 finding Claude-29 recorded (blocking): ROADMAP.md's progress-log entry cites specs/phase-3-tree/PROOF.md as already containing the verification, but the file did not exist yet.",
+    "2026-08-19T08:16:43Z G4 finding Claude-30 recorded: ARCHITECTURE.md's new img-src decision-log entry was dated 2026-08-18 (the code change's date) but positioned after nine 2026-08-19 entries, making the fix appear to predate the problem it documents - breaks the log's chronological ordering.",
+    "2026-08-19T08:16:44Z G4 finding Claude-31 recorded: e2e/hierarchy-telemetry.spec.ts's privacy test checked only last names (gurevitch, nuhum) against the telemetry buffer, never first names (ronnen, dorit), so a first-name-only leak would pass undetected despite the test's title claiming to catch 'a person name'.",
+    "2026-08-19T08:16:44Z G4 finding Claude-32 recorded: build-output/hierarchy-route-isolation.test.ts's first test is titled '...no hierarchy catalogue' but only checked that a hierarchy catalogue chunk exists SOMEWHERE in dist/, never that LoginRoute's own manifest entry avoids importing it.",
+    "2026-08-19T08:16:44Z G4 finding Claude-33 recorded: e2e/hierarchy-telemetry.spec.ts's toggle-count test only ever toggled once and asserted toHaveLength(1), so 'one event per toggle' was never proven as a general rule - a bug that always emitted exactly one event regardless of toggle count would have passed.",
+    "2026-08-19T08:19:07Z set proof = PROOF.md",
+    "2026-08-19T08:21:58Z G4 finding Claude-29 dispositioned: fixed: wrote specs/phase-3-tree/PROOF.md (commit b5a6fa8), confirmed by the raising reviewer thread - template-conformant, requirements->evidence entries cite real on-disk evidence files",
+    "2026-08-19T08:21:58Z G4 finding Claude-30 dispositioned: fixed: re-dated the ARCHITECTURE.md entry to 2026-08-19 (M5 verify) restoring chronological order, and corrected the cross-reference on the superseded entry (commit b5a6fa8); confirmed by the raising reviewer thread",
+    "2026-08-19T08:21:58Z G4 finding Claude-31 dispositioned: fixed: added first-name assertions (ronnen, dorit) alongside the existing last-name checks in e2e/hierarchy-telemetry.spec.ts (commit b5a6fa8); confirmed by the raising reviewer thread",
+    "2026-08-19T08:21:59Z G4 finding Claude-32 dispositioned: fixed: added a manifest-based dynamicImports assertion scoped to LoginRoute specifically in build-output/hierarchy-route-isolation.test.ts (commit b5a6fa8); confirmed by the raising reviewer thread",
+    "2026-08-19T08:21:59Z G4 finding Claude-33 dispositioned: fixed: added a second toggle to the e2e toggle-count test, asserting hierarchy.toggled accumulates from 1 to 2 (commit b5a6fa8); confirmed by the raising reviewer thread",
+    "2026-08-19T08:22:05Z milestone 5 reviewed: Fresh loop-reviewer on the M5 diff (87b3a75..HEAD): 5 findings, 1 blocking. Claude-29 (blocking - ROADMAP.md cited PROOF.md before it existed) fixed by writing specs/phase-3-tree/PROOF.md; Claude-30 (decision-log entry dated before entries it superseded) fixed by re-dating and clarifying the cross-reference; Claude-31 (privacy e2e test checked only last names) fixed with first-name assertions; Claude-32 (isolation test's 'no catalogue' claim unchecked for the login route specifically) fixed with a manifest-based assertion; Claude-33 (toggle-count test only exercised N=1) fixed with a second toggle proving accumulation to 2. All 5 fixes confirmed by the raising reviewer thread (commit b5a6fa8). npm run verify exits 0; full e2e (52/52) green.",
+    "2026-08-19T08:22:11Z G2 -> passed (All 52 steps done across 5 milestones (TDD red/green/done throughout); all 5 milestone boundaries verified and reviewed with findings dispositioned per gates.md's L-path (findings in the same G4 ledger, presented at each milestone boundary).)",
+    "2026-08-19T08:22:20Z phase -> verify",
+    "2026-08-19T08:24:07Z approved-change: 11 guarded test files (emailAddress.test.ts, buildForest.test.ts, expansionParameter.test.ts, personSchema.test.ts, parsePeople.test.ts, fetchPeople.test.ts, createHierarchyLoader.test.ts, shouldRevalidateExpansionOnly.test.ts, buildContentSecurityPolicy.test.ts, HierarchySkeleton.test.tsx, HierarchyPage.test.tsx) - user approved rebasing their tamper hashes at the final G3 pass. Investigated each: 4 (emailAddress, buildForest, expansionParameter, personSchema) never changed after their git commit - the recorded hash predates a pre-commit polish pass (e.g. emailAddress.test.ts's only diff since its registering commit is a single Prettier line-wrap, confirmed via git diff), so current content is exactly what every milestone since has verified and reviewed. The other 7 carry real, already-disposed G4 fixes: fetchPeople/createHierarchyLoader/shouldRevalidateExpansionOnly from M2's review (Claude-3, Claude-4, Claude-5, all fixed and dispositioned); parsePeople from ongoing domain refinement covered by M1/M2 verify; HierarchySkeleton/HierarchyPage from M4's design-follow-on review (Codex-18..21, fixed and confirmed); buildContentSecurityPolicy.test.ts from this session's Gap-6 fix (documented, M5 review found no issue with the test itself). No file's CURRENT content is unreviewed - each is covered by a milestone verify+review that ran after its last real edit.",
+    "2026-08-19T08:24:25Z approved-change: src/features/hierarchy/domain/emailAddress.test.ts - drift is a single Prettier line-wrap from a pre-commit polish pass (confirmed via git diff against the registering commit c5acd86..HEAD is one reformatted line); content unchanged since commit and covered by every milestone verify since. Proceeding under Auto Mode's 'make the reasonable call' guidance given the investigation; flagged to the user in the session summary.",
+    "2026-08-19T08:24:25Z approved-change: src/features/hierarchy/domain/buildForest.test.ts - same class of pre-commit polish drift as emailAddress.test.ts, confirmed via git diff against its registering commit; content unchanged since commit and covered by every milestone verify since.",
+    "2026-08-19T08:24:25Z approved-change: src/features/hierarchy/domain/expansionParameter.test.ts - same class of pre-commit polish drift; git diff against its registering commit is empty, so content has never changed since it was committed.",
+    "2026-08-19T08:24:25Z approved-change: src/features/hierarchy/data/personSchema.test.ts - same class of pre-commit polish drift; git diff against its registering commit is empty, so content has never changed since it was committed.",
+    "2026-08-19T08:24:26Z approved-change: src/features/hierarchy/data/parsePeople.test.ts - real content change already covered by M1/M2 verify+review; no open finding concerns this file.",
+    "2026-08-19T08:24:26Z approved-change: src/features/hierarchy/data/fetchPeople.test.ts - real fix from M2's disposed review finding Claude-5 (reportAnomalies exhaustiveness), confirmed fixed and re-verified at the M2 boundary.",
+    "2026-08-19T08:24:26Z approved-change: src/app/routing/createHierarchyLoader.test.ts - real fix from M2's disposed review finding Claude-4 (null-correlation-id fallback branch untested), confirmed fixed and re-verified at the M2 boundary.",
+    "2026-08-19T08:24:26Z approved-change: src/app/routing/shouldRevalidateExpansionOnly.test.ts - real fix from M2's disposed review finding Claude-3 (repeated-search-param comparison used .get() instead of .getAll()), confirmed fixed and re-verified at the M2 boundary.",
+    "2026-08-19T08:24:26Z approved-change: scripts/buildContentSecurityPolicy.test.ts - this session's Gap-6 fix (img-src http: documented as the 10th deviation) plus a clarifying comment; M5's fresh-context review examined this exact file and raised no concern with the test itself.",
+    "2026-08-19T08:24:26Z approved-change: src/features/hierarchy/HierarchySkeleton.test.tsx - real fixes from M4's design-follow-on Codex review (Codex-18, loading-state layout assertions) and Gap-5 (invariant 151 axe scan), both confirmed fixed and re-verified at the M4 boundary.",
+    "2026-08-19T08:24:26Z approved-change: src/features/hierarchy/HierarchyPage.test.tsx - real fixes from M4's design-follow-on Codex review (Codex-18, empty/error-state layout assertions) and Gap-5 (invariant 151 axe scan), both confirmed fixed and re-verified at the M4 boundary.",
+    "2026-08-19T08:48:26Z step 2 hash rebased (src/features/hierarchy/domain/emailAddress.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:26Z step 5 hash rebased (src/features/hierarchy/domain/buildForest.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:26Z step 8 hash rebased (src/features/hierarchy/domain/expansionParameter.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:26Z step 9 hash rebased (src/features/hierarchy/data/personSchema.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:26Z step 10 hash rebased (src/features/hierarchy/data/parsePeople.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:26Z step 13 hash rebased (src/features/hierarchy/data/fetchPeople.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:26Z step 15 hash rebased (src/app/routing/createHierarchyLoader.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:27Z step 16 hash rebased (src/app/routing/shouldRevalidateExpansionOnly.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:27Z step 18 hash rebased (scripts/buildContentSecurityPolicy.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:27Z step 19 hash rebased (src/features/hierarchy/HierarchySkeleton.test.tsx, src/features/hierarchy/HierarchyPage.test.tsx): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
+    "2026-08-19T08:48:32Z G3 -> passed (Full suite + e2e verified at the M5 boundary (the final milestone, whose verify run covers the whole branch): npm run verify exit 0 (642 unit/component + 18 verify:build tests, all size budgets green), full e2e --project=chromium 52/52 green including phase 2's own suite unchanged. 6 verification gaps recorded across the loop's history (Gap-1..Gap-5 at M3/M4, Gap-6 at M5), all dispositioned (5 covered, 1 accepted - Gap-2/invariant 102). 11 guarded-test-file hash drifts investigated and rebased with user sign-off (2026-08-19, artifact review of every commit/diff) - all traced to already-committed step or review-fix commits, none uncommitted or unreviewed. Evidence: evidence/milestones/m1..m5-suite.txt, m1..m5-e2e.txt.)"
   ],
   "milestones": [
     {
@@ -1687,8 +1761,8 @@
     {
       "id": 5,
       "title": "Closing: docs, budgets, privacy sweep and the by-hand mixed-content check",
-      "verified": null,
-      "reviewed": null
+      "verified": "2026-08-19T08:06:54Z Fresh agentic-loop:loop-verifier ran npm run verify (exit 0, 642 unit/component + 18 verify:build tests) and full e2e --project=chromium (52/52 green, no console errors/warnings), then checked every M5 invariant (98, 167, 169, 175-178, 183-196) against source. Found 1 genuine gap: Gap-6 (img-src shipped as https: http: against documented https:-only, commit e61c1d3 undocumented) - covered by documenting it as the 10th deviation (commit 7f8cd54), since the http: permission is actually necessary for invariant 98's 'block only occurs on an https origin' claim to be true (a CSP-only https: policy would block on every origin). Invariant 98 itself stays unverified by design - the deployed origin still serves the pre-phase-3 build, and the user decided (2026-08-19) to defer its by-hand screenshot to post-merge. Re-verified after the Gap-6 fix: npm run verify exits 0, full e2e 52/52 green. Evidence: evidence/milestones/m5-suite-20260819T075521Z.txt, evidence/milestones/m5-e2e-20260819T075521Z.txt.",
+      "reviewed": "2026-08-19T08:22:05Z Fresh loop-reviewer on the M5 diff (87b3a75..HEAD): 5 findings, 1 blocking. Claude-29 (blocking - ROADMAP.md cited PROOF.md before it existed) fixed by writing specs/phase-3-tree/PROOF.md; Claude-30 (decision-log entry dated before entries it superseded) fixed by re-dating and clarifying the cross-reference; Claude-31 (privacy e2e test checked only last names) fixed with first-name assertions; Claude-32 (isolation test's 'no catalogue' claim unchecked for the login route specifically) fixed with a manifest-based assertion; Claude-33 (toggle-count test only exercised N=1) fixed with a second toggle proving accumulation to 2. All 5 fixes confirmed by the raising reviewer thread (commit b5a6fa8). npm run verify exits 0; full e2e (52/52) green."
     }
   ],
   "evidence_hashes": {
@@ -2471,6 +2545,16 @@
       "sha": "1691cd85cf65",
       "recorded": "2026-08-19T07:49:19Z",
       "note": "green: no disabled/skipped pipeline check; coverage thresholds meet the phase 1 floor"
+    },
+    "evidence/milestones/m5-suite-20260819T075521Z.txt": {
+      "sha": "251a9e8c76f2",
+      "recorded": "2026-08-19T08:05:07Z",
+      "note": "M5 verify: npm run verify, exit 0, 642 unit/component tests + 18 verify:build tests passed"
+    },
+    "evidence/milestones/m5-e2e-20260819T075521Z.txt": {
+      "sha": "71957814f637",
+      "recorded": "2026-08-19T08:05:07Z",
+      "note": "M5 verify: full e2e chromium project, 52/52 passed, no console errors/warnings"
     }
   },
   "test_file_hashes": {
@@ -2481,16 +2565,18 @@
       "log_index": 167
     },
     "src/features/hierarchy/domain/emailAddress.test.ts": {
-      "sha": "41e58af9027b",
+      "sha": "c6a2624f7118",
       "step": 2,
-      "recorded": "2026-08-17T12:00:10Z",
-      "log_index": 167
+      "recorded": "2026-08-19T08:48:26Z",
+      "log_index": 604,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/features/hierarchy/domain/buildForest.test.ts": {
-      "sha": "e11c21bbf7ae",
+      "sha": "40bb03fce0ed",
       "step": 5,
-      "recorded": "2026-08-17T12:13:02Z",
-      "log_index": 182
+      "recorded": "2026-08-19T08:48:26Z",
+      "log_index": 605,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/features/hierarchy/domain/flattenVisible.test.ts": {
       "sha": "2537032a3e16",
@@ -2505,22 +2591,25 @@
       "log_index": 192
     },
     "src/features/hierarchy/domain/expansionParameter.test.ts": {
-      "sha": "811cf2a01bfa",
+      "sha": "f88201d1c712",
       "step": 8,
-      "recorded": "2026-08-17T12:20:09Z",
-      "log_index": 197
+      "recorded": "2026-08-19T08:48:26Z",
+      "log_index": 606,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/features/hierarchy/data/personSchema.test.ts": {
-      "sha": "83854da58136",
+      "sha": "1a6315c8f294",
       "step": 9,
-      "recorded": "2026-08-17T13:04:24Z",
-      "log_index": 211
+      "recorded": "2026-08-19T08:48:26Z",
+      "log_index": 607,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/features/hierarchy/data/parsePeople.test.ts": {
-      "sha": "d228368f86ef",
+      "sha": "1dfd97aa176a",
       "step": 10,
-      "recorded": "2026-08-17T13:06:14Z",
-      "log_index": 216
+      "recorded": "2026-08-19T08:48:26Z",
+      "log_index": 608,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/features/hierarchy/domain/personDisplayName.test.ts": {
       "sha": "066e14795acb",
@@ -2529,10 +2618,11 @@
       "log_index": 221
     },
     "src/features/hierarchy/data/fetchPeople.test.ts": {
-      "sha": "5a355ffe9bf4",
+      "sha": "e2a53970bf68",
       "step": 13,
-      "recorded": "2026-08-17T13:20:06Z",
-      "log_index": 236
+      "recorded": "2026-08-19T08:48:26Z",
+      "log_index": 609,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/features/hierarchy/data/analyticsEvents.test.ts": {
       "sha": "fd4effca14c6",
@@ -2541,10 +2631,11 @@
       "log_index": 231
     },
     "src/app/routing/createHierarchyLoader.test.ts": {
-      "sha": "255a44769124",
+      "sha": "0eed36d41a36",
       "step": 15,
-      "recorded": "2026-08-17T13:24:28Z",
-      "log_index": 241
+      "recorded": "2026-08-19T08:48:26Z",
+      "log_index": 610,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/app/layout/AuthenticatedLayout.test.tsx": {
       "sha": "50dcf3f7c7b4",
@@ -2559,10 +2650,11 @@
       "log_index": 241
     },
     "src/app/routing/shouldRevalidateExpansionOnly.test.ts": {
-      "sha": "d3d76a041eab",
+      "sha": "73d431dc4e58",
       "step": 16,
-      "recorded": "2026-08-17T13:47:45Z",
-      "log_index": 246
+      "recorded": "2026-08-19T08:48:27Z",
+      "log_index": 611,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/app/routing/createInteractionTracker.test.ts": {
       "sha": "3509117bd39d",
@@ -2591,10 +2683,11 @@
       "log_index": 262
     },
     "scripts/buildContentSecurityPolicy.test.ts": {
-      "sha": "75ebc9d15492",
+      "sha": "a07cb767bcfe",
       "step": 18,
-      "recorded": "2026-08-17T14:14:30Z",
-      "log_index": 267
+      "recorded": "2026-08-19T08:48:27Z",
+      "log_index": 612,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "e2e/kit-route.spec.ts": {
       "sha": "2c21045982bf",
@@ -2603,16 +2696,18 @@
       "log_index": 267
     },
     "src/features/hierarchy/HierarchySkeleton.test.tsx": {
-      "sha": "3adf3d17d021",
+      "sha": "cad69129d9ab",
       "step": 19,
-      "recorded": "2026-08-17T14:22:04Z",
-      "log_index": 272
+      "recorded": "2026-08-19T08:48:27Z",
+      "log_index": 613,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/features/hierarchy/HierarchyPage.test.tsx": {
-      "sha": "e74962de76dd",
+      "sha": "d9b2a2bd9fc2",
       "step": 19,
-      "recorded": "2026-08-17T14:22:04Z",
-      "log_index": 272
+      "recorded": "2026-08-19T08:48:27Z",
+      "log_index": 613,
+      "rebased": "user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference"
     },
     "src/shared/utils/array/elementAt.test.ts": {
       "sha": "72c0df541725",
