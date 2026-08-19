@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { StrictMode, useState } from 'react';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
@@ -41,9 +42,40 @@ function ExpansionHarness({
     roots,
     observability,
   );
+  // Counts how many times expandMany's and toggleExpanded's OWN identities
+  // changed across renders - the render-count assertion invariant 91
+  // demands, applied to the callbacks themselves rather than to a rendered
+  // row (HierarchyTree.test.tsx already covers rows; this covers the hook
+  // that feeds them, with the real useSearchParams wiring rather than a
+  // stubbed onToggle/onExpandMany). State adjusted during render (React's
+  // documented pattern), not a ref, which the render output would then
+  // read straight out of - eslint's react-hooks/refs rule (and React
+  // Compiler) forbid that as an anti-pattern.
+  // useState(expandMany) directly would be misread as a lazy initializer -
+  // useState calls a function argument to compute the initial value rather
+  // than storing the function itself - so the initial value is wrapped in
+  // its own thunk to store expandMany AS a value.
+  const [previousExpandMany, setPreviousExpandMany] = useState(
+    () => expandMany,
+  );
+  const [expandManyChangeCount, setExpandManyChangeCount] = useState(0);
+  if (previousExpandMany !== expandMany) {
+    setPreviousExpandMany(() => expandMany);
+    setExpandManyChangeCount((count) => count + 1);
+  }
+  const [previousToggleExpanded, setPreviousToggleExpanded] = useState(
+    () => toggleExpanded,
+  );
+  const [toggleExpandedChangeCount, setToggleExpandedChangeCount] = useState(0);
+  if (previousToggleExpanded !== toggleExpanded) {
+    setPreviousToggleExpanded(() => toggleExpanded);
+    setToggleExpandedChangeCount((count) => count + 1);
+  }
   return (
     <div>
       <p>expanded: {sortedIds(expandedIds)}</p>
+      <p>expandMany identity changes: {expandManyChangeCount}</p>
+      <p>toggleExpanded identity changes: {toggleExpandedChangeCount}</p>
       <button
         type="button"
         onClick={() => toggleExpanded(parsePersonIdentifier(1))}
@@ -82,6 +114,7 @@ function threeGenerationRoots(): readonly TreeNode[] {
 function renderExpansion(
   initialPath = '/',
   roots: readonly TreeNode[] = threeGenerationRoots(),
+  { strict = false }: { strict?: boolean } = {},
 ) {
   const observability = createSpyObservability();
   const router = createMemoryRouter(
@@ -95,7 +128,8 @@ function renderExpansion(
     ],
     { initialEntries: [initialPath] },
   );
-  render(<RouterProvider router={router} />);
+  const tree = <RouterProvider router={router} />;
+  render(strict ? <StrictMode>{tree}</StrictMode> : tree);
   return { router, roots, observability };
 }
 
@@ -217,6 +251,19 @@ describe('useExpansion', () => {
     expect(observability.logger.warn).not.toHaveBeenCalled();
   });
 
+  it('still reports skipped segments only once under StrictMode', () => {
+    // bootstrap.ts wraps the real app in StrictMode, which deliberately
+    // double-invokes an effect (mount, cleanup, mount again) with the
+    // identical closure to surface side-effect bugs - the dependency array
+    // alone cannot tell that apart from a real second parse, since nothing
+    // in it changes between the two invocations either.
+    const { observability } = renderExpansion('/?expanded=abc', undefined, {
+      strict: true,
+    });
+
+    expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+  });
+
   it('a childless root never reaches the URL even though it is part of the default expansion', async () => {
     const user = userEvent.setup();
     // Two roots: 1 is a manager (has child 2), 5 is a leaf with no
@@ -235,5 +282,26 @@ describe('useExpansion', () => {
 
     const params = new URLSearchParams(router.state.location.search);
     expect(params.get('expanded')).toBe('');
+  });
+
+  it("expandMany's own identity survives a real toggle, not only an unrelated render (invariant 91)", async () => {
+    const user = userEvent.setup();
+    renderExpansion();
+
+    expect(
+      screen.getByText('expandMany identity changes: 0'),
+    ).toBeInTheDocument();
+
+    // toggleExpanded, not expandMany itself - the point is that TOGGLING
+    // (which changes the URL, which is what previously made expandMany's
+    // own dependency array recompute a fresh expandedIds Set on every
+    // real toggle, not only on an unrelated render) leaves expandMany's
+    // identity untouched.
+    await user.click(screen.getByRole('button', { name: 'toggle 1' }));
+    await user.click(screen.getByRole('button', { name: 'toggle 2' }));
+
+    expect(
+      screen.getByText('expandMany identity changes: 0'),
+    ).toBeInTheDocument();
   });
 });

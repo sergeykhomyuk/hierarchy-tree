@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router';
 import type { ObservabilityFacade } from '@platform/observability';
 import { defaultExpansion } from './domain/defaultExpansion';
@@ -60,6 +60,18 @@ export function useExpansion(
   observability: ObservabilityFacade,
 ): UseExpansionResult {
   const [searchParams, setSearchParams] = useSearchParams();
+  // react-router's own setSearchParams is not referentially stable across
+  // a URL change (it closes over the CURRENT searchParams object, which
+  // useSearchParams recomputes from location.search on every navigation)
+  // - so every toggle, which changes the URL, would otherwise churn
+  // toggleExpanded's and expandMany's identity too, on top of the
+  // expandedIds issue above. Read through a ref for the same reason
+  // expandedIdsRef exists below: only roots (stable across a toggle)
+  // should decide whether these callbacks get a new identity.
+  const setSearchParamsRef = useRef(setSearchParams);
+  useEffect(() => {
+    setSearchParamsRef.current = setSearchParams;
+  });
   const expandedParam = searchParams.get(EXPANDED_PARAM);
   const parsed = useMemo(
     () => parseExpansion(expandedParam, roots),
@@ -68,14 +80,33 @@ export function useExpansion(
   const fallbackDefault = useMemo(() => defaultExpansion(roots), [roots]);
   const expandedIds = parsed.expanded ?? fallbackDefault;
 
-  // Reported once per parse (invariant 121) - the effect's own dependency
-  // array is what makes "once per parse" hold: it re-runs only when the
-  // raw parameter or the roots actually change, never on an unrelated
-  // render, and a second parse that happens to skip the same COUNT of
-  // segments as the first still re-fires because expandedParam itself
-  // changed too.
+  // Read via a ref inside expandMany's no-op check rather than closed over
+  // directly - expandedIds legitimately gets a new identity on every real
+  // toggle (the URL just changed), so making it an expandMany dependency
+  // would still churn expandMany's own identity on every toggle even after
+  // the earlier fix for unrelated renders, the same invariant-91 failure
+  // one level up (toggleExpanded already avoids this the same way: it
+  // never depended on expandedIds to begin with).
+  const expandedIdsRef = useRef(expandedIds);
   useEffect(() => {
-    if (parsed.skipped > 0) {
+    expandedIdsRef.current = expandedIds;
+  });
+
+  // Reported once per parse (invariant 121) - the effect's own dependency
+  // array is what makes "once per parse" hold across genuinely distinct
+  // parses: it re-runs only when the raw parameter or the roots actually
+  // change, never on an unrelated render, and a second parse that happens
+  // to skip the same COUNT of segments as the first still re-fires because
+  // expandedParam itself changed too. The ref guard on top of that is for
+  // React StrictMode's development-only double-invoke (bootstrap.ts wraps
+  // the app in StrictMode): it re-runs this exact effect body a second
+  // time, with the identical closure, immediately after the first - the
+  // dependency array alone cannot distinguish that from a real second
+  // parse, since nothing in it changed either time.
+  const lastReportedParamRef = useRef<string | null | undefined>(undefined);
+  useEffect(() => {
+    if (parsed.skipped > 0 && lastReportedParamRef.current !== expandedParam) {
+      lastReportedParamRef.current = expandedParam;
       observability.logger.warn('hierarchy.expansion_segments_skipped', {
         skipped: parsed.skipped,
       });
@@ -84,7 +115,7 @@ export function useExpansion(
 
   const toggleExpanded = useCallback(
     (personId: PersonIdentifier) => {
-      setSearchParams((current) => {
+      setSearchParamsRef.current((current) => {
         const managerIds = collectManagerIds(roots);
         const next = new Set(
           toManagerIds(
@@ -102,7 +133,7 @@ export function useExpansion(
         return nextParams;
       });
     },
-    [roots, setSearchParams],
+    [roots],
   );
 
   // Checked against the current render's expandedIds, not inside the
@@ -111,8 +142,9 @@ export function useExpansion(
   // whether the resulting URL actually differs.
   const expandMany = useCallback(
     (personIds: readonly PersonIdentifier[]) => {
-      if (personIds.every((personId) => expandedIds.has(personId))) return;
-      setSearchParams((current) => {
+      if (personIds.every((personId) => expandedIdsRef.current.has(personId)))
+        return;
+      setSearchParamsRef.current((current) => {
         const managerIds = collectManagerIds(roots);
         const next = new Set(
           toManagerIds(
@@ -126,7 +158,7 @@ export function useExpansion(
         return nextParams;
       });
     },
-    [roots, expandedIds, setSearchParams],
+    [roots],
   );
 
   return { expandedIds, toggleExpanded, expandMany };

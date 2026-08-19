@@ -48,9 +48,12 @@ means one visible `treeitem`; "a person" means one validated user record.
    for every signed-in user. Nothing on this page filters, sorts by, or hides anything
    based on who is signed in.
 2. The only thing the signed-in identity changes on this page is which single row carries
-   the "you" marker and what the header shows - and the header is phase 2's, unchanged here.
+   the "you" marker and what the header shows - and the header is phase 2's, functionally
+   unchanged here (its own visual geometry moves to match mockup 1e - deviation 11 - which
+   changes no behavior invariant 187 protects).
 3. The page is reachable only when signed in. The guard, the redirect, the header and
-   signing out come from phase 2 and are neither re-specified nor modified here. Phase 2's
+   signing out come from phase 2 and are neither re-specified nor behaviorally modified
+   here (deviation 11 is a styling-only exception). Phase 2's
    branch has already moved the sign-out outcome out of `ROADMAP.md`'s phase 3 list into
    phase 2's; this branch inherits that edit at the rebase, and no invariant here asserts
    anything about signing out.

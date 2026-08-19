@@ -7,7 +7,7 @@
   "phase": "verify",
   "phase_entered": "2026-08-19T08:22:20Z",
   "created": "2026-08-15",
-  "updated": "2026-08-19T08:48:32Z",
+  "updated": "2026-08-19T09:21:43Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -1731,7 +1731,8 @@
     "2026-08-19T08:48:27Z step 16 hash rebased (src/app/routing/shouldRevalidateExpansionOnly.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
     "2026-08-19T08:48:27Z step 18 hash rebased (scripts/buildContentSecurityPolicy.test.ts): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
     "2026-08-19T08:48:27Z step 19 hash rebased (src/features/hierarchy/HierarchySkeleton.test.tsx, src/features/hierarchy/HierarchyPage.test.tsx): user approved after reviewing the full commit trail and diffs for every drifted file (artifact review, 2026-08-19) - all drift traces to already-committed step/review-fix commits or pre-commit polish with zero content difference",
-    "2026-08-19T08:48:32Z G3 -> passed (Full suite + e2e verified at the M5 boundary (the final milestone, whose verify run covers the whole branch): npm run verify exit 0 (642 unit/component + 18 verify:build tests, all size budgets green), full e2e --project=chromium 52/52 green including phase 2's own suite unchanged. 6 verification gaps recorded across the loop's history (Gap-1..Gap-5 at M3/M4, Gap-6 at M5), all dispositioned (5 covered, 1 accepted - Gap-2/invariant 102). 11 guarded-test-file hash drifts investigated and rebased with user sign-off (2026-08-19, artifact review of every commit/diff) - all traced to already-committed step or review-fix commits, none uncommitted or unreviewed. Evidence: evidence/milestones/m1..m5-suite.txt, m1..m5-e2e.txt.)"
+    "2026-08-19T08:48:32Z G3 -> passed (Full suite + e2e verified at the M5 boundary (the final milestone, whose verify run covers the whole branch): npm run verify exit 0 (642 unit/component + 18 verify:build tests, all size budgets green), full e2e --project=chromium 52/52 green including phase 2's own suite unchanged. 6 verification gaps recorded across the loop's history (Gap-1..Gap-5 at M3/M4, Gap-6 at M5), all dispositioned (5 covered, 1 accepted - Gap-2/invariant 102). 11 guarded-test-file hash drifts investigated and rebased with user sign-off (2026-08-19, artifact review of every commit/diff) - all traced to already-committed step or review-fix commits, none uncommitted or unreviewed. Evidence: evidence/milestones/m1..m5-suite.txt, m1..m5-e2e.txt.)",
+    "2026-08-19T09:21:43Z note: step 38's frozen description text (recorded when the step was completed) still says 'nine' decision-log entries - this is expected, not a bug: step records are immutable once done, per loops/state.md, and the count moved to ten (Gap-6) then eleven (final G4 review, deviation 11) via later, separately-logged changes rather than retroactive edits to history. The shipped docs (PRODUCT.md, ARCHITECTURE.md, ROADMAP.md) and their agreement test all correctly read eleven as of this log entry."
   ],
   "milestones": [
     {
