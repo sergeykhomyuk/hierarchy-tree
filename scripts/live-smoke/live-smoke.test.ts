@@ -9,6 +9,8 @@ import { deriveSecret } from '../../src/features/auth/domain/deriveSecret';
 import { fetchSignedInUser } from '../../src/features/auth/data/fetchSignedInUser';
 import { lookupUserIdentifier } from '../../src/features/auth/data/lookupUserIdentifier';
 import { userIdentifier } from '../../src/features/auth/domain/userIdentifier';
+import { parsePeople } from '../../src/features/hierarchy/data/parsePeople';
+import { buildForest } from '../../src/features/hierarchy/domain/buildForest';
 
 // Outside every default Vitest project (vitest.config.ts's `tooling`
 // project matches `scripts/*.test.ts` only, one path segment) and
@@ -207,5 +209,34 @@ describe('live smoke', () => {
 
       expect(view.displayName.trim().length).toBeGreaterThan(0);
     });
+  });
+
+  // Invariant 39: the shared database's shape - not just its reachability
+  // above - is what feeds the tree domain. A change collapsing everyone
+  // under one manager, or a payload that stops parsing as a forest at
+  // all, is a shape change the mocked/fixture-fed unit suite cannot see;
+  // this is the one suite that talks to the real backend.
+  it('the live users payload still parses into a forest with more than one root', async () => {
+    const result = await client.request({
+      method: 'GET',
+      resourcePath: '/users.json',
+      parse: (payload) => payload,
+    });
+    expect(result.outcome).toBe('success');
+    if (result.outcome !== 'success') return;
+
+    const parsed = parsePeople(result.value);
+    if (parsed === 'invalidEnvelope') {
+      throw new Error(
+        'the live /users.json payload no longer parses as a tolerated envelope',
+      );
+    }
+    expect(
+      parsed.people.length,
+      `every row was dropped; failing fields were: [${parsed.droppedFields.join(', ')}]`,
+    ).toBeGreaterThan(0);
+
+    const forest = buildForest(parsed.people);
+    expect(forest.counts.roots).toBeGreaterThan(1);
   });
 });
