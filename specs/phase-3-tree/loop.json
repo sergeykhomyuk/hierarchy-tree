@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-17T11:55:57Z",
   "created": "2026-08-15",
-  "updated": "2026-08-18T17:05:28Z",
+  "updated": "2026-08-19T07:54:25Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -264,7 +264,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 52,
-      "steps_done": 45
+      "steps_done": 52
     },
     "G3": {
       "status": "pending",
@@ -885,8 +885,8 @@
         "README.md describes this project and carries no sentence of the Vite template",
         "README.md states that a client-side lookup is not authentication and the database is public"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-19T07:37:33Z evidence/steps/step37-red.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -896,8 +896,8 @@
         "the deviation count agrees in PRODUCT.md, the deviations section and the decision log",
         "every phase 3 checkbox in ROADMAP.md is ticked and the status board agrees"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-19T07:40:11Z evidence/steps/step38-red.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -906,8 +906,8 @@
       "tests": [
         "the live users payload still parses into a forest with more than one root"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-19T07:41:00Z evidence/steps/step39-red.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -917,8 +917,8 @@
         "the login route chunk imports no hierarchy module and no hierarchy catalogue",
         "the hierarchy route chunk stays inside the per-route size budget"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-19T07:42:41Z evidence/steps/step40-red.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -929,8 +929,8 @@
         "the hierarchy feature imports no other feature and nothing from app",
         "the hierarchy domain imports no React"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-19T07:44:00Z evidence/steps/step41-red.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -941,8 +941,8 @@
         "no event in the buffer carries a password, an email, a person name or a photo URL",
         "every hierarchy flow produces no console error or warning"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-19T07:48:20Z evidence/steps/step42-red.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -952,8 +952,8 @@
         "no pipeline check is disabled, skipped or set to continue-on-error",
         "no coverage threshold is lower than the phase 1 pipeline set"
       ],
-      "red_observed": null,
-      "status": "pending",
+      "red_observed": "2026-08-19T07:49:20Z evidence/steps/step43-red.txt",
+      "status": "done",
       "milestone": 5
     },
     {
@@ -1621,7 +1621,43 @@
     "2026-08-18T17:05:21Z evidence recorded: evidence/step52-green-e2e.txt (88e3e3987968) - green: full Playwright suite (57 tests) including phase 2's own guard/login/header flows, unaffected by the move",
     "2026-08-18T17:05:21Z step 52 -> green",
     "2026-08-18T17:05:21Z step 52 -> done",
-    "2026-08-18T17:05:28Z PRODUCT.md amended (user-approved, per the AskUserQuestion decision to extend scope rather than spin off a separate loop): invariant 190's shared-surface list now names the shared/routing module and its touch on features/auth/guard/requireSession.ts + resolveDestination.ts; invariant 185's count moves eight->nine and six->seven with a new deviation 9 in the deviations section. TECH.md's M5 summary and PLAN.md step 38 (amended via loop step amend, still pending) updated to match, keeping the three-way count agreement invariant 185 itself requires."
+    "2026-08-18T17:05:28Z PRODUCT.md amended (user-approved, per the AskUserQuestion decision to extend scope rather than spin off a separate loop): invariant 190's shared-surface list now names the shared/routing module and its touch on features/auth/guard/requireSession.ts + resolveDestination.ts; invariant 185's count moves eight->nine and six->seven with a new deviation 9 in the deviations section. TECH.md's M5 summary and PLAN.md step 38 (amended via loop step amend, still pending) updated to match, keeping the three-way count agreement invariant 185 itself requires.",
+    "2026-08-19T07:37:32Z evidence recorded: evidence/steps/step37-red.txt (8dbc160f687a) - red: README.md tests fail against unmodified Vite template",
+    "2026-08-19T07:37:33Z evidence recorded: evidence/steps/step37-green.txt (f282fff9526b) - green: README.md tests pass after rewrite",
+    "2026-08-19T07:37:33Z step 37 -> red",
+    "2026-08-19T07:37:33Z step 37 -> green",
+    "2026-08-19T07:37:33Z step 37 -> done",
+    "2026-08-19T07:40:10Z evidence recorded: evidence/steps/step38-red.txt (1662b112d859) - red: decision-log count and ROADMAP checkbox tests fail before edits",
+    "2026-08-19T07:40:10Z evidence recorded: evidence/steps/step38-green.txt (00743d4ff5d8) - green: 9 decision-log entries + ROADMAP.md updates pass",
+    "2026-08-19T07:40:11Z step 38 -> red",
+    "2026-08-19T07:40:11Z step 38 -> green",
+    "2026-08-19T07:40:11Z step 38 -> done",
+    "2026-08-19T07:41:00Z evidence recorded: evidence/steps/step39-red.txt (6d0f41dc7e79) - red: forest-roots live assertion fails against an impossible threshold (999), proving it observes the real payload",
+    "2026-08-19T07:41:00Z evidence recorded: evidence/steps/step39-green.txt (c5bc15de9ae0) - green: npm run smoke:live passes with the real forest-roots assertion (>1)",
+    "2026-08-19T07:41:00Z step 39 -> red",
+    "2026-08-19T07:41:00Z step 39 -> green",
+    "2026-08-19T07:41:00Z step 39 -> done",
+    "2026-08-19T07:42:40Z evidence recorded: evidence/steps/step40-red.txt (e35d647dbf56) - red: isolation and budget assertions inverted, proving they observe real chunk content",
+    "2026-08-19T07:42:41Z evidence recorded: evidence/steps/step40-green.txt (88e8a2cacc6a) - green: HomeRoute isolation and size-budget assertions pass",
+    "2026-08-19T07:42:41Z step 40 -> red",
+    "2026-08-19T07:42:41Z step 40 -> green",
+    "2026-08-19T07:42:41Z step 40 -> done",
+    "2026-08-19T07:44:00Z evidence recorded: evidence/steps/step41-red.txt (e09711c5c053) - red: route-set and layer-boundary assertions inverted, proving they observe real structure",
+    "2026-08-19T07:44:00Z evidence recorded: evidence/steps/step41-green.txt (86443e96ccd9) - green: route set, no-cross-feature-import and domain-no-React assertions pass",
+    "2026-08-19T07:44:00Z step 41 -> red",
+    "2026-08-19T07:44:01Z step 41 -> green",
+    "2026-08-19T07:44:01Z step 41 -> done",
+    "2026-08-19T07:48:20Z evidence recorded: evidence/steps/step42-red.txt (e2bee05ccc92) - red: telemetry/privacy/console assertions inverted, proving they observe real buffer and console content",
+    "2026-08-19T07:48:20Z evidence recorded: evidence/steps/step42-green.txt (19753efb269e) - green: toggle-event count, no-credential-leak and no-console-noise e2e assertions pass",
+    "2026-08-19T07:48:20Z step 42 -> red",
+    "2026-08-19T07:48:20Z step 42 -> green",
+    "2026-08-19T07:48:21Z step 42 -> done",
+    "2026-08-19T07:49:19Z evidence recorded: evidence/steps/step43-red.txt (7cd22fa95535) - red: pipeline-integrity assertions forced to fail, proving they observe real CI/coverage config",
+    "2026-08-19T07:49:19Z evidence recorded: evidence/steps/step43-green.txt (1691cd85cf65) - green: no disabled/skipped pipeline check; coverage thresholds meet the phase 1 floor",
+    "2026-08-19T07:49:20Z step 43 -> red",
+    "2026-08-19T07:49:20Z step 43 -> green",
+    "2026-08-19T07:49:20Z step 43 -> done",
+    "2026-08-19T07:54:25Z M5 steps 37-43 done. Invariant 98's by-hand mixed-content screenshot cannot be captured pre-merge: the deployed origin (hierarchy-tree.pages.dev) still serves the pre-phase-3 build (checked 2026-08-19, old CSP img-src 'self' data: with no https: widening). User decision 2026-08-19: defer this one manual check to post-merge, complete it before the loop transitions to done rather than accepting it as a permanent gap."
   ],
   "milestones": [
     {
@@ -2365,6 +2401,76 @@
       "sha": "88e3e3987968",
       "recorded": "2026-08-18T17:05:21Z",
       "note": "green: full Playwright suite (57 tests) including phase 2's own guard/login/header flows, unaffected by the move"
+    },
+    "evidence/steps/step37-red.txt": {
+      "sha": "8dbc160f687a",
+      "recorded": "2026-08-19T07:37:32Z",
+      "note": "red: README.md tests fail against unmodified Vite template"
+    },
+    "evidence/steps/step37-green.txt": {
+      "sha": "f282fff9526b",
+      "recorded": "2026-08-19T07:37:32Z",
+      "note": "green: README.md tests pass after rewrite"
+    },
+    "evidence/steps/step38-red.txt": {
+      "sha": "1662b112d859",
+      "recorded": "2026-08-19T07:40:10Z",
+      "note": "red: decision-log count and ROADMAP checkbox tests fail before edits"
+    },
+    "evidence/steps/step38-green.txt": {
+      "sha": "00743d4ff5d8",
+      "recorded": "2026-08-19T07:40:10Z",
+      "note": "green: 9 decision-log entries + ROADMAP.md updates pass"
+    },
+    "evidence/steps/step39-red.txt": {
+      "sha": "6d0f41dc7e79",
+      "recorded": "2026-08-19T07:41:00Z",
+      "note": "red: forest-roots live assertion fails against an impossible threshold (999), proving it observes the real payload"
+    },
+    "evidence/steps/step39-green.txt": {
+      "sha": "c5bc15de9ae0",
+      "recorded": "2026-08-19T07:41:00Z",
+      "note": "green: npm run smoke:live passes with the real forest-roots assertion (>1)"
+    },
+    "evidence/steps/step40-red.txt": {
+      "sha": "e35d647dbf56",
+      "recorded": "2026-08-19T07:42:40Z",
+      "note": "red: isolation and budget assertions inverted, proving they observe real chunk content"
+    },
+    "evidence/steps/step40-green.txt": {
+      "sha": "88e8a2cacc6a",
+      "recorded": "2026-08-19T07:42:41Z",
+      "note": "green: HomeRoute isolation and size-budget assertions pass"
+    },
+    "evidence/steps/step41-red.txt": {
+      "sha": "e09711c5c053",
+      "recorded": "2026-08-19T07:44:00Z",
+      "note": "red: route-set and layer-boundary assertions inverted, proving they observe real structure"
+    },
+    "evidence/steps/step41-green.txt": {
+      "sha": "86443e96ccd9",
+      "recorded": "2026-08-19T07:44:00Z",
+      "note": "green: route set, no-cross-feature-import and domain-no-React assertions pass"
+    },
+    "evidence/steps/step42-red.txt": {
+      "sha": "e2bee05ccc92",
+      "recorded": "2026-08-19T07:48:20Z",
+      "note": "red: telemetry/privacy/console assertions inverted, proving they observe real buffer and console content"
+    },
+    "evidence/steps/step42-green.txt": {
+      "sha": "19753efb269e",
+      "recorded": "2026-08-19T07:48:20Z",
+      "note": "green: toggle-event count, no-credential-leak and no-console-noise e2e assertions pass"
+    },
+    "evidence/steps/step43-red.txt": {
+      "sha": "7cd22fa95535",
+      "recorded": "2026-08-19T07:49:19Z",
+      "note": "red: pipeline-integrity assertions forced to fail, proving they observe real CI/coverage config"
+    },
+    "evidence/steps/step43-green.txt": {
+      "sha": "1691cd85cf65",
+      "recorded": "2026-08-19T07:49:19Z",
+      "note": "green: no disabled/skipped pipeline check; coverage thresholds meet the phase 1 floor"
     }
   },
   "test_file_hashes": {
