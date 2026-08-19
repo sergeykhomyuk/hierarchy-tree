@@ -44,5 +44,6 @@ export async function fetchSignedInUser(
 
   return {
     displayName: `${record.firstName} ${record.lastName}`,
+    ...(record.photo !== undefined ? { photo: record.photo } : {}),
   };
 }

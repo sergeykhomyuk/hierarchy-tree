@@ -59,6 +59,22 @@ describe('SignedInName', () => {
     expect(screen.getByText('AL')).toBeInTheDocument();
   });
 
+  it('renders the photo, not initials, when the resolved view has one', async () => {
+    await renderIsolated(
+      Promise.resolve({
+        displayName: 'Ada Lovelace',
+        photo: 'https://example.com/ada.jpg',
+      }),
+    );
+
+    // decorative Avatar images render alt="", which gives them the
+    // "presentation" role rather than "img" - same precedent as the
+    // aria-hidden initials placeholder queried elsewhere in this file.
+    const image = screen.getByRole('presentation');
+    expect(image).toHaveAttribute('src', 'https://example.com/ada.jpg');
+    expect(screen.queryByText('AL')).not.toBeInTheDocument();
+  });
+
   it('renders a static placeholder, not the pulsing skeleton, when the name never resolves', async () => {
     await renderIsolated(Promise.resolve(null));
 

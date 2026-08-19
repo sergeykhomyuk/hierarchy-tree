@@ -109,6 +109,58 @@ describe('fetchSignedInUser', () => {
     expect(observability.logger.warn).not.toHaveBeenCalled();
   });
 
+  it('carries the photo field into the view when the record has one', async () => {
+    const observability = createSpyObservability();
+    const transport: Transport = () =>
+      Promise.resolve(
+        new Response(
+          JSON.stringify([
+            {
+              id: 'user_1',
+              firstName: 'Ada',
+              lastName: 'Lovelace',
+              photo: 'https://example.com/ada.jpg',
+            },
+          ]),
+          { status: 200 },
+        ),
+      );
+    const client = createTestClient(transport, observability);
+
+    const view = await fetchSignedInUser(
+      client,
+      userIdentifier('user_1'),
+      observability,
+    );
+
+    expect(view).toEqual({
+      displayName: 'Ada Lovelace',
+      photo: 'https://example.com/ada.jpg',
+    });
+  });
+
+  it('omits the photo field from the view when the record has none', async () => {
+    const observability = createSpyObservability();
+    const transport: Transport = () =>
+      Promise.resolve(
+        new Response(
+          JSON.stringify([
+            { id: 'user_1', firstName: 'Ada', lastName: 'Lovelace' },
+          ]),
+          { status: 200 },
+        ),
+      );
+    const client = createTestClient(transport, observability);
+
+    const view = await fetchSignedInUser(
+      client,
+      userIdentifier('user_1'),
+      observability,
+    );
+
+    expect(view).not.toHaveProperty('photo');
+  });
+
   it('matches a numeric record id against a resolved id of the same value but a different JS type', async () => {
     // The live database serves id as a JSON number (ARCHITECTURE.md's
     // decision log, 2026-08-15), and lookupResultSchema accepts either a

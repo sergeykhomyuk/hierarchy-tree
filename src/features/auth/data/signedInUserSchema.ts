@@ -18,6 +18,7 @@ export const signedInUserSchema = z.object({
   id: z.union([z.string(), z.int()]),
   firstName: z.string(),
   lastName: z.string(),
+  photo: z.string().optional(),
 });
 
 export type SignedInUserRecord = z.infer<typeof signedInUserSchema>;
