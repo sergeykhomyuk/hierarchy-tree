@@ -38,6 +38,15 @@ describe('routeDefinitions', () => {
     expect(paths[paths.length - 1]).toBe('*');
   });
 
+  it('the route set is slash, slash-login and the not-found wildcard and nothing else', async () => {
+    const children = await buildChildren(false);
+
+    // developmentRoutes: false, matching the production runtime this
+    // invariant re-checks (invariant 188) - no __kit route beside the
+    // three real ones.
+    expect(topLevelPaths(children)).toEqual([undefined, 'login', '*']);
+  });
+
   it('keep the route set at home, login and not-found', async () => {
     const children = await buildChildren(true);
 
