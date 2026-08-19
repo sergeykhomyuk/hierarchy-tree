@@ -18,6 +18,7 @@ Keep a persistent S-sized refactor loop for small, behavior-preserving hierarchy
 3. The existing `HierarchyTree` component suite and the repository verification gate remain green.
 4. The loop stays active after this step so later hierarchy-tree refinements can be added.
 5. `HierarchyTree` delegates roving focus, toggle orchestration, announcements, and keyboard composition to a feature-specific interaction hook without changing observable behavior.
+6. The extracted interaction hook has focused coverage for its defensive empty-row and missing-row branches.
 
 ## Steps
 
@@ -28,6 +29,9 @@ Keep a persistent S-sized refactor loop for small, behavior-preserving hierarchy
    - `src/features/hierarchy/HierarchyTree.test.tsx::collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable`
    - `src/features/hierarchy/HierarchyTree.test.tsx::clicking a toggle emits one telemetry event carrying the new state and the row's depth, with no name, email or person id`
    - `src/features/hierarchy/HierarchyTree.test.tsx::a keyboard-driven toggle leaves a row under a different root unrendered`
+3. Add focused hook tests for the two defensive branches that are not reachable through ordinary rendered-row interaction.
+   - `src/features/hierarchy/useHierarchyTreeInteractions.test.tsx::useHierarchyTreeInteractions > delegates a missing-row toggle without telemetry or an announcement`
+   - `src/features/hierarchy/useHierarchyTreeInteractions.test.tsx::useHierarchyTreeInteractions > clears the tab stop when the visible row list becomes empty`
 
 ## Verification
 

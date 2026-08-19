@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-19T12:08:32Z",
   "created": "2026-08-19",
-  "updated": "2026-08-19T12:20:50Z",
+  "updated": "2026-08-19T12:24:00Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -37,7 +37,7 @@
     "G2": {
       "status": "pending",
       "attempts": 0,
-      "steps_total": 2,
+      "steps_total": 3,
       "steps_done": 2
     },
     "G3": {
@@ -76,6 +76,16 @@
       ],
       "red_observed": "n/a: case (c): behavior-preserving refactor guarded by the pre-existing 42-test HierarchyTree component contract; no assertion changes planned",
       "status": "done"
+    },
+    {
+      "id": 3,
+      "desc": "Add focused coverage for the extracted interaction hook's defensive branches",
+      "tests": [
+        "src/features/hierarchy/useHierarchyTreeInteractions.test.tsx::useHierarchyTreeInteractions > delegates a missing-row toggle without telemetry or an announcement",
+        "src/features/hierarchy/useHierarchyTreeInteractions.test.tsx::useHierarchyTreeInteractions > clears the tab stop when the visible row list becomes empty"
+      ],
+      "red_observed": null,
+      "status": "pending"
     }
   ],
   "log": [
@@ -101,7 +111,8 @@
     "2026-08-19T12:20:50Z evidence recorded: evidence/step2-green-and-verify.txt (83b7ddd76491) - Step 2 extraction green and full npm run verify passed",
     "2026-08-19T12:20:50Z step 2 -> green",
     "2026-08-19T12:20:50Z step 2 -> done",
-    "2026-08-19T12:20:50Z step 2 verified: interaction orchestration extracted to useHierarchyTreeInteractions; HierarchyTree 42/42; npm run verify exit 0 with coverage 649/649; loop remains active in implement"
+    "2026-08-19T12:20:50Z step 2 verified: interaction orchestration extracted to useHierarchyTreeInteractions; HierarchyTree 42/42; npm run verify exit 0 with coverage 649/649; loop remains active in implement",
+    "2026-08-19T12:24:00Z step 3 added: Add focused coverage for the extracted interaction hook's defensive branches"
   ],
   "evidence_hashes": {
     "evidence/baseline-hierarchy-tree.txt": {
