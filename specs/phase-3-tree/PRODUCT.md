@@ -551,10 +551,12 @@ means one visible `treeitem`; "a person" means one validated user record.
 171. Photo URLs are third-party addresses from a public database. They are loaded as images
      and nothing else: never fetched with credentials, never used as a link target, never
      echoed into telemetry.
-172. The content security policy permits secure third-party image origins - `img-src 'self'
-     data: https:` - because today's `img-src 'self' data:` blocks every photo in the
-     database. No other directive changes. `http://` image URLs stay blocked, which is what
-     makes the mixed-content fallback a real path.
+172. The content security policy permits both secure and insecure third-party image origins -
+     `img-src 'self' data: https: http:` - because today's `img-src 'self' data:` blocks
+     every photo in the database. No other directive changes. `http://` image URLs are not
+     CSP-blocked; the **browser's own mixed-content policy** is what blocks them on the
+     deployed `https://` page, which is what invariant 98 actually exercises. See deviation
+     10.
 173. Nothing this phase adds writes to storage. The session record keeps the shape phase 2
      gave it.
 174. The users payload is public and contains plaintext passwords. The password guarantee is
@@ -592,9 +594,9 @@ means one visible `treeitem`; "a person" means one validated user record.
 184. `README.md` states the security gap plainly - a client-side lookup is not
      authentication and the database is public - rather than leaving a reader to infer it.
 185. Every deviation this phase makes gets a decision-log entry in the same change, with what
-     was chosen, why, and what was rejected. There are **nine**, and they are the nine
+     was chosen, why, and what was rejected. There are **ten**, and they are the ten
      enumerated in the deviations section below - **two** that depart from the mockups, which
-     is the same two the mockup-fidelity invariant names, and seven that depart from
+     is the same two the mockup-fidelity invariant names, and eight that depart from
      `ARCHITECTURE.md` or from a phase-1 decision. The count is stated here, in that section
      and in the milestone that lands them, and the three must agree.
 186. `ROADMAP.md`'s status board, phase 3 checkboxes and progress log are updated in the same
@@ -706,6 +708,19 @@ perspective; multi-select; drag-to-reparent; exporting.
    unchanged, per invariant 187. Rejected: leaving the duplication, which is the actual
    problem being fixed; and a feature-owned map one side imports from the other, which is a
    cross-feature import invariant 192 already forbids.
+10. **`img-src` widens to `https: http:`, not `https:` alone as this document originally
+    specified.** A `https:`-only `img-src` blocks an `http://` photo URL by CSP on **every**
+    origin, dev and deployed alike, which is not what invariant 98 describes: it says the
+    block "only occurs on an https origin," meaning the same URL loads fine locally and fails
+    only once deployed. That claim is true only if the browser's own mixed-content policy -
+    not the content security policy - is what does the blocking, which requires `img-src` to
+    permit `http:` sources in principle so CSP itself never intervenes first. Discovered
+    while implementing the photo-fallback path locally: an `https:`-only policy made the
+    fallback fire in dev too, which the spec's own "only occurs on an https origin" line
+    said should not happen. Rejected: keeping `https:` only and rewriting invariant 98 to
+    say the block happens everywhere, which is factually wrong (mixed-content protection is
+    an https-page-only browser behavior, not a CSP one) and would misrepresent what the
+    by-hand deployed check in step 43 actually proves.
 
 ## Decisions taken while specifying
 

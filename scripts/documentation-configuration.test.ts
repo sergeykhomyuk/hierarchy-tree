@@ -48,7 +48,7 @@ describe('README.md', () => {
   });
 });
 
-const DEVIATION_COUNT_WORDS: Record<string, number> = { nine: 9 };
+const DEVIATION_COUNT_WORDS: Record<string, number> = { nine: 9, ten: 10 };
 
 function sectionBody(
   content: string,
@@ -94,7 +94,14 @@ describe('phase 3 decision log and ROADMAP.md', () => {
       '## 6. Decision log',
       '\n## 7.',
     );
-    const phase3Entries = decisionLogSection.match(/phase-3-tree/g) ?? [];
+    // Matches the entry's OWN dated tag, e.g. "(2026-08-19, phase-3-tree)" -
+    // not every mention of the string "phase-3-tree" anywhere in an entry's
+    // prose (a later entry's own body cites `PRODUCT.md`'s path and would
+    // otherwise double-count itself).
+    const phase3Entries =
+      decisionLogSection.match(
+        /\(\d{4}-\d{2}-\d{2}[^)]*phase-3-tree[^)]*\)/g,
+      ) ?? [];
     expect(
       phase3Entries.length,
       'phase-3-tree decision-log entry count disagrees with invariant 185',

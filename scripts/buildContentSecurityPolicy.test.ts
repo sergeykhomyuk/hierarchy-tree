@@ -41,7 +41,12 @@ describe('buildContentSecurityPolicy', () => {
       const directives = policy.split('; ');
 
       // The exact img-src segment - not merely toContain(), which would
-      // still pass if https: had never actually been added.
+      // still pass if https: had never actually been added. http: is
+      // deliberately included too, not left over from debugging: CSP
+      // permitting it is what lets the BROWSER's own mixed-content policy
+      // (rather than CSP itself) be the thing that blocks an http:// photo
+      // on the deployed https:// page - see ARCHITECTURE.md's decision
+      // log, "img-src widens to 'self' data: https: http:".
       expect(directives).toContain("img-src 'self' data: https: http:");
 
       // Pinning the full directive set (content and count) is what proves
