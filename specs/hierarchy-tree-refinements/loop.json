@@ -7,7 +7,7 @@
   "phase": "implement",
   "phase_entered": "2026-08-19T12:08:32Z",
   "created": "2026-08-19",
-  "updated": "2026-08-19T12:17:12Z",
+  "updated": "2026-08-19T12:20:50Z",
   "security_review": false,
   "design": false,
   "timebox": null,
@@ -38,7 +38,7 @@
       "status": "pending",
       "attempts": 0,
       "steps_total": 2,
-      "steps_done": 1
+      "steps_done": 2
     },
     "G3": {
       "status": "pending",
@@ -74,8 +74,8 @@
         "src/features/hierarchy/HierarchyTree.test.tsx::clicking a toggle emits one telemetry event carrying the new state and the row's depth, with no name, email or person id",
         "src/features/hierarchy/HierarchyTree.test.tsx::a keyboard-driven toggle leaves a row under a different root unrendered"
       ],
-      "red_observed": null,
-      "status": "pending"
+      "red_observed": "n/a: case (c): behavior-preserving refactor guarded by the pre-existing 42-test HierarchyTree component contract; no assertion changes planned",
+      "status": "done"
     }
   ],
   "log": [
@@ -95,7 +95,13 @@
     "2026-08-19T12:10:59Z step 1 -> green",
     "2026-08-19T12:10:59Z step 1 -> done",
     "2026-08-19T12:10:59Z step 1 verified: HierarchyTree 42/42; npm run verify exit 0 with coverage 649/649 and all build/size gates passing; loop intentionally remains active in implement for further tweaks",
-    "2026-08-19T12:17:12Z step 2 added: Extract hierarchy-tree focus, toggle, announcement, and keyboard orchestration into a feature hook"
+    "2026-08-19T12:17:12Z step 2 added: Extract hierarchy-tree focus, toggle, announcement, and keyboard orchestration into a feature hook",
+    "2026-08-19T12:17:54Z evidence recorded: evidence/step2-baseline.txt (7d9cda17e362) - Step 2 pre-extraction behavior baseline: 42 component tests passed",
+    "2026-08-19T12:17:54Z step 2 -> na",
+    "2026-08-19T12:20:50Z evidence recorded: evidence/step2-green-and-verify.txt (83b7ddd76491) - Step 2 extraction green and full npm run verify passed",
+    "2026-08-19T12:20:50Z step 2 -> green",
+    "2026-08-19T12:20:50Z step 2 -> done",
+    "2026-08-19T12:20:50Z step 2 verified: interaction orchestration extracted to useHierarchyTreeInteractions; HierarchyTree 42/42; npm run verify exit 0 with coverage 649/649; loop remains active in implement"
   ],
   "evidence_hashes": {
     "evidence/baseline-hierarchy-tree.txt": {
@@ -112,14 +118,24 @@
       "sha": "c5b6503dd08d",
       "recorded": "2026-08-19T12:10:58Z",
       "note": "Step 1 green and full npm run verify passed"
+    },
+    "evidence/step2-baseline.txt": {
+      "sha": "7d9cda17e362",
+      "recorded": "2026-08-19T12:17:54Z",
+      "note": "Step 2 pre-extraction behavior baseline: 42 component tests passed"
+    },
+    "evidence/step2-green-and-verify.txt": {
+      "sha": "83b7ddd76491",
+      "recorded": "2026-08-19T12:20:50Z",
+      "note": "Step 2 extraction green and full npm run verify passed"
     }
   },
   "test_file_hashes": {
     "src/features/hierarchy/HierarchyTree.test.tsx": {
       "sha": "f0ade4a843a7",
-      "step": 1,
-      "recorded": "2026-08-19T12:09:14Z",
-      "log_index": 11
+      "step": 2,
+      "recorded": "2026-08-19T12:17:54Z",
+      "log_index": 18
     }
   }
 }

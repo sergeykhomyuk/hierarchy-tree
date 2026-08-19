@@ -66,11 +66,11 @@ export function useTreeKeyboard({
   // those updates, handed to every TreeRow as its onKeyDown prop and
   // defeating every row's memo bailout regardless of whether that row's own
   // data changed (the exact hazard handleRowToggle's own rowsRef already
-  // guards against in HierarchyTree.tsx - invariant 91). Synced through an
-  // effect rather than a direct assignment in the render body - a plain
+  // guards against in useHierarchyTreeInteractions - invariant 91).
+  // Synced through an effect rather than a direct assignment in the render
+  // body - a plain
   // `ref.current = value` during render is exactly what react-hooks/refs
-  // flags inside a custom hook (unlike a component's own render body,
-  // where HierarchyTree.tsx's own rowsRef does this directly).
+  // flags inside a custom hook.
   const rowsRef = useRef(rows);
   const accessibleNamesRef = useRef(accessibleNames);
   const tabbableIdRef = useRef(tabbableId);

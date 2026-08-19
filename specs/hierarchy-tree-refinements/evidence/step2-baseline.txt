@@ -1,0 +1,8 @@
+Command: npm run test -- src/features/hierarchy/HierarchyTree.test.tsx
+Result: PASS before extraction
+
+Test Files  1 passed (1)
+Tests      42 passed (42)
+Duration   1.03s
+
+The existing component suite is the behavior-preservation contract for the refactor.
