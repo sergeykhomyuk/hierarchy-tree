@@ -1,0 +1,87 @@
+{
+  "task": "hierarchy-tree-refinements",
+  "title": "Hierarchy tree refinements",
+  "type": "refactor",
+  "size": "S",
+  "status": "active",
+  "phase": "plan",
+  "phase_entered": "2026-08-19T12:07:47Z",
+  "created": "2026-08-19",
+  "updated": "2026-08-19T12:07:47Z",
+  "security_review": false,
+  "design": false,
+  "timebox": null,
+  "budget": {
+    "profile": "S",
+    "overruns": []
+  },
+  "blocked": null,
+  "links": {
+    "parent": null,
+    "spawned": [],
+    "blocked_on": []
+  },
+  "resize_history": [],
+  "artifacts": {
+    "spec": null,
+    "plan": "PLAN.md",
+    "design": null,
+    "proof": null,
+    "evidence": "evidence/"
+  },
+  "gates": {
+    "G1": {
+      "status": "skipped",
+      "attempts": 0
+    },
+    "G2": {
+      "status": "pending",
+      "attempts": 0,
+      "steps_total": 1,
+      "steps_done": 0
+    },
+    "G3": {
+      "status": "pending",
+      "attempts": 0
+    },
+    "G4": {
+      "status": "pending",
+      "attempts": 0,
+      "security_pass": null
+    },
+    "G5": {
+      "status": "pending",
+      "attempts": 0
+    }
+  },
+  "retro": null,
+  "plan_steps": [
+    {
+      "id": 1,
+      "desc": "Memoize visible rows and accessible names across unrelated local-state renders",
+      "tests": [
+        "src/features/hierarchy/HierarchyTree.test.tsx::memoizes visible rows and accessible names across a focus-only render"
+      ],
+      "red_observed": null,
+      "status": "pending"
+    }
+  ],
+  "log": [
+    "2026-08-19T12:06:20Z init: type=refactor size=S flags=[]",
+    "2026-08-19T12:06:20Z triage: S refactor because memoization changes internal derivation shape while preserving rendered and interaction behavior; user requested a persistent loop for additional tweaks; no design or security flags",
+    "2026-08-19T12:06:20Z concurrency: user chose a new unblocked loop despite overlap with active phase-3-tree retro",
+    "2026-08-19T12:07:17Z phase -> frame",
+    "2026-08-19T12:07:17Z behavior-preservation contract: rendered rows, accessible names, keyboard behavior, focus behavior, telemetry, and expansion semantics remain unchanged; only redundant derivation work on unrelated local-state renders changes",
+    "2026-08-19T12:07:17Z coverage audit: existing HierarchyTree component tests cover rendering, accessible names, focus, keyboard navigation, expansion, telemetry, memoized row rendering, and axe; targeted baseline passed 41 tests before source changes",
+    "2026-08-19T12:07:40Z evidence recorded: evidence/baseline-hierarchy-tree.txt (9120be477aba) - Pre-refactor HierarchyTree component baseline: 41 tests passed",
+    "2026-08-19T12:07:47Z phase -> plan",
+    "2026-08-19T12:07:47Z step 1 added: Memoize visible rows and accessible names across unrelated local-state renders"
+  ],
+  "evidence_hashes": {
+    "evidence/baseline-hierarchy-tree.txt": {
+      "sha": "9120be477aba",
+      "recorded": "2026-08-19T12:07:40Z",
+      "note": "Pre-refactor HierarchyTree component baseline: 41 tests passed"
+    }
+  }
+}
