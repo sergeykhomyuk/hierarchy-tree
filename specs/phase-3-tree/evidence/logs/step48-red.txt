@@ -1,0 +1,150 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |platform| src/shared/theme/contrastPairs.test.ts (4 tests | 1 failed) 5ms
+     × registers the hierarchy indent rail and toggle boundary at the non-text contrast floor 3ms
+ ❯ |ui| src/shared/theme/contrastPairs.test.ts (4 tests | 1 failed) 5ms
+     × registers the hierarchy indent rail and toggle boundary at the non-text contrast floor 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |platform| src/shared/theme/contrastPairs.test.ts > contrastPairs > registers the hierarchy indent rail and toggle boundary at the non-text contrast floor
+AssertionError: expected [ { foreground: 'ink', …(2) }, …(8) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
++ [
++   {
++     "background": "surface",
++     "foreground": "ink",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "canvas-app",
++     "foreground": "ink-muted",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "surface",
++     "foreground": "ink-faint",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "primary",
++     "foreground": "on-primary",
++     "minimumRatio": 4.5,
++   },
+    {
+      "background": "surface",
+-     "foreground": "border-indent-rail",
++     "foreground": "focus-ring",
+      "minimumRatio": 3,
+    },
+    {
+      "background": "surface",
+-     "foreground": "border-control",
++     "foreground": "border-field",
+      "minimumRatio": 3,
++   },
++   {
++     "background": "danger-surface",
++     "foreground": "danger",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "primary-pressed",
++     "foreground": "on-primary",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "surface-hover",
++     "foreground": "ink",
++     "minimumRatio": 4.5,
+    },
+  ]
+
+ ❯ src/shared/theme/contrastPairs.test.ts:151:27
+    149|
+    150|   it('registers the hierarchy indent rail and toggle boundary at the n…
+    151|     expect(contrastPairs).toEqual(
+       |                           ^
+    152|       expect.arrayContaining([
+    153|         {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/shared/theme/contrastPairs.test.ts > contrastPairs > registers the hierarchy indent rail and toggle boundary at the non-text contrast floor
+AssertionError: expected [ { foreground: 'ink', …(2) }, …(8) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
++ [
++   {
++     "background": "surface",
++     "foreground": "ink",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "canvas-app",
++     "foreground": "ink-muted",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "surface",
++     "foreground": "ink-faint",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "primary",
++     "foreground": "on-primary",
++     "minimumRatio": 4.5,
++   },
+    {
+      "background": "surface",
+-     "foreground": "border-indent-rail",
++     "foreground": "focus-ring",
+      "minimumRatio": 3,
+    },
+    {
+      "background": "surface",
+-     "foreground": "border-control",
++     "foreground": "border-field",
+      "minimumRatio": 3,
++   },
++   {
++     "background": "danger-surface",
++     "foreground": "danger",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "primary-pressed",
++     "foreground": "on-primary",
++     "minimumRatio": 4.5,
++   },
++   {
++     "background": "surface-hover",
++     "foreground": "ink",
++     "minimumRatio": 4.5,
+    },
+  ]
+
+ ❯ src/shared/theme/contrastPairs.test.ts:151:27
+    149|
+    150|   it('registers the hierarchy indent rail and toggle boundary at the n…
+    151|     expect(contrastPairs).toEqual(
+       |                           ^
+    152|       expect.arrayContaining([
+    153|         {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 6 passed (8)
+   Start at  13:15:21
+   Duration  550ms (transform 43ms, setup 133ms, import 10ms, tests 10ms, environment 389ms)
+

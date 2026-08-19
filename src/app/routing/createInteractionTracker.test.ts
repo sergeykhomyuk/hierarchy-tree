@@ -37,18 +37,21 @@ function createSpyObservability() {
 
 const IDLE_SUCCESS: RouterState = {
   navigation: { state: 'idle' },
+  revalidation: 'idle',
   matches: [{ route: { id: 'home' } }],
   errors: null,
 };
 
 const LOADING: RouterState = {
   navigation: { state: 'loading' },
+  revalidation: 'idle',
   matches: [{ route: { id: 'home' } }],
   errors: null,
 };
 
 const IDLE_ERROR: RouterState = {
   navigation: { state: 'idle' },
+  revalidation: 'idle',
   matches: [{ route: { id: 'home' } }],
   errors: { home: new Error('boom') },
 };
@@ -126,7 +129,12 @@ describe('createInteractionTracker', () => {
     const { router, emit } = createFakeRouter();
 
     tracker.attach(router);
-    emit({ navigation: { state: 'idle' }, matches: [], errors: null });
+    emit({
+      navigation: { state: 'idle' },
+      revalidation: 'idle',
+      matches: [],
+      errors: null,
+    });
 
     expect(observability.analytics.track).not.toHaveBeenCalled();
   });
@@ -178,6 +186,38 @@ describe('createInteractionTracker', () => {
     expect(tracker.shouldReportPrimitive('string:boom')).toBe(true);
     expect(tracker.shouldReportPrimitive('string:boom')).toBe(false);
     expect(tracker.shouldReportPrimitive('object:null')).toBe(true);
+  });
+
+  it('a revalidation-only state change opens no interaction and settles none', () => {
+    const observability = createSpyObservability();
+    const tracker = createInteractionTracker(observability);
+    const { router, emit } = createFakeRouter();
+
+    tracker.attach(router);
+    emit(IDLE_SUCCESS);
+    observability.tracer.startInteraction.mockClear();
+    observability.analytics.track.mockClear();
+    tracker.beginInteraction();
+
+    // navigation.state stays idle throughout a revalidation
+    // (router.revalidate() never moves it) - only revalidation changes.
+    emit({
+      navigation: { state: 'idle' },
+      revalidation: 'loading',
+      matches: [{ route: { id: 'home' } }],
+      errors: null,
+    });
+    emit({
+      navigation: { state: 'idle' },
+      revalidation: 'idle',
+      matches: [{ route: { id: 'home' } }],
+      errors: null,
+    });
+
+    expect(observability.analytics.track).not.toHaveBeenCalled();
+    // Only the explicit beginInteraction() call minted an id - neither
+    // revalidation-state emission opened a second one.
+    expect(observability.tracer.startInteraction).toHaveBeenCalledTimes(1);
   });
 
   it('a new interaction clears which primitive keys were already reported', () => {

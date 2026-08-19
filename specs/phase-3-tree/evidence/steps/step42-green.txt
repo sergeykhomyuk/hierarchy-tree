@@ -1,0 +1,8 @@
+
+Running 3 tests using 1 worker
+
+  ✓  1 [chromium] › e2e/hierarchy-telemetry.spec.ts:56:3 › hierarchy telemetry and privacy › the buffer holds one hierarchy-viewed event and one toggle event per toggle and no additional route-viewed event (251ms)
+  ✓  2 [chromium] › e2e/hierarchy-telemetry.spec.ts:93:3 › hierarchy telemetry and privacy › no event in the buffer carries a password, an email, a person name or a photo URL (190ms)
+  ✓  3 [chromium] › e2e/hierarchy-telemetry.spec.ts:143:3 › hierarchy telemetry and privacy › every hierarchy flow produces no console error or warning (241ms)
+
+  3 passed (1.5s)

@@ -1,0 +1,199 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/documentation-configuration.test.ts (2 tests | 2 failed) 4ms
+     × README.md describes this project and carries no sentence of the Vite template 3ms
+     × README.md states that a client-side lookup is not authentication and the database is public 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/documentation-configuration.test.ts > README.md > README.md describes this project and carries no sentence of the Vite template
+AssertionError: README.md still contains the Vite template sentence "React + TypeScript + Vite": expected '# React + TypeScript + Vite\n\nThis t…' not to contain 'React + TypeScript + Vite'
+
+- Expected
++ Received
+
+- React + TypeScript + Vite
++ # React + TypeScript + Vite
++
++ This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
++
++ Currently, two official plugins are available:
++
++ - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
++ - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
++
++ ## React Compiler
++
++ The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
++
++ ## Expanding the ESLint configuration
++
++ If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
++
++ ```js
++ export default defineConfig([
++   globalIgnores(['dist']),
++   {
++     files: ['**/*.{ts,tsx}'],
++     extends: [
++       // Other configs...
++
++       // Remove tseslint.configs.recommended and replace with this
++       tseslint.configs.recommendedTypeChecked,
++       // Alternatively, use this for stricter rules
++       tseslint.configs.strictTypeChecked,
++       // Optionally, add this for stylistic rules
++       tseslint.configs.stylisticTypeChecked,
++
++       // Other configs...
++     ],
++     languageOptions: {
++       parserOptions: {
++         project: ['./tsconfig.node.json', './tsconfig.app.json'],
++         tsconfigRootDir: import.meta.dirname,
++       },
++       // other options...
++     },
++   },
++ ]);
++ ```
++
++ You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
++
++ ```js
++ // eslint.config.js
++ import reactX from 'eslint-plugin-react-x';
++ import reactDom from 'eslint-plugin-react-dom';
++
++ export default defineConfig([
++   globalIgnores(['dist']),
++   {
++     files: ['**/*.{ts,tsx}'],
++     extends: [
++       // Other configs...
++       // Enable lint rules for React
++       reactX.configs['recommended-typescript'],
++       // Enable lint rules for React DOM
++       reactDom.configs.recommended,
++     ],
++     languageOptions: {
++       parserOptions: {
++         project: ['./tsconfig.node.json', './tsconfig.app.json'],
++         tsconfigRootDir: import.meta.dirname,
++       },
++       // other options...
++     },
++   },
++ ]);
++ ```
++
+
+ ❯ scripts/documentation-configuration.test.ts:22:13
+     20|         readme,
+     21|         `README.md still contains the Vite template sentence "${senten…
+     22|       ).not.toContain(sentence);
+       |             ^
+     23|     }
+     24|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |tooling| scripts/documentation-configuration.test.ts > README.md > README.md states that a client-side lookup is not authentication and the database is public
+AssertionError: expected '# React + TypeScript + Vite\n\nThis t…' to match /client-side lookup/i
+
+- Expected:
+/client-side lookup/i
+
++ Received:
+"# React + TypeScript + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+]);
+```
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x';
+import reactDom from 'eslint-plugin-react-dom';
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+]);
+```
+"
+
+ ❯ scripts/documentation-configuration.test.ts:45:20
+     43|     const readme = readFileSync('README.md', 'utf-8');
+     44|
+     45|     expect(readme).toMatch(/client-side lookup/i);
+       |                    ^
+     46|     expect(readme).toMatch(/not authentication/i);
+     47|     expect(readme).toMatch(/database[^.]*\bis public\b/i);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  08:37:22
+   Duration  112ms (transform 25ms, setup 43ms, import 2ms, tests 4ms, environment 0ms)
+

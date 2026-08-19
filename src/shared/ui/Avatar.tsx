@@ -6,6 +6,15 @@ type AvatarProps = {
   displayName: string;
   size: 'small' | 'medium';
   decorative: boolean;
+  onImageError?: () => void;
+  // An opaque token whose IDENTITY changing is the caller's signal that a
+  // previously-failed image deserves a fresh attempt - e.g. hierarchy's
+  // page passing its roots reference, which changes only when a new
+  // payload resolves. No domain meaning lives here: this component only
+  // ever compares the token by reference, never reads it. Omitted, the
+  // failed state never resets, which is correct for a caller with no
+  // retry concept of its own.
+  resetToken?: unknown;
 };
 
 const SIZE_CLASS: Record<'small' | 'medium', string> = {
@@ -23,8 +32,20 @@ export const Avatar = memo(function Avatar({
   displayName,
   size,
   decorative,
+  onImageError,
+  resetToken,
 }: AvatarProps) {
   const [imageFailed, setImageFailed] = useState(false);
+  // Adjusting state during render (React's documented pattern for
+  // deriving from a prop change) rather than an effect: a caller handing
+  // over a new resetToken means "give this image a fresh attempt," which
+  // must take effect in the same render that shows the new payload, not
+  // one render later.
+  const [seenResetToken, setSeenResetToken] = useState(resetToken);
+  if (resetToken !== seenResetToken) {
+    setSeenResetToken(resetToken);
+    setImageFailed(false);
+  }
   const showImage = imageSource !== undefined && !imageFailed;
 
   if (showImage) {
@@ -36,7 +57,10 @@ export const Avatar = memo(function Avatar({
         loading="lazy"
         referrerPolicy="no-referrer"
         alt={decorative ? '' : displayName}
-        onError={() => setImageFailed(true)}
+        onError={() => {
+          setImageFailed(true);
+          onImageError?.();
+        }}
         className={`${SIZE_CLASS[size]} rounded-full object-cover`}
       />
     );

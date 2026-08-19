@@ -1,0 +1,45 @@
+
+> hierarchy-tree@0.0.0 smoke:live
+> vitest run --config vitest.live.config.ts
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+stdout | scripts/live-smoke/live-smoke.test.ts > live smoke > the live users payload still parses into a forest with more than one root
+timing {
+  kind: 'timing',
+  timing: {
+    method: 'GET',
+    resourcePath: '/users.json',
+    outcome: 'success',
+    durationMilliseconds: 134,
+    correlationId: '8e05cd1737714bb3fd4323182cb49c3a',
+    attempt: 0,
+    requestId: '8db8331d508df5c37bdd2fd65e9708e2',
+    status: 200
+  }
+}
+
+ ❯ scripts/live-smoke/live-smoke.test.ts (5 tests | 1 failed) 1165ms
+     × the live users payload still parses into a forest with more than one root 138ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  scripts/live-smoke/live-smoke.test.ts > live smoke > the live users payload still parses into a forest with more than one root
+AssertionError: expected 3 to be greater than 999
+ ❯ scripts/live-smoke/live-smoke.test.ts:240:33
+    238|
+    239|     const forest = buildForest(parsed.people);
+    240|     expect(forest.counts.roots).toBeGreaterThan(999);
+       |                                 ^
+    241|   });
+    242| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  08:40:45
+   Duration  1.35s (transform 74ms, setup 0ms, import 121ms, tests 1.16s, environment 0ms)
+

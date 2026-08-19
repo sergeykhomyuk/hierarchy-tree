@@ -1,0 +1,94 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/layer-boundaries.test.ts (3 tests | 2 failed) 10ms
+     × the hierarchy feature imports no other feature and nothing from app 6ms
+     × the hierarchy domain imports no React 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/layer-boundaries.test.ts > layer boundaries > the hierarchy feature imports no other feature and nothing from app
+AssertionError: expected [] to deeply equal [ '__forced_red__' ]
+
+- Expected
++ Received
+
+- [
+-   "__forced_red__",
+- ]
++ []
+
+ ❯ scripts/layer-boundaries.test.ts:33:24
+     31|       }
+     32|     }
+     33|     expect(violations).toEqual(['__forced_red__']);
+       |                        ^
+     34|   });
+     35|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |tooling| scripts/layer-boundaries.test.ts > layer boundaries > the hierarchy domain imports no React
+AssertionError: expected [] to deeply equal [ '__forced_red__' ]
+
+- Expected
++ Received
+
+- [
+-   "__forced_red__",
+- ]
++ []
+
+ ❯ scripts/layer-boundaries.test.ts:44:24
+     42|       }
+     43|     }
+     44|     expect(violations).toEqual(['__forced_red__']);
+       |                        ^
+     45|   });
+     46|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  08:43:33
+   Duration  119ms (transform 27ms, setup 42ms, import 2ms, tests 10ms, environment 0ms)
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/app/routing/routeDefinitions.test.ts (7 tests | 1 failed | 6 skipped) 5ms
+     × the route set is slash, slash-login and the not-found wildcard and nothing else 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/app/routing/routeDefinitions.test.ts > routeDefinitions > the route set is slash, slash-login and the not-found wildcard and nothing else
+AssertionError: expected [ undefined, 'login', '*' ] to deeply equal [ '__forced_red__' ]
+
+- Expected
++ Received
+
+  [
+-   "__forced_red__",
++   undefined,
++   "login",
++   "*",
+  ]
+
+ ❯ src/app/routing/routeDefinitions.test.ts:47:37
+     45|     // invariant re-checks (invariant 188) - no __kit route beside the
+     46|     // three real ones.
+     47|     expect(topLevelPaths(children)).toEqual(['__forced_red__']);
+       |                                     ^
+     48|   });
+     49|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  08:43:43
+   Duration  817ms (transform 175ms, setup 110ms, import 218ms, tests 5ms, environment 416ms)
+

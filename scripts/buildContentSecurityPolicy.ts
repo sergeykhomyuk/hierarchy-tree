@@ -13,7 +13,7 @@ export function buildContentSecurityPolicy(
     "default-src 'self'",
     "object-src 'none'",
     "base-uri 'self'",
-    "img-src 'self' data:",
+    "img-src 'self' data: https: http:",
     isDevelopment ? "style-src 'self' 'unsafe-inline'" : "style-src 'self'",
     "font-src 'self'",
     isDevelopment

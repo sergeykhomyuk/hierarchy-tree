@@ -1,0 +1,657 @@
+diff --git a/e2e/hierarchy-layout.spec.ts b/e2e/hierarchy-layout.spec.ts
+index 5771e44..1a8fa37 100644
+--- a/e2e/hierarchy-layout.spec.ts
++++ b/e2e/hierarchy-layout.spec.ts
+@@ -4,6 +4,7 @@ import {
+   submitSignInForm,
+ } from './support/deferredUserMock';
+ import {
++  DEEPEST_PERSON_NAME,
+   installHierarchyUserMock,
+   installPopulatedHierarchyMock,
+   populatedHierarchyPayload,
+@@ -17,6 +18,111 @@ import { installSignInApiMock, signIn } from './support/signIn';
+ // (TECH.md's own note: no other e2e mock in this suite produces the
+ // Data state at all, only Error or Empty).
+ test.describe('hierarchy layout', () => {
++  test("the loading hierarchy matches mockup 1f's card header and row rhythm", async ({
++    page,
++    baseURL,
++  }) => {
++    await page.setViewportSize({ width: 960, height: 600 });
++    await installRouteMocks(page, baseURL ?? '');
++    await installDeferredUserMock(page);
++    await submitSignInForm(page);
++
++    const title = page.getByRole('heading', { name: 'page.cardTitle' });
++    await expect(title).toBeVisible();
++    expect(await title.locator('..').boundingBox()).toEqual({
++      x: 83,
++      y: 79,
++      width: 854,
++      height: 46,
++    });
++    expect((await title.boundingBox())?.x).toBe(101);
++  });
++
++  test("the empty hierarchy matches mockup 1g's centered card state", async ({
++    page,
++    baseURL,
++  }) => {
++    await page.setViewportSize({ width: 960, height: 600 });
++    await installRouteMocks(page, baseURL ?? '');
++    await installHierarchyUserMock(page, { status: 200, body: [] });
++    await signIn(page);
++
++    const state = page.getByText('page.emptyHeading').locator('..');
++    await expect(state).toHaveCSS('display', 'flex');
++    await expect(state).toHaveCSS('align-items', 'center');
++    await expect(state).toHaveCSS('justify-content', 'center');
++    await expect(state).toHaveCSS('gap', '14px');
++  });
++
++  test("the error hierarchy matches mockup 1h's centered card state", async ({
++    page,
++    baseURL,
++  }) => {
++    await page.setViewportSize({ width: 960, height: 600 });
++    await installRouteMocks(page, baseURL ?? '');
++    await installSignInApiMock(page);
++    await signIn(page);
++
++    const state = page.getByRole('alert');
++    await expect(state).toHaveCSS('display', 'flex');
++    await expect(state).toHaveCSS('align-items', 'center');
++    await expect(state).toHaveCSS('justify-content', 'center');
++    await expect(state).toHaveCSS('gap', '14px');
++  });
++
++  test("the loaded hierarchy matches mockup 1e's shell and row rhythm", async ({
++    page,
++    baseURL,
++  }) => {
++    await page.setViewportSize({ width: 960, height: 600 });
++    await installRouteMocks(page, baseURL ?? '');
++    await installPopulatedHierarchyMock(page);
++    await signIn(page);
++    await expect(page.getByRole('tree')).toBeVisible();
++
++    await expect(page.getByTestId('navigation-rail')).toHaveCSS(
++      'background-color',
++      'rgb(36, 11, 78)',
++    );
++    expect(await page.getByTestId('navigation-rail').boundingBox()).toEqual({
++      x: 0,
++      y: 0,
++      width: 60,
++      height: 600,
++    });
++    expect(await page.locator('header').boundingBox()).toEqual({
++      x: 60,
++      y: 0,
++      width: 900,
++      height: 60,
++    });
++    expect(
++      await page.getByTestId('hierarchy-card-frame').boundingBox(),
++    ).toEqual({
++      x: 82,
++      y: 78,
++      width: 856,
++      height: 500,
++    });
++
++    const firstRow = page.getByRole('treeitem', {
++      name: /Ronnen Gurevitch/,
++    });
++    expect((await firstRow.boundingBox())?.height).toBe(52);
++
++    await page
++      .getByRole('treeitem', { name: /Tal Bergman/ })
++      .locator('button')
++      .click();
++    const signedInRow = page.getByRole('treeitem', {
++      name: new RegExp(`${DEEPEST_PERSON_NAME}.*page.youMarkerLabel`),
++    });
++    await expect(signedInRow).toHaveCSS(
++      'background-color',
++      'rgb(247, 243, 254)',
++    );
++  });
++
+   test('the header, nav rail and card frame have identical bounding boxes before and after the data resolves', async ({
+     page,
+     baseURL,
+@@ -53,6 +159,7 @@ test.describe('hierarchy layout', () => {
+     page,
+     baseURL,
+   }) => {
++    await page.setViewportSize({ width: 960, height: 360 });
+     await installRouteMocks(page, baseURL ?? '');
+     await installPopulatedHierarchyMock(page);
+     await signIn(page);
+@@ -144,6 +251,32 @@ test.describe('hierarchy layout', () => {
+     }
+   });
+ 
++  test('the deepest manager retains usable text space without horizontal overflow at 320 px', async ({
++    page,
++    baseURL,
++  }) => {
++    await page.setViewportSize({ width: 320, height: 800 });
++    await installRouteMocks(page, baseURL ?? '');
++    await installPopulatedHierarchyMock(page);
++    await signIn(page);
++
++    const tree = page.getByRole('tree');
++    const deepestManagerRow = page.getByRole('treeitem', {
++      name: /Tal Bergman/,
++    });
++    const name = deepestManagerRow.locator('p').first();
++    await expect(deepestManagerRow).toBeVisible();
++
++    expect(
++      await tree.evaluate((element) => element.scrollWidth),
++    ).toBeLessThanOrEqual(
++      await tree.evaluate((element) => element.clientWidth),
++    );
++    expect(
++      await name.evaluate((element) => element.clientWidth),
++    ).toBeGreaterThan(24);
++  });
++
+   // Not one of the three layout claims above - screenshot evidence for
+   // the G3 design comparison against mockups 1e-1h (invariant 181, "the
+   // mockups are illustrative", checked there rather than pixel-matched
+diff --git a/specs/phase-3-tree/PLAN.md b/specs/phase-3-tree/PLAN.md
+index 6933188..bb3f3f4 100644
+--- a/specs/phase-3-tree/PLAN.md
++++ b/specs/phase-3-tree/PLAN.md
+@@ -216,6 +216,18 @@ states, screenshots per state.
+     scroll held across a toggle (113), and one line at 320/768/1280px (104). Plus the four
+     states against the mockups and both themes at the contrast floor. Invariants 64, 104, 113,
+     179-182.
++30a. **Loaded-state alignment correction requested during implementation** - compare the
++    rendered 960x600 shell and row rhythm directly with mockup `1e`, then correct the
++    authenticated-shell composition, canvas/card insets, decorative rail, row density,
++    indent rails and signed-in-row treatment without changing tree behavior. Guarded by
++    Playwright test `the loaded hierarchy matches mockup 1e's shell and row rhythm`.
++30b. **Non-data-state alignment review fix** - assert the loading header geometry and the
++    centered empty/error treatment against mockups `1f`, `1g` and `1h` in Playwright.
++30c. **Narrow-width review fix** - assert that the deepest manager retains usable text
++    width and the tree has no horizontal overflow at 320px, not merely that text does not
++    wrap.
++30d. **Graphical-object contrast review fix** - register the indent-rail and toggle-border
++    token pairs at 3:1 in both themes and make the pair matrix fail for faint tokens.
+ 
+ **Boundary**: suite green; e2e over all four states, a photo failing to initials, retry with a
+ fresh correlation id, refresh/shared-link/back/forward, and the exact telemetry buffer after a
+diff --git a/src/app/layout/AuthenticatedLayout.tsx b/src/app/layout/AuthenticatedLayout.tsx
+index d515e8d..21bf358 100644
+--- a/src/app/layout/AuthenticatedLayout.tsx
++++ b/src/app/layout/AuthenticatedLayout.tsx
+@@ -27,26 +27,26 @@ export const AuthenticatedLayout = memo(function AuthenticatedLayout() {
+   );
+ 
+   return (
+-    <>
+-      <SignedInHeader
+-        signedInUser={signedInUser}
+-        dependencies={{
+-          observability: runtime.observability,
+-          tabStorage: runtime.tabStorage,
+-          beginInteraction: runtime.interactionTracker.beginInteraction,
+-          navigate,
+-        }}
+-      />
+-      <div className="flex">
+-        <NavigationRail />
+-        {/* min-w-0 alongside flex-1: a flex item with neither would sit at
+-            its content's natural width instead of filling the row's
+-            remaining space - the hierarchy card's own width would then
+-            track whatever text is longest inside it (invariant 64). */}
+-        <div className="min-w-0 flex-1">
++    <div className="flex min-h-screen bg-canvas-app">
++      <NavigationRail />
++      {/* min-w-0 alongside flex-1: a flex item with neither would sit at
++          its content's natural width instead of filling the row's
++          remaining space - the hierarchy card's own width would then
++          track whatever text is longest inside it (invariant 64). */}
++      <div className="min-w-0 flex-1">
++        <SignedInHeader
++          signedInUser={signedInUser}
++          dependencies={{
++            observability: runtime.observability,
++            tabStorage: runtime.tabStorage,
++            beginInteraction: runtime.interactionTracker.beginInteraction,
++            navigate,
++          }}
++        />
++        <div className="px-[22px] pt-[18px] pb-[22px]">
+           <Outlet />
+         </div>
+       </div>
+-    </>
++    </div>
+   );
+ });
+diff --git a/src/app/layout/NavigationRail.tsx b/src/app/layout/NavigationRail.tsx
+index 0144a91..b83b920 100644
+--- a/src/app/layout/NavigationRail.tsx
++++ b/src/app/layout/NavigationRail.tsx
+@@ -15,7 +15,19 @@ export const NavigationRail = memo(function NavigationRail() {
+     <div
+       aria-hidden="true"
+       data-testid="navigation-rail"
+-      className="sticky top-0 h-screen w-16 shrink-0 border-e border-border-hairline"
+-    />
++      className="sticky top-0 h-screen w-[60px] shrink-0 bg-nav-rail"
++    >
++      <div className="flex h-[60px] items-center justify-center bg-primary">
++        <span className="h-4 w-4 rounded-[5px] bg-on-primary" />
++      </div>
++      <div className="flex flex-col items-center gap-[18px] pt-[22px]">
++        {[0, 1, 2, 3].map((item) => (
++          <span
++            key={item}
++            className="h-[26px] w-[26px] rounded-full bg-white/10 first:bg-white/15"
++          />
++        ))}
++      </div>
++    </div>
+   );
+ });
+diff --git a/src/app/layout/SignedInHeader.tsx b/src/app/layout/SignedInHeader.tsx
+index 00f8ad1..85b7743 100644
+--- a/src/app/layout/SignedInHeader.tsx
++++ b/src/app/layout/SignedInHeader.tsx
+@@ -40,7 +40,7 @@ export const SignedInHeader = memo(function SignedInHeader({
+   }, [dependencies]);
+ 
+   return (
+-    <header className="flex items-center justify-between gap-4 border-b border-border-hairline px-6 py-4">
++    <header className="flex h-[60px] items-center justify-between gap-4 border-b border-border-hairline bg-surface px-[22px]">
+       <div>
+         <p className="text-sm text-ink-muted">{t('header.eyebrow')}</p>
+         <p className="text-lg font-semibold text-ink">
+diff --git a/src/app/routing/routes/HomeRoute.tsx b/src/app/routing/routes/HomeRoute.tsx
+index 2eda6ff..2506aa9 100644
+--- a/src/app/routing/routes/HomeRoute.tsx
++++ b/src/app/routing/routes/HomeRoute.tsx
+@@ -74,7 +74,7 @@ export const HomeRoute = memo(function HomeRoute() {
+     // merely happen to match (invariant 64).
+     <div
+       data-testid="hierarchy-card-frame"
+-      className="rounded-card border border-border-hairline bg-surface p-6"
++      className="h-[calc(100vh-100px)] overflow-hidden rounded-card border border-border-hairline bg-surface shadow-sm"
+     >
+       <Suspense fallback={<HierarchySkeleton />}>
+         <HierarchyPage
+diff --git a/src/features/hierarchy/HierarchySkeleton.tsx b/src/features/hierarchy/HierarchySkeleton.tsx
+index 93eed52..9938ad6 100644
+--- a/src/features/hierarchy/HierarchySkeleton.tsx
++++ b/src/features/hierarchy/HierarchySkeleton.tsx
+@@ -10,12 +10,12 @@ import { ROW_LIST_MAX_HEIGHT_CLASS } from './rowListMaxHeightClass';
+ // 61) via role="status"'s implicit aria-live="polite" - the same
+ // technique SignedInNameSkeleton.tsx uses for the header's own skeleton.
+ const SKELETON_ROW_INDENT_CLASS = [
+-  'ps-0',
+-  'ps-8',
+-  'ps-16',
+-  'ps-16',
+-  'ps-8',
+-  'ps-0',
++  'ps-2',
++  'ps-[49px]',
++  'ps-[90px]',
++  'ps-[90px]',
++  'ps-[49px]',
++  'ps-2',
+ ];
+ 
+ export const HierarchySkeleton = memo(function HierarchySkeleton() {
+@@ -23,8 +23,8 @@ export const HierarchySkeleton = memo(function HierarchySkeleton() {
+ 
+   return (
+     <div>
+-      <div className="flex items-center justify-between border-b border-border-hairline pb-4">
+-        <h1 className="text-lg font-semibold text-ink">
++      <div className="flex h-[46px] items-center justify-between border-b border-border-hairline px-[18px]">
++        <h1 className="text-sm font-semibold text-ink">
+           {t('page.cardTitle')}
+         </h1>
+         <span
+@@ -48,8 +48,9 @@ export const HierarchySkeleton = memo(function HierarchySkeleton() {
+         {SKELETON_ROW_INDENT_CLASS.map((indentClass, index) => (
+           <div
+             key={index}
+-            className={`flex items-center gap-3 py-3 ${indentClass}`}
++            className={`flex items-center gap-[11px] py-[9px] pe-2 ${indentClass}`}
+           >
++            <span className="h-5 w-5 shrink-0 rounded-toggle bg-primary-tint" />
+             <Skeleton
+               shape="circle"
+               width={SkeletonSize.avatar}
+diff --git a/src/features/hierarchy/HierarchySummary.tsx b/src/features/hierarchy/HierarchySummary.tsx
+index 9527e20..ded0506 100644
+--- a/src/features/hierarchy/HierarchySummary.tsx
++++ b/src/features/hierarchy/HierarchySummary.tsx
+@@ -18,9 +18,9 @@ export const HierarchySummary = memo(function HierarchySummary({
+   const { t, i18n } = useTranslation('hierarchy');
+ 
+   return (
+-    <div className="flex items-center justify-between border-b border-border-hairline pb-4">
+-      <h1 className="text-lg font-semibold text-ink">{t('page.cardTitle')}</h1>
+-      <p className="text-ink-muted">
++    <div className="flex h-[46px] items-center justify-between border-b border-border-hairline px-[18px]">
++      <h1 className="text-sm font-semibold text-ink">{t('page.cardTitle')}</h1>
++      <p className="text-sm text-ink-muted">
+         {t('page.summary', {
+           people: formatCount(counts.people, i18n.language),
+           managers: formatCount(counts.managers, i18n.language),
+diff --git a/src/features/hierarchy/TreeRow.test.tsx b/src/features/hierarchy/TreeRow.test.tsx
+index 4970d26..fc08967 100644
+--- a/src/features/hierarchy/TreeRow.test.tsx
++++ b/src/features/hierarchy/TreeRow.test.tsx
+@@ -206,21 +206,14 @@ describe('TreeRow', () => {
+     expect(screen.getByText(/2 page\.reports_other/)).toBeInTheDocument();
+   });
+ 
+-  it('a row at depth greater than zero carries the indent rail class', async () => {
++  it('a row renders one indent rail for every ancestor level', async () => {
+     await renderRow({ ...MANAGER_PROPS, depth: 0 });
+-    expect(screen.getByRole('treeitem').className).not.toContain('border-s');
++    expect(screen.queryByTestId('indent-rail')).not.toBeInTheDocument();
+ 
+     cleanup();
+ 
+-    await renderRow({ ...MANAGER_PROPS, depth: 1 });
+-    const row = screen.getByRole('treeitem');
+-    // A template-literal bug once concatenated this into the malformed
+-    // token "py-3border-s", matching neither class - split on whitespace
+-    // so a regression that reintroduces missing whitespace fails here
+-    // instead of passing a substring check.
+-    expect(row.className.split(/\s+/)).toEqual(
+-      expect.arrayContaining(['py-3', 'border-s', 'border-border-hairline']),
+-    );
++    await renderRow({ ...MANAGER_PROPS, depth: 2 });
++    expect(screen.getAllByTestId('indent-rail')).toHaveLength(2);
+   });
+ 
+   it('each row exposes its level, its 1-based position among its siblings and the number of those siblings, from the row model', async () => {
+diff --git a/src/features/hierarchy/TreeRow.tsx b/src/features/hierarchy/TreeRow.tsx
+index 2f63ee1..bdf902e 100644
+--- a/src/features/hierarchy/TreeRow.tsx
++++ b/src/features/hierarchy/TreeRow.tsx
+@@ -1,4 +1,4 @@
+-import { memo, useCallback } from 'react';
++import { memo, useCallback, useMemo } from 'react';
+ import type { KeyboardEvent } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { Avatar } from '@shared/ui';
+@@ -9,7 +9,18 @@ import type { PersonIdentifier } from './domain/personIdentifier';
+ import { formatCount } from './formatCount';
+ import { TreeToggle } from './TreeToggle';
+ 
+-const INDENT_REM_PER_DEPTH = 2;
++const INDENT_PIXELS_PER_DEPTH = 41;
++const INDENT_RAIL_OFFSET_PIXELS = 29;
++const NARROW_INDENT_PIXELS_PER_DEPTH = 8;
++const NARROW_INDENT_RAIL_OFFSET_PIXELS = 6;
++
++function responsiveIndent(depth: number): string {
++  return `clamp(${depth * NARROW_INDENT_PIXELS_PER_DEPTH}px, calc(${depth * 5}vw - ${depth * 8}px), ${depth * INDENT_PIXELS_PER_DEPTH}px)`;
++}
++
++function responsiveRailOffset(level: number): string {
++  return `calc(${responsiveIndent(level)} + clamp(${NARROW_INDENT_RAIL_OFFSET_PIXELS}px, calc(3.5vw - 5px), ${INDENT_RAIL_OFFSET_PIXELS}px))`;
++}
+ 
+ export type TreeRowProps = {
+   personId: PersonIdentifier;
+@@ -81,6 +92,11 @@ export const TreeRow = memo(function TreeRow({
+     isSignedInUser,
+     t('page.youMarkerLabel'),
+   );
++  const indentRailOffsets = useMemo(
++    () =>
++      Array.from({ length: depth }, (_, level) => responsiveRailOffset(level)),
++    [depth],
++  );
+   const handleImageError = useCallback(() => {
+     onPhotoError(personId);
+   }, [onPhotoError, personId]);
+@@ -114,15 +130,26 @@ export const TreeRow = memo(function TreeRow({
+       // declares itself unselected rather than omitting a required
+       // attribute.
+       aria-selected="false"
+-      className={`flex items-center gap-3 py-3 ${depth > 0 ? 'border-s border-border-hairline' : ''}`}
+-      style={{ paddingInlineStart: `${depth * INDENT_REM_PER_DEPTH}rem` }}
++      className={`relative flex items-center gap-1 rounded-control py-[9px] pe-2 text-sm hover:bg-surface-hover sm:gap-[11px] ${isSignedInUser ? 'bg-surface-selected' : ''}`}
++      style={{
++        paddingInlineStart: `calc(8px + ${responsiveIndent(depth)})`,
++      }}
+     >
++      {indentRailOffsets.map((offset) => (
++        <span
++          key={offset}
++          aria-hidden="true"
++          data-testid="indent-rail"
++          className="pointer-events-none absolute inset-y-0 w-px bg-border-indent-rail"
++          style={{ insetInlineStart: offset }}
++        />
++      ))}
+       {hasChildren ? (
+         <TreeToggle isExpanded={isExpanded} onToggle={handleToggle} />
+       ) : (
+         <span
+           aria-hidden="true"
+-          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
++          className="flex h-5 w-5 shrink-0 items-center justify-center text-sm font-semibold text-ink-placeholder"
+         >
+           −
+         </span>
+@@ -135,7 +162,7 @@ export const TreeRow = memo(function TreeRow({
+         onImageError={handleImageError}
+       />
+       <div className="min-w-0 flex-1">
+-        <p className="flex items-center gap-2 truncate font-semibold text-ink">
++        <p className="flex items-center gap-2 truncate text-[13.5px] leading-[17px] font-semibold text-ink">
+           {displayName}
+           {isSignedInUser && (
+             <span
+@@ -146,10 +173,12 @@ export const TreeRow = memo(function TreeRow({
+             </span>
+           )}
+         </p>
+-        <p className="truncate text-ink-muted">{email}</p>
++        <p className="truncate text-xs leading-[17px] text-ink-muted-soft">
++          {email}
++        </p>
+       </div>
+       {hasChildren && (
+-        <p className="shrink-0 text-ink-muted">
++        <p className="max-w-[35%] shrink-0 truncate text-[11px] font-semibold text-ink-muted">
+           {formatCount(reportCount, i18n.language)}{' '}
+           {t(isExpanded ? 'page.reports' : 'page.hidden', {
+             count: reportCount,
+diff --git a/src/features/hierarchy/TreeToggle.tsx b/src/features/hierarchy/TreeToggle.tsx
+index 0cd72db..4e77f13 100644
+--- a/src/features/hierarchy/TreeToggle.tsx
++++ b/src/features/hierarchy/TreeToggle.tsx
+@@ -33,7 +33,7 @@ export const TreeToggle = memo(function TreeToggle({
+       aria-hidden="true"
+       onMouseDown={preventMouseDownFocus}
+       onClick={onToggle}
+-      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"
++      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-toggle border border-border-control text-primary-deep hover:bg-primary-tint-hover"
+     >
+       {isExpanded ? '−' : '+'}
+     </button>
+diff --git a/src/features/hierarchy/rowListMaxHeightClass.ts b/src/features/hierarchy/rowListMaxHeightClass.ts
+index f6d3ef7..d1b986f 100644
+--- a/src/features/hierarchy/rowListMaxHeightClass.ts
++++ b/src/features/hierarchy/rowListMaxHeightClass.ts
+@@ -2,4 +2,5 @@
+ // frame's own height never depends on how many rows either one renders
+ // (invariant 64) - a scrollable region of fixed height, not an outer frame
+ // that grows and shrinks with the row count of whichever state is showing.
+-export const ROW_LIST_MAX_HEIGHT_CLASS = 'max-h-48 overflow-y-auto';
++export const ROW_LIST_MAX_HEIGHT_CLASS =
++  'h-[calc(100vh-146px)] overflow-x-hidden overflow-y-auto px-[10px] py-1';
+diff --git a/src/shared/theme/contrastPairs.test.ts b/src/shared/theme/contrastPairs.test.ts
+index 028851d..5b7b867 100644
+--- a/src/shared/theme/contrastPairs.test.ts
++++ b/src/shared/theme/contrastPairs.test.ts
+@@ -146,4 +146,21 @@ describe('contrastPairs', () => {
+     ).toBeDefined();
+     expect(focusPair?.minimumRatio).toBeGreaterThanOrEqual(3);
+   });
++
++  it('registers the hierarchy indent rail and toggle boundary at the non-text contrast floor', () => {
++    expect(contrastPairs).toEqual(
++      expect.arrayContaining([
++        {
++          foreground: 'border-indent-rail',
++          background: 'surface',
++          minimumRatio: 3,
++        },
++        {
++          foreground: 'border-control',
++          background: 'surface',
++          minimumRatio: 3,
++        },
++      ]),
++    );
++  });
+ });
+diff --git a/src/shared/theme/contrastPairs.ts b/src/shared/theme/contrastPairs.ts
+index 154151b..183157f 100644
+--- a/src/shared/theme/contrastPairs.ts
++++ b/src/shared/theme/contrastPairs.ts
+@@ -11,6 +11,12 @@ export const contrastPairs: readonly ContrastPair[] = [
+   { foreground: 'on-primary', background: 'primary', minimumRatio: 4.5 },
+   { foreground: 'focus-ring', background: 'surface', minimumRatio: 3 },
+   { foreground: 'border-field', background: 'surface', minimumRatio: 3 },
++  {
++    foreground: 'border-indent-rail',
++    background: 'surface',
++    minimumRatio: 3,
++  },
++  { foreground: 'border-control', background: 'surface', minimumRatio: 3 },
+   { foreground: 'danger', background: 'danger-surface', minimumRatio: 4.5 },
+   // Button's busy fill (invariant 41): unconditional rather than a hover
+   // state, so it needs its own registered pair.
+diff --git a/src/shared/theme/theme.css b/src/shared/theme/theme.css
+index 3105ef1..22305a9 100644
+--- a/src/shared/theme/theme.css
++++ b/src/shared/theme/theme.css
+@@ -23,8 +23,8 @@
+   --color-ink-placeholder: #a9a5b8;
+   --color-border-hairline: rgb(36 11 78 / 0.08);
+   --color-border-field: #8f89a3;
+-  --color-border-indent-rail: #eae6f3;
+-  --color-border-control: #dcd7ea;
++  --color-border-indent-rail: #8f89a3;
++  --color-border-control: #8f89a3;
+   --color-danger: #c81e4a;
+   --color-danger-surface: #fde9ee;
+   --color-focus-ring: #5b15c4;
+@@ -69,8 +69,8 @@
+     --color-ink-faint: #847f95;
+     --color-ink-placeholder: #66627c;
+     --color-border-hairline: rgb(255 255 255 / 0.08);
+-    --color-border-indent-rail: #2a2338;
+-    --color-border-control: #3a3050;
++    --color-border-indent-rail: #8f89a3;
++    --color-border-control: #8f89a3;
+     --color-danger: #ff6b8f;
+     --color-danger-surface: #3a1420;
+     --color-focus-ring: #9b7bf5;
+diff --git a/src/shared/ui/EmptyState.tsx b/src/shared/ui/EmptyState.tsx
+index 9db5ba2..f4357a8 100644
+--- a/src/shared/ui/EmptyState.tsx
++++ b/src/shared/ui/EmptyState.tsx
+@@ -12,6 +12,8 @@ type EmptyStateProps = {
+ };
+ 
+ const FRAME_CLASS = 'rounded-card border border-border-hairline bg-surface p-6';
++const UNFRAMED_CLASS =
++  'flex h-full flex-col items-center justify-center gap-[14px] p-10 text-center';
+ 
+ export const EmptyState = memo(function EmptyState({
+   title,
+@@ -21,15 +23,17 @@ export const EmptyState = memo(function EmptyState({
+   framed = true,
+ }: EmptyStateProps) {
+   return (
+-    <div className={framed ? FRAME_CLASS : undefined}>
++    <div className={framed ? FRAME_CLASS : UNFRAMED_CLASS}>
+       {glyph !== undefined && <div>{glyph}</div>}
+-      <h1 className="font-semibold text-ink">{title}</h1>
+-      <p className="text-ink-muted">{message}</p>
++      <h1 className="text-[17px] font-semibold text-ink">{title}</h1>
++      <p className="max-w-[38ch] text-[13.5px] leading-relaxed text-ink-muted-soft">
++        {message}
++      </p>
+       {action !== undefined && (
+         <button
+           type="button"
+           onClick={action.onActivate}
+-          className="rounded-control bg-primary px-4 py-2 text-on-primary"
++          className="h-[38px] rounded-control bg-primary px-4 text-[13px] font-semibold text-on-primary"
+         >
+           {action.label}
+         </button>
+diff --git a/src/shared/ui/ErrorState.tsx b/src/shared/ui/ErrorState.tsx
+index e164937..a00052b 100644
+--- a/src/shared/ui/ErrorState.tsx
++++ b/src/shared/ui/ErrorState.tsx
+@@ -14,6 +14,8 @@ type ErrorStateProps = {
+ };
+ 
+ const FRAME_CLASS = 'rounded-card border border-border-hairline bg-surface p-6';
++const UNFRAMED_CLASS =
++  'flex h-full flex-col items-center justify-center gap-[14px] p-10 text-center';
+ 
+ export const ErrorState = memo(function ErrorState({
+   title,
+@@ -25,12 +27,16 @@ export const ErrorState = memo(function ErrorState({
+   framed = true,
+ }: ErrorStateProps) {
+   return (
+-    <div role="alert" className={framed ? FRAME_CLASS : undefined}>
++    <div role="alert" className={framed ? FRAME_CLASS : UNFRAMED_CLASS}>
+       {glyph !== undefined && <div>{glyph}</div>}
+-      <h1 className="font-semibold text-ink">{title}</h1>
+-      <p className="text-ink-muted">{message}</p>
++      <h1 className="text-[17px] font-semibold text-ink">{title}</h1>
++      <p className="max-w-[40ch] text-[13.5px] leading-relaxed text-ink-muted-soft">
++        {message}
++      </p>
+       {correlationId !== undefined && (
+-        <p className="text-ink-faint">{correlationId}</p>
++        <p className="rounded-control bg-surface-hover px-2.5 py-1.5 font-mono text-xs text-ink-muted">
++          {correlationId}
++        </p>
+       )}
+       {(action !== undefined || secondaryAction !== undefined) && (
+         <div className="flex gap-3">
+@@ -38,7 +44,7 @@ export const ErrorState = memo(function ErrorState({
+             <button
+               type="button"
+               onClick={action.onActivate}
+-              className="rounded-control bg-primary px-4 py-2 text-on-primary"
++              className="h-[38px] rounded-control bg-primary px-4 text-[13px] font-semibold text-on-primary"
+             >
+               {action.label}
+             </button>
+@@ -47,7 +53,7 @@ export const ErrorState = memo(function ErrorState({
+             <button
+               type="button"
+               onClick={secondaryAction.onActivate}
+-              className="rounded-control border border-border-hairline px-4 py-2 text-ink"
++              className="h-[38px] rounded-control border border-border-control px-4 text-[13px] font-semibold text-ink"
+             >
+               {secondaryAction.label}
+             </button>

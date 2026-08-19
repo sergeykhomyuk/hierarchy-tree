@@ -1,0 +1,15 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  15:16:15
+   Duration  89ms (transform 23ms, setup 33ms, import 4ms, tests 2ms, environment 0ms)
+
+
+Running 1 test using 1 worker
+
+  ✓  1 [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header (240ms)
+
+  1 passed (1.3s)

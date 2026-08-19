@@ -44,4 +44,21 @@ describe('AuthenticatedLayout', () => {
     expect(result.signedInUser).toBe(userPromise);
     expect(readSpy).toHaveBeenCalledWith('user-1');
   });
+
+  it('the authenticated loader returns the signed-in userId alongside signedInUser', () => {
+    const signedInUserStore: SignedInUserStore = {
+      read: () => Promise.resolve(null),
+    };
+    const loader = createAuthenticatedLoader({
+      tabStorage: createSignedInStorage('user-1'),
+      observability: createSpyObservability(),
+      signedInUserStore,
+    });
+
+    const result = loader({
+      request: new Request('https://example.test/'),
+    } as LoaderFunctionArgs);
+
+    expect(result.userId).toBe('user-1');
+  });
 });

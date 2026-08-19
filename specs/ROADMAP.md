@@ -8,11 +8,11 @@ The goal is in [GOAL.md](./GOAL.md), the technical decisions are in [ARCHITECTUR
 
 - **Phase 1 - Project setup**: done (6/6 outcomes, 3/3 exit criteria)
 - **Phase 2 - Login page**: IN PROGRESS - specs written and under validation (0/6 outcomes, 0/4 exit criteria)
-- **Phase 3 - Hierarchy Tree page**: not started (0/6 outcomes, 0/5 exit criteria)
+- **Phase 3 - Hierarchy Tree page**: done (6/6 outcomes, 5/5 exit criteria)
 
-**Next up**: finish phase 2's spec validation, then execute its four milestones.
+**Next up**: nothing - all three phases are complete.
 
-**Last updated**: 2026-08-14 - phase 1 closed; phase 2 specified, and sign-out moved into it from phase 3
+**Last updated**: 2026-08-19 - phase 3 closed
 
 ## How to use this
 
@@ -86,20 +86,20 @@ Screens `1e`-`1h`. This is where the depth goes: the tree domain is pure and hea
 
 **Outcomes**
 
-- [ ] Tree construction is pure, framework-free and exhaustively tested, including multiple roots, missing managers and cycles
-- [ ] A malformed record is dropped and reported rather than taking the page down
-- [ ] The page renders all four of its states
-- [ ] Expand and collapse survive a refresh, a shared link and the back button
-- [ ] The tree implements the full ARIA tree keyboard contract, asserted in tests rather than claimed in prose
-- [ ] `README.md` describes this project rather than the Vite template, and the decision log reflects anything that deviated
+- [x] Tree construction is pure, framework-free and exhaustively tested, including multiple roots, missing managers and cycles
+- [x] A malformed record is dropped and reported rather than taking the page down
+- [x] The page renders all four of its states
+- [x] Expand and collapse survive a refresh, a shared link and the back button
+- [x] The tree implements the full ARIA tree keyboard contract, asserted in tests rather than claimed in prose
+- [x] `README.md` describes this project rather than the Vite template, and the decision log reflects anything that deviated
 
 **Exit criteria**
 
-- [ ] The full tree renders from the live database, with multiple roots, correct nesting and correct manager detection
-- [ ] Toggles work by mouse and by keyboard; the tree is a single tab stop; accessibility checks pass on rendered pages
-- [ ] All four states are reachable in e2e, failure paths included
-- [ ] Expansion state survives a refresh and the back button
-- [ ] The whole pipeline is green and `main` is deployed
+- [x] The full tree renders from the live database, with multiple roots, correct nesting and correct manager detection
+- [x] Toggles work by mouse and by keyboard; the tree is a single tab stop; accessibility checks pass on rendered pages
+- [x] All four states are reachable in e2e, failure paths included
+- [x] Expansion state survives a refresh and the back button
+- [x] The whole pipeline is green and `main` is deployed
 
 ---
 
@@ -125,3 +125,4 @@ Newest last. One line per phase closed, or per event a later reader would need t
 - 2026-08-13 - two scope changes made while specifying phase 1, both recorded in ARCHITECTURE.md's decision log. Response caching is withdrawn from the roadmap (the design outweighed the single 9KB request it saves), so `platform/cache` is not built in any phase. Deployment moves from GitHub Pages to Cloudflare Pages, because the repository is private; the site now serves at the root, so the Vite base is `/` and SPA deep links come from a `_redirects` rule rather than a `404.html` copy.
 - 2026-08-14 - phase 1 closed. All six outcomes and all three exit criteria verified against `specs/phase-1-setup/PROOF.md`; the loop merged in PR #3, with two follow-on loops merged behind it - `i18n-test-locale` (PR #4, a key-echoing test locale so unit and e2e assertions check the real catalogue's shape instead of a hand-maintained copy of its prose) and `phase-1-conventions` (PR #5, aligning the code with the react-coding and typescript-coding conventions). The deployed URL serves the placeholder login route from Cloudflare Pages.
 - 2026-08-14 - phase 2's scope widened while framing it, on the user's decision: signing out ships with the login page rather than with the tree. The header carrying the signed-in user's name and the logout link, and the guarantee that the back button cannot return to an authenticated view, move from phase 3's outcome list into phase 2's. Phase 3 keeps the tree and nothing else of that. Three further framing decisions shaped phase 2's spec and are recorded in `specs/phase-2-login/PRODUCT.md`: the failed-sign-in state shows one summary alert rather than mockup 1d's field-level "Incorrect password" line, because the derivation collapses both fields into a single secret and a null lookup cannot attribute the failure to either; a transport failure is a fifth state, distinct from "no user matches", with its own retry and correlation id; and the email is trimmed but never lowercased, because the derivation depends on the exact characters.
+- 2026-08-19 - phase 3 closed. All six outcomes and all five exit criteria verified against `specs/phase-3-tree/PROOF.md`, across five milestones (the tree domain and its tripwires; the boundary, repository and loader; the four-state page and URL-driven expansion; the full ARIA keyboard contract; this closing milestone). Eleven deviations recorded in `ARCHITECTURE.md`'s decision log, matching the eleven `specs/phase-3-tree/PRODUCT.md` enumerates: the error chip's correlation id, the single-button empty state, the widened `img-src`, flat `treeitem`s over nested groups, the decorative avatar, the widened UI kit, the extensible analytics event map, the retired phase-1 vocabulary tripwires, the shared `shared/routing` module, (found during the M5 verify pass) `img-src` widening to `https: http:` rather than `https:` alone so the browser's own mixed-content policy - not CSP - is what blocks an `http://` photo on the deployed page, and (found during the final G4 review) the signed-in header's own restyling to match mockup 1e. `README.md` now describes this project instead of the Vite template it started from.

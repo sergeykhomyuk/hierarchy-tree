@@ -1,0 +1,237 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+stderr | src/app/routing/routes/HomeRoute.test.tsx > HomeRoute > retry mints a new correlation id and emits no route-viewed event
+No `HydrateFallback` element provided to render during initial hydration
+
+ ❯ |ui| src/app/routing/routes/HomeRoute.test.tsx (3 tests | 3 failed) 3035ms
+     × retry mints a new correlation id and emits no route-viewed event 1024ms
+     × retry after a failure that then succeeds renders the data state with the URL expansion intact 1006ms
+     × retry that fails again shows a different correlation id and never disables the button 1004ms
+ ❯ |tooling| scripts/eslint-configuration.test.ts (13 tests | 1 failed) 9722ms
+     × the feature layer may not import useRevalidator 1031ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/eslint-configuration.test.ts > demonstrable negatives > the feature layer may not import useRevalidator
+AssertionError: expected '' to contain 'no-restricted-imports'
+
+- Expected
++ Received
+
+- no-restricted-imports
+
+ ❯ scripts/eslint-configuration.test.ts:318:20
+    316|     );
+    317|
+    318|     expect(output).toContain('no-restricted-imports');
+       |                    ^
+    319|     expect(output).toContain('src/app/');
+    320|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |ui| src/app/routing/routes/HomeRoute.test.tsx > HomeRoute > retry mints a new correlation id and emits no route-viewed event
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mclass[39m=[32m"sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2 focus:text-ink"[39m
+      [33mhref[39m=[32m"#main-content"[39m
+    [36m>[39m
+      [0mlayout.skipLink[0m
+    [36m</a>[39m
+    [36m<main[39m
+      [33mid[39m=[32m"main-content"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mhome.title[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mhome.message[0m
+        [36m</p>[39m
+      [36m</div>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mclass[39m=[32m"sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2 focus:text-ink"[39m
+      [33mhref[39m=[32m"#main-content"[39m
+    [36m>[39m
+      [0mlayout.skipLink[0m
+    [36m</a>[39m
+    [36m<main[39m
+      [33mid[39m=[32m"main-content"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mhome.title[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mhome.message[0m
+        [36m</p>[39m
+      [36m</div>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/app/routing/routes/HomeRoute.test.tsx:99:18
+     97|     });
+     98|     const { runtime } = await renderHomeRoute(transport, clock);
+     99|     await screen.findByRole('alert');
+       |                  ^
+    100|     const idBeforeRetry = runtime.interactionTracker.currentCorrelatio…
+    101|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |ui| src/app/routing/routes/HomeRoute.test.tsx > HomeRoute > retry after a failure that then succeeds renders the data state with the URL expansion intact
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mclass[39m=[32m"sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2 focus:text-ink"[39m
+      [33mhref[39m=[32m"#main-content"[39m
+    [36m>[39m
+      [0mlayout.skipLink[0m
+    [36m</a>[39m
+    [36m<main[39m
+      [33mid[39m=[32m"main-content"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mhome.title[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mhome.message[0m
+        [36m</p>[39m
+      [36m</div>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mclass[39m=[32m"sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2 focus:text-ink"[39m
+      [33mhref[39m=[32m"#main-content"[39m
+    [36m>[39m
+      [0mlayout.skipLink[0m
+    [36m</a>[39m
+    [36m<main[39m
+      [33mid[39m=[32m"main-content"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mhome.title[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mhome.message[0m
+        [36m</p>[39m
+      [36m</div>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/app/routing/routes/HomeRoute.test.tsx:132:18
+    130|       '/?expanded=1,2,3',
+    131|     );
+    132|     await screen.findByRole('alert');
+       |                  ^
+    133|
+    134|     await user.click(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |ui| src/app/routing/routes/HomeRoute.test.tsx > HomeRoute > retry that fails again shows a different correlation id and never disables the button
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mclass[39m=[32m"sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2 focus:text-ink"[39m
+      [33mhref[39m=[32m"#main-content"[39m
+    [36m>[39m
+      [0mlayout.skipLink[0m
+    [36m</a>[39m
+    [36m<main[39m
+      [33mid[39m=[32m"main-content"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mhome.title[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mhome.message[0m
+        [36m</p>[39m
+      [36m</div>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mclass[39m=[32m"sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2 focus:text-ink"[39m
+      [33mhref[39m=[32m"#main-content"[39m
+    [36m>[39m
+      [0mlayout.skipLink[0m
+    [36m</a>[39m
+    [36m<main[39m
+      [33mid[39m=[32m"main-content"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"rounded-card border border-border-hairline bg-surface p-6"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mhome.title[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0mhome.message[0m
+        [36m</p>[39m
+      [36m</div>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/app/routing/routes/HomeRoute.test.tsx:157:18
+    155|     });
+    156|     const { runtime } = await renderHomeRoute(transport, clock);
+    157|     await screen.findByRole('alert');
+       |                  ^
+    158|     const firstId = runtime.interactionTracker.currentCorrelationId();
+    159|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 12 passed (16)
+   Start at  16:30:31
+   Duration  9.84s (transform 195ms, setup 141ms, import 232ms, tests 12.76s, environment 400ms)
+

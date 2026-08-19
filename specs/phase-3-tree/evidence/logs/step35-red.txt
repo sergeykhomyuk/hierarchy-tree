@@ -1,0 +1,139 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/useExpansion.test.tsx (7 tests | 1 failed) 124ms
+     × expandMany opens several branches in one history entry 11ms
+stderr | src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > asterisk expand > asterisk expands every collapsed sibling under the same parent, including the focused row if it is a collapsed manager
+The current testing environment is not configured to support act(...)
+
+stderr | src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > asterisk expand > asterisk announces how many branches opened and emits one telemetry event
+The current testing environment is not configured to support act(...)
+
+ ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (34 tests | 2 failed) 246ms
+       × asterisk expands every collapsed sibling under the same parent, including the focused row if it is a collapsed manager 6ms
+       × asterisk announces how many branches opened and emits one telemetry event 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > asterisk expand > asterisk expands every collapsed sibling under the same parent, including the focused row if it is a collapsed manager
+AssertionError: expected [ …(4) ] to have a length of 6 but got 4
+
+- Expected
++ Received
+
+- 6
++ 4
+
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:895:47
+    893|       // 1, 2, 5 (2's child), 3, 6 (3's child), 4 - person4 is a
+    894|       // non-manager sibling, untouched either way.
+    895|       expect(screen.getAllByRole('treeitem')).toHaveLength(6);
+       |                                               ^
+    896|       expect(
+    897|         screen.getByRole('treeitem', { name: 'First5 Last5' }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > asterisk expand > asterisk announces how many branches opened and emits one telemetry event
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:930:45
+    928|       pressKey('*');
+    929|
+    930|       expect(observability.analytics.track).toHaveBeenCalledTimes(1);
+       |                                             ^
+    931|       const [eventName, payload] =
+    932|         vi.mocked(observability.analytics.track).mock.calls[0] ?? [];
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |ui| src/features/hierarchy/useExpansion.test.tsx > useExpansion > expandMany opens several branches in one history entry
+TestingLibraryElementError: Unable to find an element with the text: expanded: 1,2. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div>[39m
+      [36m<p>[39m
+        [0mexpanded: [0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mtoggle 1[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mtoggle 2[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mexpand 1 and 2[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/useExpansion.test.tsx:133:19
+    131|     expect(screen.getByText('expanded:')).toBeInTheDocument();
+    132|     await user.click(screen.getByRole('button', { name: 'expand 1 and …
+    133|     expect(screen.getByText('expanded: 1,2')).toBeInTheDocument();
+       |                   ^
+    134|
+    135|     // One Back undoes the whole action, not one id at a time - proof …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 2 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: expandMany is not a function
+ ❯ onClick src/features/hierarchy/useExpansion.test.tsx:41:11
+ ❯ executeDispatch node_modules/react-dom/cjs/react-dom-client.development.js:19116:9
+ ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ processDispatchQueue node_modules/react-dom/cjs/react-dom-client.development.js:19166:19
+ ❯ node_modules/react-dom/cjs/react-dom-client.development.js:19767:9
+ ❯ batchedUpdates$1 node_modules/react-dom/cjs/react-dom-client.development.js:3255:40
+ ❯ dispatchEventForPluginEventSystem node_modules/react-dom/cjs/react-dom-client.development.js:19320:7
+ ❯ dispatchEvent node_modules/react-dom/cjs/react-dom-client.development.js:23585:11
+ ❯ dispatchDiscreteEvent node_modules/react-dom/cjs/react-dom-client.development.js:23553:11
+ ❯ HTMLDivElement.callTheUserObjectsOperation node_modules/jsdom/lib/generated/idl/EventListener.js:26:30
+
+This error originated in "src/features/hierarchy/useExpansion.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "expandMany opens several branches in one history entry". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: expandMany is not a function
+ ❯ onClick src/features/hierarchy/useExpansion.test.tsx:41:11
+ ❯ executeDispatch node_modules/react-dom/cjs/react-dom-client.development.js:19116:9
+ ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ processDispatchQueue node_modules/react-dom/cjs/react-dom-client.development.js:19166:19
+ ❯ node_modules/react-dom/cjs/react-dom-client.development.js:19767:9
+ ❯ batchedUpdates$1 node_modules/react-dom/cjs/react-dom-client.development.js:3255:40
+ ❯ dispatchEventForPluginEventSystem node_modules/react-dom/cjs/react-dom-client.development.js:19320:7
+ ❯ dispatchEvent node_modules/react-dom/cjs/react-dom-client.development.js:23585:11
+ ❯ dispatchDiscreteEvent node_modules/react-dom/cjs/react-dom-client.development.js:23553:11
+ ❯ HTMLDivElement.callTheUserObjectsOperation node_modules/jsdom/lib/generated/idl/EventListener.js:26:30
+
+This error originated in "src/features/hierarchy/useExpansion.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "expandMany that would open nothing writes no history entry". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  3 failed | 49 passed (52)
+     Errors  2 errors
+   Start at  10:22:36
+   Duration  905ms (transform 215ms, setup 490ms, import 194ms, tests 380ms, environment 1.57s)
+

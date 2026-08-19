@@ -1,0 +1,153 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/data/fetchPeople.test.ts (9 tests | 9 failed) 6ms
+     × one bad record is dropped and counted while the rest still builds a forest 3ms
+     × a payload whose every element fails validation returns allRowsInvalid rather than empty 0ms
+     × a pre-aborted signal returns cancelled and not a failure 0ms
+     × fetchPeople never throws and never rejects on any outcome 1ms
+     × a completed load emits exactly one hierarchy-viewed event carrying the counts and the drop count 0ms
+     × dropped rows are reported once per load with the count and the failing field names 0ms
+     × each anomaly kind is reported with its count 0ms
+     × a failed load emits one error event with the failure kind and the correlation id 0ms
+     × a cancelled request emits no event 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/data/fetchPeople.test.ts > fetchPeople > one bad record is dropped and counted while the rest still builds a forest
+TypeError: The "signals[0]" argument must be an instance of AbortSignal. Received an instance of Object
+ ❯ Object.request src/platform/http/createHttpClient.ts:89:21
+     87|     });
+     88|     const signal = httpRequest.signal
+     89|       ? AbortSignal.any([httpRequest.signal, deadlineController.signal…
+       |                     ^
+     90|       : deadlineController.signal;
+     91|
+ ❯ fetchPeople src/features/hierarchy/data/fetchPeople.ts:49:29
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:65:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  |ui| src/features/hierarchy/data/fetchPeople.test.ts > fetchPeople > a payload whose every element fails validation returns allRowsInvalid rather than empty
+TypeError: The "signals[0]" argument must be an instance of AbortSignal. Received an instance of Object
+ ❯ Object.request src/platform/http/createHttpClient.ts:89:21
+     87|     });
+     88|     const signal = httpRequest.signal
+     89|       ? AbortSignal.any([httpRequest.signal, deadlineController.signal…
+       |                     ^
+     90|       : deadlineController.signal;
+     91|
+ ❯ fetchPeople src/features/hierarchy/data/fetchPeople.ts:49:29
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:83:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  |ui| src/features/hierarchy/data/fetchPeople.test.ts > fetchPeople > a pre-aborted signal returns cancelled and not a failure
+TypeError: The "signals[0]" argument must be an instance of AbortSignal. Received an instance of Object
+ ❯ Object.request src/platform/http/createHttpClient.ts:89:21
+     87|     });
+     88|     const signal = httpRequest.signal
+     89|       ? AbortSignal.any([httpRequest.signal, deadlineController.signal…
+       |                     ^
+     90|       : deadlineController.signal;
+     91|
+ ❯ fetchPeople src/features/hierarchy/data/fetchPeople.ts:49:29
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:98:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  |ui| src/features/hierarchy/data/fetchPeople.test.ts > fetchPeople > fetchPeople never throws and never rejects on any outcome
+AssertionError: promise rejected "TypeError: The "signals[0]" argument must… { code: '…' }" instead of resolving
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:135:34
+    133|       await clock.advance(200);
+    134|
+    135|       await expect(resultPromise).resolves.toBeDefined();
+       |                                  ^
+    136|     }
+    137|   });
+
+Caused by: TypeError: The "signals[0]" argument must be an instance of AbortSignal. Received an instance of Object
+ ❯ Object.request src/platform/http/createHttpClient.ts:89:21
+ ❯ fetchPeople src/features/hierarchy/data/fetchPeople.ts:49:29
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:128:29
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_INVALID_ARG_TYPE' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  |ui| src/features/hierarchy/data/fetchPeople.test.ts > fetchPeople > a completed load emits exactly one hierarchy-viewed event carrying the counts and the drop count
+TypeError: The "signals[0]" argument must be an instance of AbortSignal. Received an instance of Object
+ ❯ Object.request src/platform/http/createHttpClient.ts:89:21
+     87|     });
+     88|     const signal = httpRequest.signal
+     89|       ? AbortSignal.any([httpRequest.signal, deadlineController.signal…
+       |                     ^
+     90|       : deadlineController.signal;
+     91|
+ ❯ fetchPeople src/features/hierarchy/data/fetchPeople.ts:49:29
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:154:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  |ui| src/features/hierarchy/data/fetchPeople.test.ts > fetchPeople > dropped rows are reported once per load with the count and the failing field names
+TypeError: The "signals[0]" argument must be an instance of AbortSignal. Received an instance of Object
+ ❯ Object.request src/platform/http/createHttpClient.ts:89:21
+     87|     });
+     88|     const signal = httpRequest.signal
+     89|       ? AbortSignal.any([httpRequest.signal, deadlineController.signal…
+       |                     ^
+     90|       : deadlineController.signal;
+     91|
+ ❯ fetchPeople src/features/hierarchy/data/fetchPeople.ts:49:29
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:179:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  |ui| src/features/hierarchy/data/fetchPeople.test.ts > fetchPeople > each anomaly kind is reported with its count
+TypeError: The "signals[0]" argument must be an instance of AbortSignal. Received an instance of Object
+ ❯ Object.request src/platform/http/createHttpClient.ts:89:21
+     87|     });
+     88|     const signal = httpRequest.signal
+     89|       ? AbortSignal.any([httpRequest.signal, deadlineController.signal…
+       |                     ^
+     90|       : deadlineController.signal;
+     91|
+ ❯ fetchPeople src/features/hierarchy/data/fetchPeople.ts:49:29
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:202:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  |ui| src/features/hierarchy/data/fetchPeople.test.ts > fetchPeople > a failed load emits one error event with the failure kind and the correlation id
+TypeError: The "signals[0]" argument must be an instance of AbortSignal. Received an instance of Object
+ ❯ Object.request src/platform/http/createHttpClient.ts:89:21
+     87|     });
+     88|     const signal = httpRequest.signal
+     89|       ? AbortSignal.any([httpRequest.signal, deadlineController.signal…
+       |                     ^
+     90|       : deadlineController.signal;
+     91|
+ ❯ fetchPeople src/features/hierarchy/data/fetchPeople.ts:49:29
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:223:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  |ui| src/features/hierarchy/data/fetchPeople.test.ts > fetchPeople > a cancelled request emits no event
+TypeError: The "signals[0]" argument must be an instance of AbortSignal. Received an instance of Object
+ ❯ Object.request src/platform/http/createHttpClient.ts:89:21
+     87|     });
+     88|     const signal = httpRequest.signal
+     89|       ? AbortSignal.any([httpRequest.signal, deadlineController.signal…
+       |                     ^
+     90|       : deadlineController.signal;
+     91|
+ ❯ fetchPeople src/features/hierarchy/data/fetchPeople.ts:49:29
+ ❯ src/features/hierarchy/data/fetchPeople.test.ts:240:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed (9)
+   Start at  14:19:58
+   Duration  579ms (transform 70ms, setup 100ms, import 75ms, tests 6ms, environment 334ms)
+

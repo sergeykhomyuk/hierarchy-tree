@@ -1,0 +1,241 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: hierarchy-layout.spec.ts >> hierarchy layout >> the loaded hierarchy matches mockup 1e's shell and row rhythm
+- Location: e2e/hierarchy-layout.spec.ts:21:3
+
+# Error details
+
+```
+Error: expect(locator).toHaveCSS(expected) failed
+
+Locator:  getByTestId('navigation-rail')
+Expected: "rgb(36, 11, 78)"
+Received: "rgba(0, 0, 0, 0)"
+Timeout:  5000ms
+
+Call log:
+  - Expect "toHaveCSS" with timeout 5000ms
+  - waiting for getByTestId('navigation-rail')
+    14 × locator resolved to <div aria-hidden="true" data-testid="navigation-rail" class="sticky top-0 h-screen w-16 shrink-0 border-e border-border-hairline"></div>
+       - unexpected value "rgba(0, 0, 0, 0)"
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - link "layout.skipLink" [ref=e3] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - paragraph [ref=e7]: header.eyebrow
+        - paragraph [ref=e8]: header.pageTitle
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e11]: PO
+          - generic [ref=e12]: Persephone Okonkwo-Villanueva
+        - button "header.logout" [ref=e13]
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - heading "page.cardTitle" [level=1] [ref=e20]
+        - paragraph [ref=e21]: page.summary
+      - tree "page.treeLabel" [ref=e23]:
+        - treeitem "Ronnen Gurevitch" [expanded] [level=1] [ref=e24]:
+          - button [ref=e25]: −
+          - generic [ref=e26]: RG
+          - generic [ref=e27]:
+            - paragraph [ref=e28]: Ronnen Gurevitch
+            - paragraph [ref=e29]: ronnen.gurevitch@example.com
+          - paragraph [ref=e30]: 2 page.reports_other
+        - treeitem "Dorit Nuhum" [expanded] [level=2] [ref=e31]:
+          - button [ref=e32]: −
+          - generic [ref=e33]: DN
+          - generic [ref=e34]:
+            - paragraph [ref=e35]: Dorit Nuhum
+            - paragraph [ref=e36]: dorit.nuhum@example.com
+          - paragraph [ref=e37]: 2 page.reports_other
+        - treeitem "Andrew Crist" [level=3] [ref=e38]:
+          - generic [ref=e39]: −
+          - generic [ref=e40]: AC
+          - generic [ref=e41]:
+            - paragraph [ref=e42]: Andrew Crist
+            - paragraph [ref=e43]: andrew.crist@example.com
+        - treeitem "Jed Foster" [level=3] [ref=e44]:
+          - generic [ref=e45]: −
+          - generic [ref=e46]: JF
+          - generic [ref=e47]:
+            - paragraph [ref=e48]: Jed Foster
+            - paragraph [ref=e49]: jed.foster@example.com
+        - treeitem "Roni Yashar" [expanded] [level=2] [ref=e50]:
+          - button [ref=e51]: −
+          - generic [ref=e52]: RY
+          - generic [ref=e53]:
+            - paragraph [ref=e54]: Roni Yashar
+            - paragraph [ref=e55]: roni.yashar@example.com
+          - paragraph [ref=e56]: 1 page.reports_other
+        - treeitem "Tal Bergman" [level=3] [ref=e57]:
+          - button [ref=e58]: +
+          - generic [ref=e59]: TB
+          - generic [ref=e60]:
+            - paragraph [ref=e61]: Tal Bergman
+            - paragraph [ref=e62]: tal.bergman@example.com
+          - paragraph [ref=e63]: 1 page.hidden_other
+        - treeitem "Noa Shani" [expanded] [level=1] [ref=e64]:
+          - button [ref=e65]: −
+          - generic [ref=e66]: NS
+          - generic [ref=e67]:
+            - paragraph [ref=e68]: Noa Shani
+            - paragraph [ref=e69]: noa.shani@example.com
+          - paragraph [ref=e70]: 1 page.reports_other
+        - treeitem "Uri Barak" [level=2] [ref=e71]:
+          - generic [ref=e72]: −
+          - generic [ref=e73]: UB
+          - generic [ref=e74]:
+            - paragraph [ref=e75]: Uri Barak
+            - paragraph [ref=e76]: uri.barak@example.com
+```
+
+# Test source
+
+```ts
+  1   | import { expect, test } from '@playwright/test';
+  2   | import {
+  3   |   installDeferredUserMock,
+  4   |   submitSignInForm,
+  5   | } from './support/deferredUserMock';
+  6   | import {
+  7   |   DEEPEST_PERSON_NAME,
+  8   |   installHierarchyUserMock,
+  9   |   installPopulatedHierarchyMock,
+  10  |   populatedHierarchyPayload,
+  11  | } from './support/hierarchyFixture';
+  12  | import { installRouteMocks } from './support/routeMocks';
+  13  | import { installSignInApiMock, signIn } from './support/signIn';
+  14  | 
+  15  | // The three layout claims jsdom cannot make - getBoundingClientRect()
+  16  | // returns all-zero rects there and there is no real scrolling - so all
+  17  | // three live here instead, against a real, schema-valid nested payload
+  18  | // (TECH.md's own note: no other e2e mock in this suite produces the
+  19  | // Data state at all, only Error or Empty).
+  20  | test.describe('hierarchy layout', () => {
+  21  |   test("the loaded hierarchy matches mockup 1e's shell and row rhythm", async ({
+  22  |     page,
+  23  |     baseURL,
+  24  |   }) => {
+  25  |     await page.setViewportSize({ width: 960, height: 600 });
+  26  |     await installRouteMocks(page, baseURL ?? '');
+  27  |     await installPopulatedHierarchyMock(page);
+  28  |     await signIn(page);
+  29  |     await expect(page.getByRole('tree')).toBeVisible();
+  30  | 
+> 31  |     await expect(page.getByTestId('navigation-rail')).toHaveCSS(
+      |                                                       ^ Error: expect(locator).toHaveCSS(expected) failed
+  32  |       'background-color',
+  33  |       'rgb(36, 11, 78)',
+  34  |     );
+  35  |     expect(await page.getByTestId('navigation-rail').boundingBox()).toEqual({
+  36  |       x: 0,
+  37  |       y: 0,
+  38  |       width: 60,
+  39  |       height: 600,
+  40  |     });
+  41  |     expect(await page.locator('header').boundingBox()).toEqual({
+  42  |       x: 60,
+  43  |       y: 0,
+  44  |       width: 900,
+  45  |       height: 60,
+  46  |     });
+  47  |     expect(await page.getByTestId('hierarchy-card-frame').boundingBox()).toEqual(
+  48  |       {
+  49  |         x: 82,
+  50  |         y: 78,
+  51  |         width: 856,
+  52  |         height: 500,
+  53  |       },
+  54  |     );
+  55  | 
+  56  |     const firstRow = page.getByRole('treeitem', {
+  57  |       name: /Ronnen Gurevitch/,
+  58  |     });
+  59  |     expect((await firstRow.boundingBox())?.height).toBe(52);
+  60  | 
+  61  |     const signedInRow = page.getByRole('treeitem', {
+  62  |       name: new RegExp(`${DEEPEST_PERSON_NAME}.*page.youMarkerLabel`),
+  63  |     });
+  64  |     await expect(signedInRow).toHaveCSS(
+  65  |       'background-color',
+  66  |       'rgb(247, 243, 254)',
+  67  |     );
+  68  |   });
+  69  | 
+  70  |   test('the header, nav rail and card frame have identical bounding boxes before and after the data resolves', async ({
+  71  |     page,
+  72  |     baseURL,
+  73  |   }) => {
+  74  |     await installRouteMocks(page, baseURL ?? '');
+  75  |     const getResolveUser = await installDeferredUserMock(page);
+  76  |     await submitSignInForm(page);
+  77  |     await expect(
+  78  |       page.getByRole('status', { name: 'page.loadingLabel' }),
+  79  |     ).toBeVisible();
+  80  | 
+  81  |     // A plain tag locator, not getByRole('banner') - <header> nested
+  82  |     // inside ApplicationLayout's <main> loses its implicit banner role
+  83  |     // per the ARIA landmark-nesting rule, even though it is still the
+  84  |     // one and only <header> the page renders.
+  85  |     const header = page.locator('header');
+  86  |     const navRail = page.getByTestId('navigation-rail');
+  87  |     const cardFrame = page.getByTestId('hierarchy-card-frame');
+  88  |     const before = {
+  89  |       header: await header.boundingBox(),
+  90  |       navRail: await navRail.boundingBox(),
+  91  |       cardFrame: await cardFrame.boundingBox(),
+  92  |     };
+  93  | 
+  94  |     getResolveUser()({ status: 200, body: populatedHierarchyPayload() });
+  95  |     await expect(page.getByRole('tree')).toBeVisible();
+  96  | 
+  97  |     expect(await header.boundingBox()).toEqual(before.header);
+  98  |     expect(await navRail.boundingBox()).toEqual(before.navRail);
+  99  |     expect(await cardFrame.boundingBox()).toEqual(before.cardFrame);
+  100 |   });
+  101 | 
+  102 |   test('toggling a branch does not move the scroll position of the rows above it', async ({
+  103 |     page,
+  104 |     baseURL,
+  105 |   }) => {
+  106 |     await installRouteMocks(page, baseURL ?? '');
+  107 |     await installPopulatedHierarchyMock(page);
+  108 |     await signIn(page);
+  109 |     // The row list is its own fixed-height scrollable region, not the
+  110 |     // page (invariant 64's own reason: the card frame's height must
+  111 |     // never depend on row count) - the "scroll position" this test rules
+  112 |     // out moving is this container's scrollTop, not window.scrollY.
+  113 |     const treeList = page.getByRole('tree');
+  114 |     await expect(treeList).toBeVisible();
+  115 | 
+  116 |     // The very first row - above every other row in the list, so nothing
+  117 |     // toggled below it should ever move it.
+  118 |     const anchorRow = page.getByRole('treeitem', { name: /Ronnen Gurevitch/ });
+  119 |     // Roni Yashar sits below the anchor with enough of the row list still
+  120 |     // remaining beneath it (Tal Bergman, then the whole second root
+  121 |     // branch) that collapsing it - hiding only Tal - never shrinks the
+  122 |     // scrollable content below the current scroll position. Noa Shani,
+  123 |     // the very last branch, was tried first and rejected: collapsing the
+  124 |     // last rows in a scrolled list can shrink content below the browser's
+  125 |     // own scrollTop, which the browser then clamps down on its own - a
+  126 |     // real browser behaviour, not a bug this test should be reporting as
+  127 |     // one, and it produced exactly that false failure here.
+  128 |     const targetRow = page.getByRole('treeitem', { name: /Roni Yashar/ });
+  129 |     const targetToggle = targetRow.locator('button');
+  130 | 
+  131 |     // scrollIntoViewIfNeeded() scrolls the row list's own container, not
+```

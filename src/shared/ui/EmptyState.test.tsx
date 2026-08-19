@@ -36,4 +36,53 @@ describe('EmptyState', () => {
 
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
+
+  it('renders a glyph and can render unframed', () => {
+    const { container, rerender } = render(
+      <EmptyState
+        title="Nothing here yet"
+        message="Add your first item"
+        glyph={<span data-testid="glyph">○</span>}
+      />,
+    );
+
+    expect(screen.getByTestId('glyph')).toBeInTheDocument();
+
+    rerender(
+      <EmptyState
+        title="Nothing here yet"
+        message="Add your first item"
+        framed={false}
+      />,
+    );
+
+    expect(container.firstElementChild?.className).not.toMatch(
+      /rounded-card|border-border-hairline/,
+    );
+  });
+
+  it('keeps hierarchy empty-state typography out of the framed kit presentation', () => {
+    const { rerender } = render(
+      <EmptyState
+        title="Nothing here yet"
+        message="Add your first item"
+        action={{ label: 'Add item', onActivate: () => {} }}
+      />,
+    );
+
+    expect(screen.getByRole('heading')).not.toHaveClass('text-[17px]');
+    expect(screen.getByRole('button')).not.toHaveClass('h-[38px]');
+
+    rerender(
+      <EmptyState
+        title="Nothing here yet"
+        message="Add your first item"
+        action={{ label: 'Add item', onActivate: () => {} }}
+        framed={false}
+      />,
+    );
+
+    expect(screen.getByRole('heading')).toHaveClass('text-[17px]');
+    expect(screen.getByRole('button')).toHaveClass('h-[38px]');
+  });
 });

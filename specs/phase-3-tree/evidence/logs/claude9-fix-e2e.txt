@@ -1,0 +1,10 @@
+  ✓  44 [development] › e2e/kit-route.spec.ts:29:3 › kit route › has zero axe violations in real light (565ms)
+  ✓  43 [chromium] › e2e/accessibility.spec.ts:86:5 › accessibility › / has zero axe violations when the header's name cannot resolve, in dark (1.3s)
+  ✓  46 [chromium] › e2e/accessibility.spec.ts:114:5 › accessibility › the populated tree meets the color-contrast floor, in light (357ms)
+  ✓  45 [development] › e2e/kit-route.spec.ts:46:3 › kit route › has zero axe violations in real dark (564ms)
+  ✓  48 [development] › e2e/kit-route.spec.ts:59:3 › kit route › a skeleton box equals the box of the content it stands in for (303ms)
+  ✓  47 [chromium] › e2e/accessibility.spec.ts:114:5 › accessibility › the populated tree meets the color-contrast floor, in dark (368ms)
+  ✓  49 [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header (227ms)
+  ✓  50 [development] › e2e/kit-route.spec.ts:103:3 › kit route › mirrors correctly under a forced right-to-left direction (493ms)
+
+  50 passed (8.3s)

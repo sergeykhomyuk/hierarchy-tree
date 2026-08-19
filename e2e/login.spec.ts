@@ -36,8 +36,11 @@ test.describe('the login card', () => {
     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
     await page.getByRole('button', { name: 'login.submit' }).click();
 
+    // No user handler passed to installApiMocks fulfills /users.json
+    // with [] by default - the hierarchy feature's own empty envelope
+    // (invariant 44) - which lands the tree on the empty state.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.emptyHeading',
     );
     expect(new URL(page.url()).pathname).toBe('/');
   });
@@ -94,13 +97,16 @@ test.describe('the login card', () => {
 
     await page.getByRole('button', { name: 'login.retry' }).click();
 
+    // No user handler passed to installApiMocks fulfills /users.json
+    // with [] by default - the hierarchy feature's own empty envelope
+    // (invariant 44) - which lands the tree on the empty state.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.emptyHeading',
     );
     expect(secretCallCount).toBe(3);
   });
 
-  test('issues exactly one secrets request while authenticating, and exactly one users request from the landing route', async ({
+  test('issues exactly one secrets request while authenticating, and exactly two users requests from the landing route', async ({
     page,
     baseURL,
   }) => {
@@ -126,16 +132,19 @@ test.describe('the login card', () => {
     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
     await page.getByRole('button', { name: 'login.submit' }).click();
 
+    // [] is the hierarchy feature's own empty envelope (invariant 44),
+    // which lands the tree on the empty state.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.emptyHeading',
     );
 
     expect(secretRequestCount).toBe(1);
-    // Exactly one, not zero: the authenticated route's own loader (M3)
-    // fetches the signed-in user's record once landing on / - the
-    // sign-in flow itself still never touches the users path, only the
-    // subsequent navigation's loader does.
-    expect(userRequestCount).toBe(1);
+    // Two, not zero and not one: the sign-in flow itself never touches
+    // the users path, only the subsequent navigation's loaders do - and
+    // landing on / runs two independent ones, the authenticated route's
+    // signed-in-name lookup and the hierarchy page's own repository fetch
+    // (invariant 4 - "this page issues exactly one request of its own").
+    expect(userRequestCount).toBe(2);
   });
 
   test('leaves no credential material in the telemetry buffer or storage', async ({
@@ -154,8 +163,11 @@ test.describe('the login card', () => {
     await page.getByLabel('login.emailLabel').fill(EMAIL);
     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
     await page.getByRole('button', { name: 'login.submit' }).click();
+    // No user handler passed to installApiMocks fulfills /users.json
+    // with [] by default - the hierarchy feature's own empty envelope
+    // (invariant 44) - which lands the tree on the empty state.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.emptyHeading',
     );
 
     const credentials = {

@@ -585,6 +585,12 @@ export default defineConfig([
               message:
                 'redirect/redirectDocument are only permitted inside src/features/auth/guard/** - no other file performs a client-side redirect.',
             },
+            {
+              name: 'react-router',
+              importNames: ['useRevalidator'],
+              message:
+                'useRevalidator is only permitted in src/app/ route modules - a feature retries or refreshes through the callback its route hands it, so the route stays the one place that wraps beginInteraction/revalidate/endInteraction.',
+            },
           ],
           patterns: [SINKS_IMPORT_PATTERN],
         },

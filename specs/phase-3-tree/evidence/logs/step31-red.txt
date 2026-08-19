@@ -1,0 +1,124 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/domain/recoverFocusedRowId.test.ts (0 test)
+ ❯ |ui| src/features/hierarchy/domain/rowNavigation.test.ts (0 test)
+ ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (14 tests | 3 failed) 164ms
+       × exactly one row is tabbable, and on first render it is the first visible row 5ms
+       × the row that receives focus becomes the tabbable row, and the rest fall out of the tab sequence 3ms
+       × collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable 9ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/domain/recoverFocusedRowId.test.ts [ src/features/hierarchy/domain/recoverFocusedRowId.test.ts ]
+Error: Failed to resolve import "./recoverFocusedRowId" from "src/features/hierarchy/domain/recoverFocusedRowId.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/recoverFocusedRowId.test.ts:4:36
+  2  |  import { buildForest } from "./buildForest";
+  3  |  import { flattenVisible } from "./flattenVisible";
+  4  |  import { recoverFocusedRowId } from "./recoverFocusedRowId";
+     |                                       ^
+  5  |  import { parsePersonIdentifier } from "./personIdentifier";
+  6  |  import { testPerson } from "../testing/testPerson";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |ui| src/features/hierarchy/domain/rowNavigation.test.ts [ src/features/hierarchy/domain/rowNavigation.test.ts ]
+Error: Failed to resolve import "./rowNavigation" from "src/features/hierarchy/domain/rowNavigation.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/rowNavigation.test.ts:4:49
+  2  |  import { buildForest } from "./buildForest";
+  3  |  import { flattenVisible } from "./flattenVisible";
+  4  |  import { findRowIndexById, parentRowIndex } from "./rowNavigation";
+     |                                                    ^
+  5  |  import { parsePersonIdentifier } from "./personIdentifier";
+  6  |  import { testPerson } from "../testing/testPerson";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > roving tabindex > exactly one row is tabbable, and on first render it is the first visible row
+AssertionError: expected [ -1, -1 ] to deeply equal [ +0, -1 ]
+
+- Expected
++ Received
+
+  [
+-   0,
++   -1,
+    -1,
+  ]
+
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:415:47
+    413|
+    414|       const rows = screen.getAllByRole('treeitem');
+    415|       expect(rows.map((row) => row.tabIndex)).toEqual([0, -1]);
+       |                                               ^
+    416|     });
+    417|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > roving tabindex > the row that receives focus becomes the tabbable row, and the rest fall out of the tab sequence
+AssertionError: expected [ -1, -1 ] to deeply equal [ -1, +0 ]
+
+- Expected
++ Received
+
+  [
+    -1,
+-   0,
++   -1,
+  ]
+
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:439:74
+    437|       fireEvent.focus(rows[1]);
+    438|
+    439|       expect(screen.getAllByRole('treeitem').map((row) => row.tabIndex…
+       |                                                                          ^
+    440|         [-1, 0],
+    441|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > roving tabindex > collapsing the branch containing the tabbable row leaves exactly one still-rendered row tabbable
+AssertionError: expected -1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ -1
+
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:459:32
+    457|       const rows = screen.getAllByRole('treeitem');
+    458|       expect(rows).toHaveLength(1);
+    459|       expect(rows[0].tabIndex).toBe(0);
+       |                                ^
+    460|     });
+    461|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed | 1 passed (4)
+      Tests  3 failed | 21 passed (24)
+   Start at  09:02:12
+   Duration  884ms (transform 314ms, setup 537ms, import 226ms, tests 262ms, environment 1.64s)
+

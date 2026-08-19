@@ -4,6 +4,7 @@ import {
   installDeferredUserMock,
   submitSignInForm,
 } from './support/deferredUserMock';
+import { installPopulatedHierarchyMock } from './support/hierarchyFixture';
 import { installRouteMocks } from './support/routeMocks';
 import { installSignInApiMock, signIn } from './support/signIn';
 
@@ -46,8 +47,12 @@ test.describe('accessibility', () => {
       await page.emulateMedia({ colorScheme });
       await installSignInApiMock(page);
       await signIn(page);
+      // installSignInApiMock's one user record satisfies auth's own
+      // schema but not the hierarchy feature's (no email, a string id),
+      // so this lands on the error state - see placeholder-routes.spec.ts's
+      // own note on the same mock.
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-        'home.title',
+        'page.errorHeading',
       );
       await expect(
         page.getByRole('button', { name: 'header.logout' }),
@@ -73,6 +78,13 @@ test.describe('accessibility', () => {
 
       await submitSignInForm(page);
       await expect(page.getByLabel('header.nameLoading')).toBeVisible();
+      // installDeferredUserMock defers the SAME /users.json request the
+      // header's own lookup and the hierarchy repository both make, so
+      // this scan also covers the hierarchy Skeleton state - not just the
+      // header's own pending presentation (invariant 151).
+      await expect(
+        page.getByRole('status', { name: 'page.loadingLabel' }),
+      ).toBeVisible();
 
       const results = await createAxeBuilder(page).analyze();
       expect(results.violations).toEqual([]);
@@ -89,6 +101,33 @@ test.describe('accessibility', () => {
       await submitSignInForm(page);
       getResolveUser()({ status: 200, body: [] });
       await expect(page.getByText('header.signedInFallback')).toBeVisible();
+      // The same empty-array response also resolves the hierarchy
+      // repository's own fetch (same shared mock), landing it on the
+      // Empty state - this scan covers both, not just the header
+      // (invariant 151).
+      await expect(page.getByText('page.emptyHeading')).toBeVisible();
+
+      const results = await createAxeBuilder(page).analyze();
+      expect(results.violations).toEqual([]);
+    });
+  }
+
+  // The Data state - a real, nested, schema-valid tree - was unreachable
+  // by any e2e mock before the M3 hierarchy fixture: every other route
+  // mock in this suite produces only Error or Empty. A full, unscoped
+  // scan now that M4's roving tabindex work has landed - role="tree" has
+  // real focusable content (invariant 151), so the color-contrast-only
+  // scoping this test carried through M3 no longer has a reason to exist.
+  for (const colorScheme of ['light', 'dark'] as const) {
+    test(`the populated tree has zero axe violations, in ${colorScheme}`, async ({
+      page,
+      baseURL,
+    }) => {
+      await installRouteMocks(page, baseURL ?? '');
+      await page.emulateMedia({ colorScheme });
+      await installPopulatedHierarchyMock(page);
+      await signIn(page);
+      await expect(page.getByRole('tree')).toBeVisible();
 
       const results = await createAxeBuilder(page).analyze();
       expect(results.violations).toEqual([]);

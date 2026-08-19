@@ -1,0 +1,42 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/buildContentSecurityPolicy.test.ts (8 tests | 2 failed) 4ms
+     × the content security policy permits https image origins and changes no other directive 2ms
+     × the content security policy permits https image origins and changes no other directive 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/buildContentSecurityPolicy.test.ts > buildContentSecurityPolicy > the content security policy permits https image origins and changes no other directive
+ FAIL  |tooling| scripts/buildContentSecurityPolicy.test.ts > buildContentSecurityPolicy > the content security policy permits https image origins and changes no other directive
+AssertionError: expected [ 'default-src \'self\'', …(7) ] to include 'img-src \'self\' data: https:'
+ ❯ scripts/buildContentSecurityPolicy.test.ts:45:26
+     43|       // The exact img-src segment - not merely toContain(), which wou…
+     44|       // still pass if https: had never actually been added.
+     45|       expect(directives).toContain("img-src 'self' data: https:");
+       |                          ^
+     46|
+     47|       // Pinning the full directive set (content and count) is what pr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  15:13:41
+   Duration  144ms (transform 40ms, setup 55ms, import 14ms, tests 4ms, environment 0ms)
+
+
+Running 1 test using 1 worker
+
+  ✘  1 [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header (30.1s)
+
+
+  1) [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header 
+
+    Test timeout of 30000ms exceeded.
+
+    Error Context: test-results/kit-route-kit-route-an-int-ac26f-t-carries-no-Referer-header-development/error-context.md
+
+  1 failed
+    [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header 

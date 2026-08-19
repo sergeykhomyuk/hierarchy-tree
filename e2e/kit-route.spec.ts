@@ -82,6 +82,24 @@ test.describe('kit route', () => {
     expect(skeletonBox?.height).toBe(avatarBox?.height);
   });
 
+  test('an intercepted image request carries no Referer header', async ({
+    page,
+    baseURL,
+  }) => {
+    await installRouteMocks(page, baseURL ?? '');
+    const capturedHeaders = new Promise<Record<string, string>>((resolve) => {
+      void page.route('**/kit-avatar.jpg', async (route) => {
+        resolve(route.request().headers());
+        await route.fulfill({ status: 404 });
+      });
+    });
+
+    await page.goto('/__kit');
+
+    const headers = await capturedHeaders;
+    expect(headers['referer']).toBeUndefined();
+  });
+
   test('mirrors correctly under a forced right-to-left direction', async ({
     page,
     baseURL,

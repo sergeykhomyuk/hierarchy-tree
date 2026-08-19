@@ -1,0 +1,50 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/documentation-configuration.test.ts (4 tests | 2 failed | 2 skipped) 4ms
+     × the deviation count agrees in PRODUCT.md, the deviations section and the decision log 3ms
+     × every phase 3 checkbox in ROADMAP.md is ticked and the status board agrees 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/documentation-configuration.test.ts > phase 3 decision log and ROADMAP.md > the deviation count agrees in PRODUCT.md, the deviations section and the decision log
+AssertionError: phase-3-tree decision-log entry count disagrees with invariant 185: expected +0 to be 9 // Object.is equality
+
+- Expected
++ Received
+
+- 9
++ 0
+
+ ❯ scripts/documentation-configuration.test.ts:99:7
+     97|       phase3Entries.length,
+     98|       'phase-3-tree decision-log entry count disagrees with invariant …
+     99|     ).toBe(statedCount);
+       |       ^
+    100|   });
+    101|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |tooling| scripts/documentation-configuration.test.ts > phase 3 decision log and ROADMAP.md > every phase 3 checkbox in ROADMAP.md is ticked and the status board agrees
+AssertionError: a phase 3 checkbox is not ticked: expected '- [ ]' to be '- [x]' // Object.is equality
+
+Expected: "- [x]"
+Received: "- [ ]"
+
+ ❯ scripts/documentation-configuration.test.ts:122:55
+    120|     ).toBeGreaterThan(0);
+    121|     for (const box of [...outcomeBoxes, ...exitBoxes]) {
+    122|       expect(box, 'a phase 3 checkbox is not ticked').toBe('- [x]');
+       |                                                       ^
+    123|     }
+    124|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 skipped (4)
+   Start at  08:40:00
+   Duration  110ms (transform 25ms, setup 42ms, import 3ms, tests 4ms, environment 0ms)
+

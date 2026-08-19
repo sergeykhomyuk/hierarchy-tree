@@ -1,0 +1,299 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (7 tests | 2 failed) 83ms
+     × collapsing a parent and re-expanding it restores exactly the expansion its descendants had 10ms
+     × a sequence of toggles intercepts no request and calls the forest builder once 5ms
+ ❯ |ui| src/features/hierarchy/TreeRow.test.tsx (8 tests | 1 failed) 92ms
+     × the toggle control is not a tab stop of its own 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > collapsing a parent and re-expanding it restores exactly the expansion its descendants had
+TestingLibraryElementError: Unable to find an element with the role "button"
+
+Here are the available roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"truncate text-ink-muted"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-expanded[39m=[32m"true"[39m
+  [33maria-label[39m=[32m"First1 Last1"[39m
+  [33maria-level[39m=[32m"1"[39m
+  [33maria-posinset[39m=[32m"1"[39m
+  [33maria-selected[39m=[32m"false"[39m
+  [33maria-setsize[39m=[32m"1"[39m
+  [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+  [33mrole[39m=[32m"treeitem"[39m
+  [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+  [36m>[39m
+    [0m−[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+  [36m>[39m
+    [0mFL[0m
+  [36m</span>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"min-w-0 flex-1"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+    [36m>[39m
+      [0mFirst1 Last1[0m
+    [36m</p>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"truncate text-ink-muted"[39m
+    [36m>[39m
+      [0mperson1@example.test[0m
+    [36m</p>[39m
+  [36m</div>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+  [36m>[39m
+    [0m1[0m
+    [0m [0m
+    [0mpage.reportsLabel[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ rowToggle src/features/hierarchy/HierarchyTree.test.tsx:82:66
+     80|
+     81| function rowToggle(rowName: string): HTMLElement {
+     82|   return within(screen.getByRole('treeitem', { name: rowName })).getBy…
+       |                                                                  ^
+     83|     'button',
+     84|     { hidden: true },
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:305:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > a sequence of toggles intercepts no request and calls the forest builder once
+TestingLibraryElementError: Unable to find an element with the role "button"
+
+Here are the available roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"truncate text-ink-muted"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-expanded[39m=[32m"true"[39m
+  [33maria-label[39m=[32m"First1 Last1"[39m
+  [33maria-level[39m=[32m"1"[39m
+  [33maria-posinset[39m=[32m"1"[39m
+  [33maria-selected[39m=[32m"false"[39m
+  [33maria-setsize[39m=[32m"1"[39m
+  [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+  [33mrole[39m=[32m"treeitem"[39m
+  [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+  [36m>[39m
+    [0m−[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+  [36m>[39m
+    [0mFL[0m
+  [36m</span>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"min-w-0 flex-1"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+    [36m>[39m
+      [0mFirst1 Last1[0m
+    [36m</p>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"truncate text-ink-muted"[39m
+    [36m>[39m
+      [0mperson1@example.test[0m
+    [36m</p>[39m
+  [36m</div>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+  [36m>[39m
+    [0m1[0m
+    [0m [0m
+    [0mpage.reportsLabel[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ rowToggle src/features/hierarchy/HierarchyTree.test.tsx:82:66
+     80|
+     81| function rowToggle(rowName: string): HTMLElement {
+     82|   return within(screen.getByRole('treeitem', { name: rowName })).getBy…
+       |                                                                  ^
+     83|     'button',
+     84|     { hidden: true },
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:327:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |ui| src/features/hierarchy/TreeRow.test.tsx > TreeRow > the toggle control is not a tab stop of its own
+TestingLibraryElementError: Unable to find an element with the role "button"
+
+Here are the available roles:
+
+  treeitem:
+
+  Name "Ronnen Gurevitch":
+  [36m<div[39m
+    [33maria-expanded[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Ronnen Gurevitch"[39m
+    [33maria-level[39m=[32m"1"[39m
+    [33maria-posinset[39m=[32m"1"[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33maria-setsize[39m=[32m"2"[39m
+    [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+    [33mrole[39m=[32m"treeitem"[39m
+    [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"truncate text-ink-muted"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33maria-expanded[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Ronnen Gurevitch"[39m
+      [33maria-level[39m=[32m"1"[39m
+      [33maria-posinset[39m=[32m"1"[39m
+      [33maria-selected[39m=[32m"false"[39m
+      [33maria-setsize[39m=[32m"2"[39m
+      [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+      [33mrole[39m=[32m"treeitem"[39m
+      [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+      [33mtabindex[39m=[32m"-1"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+      [36m>[39m
+        [0m−[0m
+      [36m</span>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+      [36m>[39m
+        [0mRG[0m
+      [36m</span>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-w-0 flex-1"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+        [36m>[39m
+          [0mRonnen Gurevitch[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"truncate text-ink-muted"[39m
+        [36m>[39m
+          [0mronnen@example.test[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+      [36m>[39m
+        [0m3[0m
+        [0m [0m
+        [0mpage.reportsLabel[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/TreeRow.test.tsx:170:27
+    168|     await renderRow(MANAGER_PROPS);
+    169|
+    170|     const toggle = screen.getByRole('button', { hidden: true });
+       |                           ^
+    171|     expect(toggle).toHaveAttribute('tabindex', '-1');
+    172|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 12 passed (15)
+   Start at  17:30:30
+   Duration  697ms (transform 107ms, setup 227ms, import 108ms, tests 175ms, environment 756ms)
+

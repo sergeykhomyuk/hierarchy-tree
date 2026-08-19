@@ -10,6 +10,7 @@ import { useDocumentTitle } from '@shared/hooks';
 import { LoginAlert } from './LoginAlert';
 import { LoginCardStateKind, loginCardState } from './loginCardState';
 import { ProductMark } from './ProductMark';
+import { AUTH_TRANSLATION_NAMESPACE } from './translationNamespace';
 import { useLoginSubmission } from './useLoginSubmission';
 
 const ALERT_ID = 'login-alert';
@@ -32,7 +33,7 @@ export const LoginPage = memo(function LoginPage({
   dependencies,
   destination,
 }: LoginPageProps) {
-  const { t } = useTranslation('auth');
+  const { t } = useTranslation(AUTH_TRANSLATION_NAMESPACE);
   useDocumentTitle(t('login.documentTitle'));
 
   const [email, setEmail] = useState('');

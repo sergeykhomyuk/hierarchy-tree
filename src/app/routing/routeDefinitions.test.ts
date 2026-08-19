@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { RouteObject } from 'react-router';
 import { isSessionGuarded } from '@features/auth';
+import { Locale } from '@platform/internationalization';
 import { buildTestRuntime } from '../testing/renderRoute';
 import { routeDefinitions } from './routeDefinitions';
 
@@ -35,6 +36,15 @@ describe('routeDefinitions', () => {
   it('always registers the not-found wildcard last', async () => {
     const paths = topLevelPaths(await buildChildren(true));
     expect(paths[paths.length - 1]).toBe('*');
+  });
+
+  it('the route set is slash, slash-login and the not-found wildcard and nothing else', async () => {
+    const children = await buildChildren(false);
+
+    // developmentRoutes: false, matching the production runtime this
+    // invariant re-checks (invariant 188) - no __kit route beside the
+    // three real ones.
+    expect(topLevelPaths(children)).toEqual([undefined, 'login', '*']);
   });
 
   it('keep the route set at home, login and not-found', async () => {
@@ -84,5 +94,27 @@ describe('routeDefinitions', () => {
         expect(isSessionGuarded(loader)).toBe(true);
       }
     }
+  });
+
+  it('the hierarchy catalogue loads with the route and not with the app entry', async () => {
+    const runtime = await buildTestRuntime({ developmentRoutes: true });
+    // buildTestRuntime stands in for the app entry's own composition root
+    // (renderRoute.tsx's own precedent) - it registers only `common`, so
+    // the hierarchy namespace being absent here is what "not with the app
+    // entry" means (invariant 159).
+    expect(runtime.i18n.hasResourceBundle(Locale.Test, 'hierarchy')).toBe(
+      false,
+    );
+
+    const [root] = routeDefinitions(runtime);
+    const authenticated = findAuthenticated(root?.children ?? []);
+    const indexRoute = authenticated?.children?.[0];
+    if (indexRoute === undefined || typeof indexRoute.lazy !== 'function') {
+      throw new Error('expected the index route to be lazy');
+    }
+
+    await indexRoute.lazy();
+
+    expect(runtime.i18n.hasResourceBundle(Locale.Test, 'hierarchy')).toBe(true);
   });
 });

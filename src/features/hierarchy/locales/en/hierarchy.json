@@ -1,7 +1,25 @@
 {
-  "home": {
+  "page": {
     "documentTitle": "Hierarchy",
-    "title": "The hierarchy view isn't built yet",
-    "message": "This screen is a placeholder for phase 2's real hierarchy view."
+    "cardTitle": "All users",
+    "treeLabel": "User hierarchy",
+    "loadingLabel": "Loading hierarchy…",
+    "errorHeading": "Couldn't load the hierarchy",
+    "errorBody": "The request to the users database failed. Your session is still valid, so retrying is safe.",
+    "retryLabel": "Retry",
+    "backToLoginLabel": "Back to login",
+    "emptyHeading": "No users in the hierarchy yet",
+    "emptyBody": "The tree builds itself from the manager id on each record. Users will appear here once they exist.",
+    "refreshLabel": "Refresh",
+    "summary": "{{people}} people · {{managers}} managers · {{roots}} roots",
+    "youMarkerLabel": "you",
+    "reports_one": "report",
+    "reports_other": "reports",
+    "hidden_one": "hidden",
+    "hidden_other": "hidden",
+    "toggleAnnouncedExpanded": "{{name}} expanded",
+    "toggleAnnouncedCollapsed": "{{name}} collapsed",
+    "siblingsExpandedAnnounced_one": "{{count}} branch expanded",
+    "siblingsExpandedAnnounced_other": "{{count}} branches expanded"
   }
 }

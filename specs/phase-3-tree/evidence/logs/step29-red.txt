@@ -1,0 +1,751 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/loadTranslations.test.ts (3 tests | 1 failed) 15ms
+     × registers the key-echoed catalogue under Locale.Test 8ms
+ ❯ |ui| src/features/hierarchy/HierarchySummary.test.tsx (2 tests | 2 failed) 70ms
+     × renders the title and the summary line 66ms
+     × the summary line composes from one catalogue string with placeholders 3ms
+ ❯ |ui| src/features/hierarchy/TreeRow.test.tsx (9 tests | 2 failed) 89ms
+     × a manager row shows its direct report count and a non-manager row shows none 4ms
+     × the report count pluralizes through the catalogue rather than an equality branch 2ms
+ ❯ |ui| src/features/hierarchy/HierarchyPage.test.tsx (12 tests | 2 failed) 134ms
+     × a payload of 33 records containing one duplicate id reads 32 people 13ms
+     × collapsing a branch never changes the counts 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx > HierarchyPage > a payload of 33 records containing one duplicate id reads 32 people
+TestingLibraryElementError: Unable to find an element with the text: page.summary. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<span[39m
+      [33mdata-testid[39m=[32m"location-search"[39m
+    [36m/>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex items-center justify-between border-b border-border-hairline pb-4"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"text-lg font-semibold text-ink"[39m
+        [36m>[39m
+          [0mpage.cardTitle[0m
+        [36m</h1>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"text-ink-muted"[39m
+        [36m>[39m
+          [0m32[0m
+          [0m [0m
+          [0mpage.summaryPeopleLabel[0m
+          [0m · [0m
+          [0m0[0m
+          [0m [0m
+          [0mpage.summaryManagersLabel[0m
+          [0m · [0m
+          [0m32[0m
+          [0m [0m
+          [0mpage.summaryRootsLabel[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mrole[39m=[32m"tree"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"First1 Last1"[39m
+          [33maria-level[39m=[32m"1"[39m
+          [33maria-posinset[39m=[32m"1"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33maria-setsize[39m=[32m"32"[39m
+          [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+          [33mrole[39m=[32m"treeitem"[39m
+          [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+          [36m>[39m
+            [0m−[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+          [36m>[39m
+            [0mFL[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"min-w-0 flex-1"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+            [36m>[39m
+              [0mFirst1 Last1[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"truncate text-ink-muted"[39m
+            [36m>[39m
+              [0mperson1@example.test[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"First2 Last2"[39m
+          [33maria-level[39m=[32m"1"[39m
+          [33maria-posinset[39m=[32m"2"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33maria-setsize[39m=[32m"32"[39m
+          [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+          [33mrole[39m=[32m"treeitem"[39m
+          [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+          [36m>[39m
+            [0m−[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+          [36m>[39m
+            [0mFL[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"min-w-0 flex-1"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+            [36m>[39m
+              [0mFirst2 Last2[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"truncate text-ink-muted"[39m
+            [36m>[39m
+              [0mperson2@example.test[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"First3 Last3"[39m
+          [33maria-level[39m=[32m"1"[39m
+          [33maria-posinset[39m=[32m"3"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33maria-setsize[39m=[32m"32"[39m
+          [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+          [33mrole[39m=[32m"treeitem"[39m
+          [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+          [36m>[39m
+            [0m−[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+          [36m>[39m
+            [0mFL[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"min-w-0 flex-1"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+            [36m>[39m
+              [0mFirst3 Last3[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"truncate text-ink-muted"[39m
+            [36m>[39m
+              [0mperson3@example.test[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"First4 Last4"[39m
+          [33maria-level[39m=[32m"1"[39m
+          [33maria-posinset[39m=[32m"4"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33maria-setsize[39m=[32m"32"[39m
+          [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+          [33mrole[39m=[32m"treeitem"[39m
+          [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+          [36m>[39m
+            [0m−[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m...
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/HierarchyPage.test.tsx:282:19
+    280|     // real English catalogue) - this test's own claim is that a paylo…
+    281|     // reading 32 people, not 33, reaches the summary at all.
+    282|     expect(screen.getByText('page.summary')).toBeInTheDocument();
+       |                   ^
+    283|   });
+    284|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx > HierarchyPage > collapsing a branch never changes the counts
+TestingLibraryElementError: Unable to find an element with the text: page.summary. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<span[39m
+      [33mdata-testid[39m=[32m"location-search"[39m
+    [36m/>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex items-center justify-between border-b border-border-hairline pb-4"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"text-lg font-semibold text-ink"[39m
+        [36m>[39m
+          [0mpage.cardTitle[0m
+        [36m</h1>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"text-ink-muted"[39m
+        [36m>[39m
+          [0m5[0m
+          [0m [0m
+          [0mpage.summaryPeopleLabel[0m
+          [0m · [0m
+          [0m2[0m
+          [0m [0m
+          [0mpage.summaryManagersLabel[0m
+          [0m · [0m
+          [0m2[0m
+          [0m [0m
+          [0mpage.summaryRootsLabel[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mrole[39m=[32m"tree"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-expanded[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"First1 Last1"[39m
+          [33maria-level[39m=[32m"1"[39m
+          [33maria-posinset[39m=[32m"1"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33maria-setsize[39m=[32m"2"[39m
+          [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+          [33mrole[39m=[32m"treeitem"[39m
+          [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m−[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+          [36m>[39m
+            [0mFL[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"min-w-0 flex-1"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+            [36m>[39m
+              [0mFirst1 Last1[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"truncate text-ink-muted"[39m
+            [36m>[39m
+              [0mperson1@example.test[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+          [36m>[39m
+            [0m2[0m
+            [0m [0m
+            [0mpage.reportsLabel[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-expanded[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"First2 Last2"[39m
+          [33maria-level[39m=[32m"2"[39m
+          [33maria-posinset[39m=[32m"1"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33maria-setsize[39m=[32m"2"[39m
+          [33mclass[39m=[32m"flex items-center gap-3 py-3border-s border-border-hairline"[39m
+          [33mrole[39m=[32m"treeitem"[39m
+          [33mstyle[39m=[32m"padding-inline-start: 2rem;"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m−[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+          [36m>[39m
+            [0mFL[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"min-w-0 flex-1"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+            [36m>[39m
+              [0mFirst2 Last2[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"truncate text-ink-muted"[39m
+            [36m>[39m
+              [0mperson2@example.test[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+          [36m>[39m
+            [0m1[0m
+            [0m [0m
+            [0mpage.reportsLabel[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"First3 Last3"[39m
+          [33maria-level[39m=[32m"3"[39m
+          [33maria-posinset[39m=[32m"1"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33maria-setsize[39m=[32m"1"[39m
+          [33mclass[39m=[32m"flex items-center gap-3 py-3border-s border-border-hairline"[39m
+          [33mrole[39m=[32m"treeitem"[39m
+          [33mstyle[39m=[32m"padding-inline-start: 4rem;"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+          [36m>[39m
+            [0m−[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+          [36m>[39m
+            [0mFL[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"min-w-0 flex-1"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+            [36m>[39m
+              [0mFirst3 Last3[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"truncate text-ink-muted"[39m
+            [36m>[39m
+              [0mperson3@example.test[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"First4 Last4"[39m
+          [33maria-level[39m=[32m"2"[39m
+          [33maria-posinset[39m=[32m"2"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33maria-setsize[39m=[32m"2"[39m
+          [33mclass[39m=[32m"flex items-center gap-3 py-3border-s border-border-hairline"[39m
+          [33mrole[39m=[32m"treeitem"[39m
+          [33mstyle[39m=[32m"padding-inline-start: 2rem;"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+          [36m>[39m
+            [0m−[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+          [36m>[39m
+            [0mFL[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"min-w-0 flex-1"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+            [36m>[39m
+              [0mFirst4 Last4[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"truncate text-ink-muted"[39m
+            [36m>[39m
+              [0mperson4@example.test[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"First5 Last5"[39m
+          [33maria-level[39m=[32m"1"[39m
+          [33maria-posinset[39m=[32m"2"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33maria-setsize[39m=[32m"2"[39m
+          [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+          [33mrole[39m=[32m"treeitem"[39m
+          [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+          [36m>[39m
+            [0m−[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+          [36m>[39m
+            [0mFL[0m
+          [36m</span>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"min-w-0 flex-1"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+            [36m>[39m
+              [0mFirst5 Last5[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"truncate text-ink-muted"[39m
+            [36m>[39m
+              [0mperson5@example.test[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/HierarchyPage.test.tsx:312:19
+    310|     // result.counts regardless of how nested the tree beneath it is.
+    311|     // HierarchySummary.test.tsx proves the interpolated content itsel…
+    312|     expect(screen.getByText('page.summary')).toBeInTheDocument();
+       |                   ^
+    313|   });
+    314| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchySummary.test.tsx > HierarchySummary > renders the title and the summary line
+TestingLibraryElementError: Unable to find an element with the text: page.summary. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-center justify-between border-b border-border-hairline pb-4"[39m
+    [36m>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"text-lg font-semibold text-ink"[39m
+      [36m>[39m
+        [0mpage.cardTitle[0m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-muted"[39m
+      [36m>[39m
+        [0m10[0m
+        [0m [0m
+        [0mpage.summaryPeopleLabel[0m
+        [0m · [0m
+        [0m4[0m
+        [0m [0m
+        [0mpage.summaryManagersLabel[0m
+        [0m · [0m
+        [0m2[0m
+        [0m [0m
+        [0mpage.summaryRootsLabel[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/HierarchySummary.test.tsx:36:19
+     34|       screen.getByRole('heading', { level: 1, name: 'page.cardTitle' }…
+     35|     ).toBeInTheDocument();
+     36|     expect(screen.getByText('page.summary')).toBeInTheDocument();
+       |                   ^
+     37|   });
+     38|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchySummary.test.tsx > HierarchySummary > the summary line composes from one catalogue string with placeholders
+TestingLibraryElementError: Unable to find an element with the text: 1,234 people · 4 managers · 2 roots. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex items-center justify-between border-b border-border-hairline pb-4"[39m
+    [36m>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"text-lg font-semibold text-ink"[39m
+      [36m>[39m
+        [0mAll users[0m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-ink-muted"[39m
+      [36m>[39m
+        [0m1234[0m
+        [0m [0m
+        [0mpeople[0m
+        [0m · [0m
+        [0m4[0m
+        [0m [0m
+        [0mmanagers[0m
+        [0m · [0m
+        [0m2[0m
+        [0m [0m
+        [0mroots[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/HierarchySummary.test.tsx:58:14
+     56|     // Intl formatting rather than raw interpolation (invariant 156).
+     57|     expect(
+     58|       screen.getByText('1,234 people · 4 managers · 2 roots'),
+       |              ^
+     59|     ).toBeInTheDocument();
+     60|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/TreeRow.test.tsx > TreeRow > a manager row shows its direct report count and a non-manager row shows none
+TestingLibraryElementError: Unable to find an element with the text: /3 page\.reports_other/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33maria-expanded[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Ronnen Gurevitch"[39m
+      [33maria-level[39m=[32m"1"[39m
+      [33maria-posinset[39m=[32m"1"[39m
+      [33maria-selected[39m=[32m"false"[39m
+      [33maria-setsize[39m=[32m"2"[39m
+      [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+      [33mrole[39m=[32m"treeitem"[39m
+      [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+      [33mtabindex[39m=[32m"-1"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m−[0m
+      [36m</button>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+      [36m>[39m
+        [0mRG[0m
+      [36m</span>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-w-0 flex-1"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+        [36m>[39m
+          [0mRonnen Gurevitch[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"truncate text-ink-muted"[39m
+        [36m>[39m
+          [0mronnen@example.test[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+      [36m>[39m
+        [0m3[0m
+        [0m [0m
+        [0mpage.reportsLabel[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/TreeRow.test.tsx:85:19
+     83|   it('a manager row shows its direct report count and a non-manager ro…
+     84|     await renderRow(MANAGER_PROPS);
+     85|     expect(screen.getByText(/3 page\.reports_other/)).toBeInTheDocumen…
+       |                   ^
+     86|
+     87|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/TreeRow.test.tsx > TreeRow > the report count pluralizes through the catalogue rather than an equality branch
+TestingLibraryElementError: Unable to find an element with the text: /1 page\.reports_one/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33maria-expanded[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Ronnen Gurevitch"[39m
+      [33maria-level[39m=[32m"1"[39m
+      [33maria-posinset[39m=[32m"1"[39m
+      [33maria-selected[39m=[32m"false"[39m
+      [33maria-setsize[39m=[32m"2"[39m
+      [33mclass[39m=[32m"flex items-center gap-3 py-3"[39m
+      [33mrole[39m=[32m"treeitem"[39m
+      [33mstyle[39m=[32m"padding-inline-start: 0rem;"[39m
+      [33mtabindex[39m=[32m"-1"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"flex h-6 w-6 shrink-0 items-center justify-center rounded-control border border-border-hairline text-ink-muted"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m−[0m
+      [36m</button>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"h-[34px] w-[34px] text-sm flex items-center justify-center rounded-full bg-primary-tint font-medium text-ink"[39m
+      [36m>[39m
+        [0mRG[0m
+      [36m</span>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-w-0 flex-1"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"flex items-center gap-2 truncate font-semibold text-ink"[39m
+        [36m>[39m
+          [0mRonnen Gurevitch[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"truncate text-ink-muted"[39m
+        [36m>[39m
+          [0mronnen@example.test[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"shrink-0 text-ink-muted"[39m
+      [36m>[39m
+        [0m1[0m
+        [0m [0m
+        [0mpage.reportsLabel[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/TreeRow.test.tsx:197:19
+    195|     // `count === 1 ? ... : ...` branch could never produce this exact
+    196|     // string, since it has no access to the catalogue's own key suffi…
+    197|     expect(screen.getByText(/1 page\.reports_one/)).toBeInTheDocument(…
+       |                   ^
+    198|
+    199|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  |ui| src/features/hierarchy/loadTranslations.test.ts > hierarchy loadTranslations > registers the key-echoed catalogue under Locale.Test
+AssertionError: expected { home: { …(3) }, page: { …(16) } } to deeply equal { page: { …(15) } }
+
+- Expected
++ Received
+
+@@ -1,6 +1,11 @@
+  {
++   "home": {
++     "documentTitle": "home.documentTitle",
++     "message": "home.message",
++     "title": "home.title",
++   },
+    "page": {
+      "backToLoginLabel": "page.backToLoginLabel",
+      "cardTitle": "page.cardTitle",
+      "documentTitle": "page.documentTitle",
+      "emptyBody": "page.emptyBody",
+@@ -8,12 +13,13 @@
+      "errorBody": "page.errorBody",
+      "errorHeading": "page.errorHeading",
+      "hiddenLabel": "page.hiddenLabel",
+      "loadingLabel": "page.loadingLabel",
+      "refreshLabel": "page.refreshLabel",
+-     "reports_one": "page.reports_one",
+-     "reports_other": "page.reports_other",
++     "reportsLabel": "page.reportsLabel",
+      "retryLabel": "page.retryLabel",
+-     "summary": "page.summary",
++     "summaryManagersLabel": "page.summaryManagersLabel",
++     "summaryPeopleLabel": "page.summaryPeopleLabel",
++     "summaryRootsLabel": "page.summaryRootsLabel",
+      "youMarkerLabel": "page.youMarkerLabel",
+    },
+  }
+
+ ❯ src/features/hierarchy/loadTranslations.test.ts:55:70
+     53|     const testInstance = await createTestI18n(Locale.Test);
+     54|     await loadTranslations(testInstance);
+     55|     expect(testInstance.getResourceBundle(Locale.Test, 'hierarchy')).t…
+       |                                                                      ^
+     56|       page: {
+     57|         documentTitle: 'page.documentTitle',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  4 failed | 2 passed (6)
+      Tests  7 failed | 26 passed (33)
+   Start at  18:39:27
+   Duration  2.95s (transform 542ms, setup 832ms, import 585ms, tests 2.57s, environment 2.78s)
+

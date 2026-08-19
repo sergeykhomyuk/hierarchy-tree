@@ -1,0 +1,11 @@
+
+Running 6 tests using 1 worker
+
+  ✓  1 [chromium] › e2e/hierarchy-layout.spec.ts:20:3 › hierarchy layout › the header, nav rail and card frame have identical bounding boxes before and after the data resolves (632ms)
+  ✓  2 [chromium] › e2e/hierarchy-layout.spec.ts:52:3 › hierarchy layout › toggling a branch does not move the scroll position of the rows above it (278ms)
+  ✓  3 [chromium] › e2e/hierarchy-layout.spec.ts:101:3 › hierarchy layout › the name, email and count stay on one line at 320, 768 and 1280 px (214ms)
+  ✓  4 [chromium] › e2e/hierarchy-layout.spec.ts:139:3 › hierarchy layout › captures a screenshot of each of the four states (558ms)
+  ✓  5 [chromium] › e2e/hierarchy-layout.spec.ts:158:3 › hierarchy layout › captures a screenshot of the error state (203ms)
+  ✓  6 [chromium] › e2e/hierarchy-layout.spec.ts:173:3 › hierarchy layout › captures a screenshot of the empty state (181ms)
+
+  6 passed (3.2s)

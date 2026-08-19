@@ -1,0 +1,30 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/auth/guard/resolveDestination.test.ts (4 tests | 1 failed) 4ms
+     × derives its fallback and its login match from the shared ROUTE_PATHS map rather than an independent literal 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/auth/guard/resolveDestination.test.ts > resolveDestination > derives its fallback and its login match from the shared ROUTE_PATHS map rather than an independent literal
+AssertionError: expected '/' to be '/elsewhere' // Object.is equality
+
+Expected: "/elsewhere"
+Received: "/"
+
+ ❯ src/features/auth/guard/resolveDestination.test.ts:19:43
+     17|     // BOTH move together to the mocked values, which only happens when
+     18|     // resolveDestination.ts reads ROUTE_PATHS rather than its own cop…
+     19|     expect(freshResolveDestination(null)).toBe('/elsewhere');
+       |                                           ^
+     20|     expect(freshResolveDestination('/signin')).toBe('/elsewhere');
+     21|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  18:01:05
+   Duration  506ms (transform 28ms, setup 99ms, import 6ms, tests 4ms, environment 341ms)
+

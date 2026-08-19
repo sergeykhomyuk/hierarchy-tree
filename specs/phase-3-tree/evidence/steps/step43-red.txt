@@ -1,0 +1,48 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |tooling| scripts/pipeline-integrity.test.ts (2 tests | 2 failed) 50ms
+     × no pipeline check is disabled, skipped or set to continue-on-error 7ms
+     × no coverage threshold is lower than the phase 1 pipeline set 43ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |tooling| scripts/pipeline-integrity.test.ts > pipeline integrity > no pipeline check is disabled, skipped or set to continue-on-error
+AssertionError: expected [] to deeply equal [ '__forced_red__' ]
+
+- Expected
++ Received
+
+- [
+-   "__forced_red__",
+- ]
++ []
+
+ ❯ scripts/pipeline-integrity.test.ts:45:24
+     43|       }
+     44|     }
+     45|     expect(violations).toEqual(['__forced_red__']);
+       |                        ^
+     46|   });
+     47|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |tooling| scripts/pipeline-integrity.test.ts > pipeline integrity > no coverage threshold is lower than the phase 1 pipeline set
+AssertionError: expected 85 to be greater than or equal to 86
+ ❯ scripts/pipeline-integrity.test.ts:69:36
+     67|     expect(thresholds, 'vitest.config.ts has no coverage thresholds').…
+     68|
+     69|     expect(thresholds?.lines ?? 0).toBeGreaterThanOrEqual(
+       |                                    ^
+     70|       PHASE_1_THRESHOLDS.lines + 1,
+     71|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  08:49:08
+   Duration  159ms (transform 25ms, setup 35ms, import 9ms, tests 50ms, environment 0ms)
+

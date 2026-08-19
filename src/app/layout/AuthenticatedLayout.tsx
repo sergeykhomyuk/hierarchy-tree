@@ -2,6 +2,7 @@ import { memo, useCallback } from 'react';
 import { Outlet, useLoaderData, useNavigate } from 'react-router';
 import { useRuntime } from '../composition';
 import type { AuthenticatedLoaderData } from './createAuthenticatedLoader';
+import { NavigationRail } from './NavigationRail';
 import { SignedInHeader } from './SignedInHeader';
 
 // SerializeFrom<T> (react-router's useLoaderData<T>() return type) only
@@ -26,17 +27,26 @@ export const AuthenticatedLayout = memo(function AuthenticatedLayout() {
   );
 
   return (
-    <>
-      <SignedInHeader
-        signedInUser={signedInUser}
-        dependencies={{
-          observability: runtime.observability,
-          tabStorage: runtime.tabStorage,
-          beginInteraction: runtime.interactionTracker.beginInteraction,
-          navigate,
-        }}
-      />
-      <Outlet />
-    </>
+    <div className="flex min-h-screen bg-canvas-app">
+      <NavigationRail />
+      {/* min-w-0 alongside flex-1: a flex item with neither would sit at
+          its content's natural width instead of filling the row's
+          remaining space - the hierarchy card's own width would then
+          track whatever text is longest inside it (invariant 64). */}
+      <div className="min-w-0 flex-1">
+        <SignedInHeader
+          signedInUser={signedInUser}
+          dependencies={{
+            observability: runtime.observability,
+            tabStorage: runtime.tabStorage,
+            beginInteraction: runtime.interactionTracker.beginInteraction,
+            navigate,
+          }}
+        />
+        <div className="px-[22px] pt-[18px] pb-[22px]">
+          <Outlet />
+        </div>
+      </div>
+    </div>
   );
 });

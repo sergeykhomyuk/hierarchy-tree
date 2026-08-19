@@ -1,9 +1,8 @@
 import { redirect, replace } from 'react-router';
+import { ROUTE_PATHS } from '@shared/routing';
 import { readSession, SessionStatus } from '../session';
 import type { UserIdentifier } from '../domain';
 import type { GuardContext } from './guardContext';
-
-const LOGIN_PATH = '/login';
 
 // The authenticated-route guard (invariants 84-87). Signed out, it throws
 // a redirect to the login route carrying `from` - replace() when the
@@ -23,7 +22,7 @@ export function requireSession({
 
   const url = new URL(request.url);
   const guardedLocation = `${url.pathname}${url.search}`;
-  const destination = `${LOGIN_PATH}?from=${encodeURIComponent(guardedLocation)}`;
+  const destination = `${ROUTE_PATHS.login}?from=${encodeURIComponent(guardedLocation)}`;
   const isCurrentEntry =
     `${window.location.pathname}${window.location.search}` === guardedLocation;
 

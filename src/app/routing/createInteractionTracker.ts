@@ -1,8 +1,10 @@
 import type { ObservabilityFacade } from '@platform/observability';
 import { NavigationState } from './navigationState';
+import { RevalidationState } from './revalidationState';
 
 export type RouterState = {
   navigation: { state: NavigationState };
+  revalidation: RevalidationState;
   matches: ReadonlyArray<{ route: { id: string } }>;
   errors?: Readonly<Record<string, unknown>> | null;
 };
@@ -62,7 +64,26 @@ export function createInteractionTracker(
 
   function attach(router: Router): () => void {
     startInteraction();
+    let previousNavigationState: NavigationState = NavigationState.Idle;
+    let previousRevalidationState: RevalidationState = RevalidationState.Idle;
+
     return router.subscribe((state) => {
+      const navigationStateChanged =
+        state.navigation.state !== previousNavigationState;
+      const revalidationStateChanged =
+        state.revalidation !== previousRevalidationState;
+      previousNavigationState = state.navigation.state;
+      previousRevalidationState = state.revalidation;
+
+      // A revalidation (router.revalidate(), used by Retry/Refresh) never
+      // moves navigation.state - only state.revalidation changes. Treating
+      // that as a settle would spuriously close an interaction the caller
+      // opened deliberately via beginInteraction() and emit a route_viewed
+      // for a request that was never a navigation.
+      if (!navigationStateChanged && revalidationStateChanged) {
+        return;
+      }
+
       const isNavigating = state.navigation.state !== NavigationState.Idle;
       if (isNavigating && !tracking) {
         startInteraction();

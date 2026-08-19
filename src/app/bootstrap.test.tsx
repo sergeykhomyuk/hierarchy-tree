@@ -47,10 +47,14 @@ describe('bootstrap', () => {
       await bootstrap(container, VALID_CONFIGURATION_RESULT);
     });
 
+    // header.pageTitle rather than anything the hierarchy fetch itself
+    // produces: this environment has no real network route to
+    // apiBaseUrl, so the fetch's own outcome (loading, data or error) is
+    // not what these tests are proving - the header renders regardless,
+    // and its presence is what shows the real router (not the startup
+    // placeholder) rendered the home route.
     await waitFor(() => {
-      expect(container.textContent).toContain(
-        "The hierarchy view isn't built yet",
-      );
+      expect(container.textContent).toContain('Hierarchy Tree');
     });
     // eslint-disable-next-line testing-library/no-node-access -- this container is created and rendered into directly (bootstrap owns createRoot), not returned from RTL's render().
     const startupPlaceholder = container.querySelector(
@@ -77,10 +81,14 @@ describe('bootstrap', () => {
       });
     });
 
+    // header.pageTitle rather than anything the hierarchy fetch itself
+    // produces: this environment has no real network route to
+    // apiBaseUrl, so the fetch's own outcome (loading, data or error) is
+    // not what these tests are proving - the header renders regardless,
+    // and its presence is what shows the real router (not the startup
+    // placeholder) rendered the home route.
     await waitFor(() => {
-      expect(container.textContent).toContain(
-        "The hierarchy view isn't built yet",
-      );
+      expect(container.textContent).toContain('Hierarchy Tree');
     });
 
     const records = globalThis.__hierarchyTreeTelemetry?.read() ?? [];

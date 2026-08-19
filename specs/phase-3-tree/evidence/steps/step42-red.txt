@@ -1,0 +1,67 @@
+
+Running 3 tests using 1 worker
+
+  ✘  1 [chromium] › e2e/hierarchy-telemetry.spec.ts:56:3 › hierarchy telemetry and privacy › the buffer holds one hierarchy-viewed event and one toggle event per toggle and no additional route-viewed event (468ms)
+  ✘  2 [chromium] › e2e/hierarchy-telemetry.spec.ts:93:3 › hierarchy telemetry and privacy › no event in the buffer carries a password, an email, a person name or a photo URL (219ms)
+  ✘  3 [chromium] › e2e/hierarchy-telemetry.spec.ts:143:3 › hierarchy telemetry and privacy › every hierarchy flow produces no console error or warning (304ms)
+
+
+  1) [chromium] › e2e/hierarchy-telemetry.spec.ts:56:3 › hierarchy telemetry and privacy › the buffer holds one hierarchy-viewed event and one toggle event per toggle and no additional route-viewed event 
+
+    Error: expect(received).toHaveLength(expected)
+
+    Expected length: 3
+    Received length: 2
+    Received array:  [{"kind": "analytics", "name": "app.route_viewed", "payload": {"routeId": "0-1"}}, {"kind": "analytics", "name": "app.route_viewed", "payload": {"routeId": "0-0-0"}}]
+
+      84 |     const records = await readBuffer(page);
+      85 |
+    > 86 |     expect(analyticsNamed(records, 'app.route_viewed')).toHaveLength(
+         |                                                         ^
+      87 |       routeViewedBeforeToggle + 1,
+      88 |     );
+      89 |     expect(analyticsNamed(records, 'hierarchy.viewed')).toHaveLength(1);
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-telemetry.spec.ts:86:57
+
+    Error Context: test-results/hierarchy-telemetry-hierar-3b09d-ditional-route-viewed-event-chromium/error-context.md
+
+  2) [chromium] › e2e/hierarchy-telemetry.spec.ts:93:3 › hierarchy telemetry and privacy › no event in the buffer carries a password, an email, a person name or a photo URL 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "not-a-real-password-9f2c"
+    Received string:    "[{\"kind\":\"analytics\",\"name\":\"app.route_viewed\",\"payload\":{\"routeId\":\"0-1\"}},{\"kind\":\"analytics\",\"name\":\"auth.sign_in_started\",\"payload\":{\"correlationId\":\"ee1078c8bc43775f12713c98ef012837\"}},{\"kind\":\"timing\",\"timing\":{\"method\":\"GET\",\"resourcePath\":\"/secrets/[redacted].json\",\"outcome\":\"success\",\"durationMilliseconds\":13,\"correlationId\":\"ee1078c8bc43775f12713c98ef012837\",\"attempt\":0,\"requestId\":\"9ee6a98899388a3f84b2dc4fd4ed35f1\",\"status\":200}},{\"kind\":\"analytics\",\"name\":\"auth.sign_in_settled\",\"payload\":{\"correlationId\":\"ee1078c8bc43775f12713c98ef012837\",\"outcome\":\"signedIn\"}},{\"kind\":\"timing\",\"timing\":{\"method\":\"GET\",\"resourcePath\":\"/users.json\",\"outcome\":\"success\",\"durationMilliseconds\":4,\"correlationId\":\"ee1078c8bc43775f12713c98ef012837\",\"attempt\":0,\"requestId\":\"e9eba8fc5c49f572ba6d7e6f76b2159e\",\"status\":200}},{\"kind\":\"analytics\",\"name\":\"hierarchy.viewed\",\"payload\":{\"peopleCount\":2,\"managerCount\":1,\"rootCount\":1,\"droppedCount\":0}},{\"kind\":\"timing\",\"timing\":{\"method\":\"GET\",\"resourcePath\":\"/users.json\",\"outcome\":\"success\",\"durationMilliseconds\":2,\"correlationId\":\"ee1078c8bc43775f12713c98ef012837\",\"attempt\":0,\"requestId\":\"661ed0a9e0a0ff81697e261e668caec2\",\"status\":200}},{\"kind\":\"log\",\"level\":\"warn\",\"event\":\"auth.signed_in_user_unresolved\",\"attributes\":{\"reason\":\"not_found\"}},{\"kind\":\"analytics\",\"name\":\"app.route_viewed\",\"payload\":{\"routeId\":\"0-0-0\"}},{\"kind\":\"log\",\"level\":\"warn\",\"event\":\"hierarchy.photo_failed\",\"attributes\":{\"personId\":1}},{\"kind\":\"analytics\",\"name\":\"hierarchy.toggled\",\"payload\":{\"expanded\":false,\"depth\":0}}]"
+
+      132 |     const serialized = JSON.stringify(records);
+      133 |
+    > 134 |     expect(serialized).toContain(password);
+          |                        ^
+      135 |     expect(serialized).not.toContain('another-not-real-password');
+      136 |     expect(serialized).not.toContain('ronnen.gurevitch@example.com');
+      137 |     expect(serialized).not.toContain('dorit.nuhum@example.com');
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-telemetry.spec.ts:134:24
+
+    Error Context: test-results/hierarchy-telemetry-hierar-92215--person-name-or-a-photo-URL-chromium/error-context.md
+
+  3) [chromium] › e2e/hierarchy-telemetry.spec.ts:143:3 › hierarchy telemetry and privacy › every hierarchy flow produces no console error or warning 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      162 |     ).toBeHidden();
+      163 |
+    > 164 |     expect(consoleRecords.length).toBeGreaterThan(0);
+          |                                   ^
+      165 |   });
+      166 | });
+      167 |
+        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-telemetry.spec.ts:164:35
+
+    Error Context: test-results/hierarchy-telemetry-hierar-8b9a4-no-console-error-or-warning-chromium/error-context.md
+
+  3 failed
+    [chromium] › e2e/hierarchy-telemetry.spec.ts:56:3 › hierarchy telemetry and privacy › the buffer holds one hierarchy-viewed event and one toggle event per toggle and no additional route-viewed event 
+    [chromium] › e2e/hierarchy-telemetry.spec.ts:93:3 › hierarchy telemetry and privacy › no event in the buffer carries a password, an email, a person name or a photo URL 
+    [chromium] › e2e/hierarchy-telemetry.spec.ts:143:3 › hierarchy telemetry and privacy › every hierarchy flow produces no console error or warning 

@@ -1,0 +1,66 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/HierarchyPage.test.tsx (10 tests | 2 failed) 111ms
+     × an empty collection in each of its three envelope shapes renders the empty state 3ms
+     × the empty state exposes no tree role, no summary line and exactly one action 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx > HierarchyPage > an empty collection in each of its three envelope shapes renders the empty state
+TestingLibraryElementError: Unable to find an element with the text: page.emptyHeading. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<span[39m
+      [33mdata-testid[39m=[32m"location-search"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/HierarchyPage.test.tsx:227:21
+    225|       );
+    226|
+    227|       expect(screen.getByText('page.emptyHeading')).toBeInTheDocument(…
+       |                     ^
+    228|       expect(screen.getByText('page.emptyBody')).toBeInTheDocument();
+    229|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx > HierarchyPage > the empty state exposes no tree role, no summary line and exactly one action
+TestingLibraryElementError: Unable to find an accessible element with the role "button"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<span[39m
+      [33mdata-testid[39m=[32m"location-search"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/features/hierarchy/HierarchyPage.test.tsx:239:19
+    237|     expect(screen.queryByRole('tree')).not.toBeInTheDocument();
+    238|     expect(screen.queryByText('page.cardTitle')).not.toBeInTheDocument…
+    239|     expect(screen.getAllByRole('button')).toHaveLength(1);
+       |                   ^
+    240|     expect(
+    241|       screen.getByRole('button', { name: 'page.refreshLabel' }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  15:40:36
+   Duration  725ms (transform 96ms, setup 104ms, import 141ms, tests 111ms, environment 306ms)
+

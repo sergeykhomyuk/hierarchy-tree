@@ -1,0 +1,52 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (5 tests | 3 failed) 94ms
+     × collapsing and re-expanding a branch three times produces one photo-failure report for that person 8ms
+     × a second resolved payload reports the same still-broken photo again 1ms
+     × the photo-failure report carries no photo URL 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > collapsing and re-expanding a branch three times produces one photo-failure report for that person
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:128:39
+    126|     }
+    127|
+    128|     expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+       |                                       ^
+    129|   });
+    130|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > a second resolved payload reports the same still-broken photo again
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:150:39
+    148|
+    149|     fireEvent.error(brokenPhotoImage(firstContainer));
+    150|     expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+       |                                       ^
+    151|
+    152|     // Unmount and mount fresh rather than rerender(): a retry's new
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > the photo-failure report carries no photo URL
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/features/hierarchy/HierarchyTree.test.tsx:185:39
+    183|     fireEvent.error(brokenPhotoImage(container));
+    184|
+    185|     expect(observability.logger.warn).toHaveBeenCalledTimes(1);
+       |                                       ^
+    186|     const [, attributes] = vi.mocked(observability.logger.warn).mock.c…
+    187|     expect(JSON.stringify(attributes)).not.toContain(photoUrl);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 7 passed (10)
+   Start at  17:20:50
+   Duration  470ms (transform 93ms, setup 137ms, import 61ms, tests 183ms, environment 436ms)
+

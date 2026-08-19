@@ -1,0 +1,92 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/shared/utils/array/popElement.test.ts (0 test)
+ ❯ |ui| src/shared/utils/string/formatCount.test.ts (0 test)
+ ❯ |ui| src/shared/utils/string/findTypeAheadMatch.test.ts (0 test)
+ ❯ |ui| src/shared/utils/array/elementAt.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/shared/utils/string/findTypeAheadMatch.test.ts [ src/shared/utils/string/findTypeAheadMatch.test.ts ]
+Error: Failed to resolve import "./findTypeAheadMatch" from "src/shared/utils/string/findTypeAheadMatch.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/utils/string/findTypeAheadMatch.test.ts:2:35
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { findTypeAheadMatch } from "./findTypeAheadMatch";
+     |                                      ^
+  3  |  const NAMES = [
+  4  |  	"Andrew Crist",
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |ui| src/shared/utils/string/formatCount.test.ts [ src/shared/utils/string/formatCount.test.ts ]
+Error: Failed to resolve import "./formatCount" from "src/shared/utils/string/formatCount.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/utils/string/formatCount.test.ts:2:28
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { formatCount } from "./formatCount";
+     |                               ^
+  3  |  describe("formatCount", () => {
+  4  |  	it("groups digits per the passed language rather than a hardcoded one", () => {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |ui| src/shared/utils/array/elementAt.test.ts [ src/shared/utils/array/elementAt.test.ts ]
+Error: Failed to resolve import "./elementAt" from "src/shared/utils/array/elementAt.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/utils/array/elementAt.test.ts:2:26
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { elementAt } from "./elementAt";
+     |                             ^
+  3  |  describe("elementAt", () => {
+  4  |  	it("returns the element at a valid index", () => {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |ui| src/shared/utils/array/popElement.test.ts [ src/shared/utils/array/popElement.test.ts ]
+Error: Failed to resolve import "./popElement" from "src/shared/utils/array/popElement.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/utils/array/popElement.test.ts:2:27
+  1  |  import { describe, expect, it } from "vitest";
+  2  |  import { popElement } from "./popElement";
+     |                              ^
+  3  |  describe("popElement", () => {
+  4  |  	it("pops the last element from a non-empty array", () => {
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  no tests
+   Start at  17:30:36
+   Duration  841ms (transform 115ms, setup 557ms, import 0ms, tests 0ms, environment 2.13s)
+

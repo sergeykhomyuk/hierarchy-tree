@@ -86,13 +86,17 @@ test.describe('the signed-in header', () => {
     expect(failedBox?.width).toBe(skeletonBox?.width);
     expect(failedBox?.height).toBe(skeletonBox?.height);
 
+    // An empty array is also the hierarchy feature's own empty envelope
+    // (invariant 44) - the same mocked response this test's header
+    // assertions above already rely on lands the tree on the empty
+    // state, not an error.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.emptyHeading',
     );
     await expect(page.getByRole('alert')).toHaveCount(0);
   });
 
-  test('requests the user record once across two authenticated navigations', async ({
+  test("the signed-in user record's own fetch is cached across two authenticated navigations", async ({
     page,
     baseURL,
   }) => {
@@ -116,7 +120,12 @@ test.describe('the signed-in header', () => {
 
     await submitSignInForm(page);
     await expect(page.getByText('Ada Lovelace')).toBeVisible();
-    expect(userRequestCount).toBe(1);
+    // Two independent readers of the same /users.json collection settle
+    // on the first navigation: the header's signedInUserStore (this
+    // test's own concern) and the hierarchy page's own repository fetch
+    // (phase 3, invariant 4 - "this page issues exactly one request of
+    // its own"). What this test actually verifies is the DELTA below.
+    expect(userRequestCount).toBe(2);
 
     // Simulates a second navigation into the authenticated route without
     // a page reload: the same mechanism createBackForwardRestore.ts wires
@@ -130,7 +139,12 @@ test.describe('the signed-in header', () => {
     });
 
     await expect(page.getByText('Ada Lovelace')).toBeVisible();
-    expect(userRequestCount).toBe(1);
+    // signedInUserStore stays cached for the page's lifetime and
+    // contributes no further request; the hierarchy page has no such
+    // cache and re-fetches on every navigation the router revalidates,
+    // this bfcache restore included - so the count grows by exactly one,
+    // not two.
+    expect(userRequestCount).toBe(3);
   });
 
   test('signs in and out entirely from the keyboard', async ({
@@ -198,8 +212,12 @@ test.describe('the signed-in header', () => {
     // navigations to an identical URL, and guard.spec.ts's own precedent
     // uses the same trick to force a genuinely new history entry.
     await page.goto('/?a=1');
+    // installSignInApiMock's one user record satisfies auth's own schema
+    // but not the hierarchy feature's (no email, a string id), so this
+    // lands on the error state - see placeholder-routes.spec.ts's own
+    // note on the same mock.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.errorHeading',
     );
 
     await page.getByRole('button', { name: 'header.logout' }).click();
@@ -212,6 +230,8 @@ test.describe('the signed-in header', () => {
       'login.heading',
     );
     const mutationLog = await readMutationLog(page);
-    expect(mutationLog.some((text) => text.includes('home.title'))).toBe(false);
+    // 'page.' rather than a single stale marker string: every hierarchy
+    // catalogue key lives under that one top-level namespace.
+    expect(mutationLog.some((text) => text.includes('page.'))).toBe(false);
   });
 });

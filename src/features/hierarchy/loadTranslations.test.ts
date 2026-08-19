@@ -53,10 +53,28 @@ describe('hierarchy loadTranslations', () => {
     const testInstance = await createTestI18n(Locale.Test);
     await loadTranslations(testInstance);
     expect(testInstance.getResourceBundle(Locale.Test, 'hierarchy')).toEqual({
-      home: {
-        documentTitle: 'home.documentTitle',
-        title: 'home.title',
-        message: 'home.message',
+      page: {
+        documentTitle: 'page.documentTitle',
+        cardTitle: 'page.cardTitle',
+        treeLabel: 'page.treeLabel',
+        loadingLabel: 'page.loadingLabel',
+        errorHeading: 'page.errorHeading',
+        errorBody: 'page.errorBody',
+        retryLabel: 'page.retryLabel',
+        backToLoginLabel: 'page.backToLoginLabel',
+        emptyHeading: 'page.emptyHeading',
+        emptyBody: 'page.emptyBody',
+        refreshLabel: 'page.refreshLabel',
+        summary: 'page.summary',
+        youMarkerLabel: 'page.youMarkerLabel',
+        reports_one: 'page.reports_one',
+        reports_other: 'page.reports_other',
+        hidden_one: 'page.hidden_one',
+        hidden_other: 'page.hidden_other',
+        toggleAnnouncedExpanded: 'page.toggleAnnouncedExpanded',
+        toggleAnnouncedCollapsed: 'page.toggleAnnouncedCollapsed',
+        siblingsExpandedAnnounced_one: 'page.siblingsExpandedAnnounced_one',
+        siblingsExpandedAnnounced_other: 'page.siblingsExpandedAnnounced_other',
       },
     });
 

@@ -1,0 +1,54 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (0 test)
+ ❯ |ui| src/features/hierarchy/TreeRow.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx [ src/features/hierarchy/HierarchyTree.test.tsx ]
+Error: Failed to resolve import "./HierarchyTree" from "src/features/hierarchy/HierarchyTree.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchyTree.test.tsx:6:30
+  4  |  import { createInternationalization, Locale } from "@platform/internationalization";
+  5  |  import { loadTranslations } from "./loadTranslations";
+  6  |  import { HierarchyTree } from "./HierarchyTree";
+     |                                 ^
+  7  |  import { buildForest } from "./domain/buildForest";
+  8  |  import { parsePersonIdentifier } from "./domain/personIdentifier";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |ui| src/features/hierarchy/TreeRow.test.tsx [ src/features/hierarchy/TreeRow.test.tsx ]
+Error: Failed to resolve import "./TreeRow" from "src/features/hierarchy/TreeRow.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/TreeRow.test.tsx:6:24
+  4  |  import { createInternationalization, Locale } from "@platform/internationalization";
+  5  |  import { loadTranslations } from "./loadTranslations";
+  6  |  import { TreeRow } from "./TreeRow";
+     |                           ^
+  7  |  import { parseEmailAddress } from "./domain/emailAddress";
+  8  |  import * as personDisplayNameModule from "./domain/personDisplayName";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:28076:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:28044:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30851:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20619:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  17:08:00
+   Duration  587ms (transform 63ms, setup 244ms, import 0ms, tests 0ms, environment 738ms)
+

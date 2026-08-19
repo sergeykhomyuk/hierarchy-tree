@@ -1,0 +1,110 @@
+import { elementAt } from '@shared/utils';
+import type { VisibleRow } from './flattenVisible';
+import type { PersonIdentifier } from './personIdentifier';
+
+export function findRowIndexById(
+  rows: readonly VisibleRow[],
+  personId: PersonIdentifier,
+): number {
+  return rows.findIndex((row) => row.person.id === personId);
+}
+
+// The nearest preceding row exactly one level shallower - the parent of
+// the row at `index` in a pre-order visible-row list. Every ancestor of a
+// visible row is itself visible (a row renders only while its manager is
+// expanded), so a single backward scan for the first shallower depth
+// always lands on the real parent, never a more distant ancestor.
+export function parentRowIndex(
+  rows: readonly VisibleRow[],
+  index: number,
+): number {
+  const row = rows[index];
+  if (row === undefined) return -1;
+  const parentDepth = row.depth - 1;
+  if (parentDepth < 0) return -1;
+  // candidate is always < index, and rows[index] is already confirmed
+  // defined, so elementAt never throws here - it is chosen over `?.`
+  // precisely so this stays true rather than leaving an "undefined"
+  // branch that can never actually occur for the coverage floor to chase.
+  for (let candidate = index - 1; candidate >= 0; candidate -= 1) {
+    if (elementAt(rows, candidate).depth === parentDepth) return candidate;
+  }
+  return -1;
+}
+
+// Inert at the ends (invariant 133) - both return the same index rather
+// than -1, so a caller can always focus rows[nextVisibleIndex(...)]
+// unconditionally without a bounds check of its own.
+export function nextVisibleIndex(
+  rows: readonly VisibleRow[],
+  index: number,
+): number {
+  return index + 1 < rows.length ? index + 1 : index;
+}
+
+// Takes rows only for signature symmetry with nextVisibleIndex, so both
+// are safe to call the same way at a call site - the previous index never
+// depends on the row count.
+export function previousVisibleIndex(
+  _rows: readonly VisibleRow[],
+  index: number,
+): number {
+  return index > 0 ? index - 1 : index;
+}
+
+// The row immediately after an EXPANDED manager, in pre-order, is always
+// its first child - -1 for a collapsed manager (nothing to descend into)
+// or a non-manager (invariant 134's "Right on a non-manager does
+// nothing").
+export function firstChildRowIndex(
+  rows: readonly VisibleRow[],
+  index: number,
+): number {
+  const row = rows[index];
+  if (row === undefined || !row.isExpanded) return -1;
+  const child = rows[index + 1];
+  return child !== undefined && child.depth === row.depth + 1 ? index + 1 : -1;
+}
+
+// Every row under the same parent as the row at `index`, itself included,
+// in row order - the group invariant 140's `*` opens as one action. The
+// "same parent" boundary is the nearest earlier row exactly one level
+// shallower (root rows share the virtual absence of a parent, boundary
+// depth -1); everything between that boundary and the next row at or
+// above it that sits AT the target depth is a sibling, and anything
+// deeper is a nested subtree skipped rather than collected.
+export function siblingRowIndices(
+  rows: readonly VisibleRow[],
+  index: number,
+): number[] {
+  const row = rows[index];
+  if (row === undefined) return [];
+  const targetDepth = row.depth;
+  const boundaryDepth = targetDepth - 1;
+
+  // Every candidate below is bounded by index or rows.length, both
+  // already known valid, so elementAt never throws in any of the three
+  // loops - the same reasoning as parentRowIndex's own use of it.
+  let start = 0;
+  for (let candidate = index - 1; candidate >= 0; candidate -= 1) {
+    if (elementAt(rows, candidate).depth === boundaryDepth) {
+      start = candidate + 1;
+      break;
+    }
+  }
+
+  let end = rows.length;
+  for (let candidate = start; candidate < rows.length; candidate += 1) {
+    if (elementAt(rows, candidate).depth <= boundaryDepth) {
+      end = candidate;
+      break;
+    }
+  }
+
+  const siblings: number[] = [];
+  for (let candidate = start; candidate < end; candidate += 1) {
+    if (elementAt(rows, candidate).depth === targetDepth)
+      siblings.push(candidate);
+  }
+  return siblings;
+}

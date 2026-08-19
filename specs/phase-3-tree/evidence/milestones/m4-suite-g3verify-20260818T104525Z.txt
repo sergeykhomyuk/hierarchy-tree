@@ -1,0 +1,131 @@
+
+> hierarchy-tree@0.0.0 verify
+> npm run typecheck && npm run lint && npm run format:check && npm run test:coverage && npm run build && npm run verify:build && npm run size
+
+
+> hierarchy-tree@0.0.0 typecheck
+> tsc -b
+
+
+> hierarchy-tree@0.0.0 lint
+> eslint . && node scripts/assert-no-physical-properties.mjs && node scripts/assert-domain-vocabulary.mjs && node scripts/assert-no-lorem-ipsum.mjs && node scripts/assert-no-secrets.mjs --source-only
+
+
+> hierarchy-tree@0.0.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> hierarchy-tree@0.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+      Coverage enabled with v8
+
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-5KIKb9/banned.tmp.ts: identifier "make32" carries banned reference-system name "make32"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-alias-jsNTK5/src/shared/banned-alias.tmp.ts: exported identifier "sessionToken" carries the banned domain word "session"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-A2CJaB/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "manager"
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-default-A2CJaB/src/shared/banned-default.tmp.ts: exported identifier "sessionManager" carries the banned domain word "session"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-retired-B7uhL3/still-banned.tmp.ts: identifier "make32" carries banned reference-system name "make32"
+assert-domain-vocabulary: banned vocabulary found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-secrets-XDr7j4/other.tmp.ts: string literal contains "/secrets"
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/physical-properties-0FfvQ1/Banned.tmp.tsx: physical property/utility "ml-*" found - use the logical equivalent
+assert-no-physical-properties: physical CSS properties found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/raw-color-DbhCiu/Banned.tmp.tsx: raw color value found - use a theme.css token instead
+assert-no-lorem-ipsum: filler text found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/lorem-ipsum-7Sveg5/Banned.tmp.tsx: lorem ipsum filler text found
+assert-no-secrets: pass --source-only or --bundle-only
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-keyword-PKRrP1/banned.tmp.ts: matches secret keyword pattern /apiKey/i
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-entropy-QrLlAk/banned.tmp.ts: high-entropy literal found (9f8a7b6c5d4e...)
+assert-no-secrets --source-only: secrets found:
+  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-suppression-jsh4xg/banned.tmp.ts: eslint-disable suppresses "no-restricted-" - suppression is not permitted for this rule
+assert-no-secrets --bundle-only: dist/ is missing - run npm run build first
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+assert-no-secrets --source-only: secrets found:
+  - .github/workflows/ci.yml: matches secret keyword pattern /apiKey/i
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  136 passed (136)
+      Tests  604 passed (604)
+   Start at  10:40:54
+   Duration  18.93s (transform 3.48s, setup 14.52s, import 9.25s, tests 38.59s, environment 46.38s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   97.07 |    95.16 |   96.24 |   97.36 |                   
+ app               |      95 |      100 |      80 |      95 |                   
+  bootstrap.ts     |    90.9 |      100 |      50 |    90.9 | 59                
+ ...error-boundary |   90.62 |      100 |   77.77 |   90.32 |                   
+  ...rBoundary.tsx |   77.77 |      100 |      75 |   77.77 | 40-41             
+  ...rBoundary.tsx |   85.71 |      100 |      50 |   85.71 | 23                
+ app/layout        |   97.29 |      100 |   91.66 |   97.29 |                   
+  ...tedLayout.tsx |   85.71 |      100 |      50 |   85.71 | 24                
+ app/routing       |   87.83 |      100 |      80 |   88.73 |                   
+  ...ardRestore.ts |      80 |      100 |   66.66 |     100 |                   
+  ...efinitions.ts |      60 |      100 |      50 |      60 | ...,93-94,102-103 
+ ...routing/routes |   73.33 |      100 |      75 |   72.41 |                   
+  LoginRoute.tsx   |       0 |      100 |       0 |       0 | 10-26             
+ features/auth     |     100 |    93.18 |     100 |     100 |                   
+  ...Submission.ts |     100 |    86.36 |     100 |     100 | 63-78             
+ ...ures/auth/data |     100 |    94.44 |     100 |     100 |                   
+  ...gnedInUser.ts |     100 |    83.33 |     100 |     100 | 28                
+ ...res/auth/guard |   94.73 |    91.66 |     100 |   94.73 |                   
+  ...dInVisitor.ts |     100 |       75 |     100 |     100 | 28                
+  ...estination.ts |   86.66 |    92.85 |     100 |   86.66 | 23,26             
+ ...ures/hierarchy |   97.46 |    90.52 |     100 |   99.45 |                   
+  ...archyPage.tsx |     100 |     87.5 |     100 |     100 | 110               
+  ...archyTree.tsx |     100 |       90 |     100 |     100 | 153-164           
+  ...eeKeyboard.ts |   92.75 |    86.04 |     100 |   98.33 | 145               
+ ...hierarchy/data |     100 |    96.87 |     100 |     100 |                   
+  parsePeople.ts   |     100 |    92.85 |     100 |     100 | 58                
+ ...erarchy/domain |   99.11 |    97.19 |     100 |   99.48 |                   
+  rowNavigation.ts |   95.45 |    89.28 |     100 |   96.96 | 27                
+ platform/http     |   96.84 |    95.83 |     100 |   96.55 |                   
+  ...HttpClient.ts |   93.33 |     92.3 |     100 |   93.33 | 176-179           
+ .../observability |     100 |    93.18 |     100 |     100 |                   
+  redact.ts        |     100 |    90.62 |     100 |     100 | 55-56,59          
+ platform/runtime  |    92.3 |     62.5 |     100 |    92.1 |                   
+  ...ystemClock.ts |     100 |       75 |     100 |     100 | 44                
+  ...Randomness.ts |     100 |       50 |     100 |     100 | 8                 
+  ...TabStorage.ts |   83.33 |       50 |     100 |   83.33 | 20,28,36          
+ shared/ui         |   98.24 |    95.83 |     100 |   98.18 |                   
+  Skeleton.tsx     |   88.88 |       50 |     100 |    87.5 | 26                
+  ...veInitials.ts |     100 |       75 |     100 |     100 | 5-6               
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 97.07% ( 1263/1301 )
+Branches     : 95.16% ( 590/620 )
+Functions    : 96.24% ( 282/293 )
+Lines        : 97.36% ( 1183/1215 )
+================================================================================
+ERROR: Coverage for lines (99.57%) does not meet "src/features/*/domain/**" threshold (100%)
+ERROR: Coverage for statements (99.25%) does not meet "src/features/*/domain/**" threshold (100%)
+ERROR: Coverage for branches (97.56%) does not meet "src/features/*/domain/**" threshold (100%)

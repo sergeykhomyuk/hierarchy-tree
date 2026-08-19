@@ -34,6 +34,43 @@ describe('buildContentSecurityPolicy', () => {
     expect(policy).toContain('ws:');
   });
 
+  it.each(['production', 'development'] as const)(
+    'the content security policy permits https image origins and changes no other directive',
+    (mode) => {
+      const policy = buildContentSecurityPolicy(mode, API_BASE_URL);
+      const directives = policy.split('; ');
+
+      // The exact img-src segment - not merely toContain(), which would
+      // still pass if https: had never actually been added. http: is
+      // deliberately included too, not left over from debugging: CSP
+      // permitting it is what lets the BROWSER's own mixed-content policy
+      // (rather than CSP itself) be the thing that blocks an http:// photo
+      // on the deployed https:// page - see ARCHITECTURE.md's decision
+      // log, "img-src widens to 'self' data: https: http:".
+      expect(directives).toContain("img-src 'self' data: https: http:");
+
+      // Pinning the full directive set (content and count) is what proves
+      // nothing ELSE changed - a future edit to any of these shows up as a
+      // failing assertion here, not a silent pass.
+      expect(directives).toContain("default-src 'self'");
+      expect(directives).toContain("object-src 'none'");
+      expect(directives).toContain("base-uri 'self'");
+      expect(directives).toContain("font-src 'self'");
+      if (mode === 'development') {
+        expect(directives).toContain("style-src 'self' 'unsafe-inline'");
+        expect(directives).toContain(
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+        );
+        expect(directives).toContain(`connect-src 'self' ${API_BASE_URL} ws:`);
+      } else {
+        expect(directives).toContain("style-src 'self'");
+        expect(directives).toContain("script-src 'self'");
+        expect(directives).toContain(`connect-src 'self' ${API_BASE_URL}`);
+      }
+      expect(directives).toHaveLength(8);
+    },
+  );
+
   it('the production policy allows neither unsafe-inline, unsafe-eval, nor ws:', () => {
     const policy = buildContentSecurityPolicy('production', API_BASE_URL);
 

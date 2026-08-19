@@ -26,12 +26,7 @@ const EXPORTED_SCOPE_BANNED_WORDS = [
 ];
 
 const WHOLE_SCOPE_GLOB = 'src/**/*.{ts,tsx}';
-const WHOLE_SCOPE_BANNED_NAMES = [
-  'make32',
-  'POISON_ARRAY',
-  'buildForest',
-  'flattenVisible',
-];
+const WHOLE_SCOPE_BANNED_NAMES = ['make32', 'POISON_ARRAY'];
 
 const ALLOWED_IDENTIFIERS = new Set([
   'encodeURIComponent',
@@ -171,10 +166,6 @@ function checkWholeScopeVocabulary() {
       WHOLE_SCOPE_FILE_ALLOWLIST[filePath] ?? new Set();
     if (source.includes('/secrets') && !wholeScopeAllowlist.has('/secrets')) {
       violations.push(`${filePath}: string literal contains "/secrets"`);
-    }
-
-    if (/role\s*=\s*["']tree["']/.test(source)) {
-      violations.push(`${filePath}: role="tree" attribute found`);
     }
   }
   return violations;

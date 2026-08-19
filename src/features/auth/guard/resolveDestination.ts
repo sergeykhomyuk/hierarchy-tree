@@ -1,6 +1,6 @@
+import { ROUTE_PATHS } from '@shared/routing';
+
 const PLACEHOLDER_ORIGIN = 'https://resolve-destination.invalid';
-const LOGIN_PATH = '/login';
-const HIERARCHY_ROUTE = '/';
 
 // Pure and opaque (invariant 92): a candidate is never inspected for
 // content beyond the shape checks that keep it from becoming an open
@@ -10,26 +10,26 @@ const HIERARCHY_ROUTE = '/';
 // catches (invariant 68).
 export function resolveDestination(from: string | null): string {
   if (from === null || from.length === 0 || from[0] !== '/') {
-    return HIERARCHY_ROUTE;
+    return ROUTE_PATHS.home;
   }
   if (from.length >= 2 && (from[1] === '/' || from[1] === '\\')) {
-    return HIERARCHY_ROUTE;
+    return ROUTE_PATHS.home;
   }
 
   let resolved: URL;
   try {
     resolved = new URL(from, PLACEHOLDER_ORIGIN);
   } catch {
-    return HIERARCHY_ROUTE;
+    return ROUTE_PATHS.home;
   }
   if (resolved.origin !== PLACEHOLDER_ORIGIN) {
-    return HIERARCHY_ROUTE;
+    return ROUTE_PATHS.home;
   }
 
   // Otherwise redirectSignedInVisitor would send a signed-in visitor to a
   // route whose own loader redirects again (invariant 93).
-  if (resolved.pathname === LOGIN_PATH) {
-    return HIERARCHY_ROUTE;
+  if (resolved.pathname === ROUTE_PATHS.login) {
+    return ROUTE_PATHS.home;
   }
 
   return from;

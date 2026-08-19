@@ -1,28 +1,52 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { createMemoryRouter, RouterProvider } from 'react-router';
+import { createFakeTransport } from '@shared/testing';
 import '@shared/testing/toHaveNoAxeViolations';
-import {
-  HierarchyPlaceholderPage,
-  loadTranslations as loadHierarchyTranslations,
-} from '@features/hierarchy';
+import { loadTranslations as loadHierarchyTranslations } from '@features/hierarchy';
 import { ApplicationRoot } from './ApplicationRoot';
 import { ApplicationLayout } from './layout/ApplicationLayout';
+import { HomeRoute } from './routing/routes/HomeRoute';
+import { createHierarchyLoader } from './routing/createHierarchyLoader';
+import { shouldRevalidateExpansionOnly } from './routing/shouldRevalidateExpansionOnly';
 import { buildTestRuntime } from './testing/renderRoute';
 
 describe('feature slices', () => {
-  it('the hierarchy placeholder exists and exports its documented name', () => {
-    expect(HierarchyPlaceholderPage).toBeDefined();
-  });
-
-  it('the hierarchy placeholder exposes one h1 inside a main landmark and passes axe', async () => {
-    const runtime = await buildTestRuntime();
+  it('the hierarchy route renders through the real stack, inside a main landmark, and passes axe', async () => {
+    const transport = createFakeTransport({
+      'GET /users.json': () =>
+        Promise.resolve(
+          new Response(
+            JSON.stringify([
+              {
+                id: 1,
+                firstName: 'Ada',
+                lastName: 'Lovelace',
+                email: 'ada@example.test',
+              },
+            ]),
+            { status: 200 },
+          ),
+        ),
+    });
+    const runtime = await buildTestRuntime({}, transport);
     await loadHierarchyTranslations(runtime.i18n);
     const router = createMemoryRouter([
       {
         path: '/',
         element: <ApplicationLayout />,
-        children: [{ index: true, element: <HierarchyPlaceholderPage /> }],
+        children: [
+          {
+            index: true,
+            shouldRevalidate: shouldRevalidateExpansionOnly,
+            loader: createHierarchyLoader({
+              http: runtime.http,
+              observability: runtime.observability,
+              interactionTracker: runtime.interactionTracker,
+            }),
+            element: <HomeRoute />,
+          },
+        ],
       },
     ]);
 
@@ -32,9 +56,8 @@ describe('feature slices', () => {
       </ApplicationRoot>,
     );
 
-    const headings = screen.getAllByRole('heading', { level: 1 });
-    expect(headings).toHaveLength(1);
-    expect(screen.getByRole('main')).toContainElement(headings[0] ?? null);
+    expect(await screen.findByText('page.cardTitle')).toBeInTheDocument();
+    expect(screen.getByRole('main').textContent).toContain('page.cardTitle');
     await expect(container).toHaveNoAxeViolations();
   });
 });

@@ -51,7 +51,11 @@ test.describe('the route guard', () => {
 
     expect(userRequestCount).toBe(0);
     const mutationLog = await readMutationLog(page);
-    expect(mutationLog.some((text) => text.includes('home.title'))).toBe(false);
+    // 'page.' rather than a single stale marker string: every hierarchy
+    // catalogue key lives under that one top-level namespace (no other
+    // feature's catalogue does), so this catches a flash of any of the
+    // page's four states rather than just one.
+    expect(mutationLog.some((text) => text.includes('page.'))).toBe(false);
   });
 
   test('lands on the bookmarked path after signing in from the redirect', async ({
@@ -71,8 +75,12 @@ test.describe('the route guard', () => {
     await submitSignInForm(page);
 
     await expect(page).toHaveURL(/\/\?a=1$/);
+    // installSignInApiMock's one user record satisfies auth's own schema
+    // but not the hierarchy feature's (no email, a string id), so this
+    // lands on the error state - see placeholder-routes.spec.ts's own
+    // note on the same mock.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.errorHeading',
     );
   });
 
@@ -88,8 +96,12 @@ test.describe('the route guard', () => {
     await page.goto('/login');
 
     await expect(page).toHaveURL(/\/$/);
+    // installSignInApiMock's one user record satisfies auth's own schema
+    // but not the hierarchy feature's (no email, a string id), so this
+    // lands on the error state - see placeholder-routes.spec.ts's own
+    // note on the same mock.
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'home.title',
+      'page.errorHeading',
     );
     const mutationLog = await readMutationLog(page);
     expect(mutationLog.some((text) => text.includes('login.heading'))).toBe(

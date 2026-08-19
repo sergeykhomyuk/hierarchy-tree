@@ -1,0 +1,122 @@
+
+ RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+
+ ❯ |ui| src/features/hierarchy/HierarchyPage.test.tsx (8 tests | 4 failed) 73ms
+     × every failure kind renders the error state inside the card with the header and nav rail unchanged 7ms
+     × the chip carries the correlation id of the failed request 3ms
+     × Back to login navigates without signing the user out 4ms
+     × the error state never reaches the route error boundary 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx > HierarchyPage > every failure kind renders the error state inside the card with the header and nav rail unchanged
+TestingLibraryElementError: Unable to find an accessible element with the role "alert"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<span[39m
+      [33mdata-testid[39m=[32m"location-search"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/features/hierarchy/HierarchyPage.test.tsx:151:21
+    149|       // surrounding layout's, unaffected by which of the page's own f…
+    150|       // states is showing (invariant 62).
+    151|       expect(screen.getAllByRole('alert')).toHaveLength(1);
+       |                     ^
+    152|       expect(screen.queryByRole('banner')).not.toBeInTheDocument();
+    153|       expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx > HierarchyPage > the chip carries the correlation id of the failed request
+TestingLibraryElementError: Unable to find an element with the text: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<span[39m
+      [33mdata-testid[39m=[32m"location-search"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/HierarchyPage.test.tsx:164:19
+    162|     await renderIsolated(Promise.resolve(failureResult('network')));
+    163|
+    164|     expect(screen.getByText('a'.repeat(32))).toBeInTheDocument();
+       |                   ^
+    165|   });
+    166|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx > HierarchyPage > Back to login navigates without signing the user out
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "page.backToLoginLabel"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<span[39m
+      [33mdata-testid[39m=[32m"location-search"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/HierarchyPage.test.tsx:172:29
+    170|
+    171|     expect(screen.queryByText('login-route')).not.toBeInTheDocument();
+    172|     await user.click(screen.getByRole('button', { name: 'page.backToLo…
+       |                             ^
+    173|
+    174|     // Navigation alone, and only navigation - nothing here calls a
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx > HierarchyPage > the error state never reaches the route error boundary
+TestingLibraryElementError: Unable to find an accessible element with the role "alert"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<span[39m
+      [33mdata-testid[39m=[32m"location-search"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/hierarchy/HierarchyPage.test.tsx:187:19
+    185|     await renderIsolated(Promise.resolve(failureResult('network')));
+    186|
+    187|     expect(screen.getByRole('alert')).toBeInTheDocument();
+       |                   ^
+    188|   });
+    189|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 4 passed (8)
+   Start at  15:34:35
+   Duration  719ms (transform 84ms, setup 98ms, import 127ms, tests 73ms, environment 354ms)
+

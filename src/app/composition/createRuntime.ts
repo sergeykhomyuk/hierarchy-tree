@@ -11,6 +11,7 @@ import {
   type HttpClient,
 } from '@platform/http';
 import {
+  COMMON_TRANSLATION_NAMESPACE,
   createInternationalization,
   detectLocale,
   Locale,
@@ -20,6 +21,7 @@ import {
   createSystemClock,
   createSystemRandomness,
   createTabStorage,
+  type Clock,
   type KeyValueStorage,
 } from '@platform/runtime';
 import {
@@ -37,6 +39,7 @@ export type Runtime = Readonly<{
   interactionTracker: InteractionTracker;
   tabStorage: KeyValueStorage;
   signedInUserStore: SignedInUserStore;
+  clock: Clock;
 }>;
 
 export async function createRuntime(
@@ -70,7 +73,7 @@ export async function createRuntime(
   const language = detectLocale(navigator.languages);
   const i18n = await createInternationalization({
     resources: {
-      common: resolveLocaleCatalogue(language, {
+      [COMMON_TRANSLATION_NAMESPACE]: resolveLocaleCatalogue(language, {
         [Locale.English]: commonCatalogue,
       }),
     },
@@ -91,5 +94,6 @@ export async function createRuntime(
     interactionTracker,
     tabStorage,
     signedInUserStore,
+    clock,
   });
 }
