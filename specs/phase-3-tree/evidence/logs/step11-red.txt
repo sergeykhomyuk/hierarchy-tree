@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/domain/personDisplayName.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/hierarchy/domain/personDisplayName.test.ts [ src/features/hierarchy/domain/personDisplayName.test.ts ]
 Error: Failed to resolve import "./personDisplayName" from "src/features/hierarchy/domain/personDisplayName.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/personDisplayName.test.ts:3:34
+  File: /hierarchy-tree/src/features/hierarchy/domain/personDisplayName.test.ts:3:34
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { testPerson } from "../testing/testPerson";
   3  |  import { personDisplayName } from "./personDisplayName";
@@ -30,4 +30,3 @@ Error: Failed to resolve import "./personDisplayName" from "src/features/hierarc
       Tests  no tests
    Start at  14:09:09
    Duration  693ms (transform 28ms, setup 116ms, import 0ms, tests 0ms, environment 470ms)
-

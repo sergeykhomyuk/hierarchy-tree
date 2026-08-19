@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (27 tests | 3 failed) 211ms
        × Enter toggles the focused manager's branch and does nothing on a non-manager row 5ms
@@ -127,4 +127,3 @@ AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
       Tests  3 failed | 24 passed (27)
    Start at  09:15:41
    Duration  590ms (transform 61ms, setup 62ms, import 56ms, tests 211ms, environment 202ms)
-

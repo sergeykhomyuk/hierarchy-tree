@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |platform| src/platform/internationalization/formatMissingKey.test.ts (0 test)
  ❯ |platform| src/platform/internationalization/localeDirection.test.ts (0 test)
@@ -9,7 +9,7 @@
 ⎯⎯⎯⎯⎯⎯ Failed Suites 4 ⎯⎯⎯⎯⎯⎯⎯
 
  FAIL  |platform| src/platform/internationalization/createInternationalization.test.ts [ src/platform/internationalization/createInternationalization.test.ts ]
-Error: Cannot find module './createInternationalization' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/internationalization/createInternationalization.test.ts
+Error: Cannot find module './createInternationalization' imported from /hierarchy-tree/src/platform/internationalization/createInternationalization.test.ts
  ❯ src/platform/internationalization/createInternationalization.test.ts:2:1
       1| import { describe, expect, it, vi } from 'vitest';
       2| import { createInternationalization } from './createInternationalizati…
@@ -20,7 +20,7 @@ Error: Cannot find module './createInternationalization' imported from /Users/se
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
 
  FAIL  |platform| src/platform/internationalization/formatMissingKey.test.ts [ src/platform/internationalization/formatMissingKey.test.ts ]
-Error: Cannot find module './formatMissingKey' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/internationalization/formatMissingKey.test.ts
+Error: Cannot find module './formatMissingKey' imported from /hierarchy-tree/src/platform/internationalization/formatMissingKey.test.ts
  ❯ src/platform/internationalization/formatMissingKey.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { formatMissingKey } from './formatMissingKey';
@@ -31,7 +31,7 @@ Error: Cannot find module './formatMissingKey' imported from /Users/sergeykhomyu
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
 
  FAIL  |platform| src/platform/internationalization/localeDirection.test.ts [ src/platform/internationalization/localeDirection.test.ts ]
-Error: Cannot find module './localeDirection' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/internationalization/localeDirection.test.ts
+Error: Cannot find module './localeDirection' imported from /hierarchy-tree/src/platform/internationalization/localeDirection.test.ts
  ❯ src/platform/internationalization/localeDirection.test.ts:2:1
       1| import { afterEach, describe, expect, it, vi } from 'vitest';
       2| import { localeDirection } from './localeDirection';
@@ -42,7 +42,7 @@ Error: Cannot find module './localeDirection' imported from /Users/sergeykhomyuk
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
 
  FAIL  |platform| src/platform/internationalization/reportMissingKey.test.ts [ src/platform/internationalization/reportMissingKey.test.ts ]
-Error: Cannot find module './reportMissingKey' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/internationalization/reportMissingKey.test.ts
+Error: Cannot find module './reportMissingKey' imported from /hierarchy-tree/src/platform/internationalization/reportMissingKey.test.ts
  ❯ src/platform/internationalization/reportMissingKey.test.ts:2:1
       1| import { describe, expect, it, vi } from 'vitest';
       2| import { createMissingKeyHandler, missingKeyReports } from './reportMi…
@@ -57,4 +57,3 @@ Error: Cannot find module './reportMissingKey' imported from /Users/sergeykhomyu
       Tests  no tests
    Start at  15:09:49
    Duration  96ms (transform 52ms, setup 39ms, import 0ms, tests 0ms, environment 0ms)
-

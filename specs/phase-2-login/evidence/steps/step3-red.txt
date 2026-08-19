@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/domain/deriveSecret.test.ts (0 test)
  ❯ |ui| src/features/auth/domain/substitutionTableEntry.test.ts (0 test)
@@ -9,7 +9,7 @@
  FAIL  |ui| src/features/auth/domain/deriveSecret.test.ts [ src/features/auth/domain/deriveSecret.test.ts ]
 Error: Failed to resolve import "./deriveSecret" from "src/features/auth/domain/deriveSecret.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/domain/deriveSecret.test.ts:3:29
+  File: /hierarchy-tree/src/features/auth/domain/deriveSecret.test.ts:3:29
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { SUBSTITUTION_TABLE } from "./substitutionTable";
   3  |  import { deriveSecret } from "./deriveSecret";
@@ -29,7 +29,7 @@ Error: Failed to resolve import "./deriveSecret" from "src/features/auth/domain/
  FAIL  |ui| src/features/auth/domain/substitutionTableEntry.test.ts [ src/features/auth/domain/substitutionTableEntry.test.ts ]
 Error: Failed to resolve import "./substitutionTableEntry" from "src/features/auth/domain/substitutionTableEntry.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/domain/substitutionTableEntry.test.ts:2:39
+  File: /hierarchy-tree/src/features/auth/domain/substitutionTableEntry.test.ts:2:39
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { substitutionTableEntry } from "./substitutionTableEntry";
      |                                          ^
@@ -50,4 +50,3 @@ Error: Failed to resolve import "./substitutionTableEntry" from "src/features/au
       Tests  no tests
    Start at  21:28:10
    Duration  592ms (transform 36ms, setup 210ms, import 0ms, tests 0ms, environment 761ms)
-

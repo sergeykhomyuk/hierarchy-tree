@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/domain/defaultExpansion.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/hierarchy/domain/defaultExpansion.test.ts [ src/features/hierarchy/domain/defaultExpansion.test.ts ]
 Error: Failed to resolve import "./defaultExpansion" from "src/features/hierarchy/domain/defaultExpansion.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/defaultExpansion.test.ts:4:33
+  File: /hierarchy-tree/src/features/hierarchy/domain/defaultExpansion.test.ts:4:33
   2  |  import { testPerson } from "../testing/testPerson";
   3  |  import { buildForest } from "./buildForest";
   4  |  import { defaultExpansion } from "./defaultExpansion";
@@ -30,4 +30,3 @@ Error: Failed to resolve import "./defaultExpansion" from "src/features/hierarch
       Tests  no tests
    Start at  13:18:30
    Duration  640ms (transform 25ms, setup 115ms, import 0ms, tests 0ms, environment 425ms)
-

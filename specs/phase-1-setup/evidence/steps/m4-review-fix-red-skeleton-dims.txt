@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/shared/ui/Skeleton.test.tsx (5 tests | 1 failed) 13ms
      × independent width and height sizes never emit two conflicting classes for the same dimension 3ms
@@ -30,4 +30,3 @@ AssertionError: expected exactly one width class, got w-full, w-[34px]: expected
       Tests  1 failed | 4 passed (5)
    Start at  16:35:37
    Duration  605ms (transform 29ms, setup 113ms, import 13ms, tests 13ms, environment 390ms)
-

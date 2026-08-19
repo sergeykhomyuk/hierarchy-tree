@@ -53,11 +53,11 @@ Running 25 tests using 5 workers
       17 |         route.heading,
       18 |       );
       19 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/accessibility.spec.ts:16:61
+        at /hierarchy-tree/e2e/accessibility.spec.ts:16:61
 
     Error Context: test-results/accessibility-accessibility-login-has-zero-axe-violations-chromium/error-context.md
 
-  2) [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry 
+  2) [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry
 
     Test timeout of 30000ms exceeded.
 
@@ -84,11 +84,11 @@ Running 25 tests using 5 workers
       54 |     'login.title',
       55 |   );
       56 |   await expect(alert).toBeHidden();
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/error-boundary.spec.ts:53:57
+        at /hierarchy-tree/e2e/error-boundary.spec.ts:53:57
 
     Error Context: test-results/error-boundary-a-forced-ro-80071-on-id-and-recovers-on-retry-chromium/error-context.md
 
-  3) [chromium] › e2e/placeholder-routes.spec.ts:32:3 › placeholder routes › the login route renders the generic auth placeholder 
+  3) [chromium] › e2e/placeholder-routes.spec.ts:32:3 › placeholder routes › the login route renders the generic auth placeholder
 
     Test timeout of 30000ms exceeded.
 
@@ -113,11 +113,11 @@ Running 25 tests using 5 workers
       42 |       'login.title',
       43 |     );
       44 |     await expect(page).toHaveTitle('login.documentTitle');
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/placeholder-routes.spec.ts:41:59
+        at /hierarchy-tree/e2e/placeholder-routes.spec.ts:41:59
 
     Error Context: test-results/placeholder-routes-placeho-3ecb7-he-generic-auth-placeholder-chromium/error-context.md
 
-  4) [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › /login mirrors correctly under a forced right-to-left direction 
+  4) [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › /login mirrors correctly under a forced right-to-left direction
 
     Test timeout of 30000ms exceeded.
 
@@ -142,17 +142,17 @@ Running 25 tests using 5 workers
       50 |         route.heading,
       51 |       );
       52 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/right-to-left.spec.ts:49:61
+        at /hierarchy-tree/e2e/right-to-left.spec.ts:49:61
 
     Error Context: test-results/right-to-left-right-to-lef-5b2b0-ced-right-to-left-direction-chromium/error-context.md
 
-  5) [chromium] › e2e/telemetry-buffer.spec.ts:5:1 › the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage 
+  5) [chromium] › e2e/telemetry-buffer.spec.ts:5:1 › the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage
 
     Test timeout of 30000ms exceeded while setting up "page".
 
     Error Context: test-results/telemetry-buffer-the-buffe-c2f66-and-no-redacted-key-leakage-chromium/error-context.md
 
-  6) [chromium] › e2e/telemetry-buffer.spec.ts:29:1 › local and session storage are empty after visiting both routes 
+  6) [chromium] › e2e/telemetry-buffer.spec.ts:29:1 › local and session storage are empty after visiting both routes
 
     Error: expect(locator).toHaveText(expected) failed
 
@@ -175,15 +175,15 @@ Running 25 tests using 5 workers
       41 |     'login.title',
       42 |   );
       43 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/telemetry-buffer.spec.ts:40:57
+        at /hierarchy-tree/e2e/telemetry-buffer.spec.ts:40:57
 
     Error Context: test-results/telemetry-buffer-local-and-caf77--after-visiting-both-routes-chromium/error-context.md
 
   6 failed
     [chromium] › e2e/accessibility.spec.ts:13:5 › accessibility › /login has zero axe violations ───
-    [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry 
-    [chromium] › e2e/placeholder-routes.spec.ts:32:3 › placeholder routes › the login route renders the generic auth placeholder 
-    [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › /login mirrors correctly under a forced right-to-left direction 
-    [chromium] › e2e/telemetry-buffer.spec.ts:5:1 › the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage 
-    [chromium] › e2e/telemetry-buffer.spec.ts:29:1 › local and session storage are empty after visiting both routes 
+    [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry
+    [chromium] › e2e/placeholder-routes.spec.ts:32:3 › placeholder routes › the login route renders the generic auth placeholder
+    [chromium] › e2e/right-to-left.spec.ts:41:5 › right-to-left › /login mirrors correctly under a forced right-to-left direction
+    [chromium] › e2e/telemetry-buffer.spec.ts:5:1 › the buffer sink records exactly one route_viewed for the initial load and no redacted-key leakage
+    [chromium] › e2e/telemetry-buffer.spec.ts:29:1 › local and session storage are empty after visiting both routes
   19 passed (4.0m)

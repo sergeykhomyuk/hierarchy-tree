@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/guard/resolveDestination.test.ts (4 tests | 1 failed) 4ms
      × derives its fallback and its login match from the shared ROUTE_PATHS map rather than an independent literal 3ms
@@ -27,4 +27,3 @@ Received: "/"
       Tests  1 failed | 3 passed (4)
    Start at  18:01:05
    Duration  506ms (transform 28ms, setup 99ms, import 6ms, tests 4ms, environment 341ms)
-

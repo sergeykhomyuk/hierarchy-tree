@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/HierarchyPage.test.tsx (8 tests | 4 failed) 73ms
      × every failure kind renders the error state inside the card with the header and nav rail unchanged 7ms
@@ -119,4 +119,3 @@ Ignored nodes: comments, script, style
       Tests  4 failed | 4 passed (8)
    Start at  15:34:35
    Duration  719ms (transform 84ms, setup 98ms, import 127ms, tests 73ms, environment 354ms)
-

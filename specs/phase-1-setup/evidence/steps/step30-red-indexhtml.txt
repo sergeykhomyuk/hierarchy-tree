@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/index-html.test.ts (4 tests | 3 failed) 4ms
      × declares the document language as en 2ms
@@ -91,4 +91,3 @@ Received: "/vite.svg"
       Tests  3 failed | 1 passed (4)
    Start at  17:34:24
    Duration  95ms (transform 16ms, setup 29ms, import 2ms, tests 4ms, environment 0ms)
-

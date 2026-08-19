@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/shared/utils/bytesToHex.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/shared/utils/bytesToHex.test.ts [ src/shared/utils/bytesToHex.test.ts ]
 Error: Failed to resolve import "./bytesToHex" from "src/shared/utils/bytesToHex.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/utils/bytesToHex.test.ts:2:27
+  File: /hierarchy-tree/src/shared/utils/bytesToHex.test.ts:2:27
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { bytesToHex } from "./bytesToHex";
      |                              ^
@@ -29,4 +29,3 @@ Error: Failed to resolve import "./bytesToHex" from "src/shared/utils/bytesToHex
       Tests  no tests
    Start at  09:57:16
    Duration  611ms (transform 19ms, setup 99ms, import 0ms, tests 0ms, environment 412ms)
-

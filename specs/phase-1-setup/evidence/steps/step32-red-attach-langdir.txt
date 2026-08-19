@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/ApplicationRoot.test.tsx (2 tests | 1 failed) 15ms
      × sets document.documentElement.lang and dir from the active i18next language 2ms
@@ -126,4 +126,3 @@ AssertionError: expected [ …(6) ] to deeply equal []
       Tests  2 failed | 3 passed (5)
    Start at  18:01:46
    Duration  1.71s (transform 131ms, setup 203ms, import 139ms, tests 1.07s, environment 829ms)
-

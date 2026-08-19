@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/pipeline-integrity.test.ts (2 tests | 2 failed) 50ms
      × no pipeline check is disabled, skipped or set to continue-on-error 7ms
@@ -45,4 +45,3 @@ AssertionError: expected 85 to be greater than or equal to 86
       Tests  2 failed (2)
    Start at  08:49:08
    Duration  159ms (transform 25ms, setup 35ms, import 9ms, tests 50ms, environment 0ms)
-

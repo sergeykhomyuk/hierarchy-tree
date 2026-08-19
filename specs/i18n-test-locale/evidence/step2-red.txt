@@ -1,12 +1,12 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |platform| src/platform/internationalization/detectLocale.test.ts (0 test)
 
 ⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
 
  FAIL  |platform| src/platform/internationalization/detectLocale.test.ts [ src/platform/internationalization/detectLocale.test.ts ]
-Error: Cannot find module './detectLocale' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/internationalization/detectLocale.test.ts
+Error: Cannot find module './detectLocale' imported from /hierarchy-tree/src/platform/internationalization/detectLocale.test.ts
  ❯ src/platform/internationalization/detectLocale.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { detectLocale } from './detectLocale';
@@ -21,4 +21,3 @@ Error: Cannot find module './detectLocale' imported from /Users/sergeykhomyuk/Sy
       Tests  no tests
    Start at  12:28:35
    Duration  91ms (transform 18ms, setup 31ms, import 0ms, tests 0ms, environment 0ms)
-

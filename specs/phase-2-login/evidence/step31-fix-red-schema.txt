@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/data/signedInUserSchema.test.ts (2 tests | 2 failed) 4ms
      × drops the password field at the parse boundary 3ms
@@ -53,4 +53,3 @@ undefined
       Tests  2 failed (2)
    Start at  13:25:53
    Duration  608ms (transform 24ms, setup 110ms, import 24ms, tests 4ms, environment 405ms)
-

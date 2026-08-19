@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ scripts/repository-configuration.test.ts (2 tests | 2 failed) 19ms
      × node version is pinned consistently in .nvmrc and package.json engines 3ms
@@ -43,4 +43,3 @@ AssertionError: expected true to be false // Object.is equality
       Tests  2 failed (2)
    Start at  12:07:02
    Duration  119ms (transform 12ms, setup 0ms, import 22ms, tests 19ms, environment 0ms)
-

@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 stdout | scripts/live-smoke/live-smoke.test.ts > live smoke > the real backend serves users.json as JSON with at least one record
 timing {
@@ -41,4 +41,3 @@ timing {
       Tests  2 passed (2)
    Start at  19:42:02
    Duration  734ms (transform 29ms, setup 0ms, import 40ms, tests 632ms, environment 0ms)
-

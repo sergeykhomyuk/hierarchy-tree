@@ -1,6 +1,5 @@
 
-/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/main.tsx
+/hierarchy-tree/src/app/main.tsx
   9:1  error  '@features/hierarchy/HierarchyPlaceholderPage' import is restricted from being used by a pattern. Import a feature only through its public entry: @features/<name>  no-restricted-imports
 
 ✖ 1 problem (1 error, 0 warnings)
-

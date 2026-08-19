@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |platform| src/shared/theme/theme.test.ts (3 tests | 3 failed) 4ms
      × reduced motion disables every transition including the skeleton shimmer 2ms
@@ -57,4 +57,3 @@ AssertionError: expected null not to be null
       Tests  3 failed (3)
    Start at  15:38:17
    Duration  95ms (transform 19ms, setup 31ms, import 3ms, tests 4ms, environment 0ms)
-

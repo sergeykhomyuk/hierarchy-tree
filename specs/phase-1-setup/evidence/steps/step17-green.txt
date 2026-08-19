@@ -21,7 +21,7 @@ All matched files use Prettier code style!
 > vitest run --coverage
 
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
       Coverage enabled with v8
 
 assert-domain-vocabulary: banned vocabulary found:
@@ -49,11 +49,11 @@ assert-no-secrets --bundle-only: dist/ is missing - run npm run build first
 
  % Coverage report from v8
 -------------------|---------|----------|---------|---------|-------------------
-File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 -------------------|---------|----------|---------|---------|-------------------
-All files          |   97.47 |    96.93 |     100 |   97.82 |                   
- platform/http     |   94.44 |    93.47 |     100 |   95.06 |                   
-  ...HttpClient.ts |   92.64 |     92.5 |     100 |   93.75 | 145-146,173,181   
+All files          |   97.47 |    96.93 |     100 |   97.82 |
+ platform/http     |   94.44 |    93.47 |     100 |   95.06 |
+  ...HttpClient.ts |   92.64 |     92.5 |     100 |   93.75 | 145-146,173,181
 -------------------|---------|----------|---------|---------|-------------------
 
 =============================== Coverage summary ===============================
@@ -67,7 +67,8 @@ Lines        : 97.82% ( 180/184 )
 > tsc -b && vite build
 
 vite v8.2.1 building client environment for production...
-[2Ktransforming...✓ 97 modules transformed.
+[2K
+transforming...✓ 97 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                   0.46 kB │ gzip:  0.29 kB
@@ -79,8 +80,8 @@ dist/assets/vendor-DHdUnWhO.js  205.97 kB │ gzip: 64.65 kB
 > hierarchy-tree@0.0.0 verify:build
 > vitest run --config vitest.build-output.config.ts
 
-
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+/
+ RUN  v4.1.10 /hierarchy-tree
 
 
  Test Files  2 passed (2)
@@ -94,8 +95,7 @@ dist/assets/vendor-DHdUnWhO.js  205.97 kB │ gzip: 64.65 kB
 
 - Running JS in headless Chrome
 ✔ Running JS in headless Chrome
-  
+
   Size limit:   100 kB
   Size:         65.17 kB gzipped
   Loading time: 1.3 s    on slow 3G
-  

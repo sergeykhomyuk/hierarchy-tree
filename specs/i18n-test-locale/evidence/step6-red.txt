@@ -1,20 +1,20 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/ApplicationRoot.test.tsx (2 tests | 1 failed) 23ms
      × sets document.documentElement.lang and dir from the active i18next language 5ms
 stderr | src/app/error-boundary/RootErrorBoundary.test.tsx > RootErrorBoundary > the root boundary renders the error surface above any router without throwing
 Error: boom
-    at Bomb (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/error-boundary/RootErrorBoundary.test.tsx:7:9)
-    at Object.react_stack_bottom_frame (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
-    at renderWithHooks (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
-    at updateFunctionComponent (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
-    at beginWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
-    at runWithFiberInDEV (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
-    at performUnitOfWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
-    at workLoopSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
-    at renderRootSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
-    at performWorkOnRoot (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+    at Bomb (/hierarchy-tree/src/app/error-boundary/RootErrorBoundary.test.tsx:7:9)
+    at Object.react_stack_bottom_frame (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
   [stack]: [Getter/Setter],
   [message]: 'boom'
 }
@@ -28,16 +28,16 @@ React will try to recreate this component tree from scratch using the error boun
      × the root boundary renders the error surface above any router without throwing 22ms
 stderr | src/app/error-boundary/RouteErrorBoundary.test.tsx > RouteErrorBoundary > renders the error surface when a route throws while rendering
 Error: boom
-    at Bomb (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/error-boundary/RouteErrorBoundary.test.tsx:8:9)
-    at Object.react_stack_bottom_frame (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
-    at renderWithHooks (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
-    at updateFunctionComponent (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
-    at beginWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
-    at runWithFiberInDEV (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
-    at performUnitOfWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
-    at workLoopSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
-    at renderRootSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
-    at performWorkOnRoot (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+    at Bomb (/hierarchy-tree/src/app/error-boundary/RouteErrorBoundary.test.tsx:8:9)
+    at Object.react_stack_bottom_frame (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
   [stack]: [Getter/Setter],
   [message]: 'boom'
 }
@@ -47,16 +47,16 @@ The above error occurred in the <Bomb> component.
 React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
 
 React Router caught the following error during render Error: boom
-    at Bomb (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/error-boundary/RouteErrorBoundary.test.tsx:8:9)
-    at Object.react_stack_bottom_frame (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
-    at renderWithHooks (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
-    at updateFunctionComponent (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
-    at beginWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
-    at runWithFiberInDEV (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
-    at performUnitOfWork (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
-    at workLoopSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
-    at renderRootSync (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
-    at performWorkOnRoot (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+    at Bomb (/hierarchy-tree/src/app/error-boundary/RouteErrorBoundary.test.tsx:8:9)
+    at Object.react_stack_bottom_frame (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/hierarchy-tree/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
 
  ❯ |ui| src/app/error-boundary/RouteErrorBoundary.test.tsx (1 test | 1 failed) 33ms
      × renders the error surface when a route throws while rendering 33ms
@@ -430,4 +430,3 @@ Ignored nodes: comments, script, style
       Tests  7 failed | 3 passed (10)
    Start at  12:40:28
    Duration  881ms (transform 421ms, setup 940ms, import 460ms, tests 271ms, environment 2.89s)
-

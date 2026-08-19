@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ scripts/repository-configuration.test.ts (4 tests | 2 failed) 59ms
      × tsconfig.app.json enables strict and the four strictness flags 2ms
@@ -27,7 +27,7 @@ undefined
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
 
  FAIL  scripts/repository-configuration.test.ts > repository configuration > path aliases resolve identically in tsconfig, Vite and Vitest
-Error: Cannot find module '/vitest.config.ts' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/scripts/repository-configuration.test.ts
+Error: Cannot find module '/vitest.config.ts' imported from /hierarchy-tree/scripts/repository-configuration.test.ts
  ❯ scripts/repository-configuration.test.ts:66:27
      64|
      65|     const viteConfig = (await import('../vite.config.ts')).default;
@@ -43,4 +43,3 @@ Error: Cannot find module '/vitest.config.ts' imported from /Users/sergeykhomyuk
       Tests  2 failed | 2 passed (4)
    Start at  12:11:29
    Duration  133ms (transform 12ms, setup 0ms, import 14ms, tests 59ms, environment 0ms)
-

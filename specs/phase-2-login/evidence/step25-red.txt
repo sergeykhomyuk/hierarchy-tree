@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/guard/withSessionGuard.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/auth/guard/withSessionGuard.test.ts [ src/features/auth/guard/withSessionGuard.test.ts ]
 Error: Failed to resolve import "./withSessionGuard" from "src/features/auth/guard/withSessionGuard.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/guard/withSessionGuard.test.ts:6:51
+  File: /hierarchy-tree/src/features/auth/guard/withSessionGuard.test.ts:6:51
   2  |  import { userIdentifier } from "../domain/userIdentifier";
   3  |  import { writeSession } from "../session/writeSession";
   4  |  import { isSessionGuarded, withSessionGuard } from "./withSessionGuard";
@@ -30,4 +30,3 @@ Error: Failed to resolve import "./withSessionGuard" from "src/features/auth/gua
       Tests  no tests
    Start at  09:23:34
    Duration  527ms (transform 21ms, setup 98ms, import 0ms, tests 0ms, environment 337ms)
-

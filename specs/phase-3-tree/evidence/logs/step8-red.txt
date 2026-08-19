@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/domain/expansionParameter.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/hierarchy/domain/expansionParameter.test.ts [ src/features/hierarchy/domain/expansionParameter.test.ts ]
 Error: Failed to resolve import "./expansionParameter" from "src/features/hierarchy/domain/expansionParameter.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/expansionParameter.test.ts:7:7
+  File: /hierarchy-tree/src/features/hierarchy/domain/expansionParameter.test.ts:7:7
   2  |  import { testPerson } from "../testing/testPerson";
   3  |  import { buildForest } from "./buildForest";
   4  |  import { formatExpansion, parseExpansion } from "./expansionParameter";
@@ -30,4 +30,3 @@ Error: Failed to resolve import "./expansionParameter" from "src/features/hierar
       Tests  no tests
    Start at  13:20:06
    Duration  577ms (transform 24ms, setup 100ms, import 0ms, tests 0ms, environment 386ms)
-

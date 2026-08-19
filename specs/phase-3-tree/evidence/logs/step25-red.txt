@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (5 tests | 3 failed) 94ms
      × collapsing and re-expanding a branch three times produces one photo-failure report for that person 8ms
@@ -49,4 +49,3 @@ AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
       Tests  3 failed | 7 passed (10)
    Start at  17:20:50
    Duration  470ms (transform 93ms, setup 137ms, import 61ms, tests 183ms, environment 436ms)
-

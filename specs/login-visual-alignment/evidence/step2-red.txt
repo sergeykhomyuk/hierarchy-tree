@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/shared/ui/Card.test.tsx (4 tests | 1 failed) 14ms
      × uses the login card radius when radius is set to login 2ms
@@ -47,4 +47,3 @@ Received:
       Tests  2 failed | 20 passed (22)
    Start at  11:06:00
    Duration  2.13s (transform 138ms, setup 208ms, import 145ms, tests 1.45s, environment 777ms)
-

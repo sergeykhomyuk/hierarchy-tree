@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |platform| src/shared/theme/contrastPairs.test.ts (3 tests | 1 failed) 3ms
      × every contrast pair holds AA in both themes 2ms
@@ -23,4 +23,3 @@ AssertionError: light: ink-faint on surface must hold 4.5:1: expected 3.33695565
       Tests  1 failed | 2 passed (3)
    Start at  16:34:35
    Duration  101ms (transform 22ms, setup 34ms, import 5ms, tests 3ms, environment 0ms)
-

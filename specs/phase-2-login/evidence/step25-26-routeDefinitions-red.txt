@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/routing/routeDefinitions.test.ts (5 tests | 2 failed) 6ms
      × registers the kit route before the wildcard when development routes are on 3ms
@@ -47,4 +47,3 @@ AssertionError: expected [ undefined, 'login', '*' ] to deeply equal [ undefined
       Tests  2 failed | 3 passed (5)
    Start at  09:29:08
    Duration  645ms (transform 117ms, setup 91ms, import 151ms, tests 6ms, environment 334ms)
-

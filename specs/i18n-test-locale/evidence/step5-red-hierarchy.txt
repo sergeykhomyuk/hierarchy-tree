@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/loadTranslations.test.ts (3 tests | 1 failed) 6ms
      × registers the key-echoed catalogue under Locale.Test 2ms
@@ -36,4 +36,3 @@ undefined
       Tests  1 failed | 2 passed (3)
    Start at  12:38:24
    Duration  530ms (transform 47ms, setup 122ms, import 7ms, tests 6ms, environment 337ms)
-

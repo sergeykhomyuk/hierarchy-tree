@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/playwright-configuration.test.ts (2 tests | 2 failed) 5ms
      × the deployed project is absent from the projects array when DEPLOYED_BASE_URL is unset 3ms
@@ -8,7 +8,7 @@
 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
 
  FAIL  |tooling| scripts/playwright-configuration.test.ts > playwright configuration > the deployed project is absent from the projects array when DEPLOYED_BASE_URL is unset
-Error: Cannot find module '/playwright.config.ts?deployed-unset' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/scripts/playwright-configuration.test.ts
+Error: Cannot find module '/playwright.config.ts?deployed-unset' imported from /hierarchy-tree/scripts/playwright-configuration.test.ts
  ❯ scripts/playwright-configuration.test.ts:16:21
      14|   it('the deployed project is absent from the projects array when DEPL…
      15|     delete process.env.DEPLOYED_BASE_URL;
@@ -20,7 +20,7 @@ Error: Cannot find module '/playwright.config.ts?deployed-unset' imported from /
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
 
  FAIL  |tooling| scripts/playwright-configuration.test.ts > playwright configuration > no webServer is configured when DEPLOYED_BASE_URL is set
-Error: Cannot find module '/playwright.config.ts?deployed-set' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/scripts/playwright-configuration.test.ts
+Error: Cannot find module '/playwright.config.ts?deployed-set' imported from /hierarchy-tree/scripts/playwright-configuration.test.ts
  ❯ scripts/playwright-configuration.test.ts:26:21
      24|   it('no webServer is configured when DEPLOYED_BASE_URL is set', async…
      25|     process.env.DEPLOYED_BASE_URL = 'https://example.pages.dev';
@@ -36,4 +36,3 @@ Error: Cannot find module '/playwright.config.ts?deployed-set' imported from /Us
       Tests  2 failed (2)
    Start at  13:03:24
    Duration  78ms (transform 11ms, setup 10ms, import 6ms, tests 5ms, environment 0ms)
-

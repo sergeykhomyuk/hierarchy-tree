@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/composition/createRuntime.test.ts (5 tests | 1 failed) 6ms
      × resolves the runtime language from navigator.languages 2ms
@@ -27,4 +27,3 @@ Received: "en"
       Tests  1 failed | 4 passed (5)
    Start at  12:36:02
    Duration  652ms (transform 65ms, setup 103ms, import 71ms, tests 6ms, environment 407ms)
-

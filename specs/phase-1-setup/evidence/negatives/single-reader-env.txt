@@ -1,6 +1,5 @@
 
-/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/demonstrableEnvProbe.ts
+/hierarchy-tree/src/app/demonstrableEnvProbe.ts
   1:26  error  Read the environment only in src/platform/configuration/environment.ts  no-restricted-syntax
 
 ✖ 1 problem (1 error, 0 warnings)
-

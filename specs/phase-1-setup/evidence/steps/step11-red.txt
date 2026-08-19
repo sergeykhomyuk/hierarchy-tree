@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/eslint-configuration.test.ts (3 tests | 2 failed) 518ms
      × the storage ban covers all five globals in bare and member forms 2ms
@@ -36,4 +36,3 @@ AssertionError: expected 0 to be greater than 0
       Tests  2 failed | 1 passed (3)
    Start at  13:42:50
    Duration  600ms (transform 20ms, setup 10ms, import 7ms, tests 518ms, environment 0ms)
-

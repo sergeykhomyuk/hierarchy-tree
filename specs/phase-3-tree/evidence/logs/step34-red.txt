@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/domain/rowAccessibleName.test.ts (0 test)
  ❯ |ui| src/features/hierarchy/domain/typeAheadMatch.test.ts (0 test)
@@ -11,7 +11,7 @@
  FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx [ src/features/hierarchy/HierarchyPage.test.tsx ]
 Error: Failed to resolve import "./domain/rowAccessibleName" from "src/features/hierarchy/HierarchyTree.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchyTree.tsx:8:34
+  File: /hierarchy-tree/src/features/hierarchy/HierarchyTree.tsx:8:34
   4  |  import { personDisplayName } from "./domain/personDisplayName";
   5  |  import { recoverFocusedRowId } from "./domain/recoverFocusedRowId";
   6  |  import { rowAccessibleName } from "./domain/rowAccessibleName";
@@ -32,7 +32,7 @@ Error: Failed to resolve import "./domain/rowAccessibleName" from "src/features/
  FAIL  |ui| src/features/hierarchy/HierarchyTree.test.tsx [ src/features/hierarchy/HierarchyTree.test.tsx ]
 Error: Failed to resolve import "./domain/rowAccessibleName" from "src/features/hierarchy/HierarchyTree.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchyTree.tsx:8:34
+  File: /hierarchy-tree/src/features/hierarchy/HierarchyTree.tsx:8:34
   4  |  import { personDisplayName } from "./domain/personDisplayName";
   5  |  import { recoverFocusedRowId } from "./domain/recoverFocusedRowId";
   6  |  import { rowAccessibleName } from "./domain/rowAccessibleName";
@@ -52,7 +52,7 @@ Error: Failed to resolve import "./domain/rowAccessibleName" from "src/features/
  FAIL  |ui| src/features/hierarchy/domain/rowAccessibleName.test.ts [ src/features/hierarchy/domain/rowAccessibleName.test.ts ]
 Error: Failed to resolve import "./rowAccessibleName" from "src/features/hierarchy/domain/rowAccessibleName.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/rowAccessibleName.test.ts:2:34
+  File: /hierarchy-tree/src/features/hierarchy/domain/rowAccessibleName.test.ts:2:34
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { rowAccessibleName } from "./rowAccessibleName";
      |                                     ^
@@ -71,7 +71,7 @@ Error: Failed to resolve import "./rowAccessibleName" from "src/features/hierarc
  FAIL  |ui| src/features/hierarchy/domain/typeAheadMatch.test.ts [ src/features/hierarchy/domain/typeAheadMatch.test.ts ]
 Error: Failed to resolve import "./typeAheadMatch" from "src/features/hierarchy/domain/typeAheadMatch.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/typeAheadMatch.test.ts:2:35
+  File: /hierarchy-tree/src/features/hierarchy/domain/typeAheadMatch.test.ts:2:35
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { findTypeAheadMatch } from "./typeAheadMatch";
      |                                      ^
@@ -92,4 +92,3 @@ Error: Failed to resolve import "./typeAheadMatch" from "src/features/hierarchy/
       Tests  10 passed (10)
    Start at  09:26:20
    Duration  761ms (transform 375ms, setup 687ms, import 120ms, tests 114ms, environment 1.60s)
-

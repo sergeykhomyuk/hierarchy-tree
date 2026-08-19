@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/useExpansion.test.tsx (0 test)
  ❯ |ui| src/app/routing/routes/HomeRoute.test.tsx (4 tests | 1 failed) 128ms
@@ -10,7 +10,7 @@
  FAIL  |ui| src/features/hierarchy/useExpansion.test.tsx [ src/features/hierarchy/useExpansion.test.tsx ]
 Error: Failed to resolve import "./useExpansion" from "src/features/hierarchy/useExpansion.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/useExpansion.test.tsx:5:29
+  File: /hierarchy-tree/src/features/hierarchy/useExpansion.test.tsx:5:29
   3  |  import userEvent from "@testing-library/user-event";
   4  |  import { createMemoryRouter, RouterProvider } from "react-router";
   5  |  import { useExpansion } from "./useExpansion";
@@ -53,4 +53,3 @@ AssertionError: expected '' to be '?expanded=' // Object.is equality
       Tests  1 failed | 3 passed (4)
    Start at  17:50:23
    Duration  695ms (transform 162ms, setup 146ms, import 194ms, tests 128ms, environment 492ms)
-

@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/loadTranslations.test.ts (3 tests | 1 failed) 15ms
      × registers the key-echoed catalogue under Locale.Test 8ms
@@ -748,4 +748,3 @@ AssertionError: expected { home: { …(3) }, page: { …(16) } } to deeply equal
       Tests  7 failed | 26 passed (33)
    Start at  18:39:27
    Duration  2.95s (transform 542ms, setup 832ms, import 585ms, tests 2.57s, environment 2.78s)
-

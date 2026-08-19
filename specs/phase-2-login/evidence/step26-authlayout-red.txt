@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/layout/AuthenticatedLayout.test.tsx (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/app/layout/AuthenticatedLayout.test.tsx [ src/app/layout/AuthenticatedLayout.test.tsx ]
 Error: Failed to resolve import "./AuthenticatedLayout" from "src/app/layout/AuthenticatedLayout.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/layout/AuthenticatedLayout.test.tsx:6:42
+  File: /hierarchy-tree/src/app/layout/AuthenticatedLayout.test.tsx:6:42
   1  |  import { describe, expect, it, vi } from "vitest";
   2  |  import { createAuthenticatedLoader } from "./AuthenticatedLayout";
      |                                             ^
@@ -29,4 +29,3 @@ Error: Failed to resolve import "./AuthenticatedLayout" from "src/app/layout/Aut
       Tests  no tests
    Start at  09:30:04
    Duration  503ms (transform 21ms, setup 88ms, import 0ms, tests 0ms, environment 334ms)
-

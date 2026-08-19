@@ -17,7 +17,7 @@ Running 4 tests using 1 worker
   ✘  4 [chromium] › e2e/hierarchy-layout.spec.ts:254:3 › hierarchy layout › the deepest manager retains usable text space without horizontal overflow at 320 px (202ms)
 
 
-  1) [chromium] › e2e/hierarchy-layout.spec.ts:21:3 › hierarchy layout › the loading hierarchy matches mockup 1f's card header and row rhythm 
+  1) [chromium] › e2e/hierarchy-layout.spec.ts:21:3 › hierarchy layout › the loading hierarchy matches mockup 1f's card header and row rhythm
 
     Error: expect(received).toEqual(expected) // deep equality
 
@@ -39,11 +39,11 @@ Running 4 tests using 1 worker
       33 |       x: 83,
       34 |       y: 79,
       35 |       width: 854,
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-layout.spec.ts:32:53
+        at /hierarchy-tree/e2e/hierarchy-layout.spec.ts:32:53
 
     Error Context: test-results/hierarchy-layout-hierarchy-71682--card-header-and-row-rhythm-chromium/error-context.md
 
-  2) [chromium] › e2e/hierarchy-layout.spec.ts:41:3 › hierarchy layout › the empty hierarchy matches mockup 1g's centered card state 
+  2) [chromium] › e2e/hierarchy-layout.spec.ts:41:3 › hierarchy layout › the empty hierarchy matches mockup 1g's centered card state
 
     Error: expect(locator).toHaveCSS(expected) failed
 
@@ -66,11 +66,11 @@ Running 4 tests using 1 worker
       52 |     await expect(state).toHaveCSS('align-items', 'center');
       53 |     await expect(state).toHaveCSS('justify-content', 'center');
       54 |     await expect(state).toHaveCSS('gap', '14px');
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-layout.spec.ts:51:25
+        at /hierarchy-tree/e2e/hierarchy-layout.spec.ts:51:25
 
     Error Context: test-results/hierarchy-layout-hierarchy-0e6f9-up-1g-s-centered-card-state-chromium/error-context.md
 
-  3) [chromium] › e2e/hierarchy-layout.spec.ts:57:3 › hierarchy layout › the error hierarchy matches mockup 1h's centered card state 
+  3) [chromium] › e2e/hierarchy-layout.spec.ts:57:3 › hierarchy layout › the error hierarchy matches mockup 1h's centered card state
 
     Error: expect(locator).toHaveCSS(expected) failed
 
@@ -93,11 +93,11 @@ Running 4 tests using 1 worker
       68 |     await expect(state).toHaveCSS('align-items', 'center');
       69 |     await expect(state).toHaveCSS('justify-content', 'center');
       70 |     await expect(state).toHaveCSS('gap', '14px');
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-layout.spec.ts:67:25
+        at /hierarchy-tree/e2e/hierarchy-layout.spec.ts:67:25
 
     Error Context: test-results/hierarchy-layout-hierarchy-41573-up-1h-s-centered-card-state-chromium/error-context.md
 
-  4) [chromium] › e2e/hierarchy-layout.spec.ts:254:3 › hierarchy layout › the deepest manager retains usable text space without horizontal overflow at 320 px 
+  4) [chromium] › e2e/hierarchy-layout.spec.ts:254:3 › hierarchy layout › the deepest manager retains usable text space without horizontal overflow at 320 px
 
     Error: expect(received).toBeLessThanOrEqual(expected)
 
@@ -111,12 +111,12 @@ Running 4 tests using 1 worker
       273 |       await tree.evaluate((element) => element.clientWidth),
       274 |     );
       275 |     expect(
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-layout.spec.ts:272:7
+        at /hierarchy-tree/e2e/hierarchy-layout.spec.ts:272:7
 
     Error Context: test-results/hierarchy-layout-hierarchy-bee39-rizontal-overflow-at-320-px-chromium/error-context.md
 
   4 failed
-    [chromium] › e2e/hierarchy-layout.spec.ts:21:3 › hierarchy layout › the loading hierarchy matches mockup 1f's card header and row rhythm 
-    [chromium] › e2e/hierarchy-layout.spec.ts:41:3 › hierarchy layout › the empty hierarchy matches mockup 1g's centered card state 
-    [chromium] › e2e/hierarchy-layout.spec.ts:57:3 › hierarchy layout › the error hierarchy matches mockup 1h's centered card state 
-    [chromium] › e2e/hierarchy-layout.spec.ts:254:3 › hierarchy layout › the deepest manager retains usable text space without horizontal overflow at 320 px 
+    [chromium] › e2e/hierarchy-layout.spec.ts:21:3 › hierarchy layout › the loading hierarchy matches mockup 1f's card header and row rhythm
+    [chromium] › e2e/hierarchy-layout.spec.ts:41:3 › hierarchy layout › the empty hierarchy matches mockup 1g's centered card state
+    [chromium] › e2e/hierarchy-layout.spec.ts:57:3 › hierarchy layout › the error hierarchy matches mockup 1h's centered card state
+    [chromium] › e2e/hierarchy-layout.spec.ts:254:3 › hierarchy layout › the deepest manager retains usable text space without horizontal overflow at 320 px

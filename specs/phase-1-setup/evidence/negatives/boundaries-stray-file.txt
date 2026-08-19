@@ -1,6 +1,5 @@
 
-/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/strayUnclassified.ts
+/hierarchy-tree/src/strayUnclassified.ts
   1:1  error  File does not match any file pattern and does not belong to any known element  boundaries/no-unknown-files
 
 ✖ 1 problem (1 error, 0 warnings)
-

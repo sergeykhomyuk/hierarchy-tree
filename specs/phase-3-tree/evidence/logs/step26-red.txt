@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (7 tests | 2 failed) 83ms
      × collapsing a parent and re-expanding it restores exactly the expansion its descendants had 10ms
@@ -296,4 +296,3 @@ Ignored nodes: comments, script, style
       Tests  3 failed | 12 passed (15)
    Start at  17:30:30
    Duration  697ms (transform 107ms, setup 227ms, import 108ms, tests 175ms, environment 756ms)
-

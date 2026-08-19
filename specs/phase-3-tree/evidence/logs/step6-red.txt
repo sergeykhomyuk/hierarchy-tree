@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/domain/flattenVisible.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/hierarchy/domain/flattenVisible.test.ts [ src/features/hierarchy/domain/flattenVisible.test.ts ]
 Error: Failed to resolve import "./flattenVisible" from "src/features/hierarchy/domain/flattenVisible.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/flattenVisible.test.ts:4:31
+  File: /hierarchy-tree/src/features/hierarchy/domain/flattenVisible.test.ts:4:31
   2  |  import { testPerson } from "../testing/testPerson";
   3  |  import { buildForest } from "./buildForest";
   4  |  import { flattenVisible } from "./flattenVisible";
@@ -30,4 +30,3 @@ Error: Failed to resolve import "./flattenVisible" from "src/features/hierarchy/
       Tests  no tests
    Start at  13:17:12
    Duration  603ms (transform 26ms, setup 110ms, import 0ms, tests 0ms, environment 397ms)
-

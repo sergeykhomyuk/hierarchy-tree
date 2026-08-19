@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/guard/redirectSignedInVisitor.test.ts (0 test)
  ❯ |ui| src/features/auth/guard/requireSession.test.ts (0 test)
@@ -9,7 +9,7 @@
  FAIL  |ui| src/features/auth/guard/redirectSignedInVisitor.test.ts [ src/features/auth/guard/redirectSignedInVisitor.test.ts ]
 Error: Failed to resolve import "./redirectSignedInVisitor" from "src/features/auth/guard/redirectSignedInVisitor.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/guard/redirectSignedInVisitor.test.ts:6:40
+  File: /hierarchy-tree/src/features/auth/guard/redirectSignedInVisitor.test.ts:6:40
   2  |  import { userIdentifier } from "../domain/userIdentifier";
   3  |  import { writeSession } from "../session/writeSession";
   4  |  import { redirectSignedInVisitor } from "./redirectSignedInVisitor";
@@ -29,7 +29,7 @@ Error: Failed to resolve import "./redirectSignedInVisitor" from "src/features/a
  FAIL  |ui| src/features/auth/guard/requireSession.test.ts [ src/features/auth/guard/requireSession.test.ts ]
 Error: Failed to resolve import "./requireSession" from "src/features/auth/guard/requireSession.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/guard/requireSession.test.ts:4:31
+  File: /hierarchy-tree/src/features/auth/guard/requireSession.test.ts:4:31
   1  |  import { afterEach, describe, expect, it, vi } from "vitest";
   2  |  import { requireSession } from "./requireSession";
      |                                  ^
@@ -50,4 +50,3 @@ Error: Failed to resolve import "./requireSession" from "src/features/auth/guard
       Tests  no tests
    Start at  09:06:32
    Duration  653ms (transform 42ms, setup 223ms, import 0ms, tests 0ms, environment 862ms)
-

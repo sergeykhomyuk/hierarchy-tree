@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/domain/normalizeToCodeUnits.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/auth/domain/normalizeToCodeUnits.test.ts [ src/features/auth/domain/normalizeToCodeUnits.test.ts ]
 Error: Failed to resolve import "./normalizeToCodeUnits" from "src/features/auth/domain/normalizeToCodeUnits.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/domain/normalizeToCodeUnits.test.ts:2:37
+  File: /hierarchy-tree/src/features/auth/domain/normalizeToCodeUnits.test.ts:2:37
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { normalizeToCodeUnits } from "./normalizeToCodeUnits";
      |                                        ^
@@ -29,4 +29,3 @@ Error: Failed to resolve import "./normalizeToCodeUnits" from "src/features/auth
       Tests  no tests
    Start at  21:22:33
    Duration  608ms (transform 22ms, setup 103ms, import 0ms, tests 0ms, environment 408ms)
-

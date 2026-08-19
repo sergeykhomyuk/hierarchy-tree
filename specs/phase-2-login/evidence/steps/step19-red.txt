@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/LoginPage.test.tsx (0 test)
 
@@ -8,12 +8,12 @@
  FAIL  |ui| src/features/auth/LoginPage.test.tsx [ src/features/auth/LoginPage.test.tsx ]
 Error: Failed to resolve import "./LoginPage" from "src/features/auth/LoginPage.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.test.tsx:17:26
+  File: /hierarchy-tree/src/features/auth/LoginPage.test.tsx:17:26
   7  |  import { createHttpClient } from "@platform/http";
   8  |  import authCatalogue from "./locales/en/auth.json";
   9  |  import { LoginPage } from "./LoginPage";
      |                             ^
-  10 |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.test.tsx";
+  10 |  var _jsxFileName = "/hierarchy-tree/src/features/auth/LoginPage.test.tsx";
   11 |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -30,4 +30,3 @@ Error: Failed to resolve import "./LoginPage" from "src/features/auth/LoginPage.
       Tests  no tests
    Start at  23:47:46
    Duration  424ms (transform 20ms, setup 88ms, import 0ms, tests 0ms, environment 262ms)
-

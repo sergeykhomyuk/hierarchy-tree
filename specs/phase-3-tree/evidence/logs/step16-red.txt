@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/routing/shouldRevalidateExpansionOnly.test.ts (0 test)
  ❯ |ui| src/app/routing/createInteractionTracker.test.ts (11 tests | 1 failed) 5ms
@@ -10,7 +10,7 @@
  FAIL  |ui| src/app/routing/shouldRevalidateExpansionOnly.test.ts [ src/app/routing/shouldRevalidateExpansionOnly.test.ts ]
 Error: Failed to resolve import "./shouldRevalidateExpansionOnly" from "src/app/routing/shouldRevalidateExpansionOnly.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/routing/shouldRevalidateExpansionOnly.test.ts:3:46
+  File: /hierarchy-tree/src/app/routing/shouldRevalidateExpansionOnly.test.ts:3:46
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { shouldRevalidateExpansionOnly } from "./shouldRevalidateExpansionOnly";
      |                                                 ^
@@ -61,4 +61,3 @@ Number of calls: 1
       Tests  1 failed | 10 passed (11)
    Start at  14:47:38
    Duration  656ms (transform 80ms, setup 230ms, import 30ms, tests 5ms, environment 857ms)
-

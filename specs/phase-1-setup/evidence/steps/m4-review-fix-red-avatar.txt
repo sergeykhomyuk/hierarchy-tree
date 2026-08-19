@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/shared/ui/Avatar.test.tsx (6 tests | 1 failed) 63ms
      × renders a decorative image with an empty alt instead of the display name 4ms
@@ -33,4 +33,3 @@ Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
       Tests  1 failed | 5 passed (6)
    Start at  16:36:24
    Duration  727ms (transform 36ms, setup 177ms, import 13ms, tests 63ms, environment 391ms)
-

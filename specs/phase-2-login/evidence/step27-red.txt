@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/routing/createBackForwardRestore.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/app/routing/createBackForwardRestore.test.ts [ src/app/routing/createBackForwardRestore.test.ts ]
 Error: Failed to resolve import "./createBackForwardRestore" from "src/app/routing/createBackForwardRestore.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/routing/createBackForwardRestore.test.ts:2:41
+  File: /hierarchy-tree/src/app/routing/createBackForwardRestore.test.ts:2:41
   1  |  import { describe, expect, it, vi } from "vitest";
   2  |  import { createBackForwardRestore } from "./createBackForwardRestore";
      |                                            ^
@@ -29,4 +29,3 @@ Error: Failed to resolve import "./createBackForwardRestore" from "src/app/routi
       Tests  no tests
    Start at  09:35:16
    Duration  582ms (transform 21ms, setup 117ms, import 0ms, tests 0ms, environment 356ms)
-

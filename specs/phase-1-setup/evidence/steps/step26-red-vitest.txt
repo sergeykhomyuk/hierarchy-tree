@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/composition/useRuntime.test.tsx (0 test)
  ❯ |ui| src/app/ApplicationRoot.test.tsx (0 test)
@@ -10,12 +10,12 @@
  FAIL  |ui| src/app/ApplicationRoot.test.tsx [ src/app/ApplicationRoot.test.tsx ]
 Error: Failed to resolve import "./composition/useRuntime" from "src/app/ApplicationRoot.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/ApplicationRoot.test.tsx:5:27
+  File: /hierarchy-tree/src/app/ApplicationRoot.test.tsx:5:27
   3  |  import { useTranslation } from "react-i18next";
   4  |  import { renderRoute } from "./testing/renderRoute";
   5  |  import { useRuntime } from "./composition/useRuntime";
      |                              ^
-  6  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/ApplicationRoot.test.tsx";
+  6  |  var _jsxFileName = "/hierarchy-tree/src/app/ApplicationRoot.test.tsx";
   7  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -30,7 +30,7 @@ Error: Failed to resolve import "./composition/useRuntime" from "src/app/Applica
  FAIL  |ui| src/app/composition/createRuntime.test.ts [ src/app/composition/createRuntime.test.ts ]
 Error: Failed to resolve import "./createRuntime" from "src/app/composition/createRuntime.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/composition/createRuntime.test.ts:3:30
+  File: /hierarchy-tree/src/app/composition/createRuntime.test.ts:3:30
   1  |  import { afterEach, describe, expect, it } from "vitest";
   2  |  import { createRuntime } from "./createRuntime";
      |                                 ^
@@ -49,12 +49,12 @@ Error: Failed to resolve import "./createRuntime" from "src/app/composition/crea
  FAIL  |ui| src/app/composition/useRuntime.test.tsx [ src/app/composition/useRuntime.test.tsx ]
 Error: Failed to resolve import "./useRuntime" from "src/app/composition/useRuntime.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/composition/useRuntime.test.tsx:4:27
+  File: /hierarchy-tree/src/app/composition/useRuntime.test.tsx:4:27
   2  |  import { render, screen } from "@testing-library/react";
   3  |  import { RuntimeContext } from "./runtimeContext";
   4  |  import { useRuntime } from "./useRuntime";
      |                              ^
-  5  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/composition/useRuntime.test.t...
+  5  |  var _jsxFileName = "/hierarchy-tree/src/app/composition/useRuntime.test.t...
   6  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -71,4 +71,3 @@ Error: Failed to resolve import "./useRuntime" from "src/app/composition/useRunt
       Tests  no tests
    Start at  16:51:05
    Duration  835ms (transform 75ms, setup 357ms, import 0ms, tests 0ms, environment 1.64s)
-

@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |platform| src/platform/configuration/createConfiguration.test.ts (0 test)
 stderr | src/app/bootstrap.test.tsx > bootstrap > an invalid environment renders the error screen and does not render the router
@@ -11,7 +11,7 @@ The current testing environment is not configured to support act(...)
 ⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
 
  FAIL  |platform| src/platform/configuration/createConfiguration.test.ts [ src/platform/configuration/createConfiguration.test.ts ]
-Error: Cannot find module './createConfiguration' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/configuration/createConfiguration.test.ts
+Error: Cannot find module './createConfiguration' imported from /hierarchy-tree/src/platform/configuration/createConfiguration.test.ts
  ❯ src/platform/configuration/createConfiguration.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { createConfiguration } from './createConfiguration';
@@ -41,4 +41,3 @@ AssertionError: expected null not to be null
       Tests  1 failed | 1 passed (2)
    Start at  14:18:47
    Duration  536ms (transform 25ms, setup 68ms, import 25ms, tests 12ms, environment 362ms)
-

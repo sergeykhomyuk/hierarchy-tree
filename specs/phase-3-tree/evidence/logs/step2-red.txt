@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/domain/emailAddress.test.ts (0 test)
  ❯ |ui| src/features/hierarchy/domain/personIdentifier.test.ts (0 test)
@@ -9,7 +9,7 @@
  FAIL  |ui| src/features/hierarchy/domain/emailAddress.test.ts [ src/features/hierarchy/domain/emailAddress.test.ts ]
 Error: Failed to resolve import "./emailAddress" from "src/features/hierarchy/domain/emailAddress.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/emailAddress.test.ts:2:34
+  File: /hierarchy-tree/src/features/hierarchy/domain/emailAddress.test.ts:2:34
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { parseEmailAddress } from "./emailAddress";
      |                                     ^
@@ -28,7 +28,7 @@ Error: Failed to resolve import "./emailAddress" from "src/features/hierarchy/do
  FAIL  |ui| src/features/hierarchy/domain/personIdentifier.test.ts [ src/features/hierarchy/domain/personIdentifier.test.ts ]
 Error: Failed to resolve import "./personIdentifier" from "src/features/hierarchy/domain/personIdentifier.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/personIdentifier.test.ts:2:38
+  File: /hierarchy-tree/src/features/hierarchy/domain/personIdentifier.test.ts:2:38
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { parsePersonIdentifier } from "./personIdentifier";
      |                                         ^
@@ -49,4 +49,3 @@ Error: Failed to resolve import "./personIdentifier" from "src/features/hierarch
       Tests  no tests
    Start at  12:59:38
    Duration  448ms (transform 57ms, setup 171ms, import 0ms, tests 0ms, environment 502ms)
-

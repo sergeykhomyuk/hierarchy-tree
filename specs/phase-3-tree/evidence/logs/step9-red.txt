@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/data/personSchema.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/hierarchy/data/personSchema.test.ts [ src/features/hierarchy/data/personSchema.test.ts ]
 Error: Failed to resolve import "./personSchema" from "src/features/hierarchy/data/personSchema.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/data/personSchema.test.ts:2:29
+  File: /hierarchy-tree/src/features/hierarchy/data/personSchema.test.ts:2:29
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { personSchema } from "./personSchema";
      |                                ^
@@ -29,4 +29,3 @@ Error: Failed to resolve import "./personSchema" from "src/features/hierarchy/da
       Tests  no tests
    Start at  14:04:21
    Duration  610ms (transform 26ms, setup 107ms, import 0ms, tests 0ms, environment 410ms)
-

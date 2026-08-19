@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/workflow-configuration.test.ts (17 tests | 17 failed) 5ms
      × parses as valid YAML with the three named jobs 2ms
@@ -248,4 +248,3 @@ Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'
       Tests  17 failed (17)
    Start at  19:24:32
    Duration  128ms (transform 22ms, setup 32ms, import 21ms, tests 5ms, environment 0ms)
-

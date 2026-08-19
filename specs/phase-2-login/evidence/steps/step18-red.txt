@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/useLoginSubmission.test.tsx (0 test)
 
@@ -8,12 +8,12 @@
  FAIL  |ui| src/features/auth/useLoginSubmission.test.tsx [ src/features/auth/useLoginSubmission.test.tsx ]
 Error: Failed to resolve import "./useLoginSubmission" from "src/features/auth/useLoginSubmission.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/useLoginSubmission.test.tsx:8:35
+  File: /hierarchy-tree/src/features/auth/useLoginSubmission.test.tsx:8:35
   3  |  import { createFakeClock, createFakeRandomness } from "@shared/testing";
   4  |  import { createHttpClient } from "@platform/http";
   5  |  import { useLoginSubmission } from "./useLoginSubmission";
      |                                      ^
-  6  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/useLoginSubmission....
+  6  |  var _jsxFileName = "/hierarchy-tree/src/features/auth/useLoginSubmission....
   7  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -30,4 +30,3 @@ Error: Failed to resolve import "./useLoginSubmission" from "src/features/auth/u
       Tests  no tests
    Start at  23:43:35
    Duration  521ms (transform 20ms, setup 94ms, import 0ms, tests 0ms, environment 341ms)
-

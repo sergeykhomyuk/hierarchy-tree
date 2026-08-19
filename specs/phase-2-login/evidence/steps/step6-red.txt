@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/data/lookupResultSchema.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/auth/data/lookupResultSchema.test.ts [ src/features/auth/data/lookupResultSchema.test.ts ]
 Error: Failed to resolve import "./lookupResultSchema" from "src/features/auth/data/lookupResultSchema.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/lookupResultSchema.test.ts:2:35
+  File: /hierarchy-tree/src/features/auth/data/lookupResultSchema.test.ts:2:35
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { lookupResultSchema } from "./lookupResultSchema";
      |                                      ^
@@ -29,4 +29,3 @@ Error: Failed to resolve import "./lookupResultSchema" from "src/features/auth/d
       Tests  no tests
    Start at  21:48:41
    Duration  509ms (transform 21ms, setup 96ms, import 0ms, tests 0ms, environment 334ms)
-

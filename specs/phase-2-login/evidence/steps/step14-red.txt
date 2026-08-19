@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 assert-domain-vocabulary: banned vocabulary found:
   - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-k4jxhE/banned.tmp.ts: identifier "buildForest" carries banned reference-system name "buildForest"
@@ -72,4 +72,3 @@ AssertionError: the allow-listed file must not be flagged for its own /secrets l
       Tests  2 failed | 22 passed (24)
    Start at  22:08:34
    Duration  6.28s (transform 64ms, setup 78ms, import 14ms, tests 6.69s, environment 0ms)
-

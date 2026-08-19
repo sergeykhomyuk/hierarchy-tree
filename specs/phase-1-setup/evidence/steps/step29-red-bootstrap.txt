@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/bootstrap.test.tsx (2 tests | 1 failed) 1032ms
      × renders the real app through the router when configuration is valid 1023ms
@@ -44,4 +44,3 @@ Ignored nodes: comments, script, style
       Tests  1 failed | 1 passed (2)
    Start at  17:24:12
    Duration  1.60s (transform 38ms, setup 99ms, import 26ms, tests 1.03s, environment 387ms)
-

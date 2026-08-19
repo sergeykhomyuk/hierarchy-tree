@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/HierarchyTree.test.tsx (23 tests | 7 failed) 194ms
        × ArrowDown moves focus to the next visible row and ArrowUp to the previous, crossing branch boundaries 5ms
@@ -1075,4 +1075,3 @@ Received element with focus:
       Tests  7 failed | 31 passed (38)
    Start at  09:10:02
    Duration  613ms (transform 151ms, setup 234ms, import 123ms, tests 291ms, environment 687ms)
-

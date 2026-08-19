@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/domain/recoverFocusedRowId.test.ts (0 test)
  ❯ |ui| src/features/hierarchy/domain/rowNavigation.test.ts (0 test)
@@ -13,7 +13,7 @@
  FAIL  |ui| src/features/hierarchy/domain/recoverFocusedRowId.test.ts [ src/features/hierarchy/domain/recoverFocusedRowId.test.ts ]
 Error: Failed to resolve import "./recoverFocusedRowId" from "src/features/hierarchy/domain/recoverFocusedRowId.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/recoverFocusedRowId.test.ts:4:36
+  File: /hierarchy-tree/src/features/hierarchy/domain/recoverFocusedRowId.test.ts:4:36
   2  |  import { buildForest } from "./buildForest";
   3  |  import { flattenVisible } from "./flattenVisible";
   4  |  import { recoverFocusedRowId } from "./recoverFocusedRowId";
@@ -33,7 +33,7 @@ Error: Failed to resolve import "./recoverFocusedRowId" from "src/features/hiera
  FAIL  |ui| src/features/hierarchy/domain/rowNavigation.test.ts [ src/features/hierarchy/domain/rowNavigation.test.ts ]
 Error: Failed to resolve import "./rowNavigation" from "src/features/hierarchy/domain/rowNavigation.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/domain/rowNavigation.test.ts:4:49
+  File: /hierarchy-tree/src/features/hierarchy/domain/rowNavigation.test.ts:4:49
   2  |  import { buildForest } from "./buildForest";
   3  |  import { flattenVisible } from "./flattenVisible";
   4  |  import { findRowIndexById, parentRowIndex } from "./rowNavigation";
@@ -121,4 +121,3 @@ AssertionError: expected -1 to be +0 // Object.is equality
       Tests  3 failed | 21 passed (24)
    Start at  09:02:12
    Duration  884ms (transform 314ms, setup 537ms, import 226ms, tests 262ms, environment 1.64s)
-

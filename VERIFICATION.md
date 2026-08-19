@@ -65,16 +65,15 @@ only in their own named Playwright projects; `deployed-smoke.spec.ts` only in th
 
 ## Evidence
 
-Evidence for a loop's proof document is copied into `specs/<task-id>/evidence/` (this
-phase: `specs/phase-1-setup/evidence/`) with a **`.txt` extension**, never referenced
+Evidence for a loop's proof document is copied into `specs/<task-id>/evidence/` with a **`.txt` extension**, never referenced
 directly from Playwright's `test-results/` output directory - `test-results/` is cleared at
 the start of every Playwright invocation, so anything not copied out is lost the next run.
 `.gitignore`'s blanket `*.log` rule is why `.txt` is the convention rather than `.log`; a
 `!specs/**/evidence/**` negation is also in place as a safety net.
 
-Milestone boundaries land their own evidence under `specs/phase-1-setup/evidence/milestones/`
+Milestone boundaries land their own evidence under `specs/{phase}/evidence/milestones/`
 as `m<N>-suite.txt` and `m<N>-e2e.txt`; step-level red/green evidence lands under
-`specs/phase-1-setup/evidence/steps/`.
+`specs/{phase}/evidence/steps/`.
 
 <!-- production-hostname: https://hierarchy-tree.pages.dev -->
 

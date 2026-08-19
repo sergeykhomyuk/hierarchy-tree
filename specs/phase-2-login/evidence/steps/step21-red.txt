@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/LoginPage.test.tsx (12 tests | 3 failed) 3943ms
      × shows the service-problem alert with its correlation id and marks neither field invalid 1074ms
@@ -505,4 +505,3 @@ Ignored nodes: comments, script, style
       Tests  3 failed | 9 passed (12)
    Start at  06:58:03
    Duration  4.70s (transform 124ms, setup 108ms, import 160ms, tests 3.94s, environment 386ms)
-

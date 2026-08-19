@@ -9,7 +9,7 @@ Running 6 tests using 1 worker
   ✘  6 [chromium] › e2e/login.spec.ts:158:3 › the login card › passes an accessibility scan in each of its five states (5.1s)
 
 
-  1) [chromium] › e2e/login.spec.ts:21:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page 
+  1) [chromium] › e2e/login.spec.ts:21:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page
 
     Test timeout of 30000ms exceeded.
 
@@ -25,11 +25,11 @@ Running 6 tests using 1 worker
       35 |     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
       36 |     await page.getByRole('button', { name: 'login.submit' }).click();
       37 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:34:47
+        at /hierarchy-tree/e2e/login.spec.ts:34:47
 
     Error Context: test-results/login-the-login-card-signs-27192-lands-on-the-hierarchy-page-chromium/error-context.md
 
-  2) [chromium] › e2e/login.spec.ts:44:3 › the login card › shows the no-match alert for a null lookup and stays on /login 
+  2) [chromium] › e2e/login.spec.ts:44:3 › the login card › shows the no-match alert for a null lookup and stays on /login
 
     Test timeout of 30000ms exceeded.
 
@@ -45,11 +45,11 @@ Running 6 tests using 1 worker
       53 |     await page.getByLabel('login.passwordLabel').fill(WRONG_PASSWORD);
       54 |     await page.getByRole('button', { name: 'login.submit' }).click();
       55 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:52:47
+        at /hierarchy-tree/e2e/login.spec.ts:52:47
 
     Error Context: test-results/login-the-login-card-shows-ddf75-l-lookup-and-stays-on-login-chromium/error-context.md
 
-  3) [chromium] › e2e/login.spec.ts:60:3 › the login card › shows the service-problem alert and retries successfully 
+  3) [chromium] › e2e/login.spec.ts:60:3 › the login card › shows the service-problem alert and retries successfully
 
     Test timeout of 30000ms exceeded.
 
@@ -65,11 +65,11 @@ Running 6 tests using 1 worker
       78 |     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
       79 |     await page.getByRole('button', { name: 'login.submit' }).click();
       80 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:77:47
+        at /hierarchy-tree/e2e/login.spec.ts:77:47
 
     Error Context: test-results/login-the-login-card-shows-167ab-rt-and-retries-successfully-chromium/error-context.md
 
-  4) [chromium] › e2e/login.spec.ts:93:3 › the login card › issues exactly one request while authenticating, and none on the users path 
+  4) [chromium] › e2e/login.spec.ts:93:3 › the login card › issues exactly one request while authenticating, and none on the users path
 
     Test timeout of 30000ms exceeded.
 
@@ -85,11 +85,11 @@ Running 6 tests using 1 worker
       113 |     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
       114 |     await page.getByRole('button', { name: 'login.submit' }).click();
       115 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:112:47
+        at /hierarchy-tree/e2e/login.spec.ts:112:47
 
     Error Context: test-results/login-the-login-card-issue-09c1c--and-none-on-the-users-path-chromium/error-context.md
 
-  5) [chromium] › e2e/login.spec.ts:124:3 › the login card › leaves no credential material in the telemetry buffer or storage 
+  5) [chromium] › e2e/login.spec.ts:124:3 › the login card › leaves no credential material in the telemetry buffer or storage
 
     Test timeout of 30000ms exceeded.
 
@@ -105,11 +105,11 @@ Running 6 tests using 1 worker
       138 |     await page.getByLabel('login.passwordLabel').fill(PASSWORD);
       139 |     await page.getByRole('button', { name: 'login.submit' }).click();
       140 |     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:137:47
+        at /hierarchy-tree/e2e/login.spec.ts:137:47
 
     Error Context: test-results/login-the-login-card-leave-e6a5c-telemetry-buffer-or-storage-chromium/error-context.md
 
-  6) [chromium] › e2e/login.spec.ts:158:3 › the login card › passes an accessibility scan in each of its five states 
+  6) [chromium] › e2e/login.spec.ts:158:3 › the login card › passes an accessibility scan in each of its five states
 
     Error: expect(locator).toHaveText(expected) failed
 
@@ -132,14 +132,14 @@ Running 6 tests using 1 worker
       184 |       'login.heading',
       185 |     );
       186 |     await assertAccessible(page);
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/login.spec.ts:183:59
+        at /hierarchy-tree/e2e/login.spec.ts:183:59
 
     Error Context: test-results/login-the-login-card-passe-5a5f0--in-each-of-its-five-states-chromium/error-context.md
 
   6 failed
-    [chromium] › e2e/login.spec.ts:21:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page 
-    [chromium] › e2e/login.spec.ts:44:3 › the login card › shows the no-match alert for a null lookup and stays on /login 
-    [chromium] › e2e/login.spec.ts:60:3 › the login card › shows the service-problem alert and retries successfully 
-    [chromium] › e2e/login.spec.ts:93:3 › the login card › issues exactly one request while authenticating, and none on the users path 
-    [chromium] › e2e/login.spec.ts:124:3 › the login card › leaves no credential material in the telemetry buffer or storage 
-    [chromium] › e2e/login.spec.ts:158:3 › the login card › passes an accessibility scan in each of its five states 
+    [chromium] › e2e/login.spec.ts:21:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page
+    [chromium] › e2e/login.spec.ts:44:3 › the login card › shows the no-match alert for a null lookup and stays on /login
+    [chromium] › e2e/login.spec.ts:60:3 › the login card › shows the service-problem alert and retries successfully
+    [chromium] › e2e/login.spec.ts:93:3 › the login card › issues exactly one request while authenticating, and none on the users path
+    [chromium] › e2e/login.spec.ts:124:3 › the login card › leaves no credential material in the telemetry buffer or storage
+    [chromium] › e2e/login.spec.ts:158:3 › the login card › passes an accessibility scan in each of its five states

@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/shared/ui/Avatar.test.tsx (7 tests | 1 failed) 51ms
      × calls onImageError once when its source fails 3ms
@@ -106,4 +106,3 @@ Ignored nodes: comments, script, style
       Tests  3 failed | 12 passed (15)
    Start at  15:09:34
    Duration  747ms (transform 115ms, setup 376ms, import 83ms, tests 170ms, environment 1.37s)
-

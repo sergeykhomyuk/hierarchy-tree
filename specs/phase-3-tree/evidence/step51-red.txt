@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/shared/utils/array/popElement.test.ts (0 test)
  ❯ |ui| src/shared/utils/string/formatCount.test.ts (0 test)
@@ -11,7 +11,7 @@
  FAIL  |ui| src/shared/utils/string/findTypeAheadMatch.test.ts [ src/shared/utils/string/findTypeAheadMatch.test.ts ]
 Error: Failed to resolve import "./findTypeAheadMatch" from "src/shared/utils/string/findTypeAheadMatch.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/utils/string/findTypeAheadMatch.test.ts:2:35
+  File: /hierarchy-tree/src/shared/utils/string/findTypeAheadMatch.test.ts:2:35
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { findTypeAheadMatch } from "./findTypeAheadMatch";
      |                                      ^
@@ -30,7 +30,7 @@ Error: Failed to resolve import "./findTypeAheadMatch" from "src/shared/utils/st
  FAIL  |ui| src/shared/utils/string/formatCount.test.ts [ src/shared/utils/string/formatCount.test.ts ]
 Error: Failed to resolve import "./formatCount" from "src/shared/utils/string/formatCount.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/utils/string/formatCount.test.ts:2:28
+  File: /hierarchy-tree/src/shared/utils/string/formatCount.test.ts:2:28
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { formatCount } from "./formatCount";
      |                               ^
@@ -49,7 +49,7 @@ Error: Failed to resolve import "./formatCount" from "src/shared/utils/string/fo
  FAIL  |ui| src/shared/utils/array/elementAt.test.ts [ src/shared/utils/array/elementAt.test.ts ]
 Error: Failed to resolve import "./elementAt" from "src/shared/utils/array/elementAt.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/utils/array/elementAt.test.ts:2:26
+  File: /hierarchy-tree/src/shared/utils/array/elementAt.test.ts:2:26
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { elementAt } from "./elementAt";
      |                             ^
@@ -68,7 +68,7 @@ Error: Failed to resolve import "./elementAt" from "src/shared/utils/array/eleme
  FAIL  |ui| src/shared/utils/array/popElement.test.ts [ src/shared/utils/array/popElement.test.ts ]
 Error: Failed to resolve import "./popElement" from "src/shared/utils/array/popElement.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/utils/array/popElement.test.ts:2:27
+  File: /hierarchy-tree/src/shared/utils/array/popElement.test.ts:2:27
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { popElement } from "./popElement";
      |                              ^
@@ -89,4 +89,3 @@ Error: Failed to resolve import "./popElement" from "src/shared/utils/array/popE
       Tests  no tests
    Start at  17:30:36
    Duration  841ms (transform 115ms, setup 557ms, import 0ms, tests 0ms, environment 2.13s)
-
