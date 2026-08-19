@@ -3,11 +3,10 @@
 > vitest run --config vitest.live.config.ts
 
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 
  Test Files  1 passed (1)
       Tests  2 passed (2)
    Start at  20:13:22
    Duration  727ms (transform 30ms, setup 0ms, import 39ms, tests 628ms, environment 0ms)
-

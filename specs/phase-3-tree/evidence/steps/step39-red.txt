@@ -3,7 +3,7 @@
 > vitest run --config vitest.live.config.ts
 
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 stdout | scripts/live-smoke/live-smoke.test.ts > live smoke > the live users payload still parses into a forest with more than one root
 timing {
@@ -42,4 +42,3 @@ AssertionError: expected 3 to be greater than 999
       Tests  1 failed | 4 passed (5)
    Start at  08:40:45
    Duration  1.35s (transform 74ms, setup 0ms, import 121ms, tests 1.16s, environment 0ms)
-

@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/buildContentSecurityPolicy.test.ts (8 tests | 2 failed) 4ms
      × the content security policy permits https image origins and changes no other directive 2ms
@@ -32,11 +32,11 @@ Running 1 test using 1 worker
   ✘  1 [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header (30.1s)
 
 
-  1) [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header 
+  1) [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header
 
     Test timeout of 30000ms exceeded.
 
     Error Context: test-results/kit-route-kit-route-an-int-ac26f-t-carries-no-Referer-header-development/error-context.md
 
   1 failed
-    [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header 
+    [development] › e2e/kit-route.spec.ts:85:3 › kit route › an intercepted image request carries no Referer header

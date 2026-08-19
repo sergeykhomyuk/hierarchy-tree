@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/guard/resolveDestination.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/auth/guard/resolveDestination.test.ts [ src/features/auth/guard/resolveDestination.test.ts ]
 Error: Failed to resolve import "./resolveDestination" from "src/features/auth/guard/resolveDestination.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/guard/resolveDestination.test.ts:2:35
+  File: /hierarchy-tree/src/features/auth/guard/resolveDestination.test.ts:2:35
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { resolveDestination } from "./resolveDestination";
      |                                      ^
@@ -29,4 +29,3 @@ Error: Failed to resolve import "./resolveDestination" from "src/features/auth/g
       Tests  no tests
    Start at  22:00:46
    Duration  513ms (transform 20ms, setup 97ms, import 0ms, tests 0ms, environment 337ms)
-

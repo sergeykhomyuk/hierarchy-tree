@@ -3,7 +3,7 @@
 > vitest run
 
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 assert-domain-vocabulary: banned vocabulary found:
   - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-WUh1wW/banned.tmp.ts: identifier "buildForest" carries banned reference-system name "buildForest"
@@ -53,4 +53,3 @@ Not implemented: HTMLCanvasElement's getContext() method: without installing the
       Tests  430 passed (430)
    Start at  11:24:41
    Duration  12.41s (transform 2.54s, setup 8.37s, import 5.51s, tests 19.24s, environment 27.93s)
-

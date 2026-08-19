@@ -27,7 +27,7 @@ predicate on the `authenticated` route - phase 2's `createBackForwardRestore`, w
 `router.revalidate()` on a persisted `pageshow` specifically so `requireSession` re-runs after
 a bfcache restore. Shipping it would have been an auth regression delivered under the promise
 that phase 2 was untouched. Verified independently against
-`/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/routing/createBackForwardRestore.ts:18`.
+`/hierarchy-tree/src/app/routing/createBackForwardRestore.ts:18`.
 
 ## Round-2 changes made in response
 

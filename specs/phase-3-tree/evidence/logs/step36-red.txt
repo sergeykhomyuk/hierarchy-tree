@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 stderr | src/features/hierarchy/HierarchyTree.test.tsx > HierarchyTree > aria contract > collapsing a branch that contains the focused row moves focus to the row being collapsed
 The current testing environment is not configured to support act(...)
@@ -386,4 +386,3 @@ Received element is focused:
       Tests  4 failed | 51 passed (55)
    Start at  10:38:10
    Duration  1.89s (transform 902ms, setup 936ms, import 644ms, tests 512ms, environment 2.15s)
-

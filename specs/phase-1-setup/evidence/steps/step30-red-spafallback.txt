@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ build-output/spa-fallback.test.ts (2 tests | 2 failed) 2ms
      × dist/_redirects contains exactly the spa fallback rule 2ms
@@ -36,4 +36,3 @@ Error: ENOENT: no such file or directory, open 'dist/_headers'
       Tests  2 failed (2)
    Start at  17:32:01
    Duration  69ms (transform 7ms, setup 0ms, import 10ms, tests 2ms, environment 0ms)
-

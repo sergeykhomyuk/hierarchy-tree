@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ build-output/hierarchy-route-isolation.test.ts (2 tests | 2 failed) 7ms
      × the login route chunk imports no hierarchy module and no hierarchy catalogue 5ms
@@ -40,4 +40,3 @@ AssertionError: expected 5161 to be less than or equal to 1
       Tests  2 failed (2)
    Start at  08:42:21
    Duration  78ms (transform 8ms, setup 0ms, import 12ms, tests 7ms, environment 0ms)
-

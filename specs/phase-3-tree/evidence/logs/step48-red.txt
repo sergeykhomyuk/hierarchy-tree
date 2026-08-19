@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |platform| src/shared/theme/contrastPairs.test.ts (4 tests | 1 failed) 5ms
      × registers the hierarchy indent rail and toggle boundary at the non-text contrast floor 3ms
@@ -147,4 +147,3 @@ AssertionError: expected [ { foreground: 'ink', …(2) }, …(8) ] to deeply equ
       Tests  2 failed | 6 passed (8)
    Start at  13:15:21
    Duration  550ms (transform 43ms, setup 133ms, import 10ms, tests 10ms, environment 389ms)
-

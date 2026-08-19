@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/useLoginSubmission.test.tsx (6 tests | 1 failed) 37ms
      × aborts in flight and resets to untouched when a persisted page is restored 3ms
@@ -30,4 +30,3 @@ AssertionError: expected false to be true // Object.is equality
       Tests  1 failed | 5 passed (6)
    Start at  09:37:34
    Duration  729ms (transform 78ms, setup 106ms, import 91ms, tests 37ms, environment 427ms)
-

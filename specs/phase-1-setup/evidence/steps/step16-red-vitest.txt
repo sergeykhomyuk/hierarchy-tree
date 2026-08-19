@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |platform| src/platform/http/retryDelayMilliseconds.test.ts (0 test)
  ❯ |platform| src/platform/http/shouldRetry.test.ts (0 test)
@@ -11,7 +11,7 @@
 ⎯⎯⎯⎯⎯⎯ Failed Suites 6 ⎯⎯⎯⎯⎯⎯⎯
 
  FAIL  |platform| src/platform/http/createFetchTransport.test.ts [ src/platform/http/createFetchTransport.test.ts ]
-Error: Cannot find module './createFetchTransport' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/http/createFetchTransport.test.ts
+Error: Cannot find module './createFetchTransport' imported from /hierarchy-tree/src/platform/http/createFetchTransport.test.ts
  ❯ src/platform/http/createFetchTransport.test.ts:2:1
       1| import { afterEach, describe, expect, it, vi } from 'vitest';
       2| import { createFetchTransport } from './createFetchTransport';
@@ -22,7 +22,7 @@ Error: Cannot find module './createFetchTransport' imported from /Users/sergeykh
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
 
  FAIL  |platform| src/platform/http/createHttpClient.test.ts [ src/platform/http/createHttpClient.test.ts ]
-Error: Cannot find package '@shared/testing' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/http/createHttpClient.test.ts
+Error: Cannot find package '@shared/testing' imported from /hierarchy-tree/src/platform/http/createHttpClient.test.ts
  ❯ src/platform/http/createHttpClient.test.ts:2:1
       1| import { describe, expect, it, vi } from 'vitest';
       2| import { createFakeClock, createFakeRandomness } from '@shared/testing…
@@ -33,7 +33,7 @@ Error: Cannot find package '@shared/testing' imported from /Users/sergeykhomyuk/
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
 
  FAIL  |platform| src/platform/http/createTraceparent.test.ts [ src/platform/http/createTraceparent.test.ts ]
-Error: Cannot find package '@shared/testing' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/http/createTraceparent.test.ts
+Error: Cannot find package '@shared/testing' imported from /hierarchy-tree/src/platform/http/createTraceparent.test.ts
  ❯ src/platform/http/createTraceparent.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { createFakeRandomness } from '@shared/testing';
@@ -44,7 +44,7 @@ Error: Cannot find package '@shared/testing' imported from /Users/sergeykhomyuk/
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
 
  FAIL  |platform| src/platform/http/retryDelayMilliseconds.test.ts [ src/platform/http/retryDelayMilliseconds.test.ts ]
-Error: Cannot find module './retryDelayMilliseconds' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/http/retryDelayMilliseconds.test.ts
+Error: Cannot find module './retryDelayMilliseconds' imported from /hierarchy-tree/src/platform/http/retryDelayMilliseconds.test.ts
  ❯ src/platform/http/retryDelayMilliseconds.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { retryDelayMilliseconds } from './retryDelayMilliseconds';
@@ -55,7 +55,7 @@ Error: Cannot find module './retryDelayMilliseconds' imported from /Users/sergey
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
 
  FAIL  |platform| src/platform/http/shouldRetry.test.ts [ src/platform/http/shouldRetry.test.ts ]
-Error: Cannot find module './shouldRetry' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/http/shouldRetry.test.ts
+Error: Cannot find module './shouldRetry' imported from /hierarchy-tree/src/platform/http/shouldRetry.test.ts
  ❯ src/platform/http/shouldRetry.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { shouldRetry } from './shouldRetry';
@@ -66,7 +66,7 @@ Error: Cannot find module './shouldRetry' imported from /Users/sergeykhomyuk/Sys
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
 
  FAIL  |platform| src/platform/observability/createCorrelationId.test.ts [ src/platform/observability/createCorrelationId.test.ts ]
-Error: Cannot find package '@shared/testing' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/observability/createCorrelationId.test.ts
+Error: Cannot find package '@shared/testing' imported from /hierarchy-tree/src/platform/observability/createCorrelationId.test.ts
  ❯ src/platform/observability/createCorrelationId.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { createFakeRandomness } from '@shared/testing';
@@ -81,4 +81,3 @@ Error: Cannot find package '@shared/testing' imported from /Users/sergeykhomyuk/
       Tests  1 passed (1)
    Start at  14:43:07
    Duration  118ms (transform 105ms, setup 70ms, import 7ms, tests 1ms, environment 0ms)
-

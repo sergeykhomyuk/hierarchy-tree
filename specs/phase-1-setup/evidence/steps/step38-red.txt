@@ -33,11 +33,11 @@ Running 3 tests using 1 worker
       16 |     "The hierarchy view isn't built yet",
       17 |   );
       18 | });
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/deployed-smoke.spec.ts:15:57
+        at /hierarchy-tree/e2e/deployed-smoke.spec.ts:15:57
 
     Error Context: test-results/deployed-smoke-the-home-route-renders-on-the-live-host-deployed/error-context.md
 
-  2) [deployed] › e2e/deployed-smoke.spec.ts:20:1 › /login renders with a 200 on direct load and on refresh 
+  2) [deployed] › e2e/deployed-smoke.spec.ts:20:1 › /login renders with a 200 on direct load and on refresh
 
     Error: expect(locator).toHaveText(expected) failed
 
@@ -60,7 +60,7 @@ Running 3 tests using 1 worker
       26 |     "Sign in isn't built yet",
       27 |   );
       28 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/deployed-smoke.spec.ts:25:57
+        at /hierarchy-tree/e2e/deployed-smoke.spec.ts:25:57
 
     Error Context: test-results/deployed-smoke--login-rend-c4364--direct-load-and-on-refresh-deployed/error-context.md
 
@@ -78,11 +78,11 @@ Running 3 tests using 1 worker
       40 |     "frame-ancestors 'none'",
       41 |   );
       42 | });
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/deployed-smoke.spec.ts:39:58
+        at /hierarchy-tree/e2e/deployed-smoke.spec.ts:39:58
 
     Error Context: test-results/deployed-smoke-the-live-re-02af2-arries-frame-ancestors-none-deployed/error-context.md
 
   3 failed
     [deployed] › e2e/deployed-smoke.spec.ts:11:1 › the home route renders on the live host ─────────
-    [deployed] › e2e/deployed-smoke.spec.ts:20:1 › /login renders with a 200 on direct load and on refresh 
+    [deployed] › e2e/deployed-smoke.spec.ts:20:1 › /login renders with a 200 on direct load and on refresh
     [deployed] › e2e/deployed-smoke.spec.ts:36:1 › the live response carries frame-ancestors none ──

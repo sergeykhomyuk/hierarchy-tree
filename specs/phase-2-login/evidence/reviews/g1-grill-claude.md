@@ -21,7 +21,7 @@ Saved verbatim as it was returned.
 
 Invariant 7: *"A non-BMP character contributes its **surrogate code units individually**, and the 32-unit truncation may split a surrogate pair. This is the brief's algorithm and is preserved exactly; matching the original's bytes outranks producing 'correct' Unicode handling."*
 
-The brief's `make32` (`/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/docs/task.md:37-45`) ends with:
+The brief's `make32` (`/hierarchy-tree/docs/task.md:37-45`) ends with:
 
 ```js
 return Array.from(resultString, (char) => char.charCodeAt(0));
@@ -43,7 +43,7 @@ Resolution: either transcribe `Array.from`'s code-point iteration verbatim (acce
 
 Invariant 84: *"...carrying the requested path, **search and hash** as the `from` value."* TECH.md §5.3: *"it builds `` `${url.pathname}${url.search}${url.hash}` `` from `request.url`."*
 
-`request.url` in a loader is built by `/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/react-router/dist/development/lib/router/router.js:2604-2605`:
+`request.url` in a loader is built by `/hierarchy-tree/node_modules/react-router/dist/development/lib/router/router.js:2604-2605`:
 
 ```js
 function createClientSideRequest(history, location, signal, submission) {
@@ -72,7 +72,7 @@ The block comment TECH.md itself cites (`router.js:981-999`) says the opposite f
 
 Back from the login card then lands on whatever preceded A — the direct negation of invariant 87 (*"Back from the login card returns to wherever the visitor actually came from"*). Plain `redirect()` (PUSH) is correct for this case; `replace()` is correct only for the initial load and POP. One unconditional choice cannot satisfy both.
 
-This is not hypothetical: `/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/not-found.spec.ts:18-24` already performs exactly this PUSH (`notFound.linkHome` → `/`).
+This is not hypothetical: `/hierarchy-tree/e2e/not-found.spec.ts:18-24` already performs exactly this PUSH (`notFound.linkHome` → `/`).
 
 TECH's own check does not discriminate it: M3's invariant-87 e2e is *"navigate to a third-party-free start page, then to the guarded URL, then press Back"* — if that second navigation is a `page.goto`, it is a document load and `replace` is right, so the test passes while the in-app path is broken.
 
@@ -105,12 +105,12 @@ Resolution: rewrite invariant 14 to bound its network claim to the window that e
 
 Guarding `/` invalidates every existing spec that visits it unauthenticated:
 
-- `/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/placeholder-routes.spec.ts:13-29` and `:55-67`
-- `/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/telemetry-buffer.spec.ts:11-14` and `:35-38`
-- `/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/accessibility.spec.ts:6` (`{ path: '/', heading: 'home.title' }`)
-- `/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/right-to-left.spec.ts:35` (same)
-- `/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/not-found.spec.ts:20-24` (clicks the home link, asserts `home.title`)
-- `/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/deployed-smoke.spec.ts:11-18, 20-34` (asserts the literal placeholder prose on `/` **and** on `/login`, both of which change)
+- `/hierarchy-tree/e2e/placeholder-routes.spec.ts:13-29` and `:55-67`
+- `/hierarchy-tree/e2e/telemetry-buffer.spec.ts:11-14` and `:35-38`
+- `/hierarchy-tree/e2e/accessibility.spec.ts:6` (`{ path: '/', heading: 'home.title' }`)
+- `/hierarchy-tree/e2e/right-to-left.spec.ts:35` (same)
+- `/hierarchy-tree/e2e/not-found.spec.ts:20-24` (clicks the home link, asserts `home.title`)
+- `/hierarchy-tree/e2e/deployed-smoke.spec.ts:11-18, 20-34` (asserts the literal placeholder prose on `/` **and** on `/login`, both of which change)
 
 TECH.md's M3 deliverables list mentions only `.size-limit.json` and `expected-build-output.json`. Worse, the test map for invariant 143 claims *"`HierarchyPlaceholderPage.tsx` is byte-unchanged, asserted by **the existing placeholder tests still passing untouched**"* — `placeholder-routes.spec.ts` is one of those tests and cannot pass untouched.
 
@@ -164,7 +164,7 @@ Resolution: reword 44 and 55 as "focus does not move as a result of the transiti
 
 TECH.md: *"`scripts/assert-domain-vocabulary.mjs:159-161`'s blanket ban becomes a `FILE_ALLOWLIST` entry for this one path, **in the same shape the script already uses for `redact.ts` (lines 44-48)**."*
 
-`FILE_ALLOWLIST` maps a file path to a set of banned **words** and is read only inside `checkExportedVocabulary` (`/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/scripts/assert-domain-vocabulary.mjs:119, 126`). The `/secrets` check is a **literal substring** check inside a different function, `checkWholeScopeVocabulary` (lines 159-161), which never consults `FILE_ALLOWLIST`:
+`FILE_ALLOWLIST` maps a file path to a set of banned **words** and is read only inside `checkExportedVocabulary` (`/hierarchy-tree/scripts/assert-domain-vocabulary.mjs:119, 126`). The `/secrets` check is a **literal substring** check inside a different function, `checkWholeScopeVocabulary` (lines 159-161), which never consults `FILE_ALLOWLIST`:
 
 ```js
 if (source.includes('/secrets')) {
@@ -182,7 +182,7 @@ Resolution: say that `checkWholeScopeVocabulary` gains its own path allow-list f
 
 *TECH.md Context and §5.3.*
 
-TECH.md cites `eslint.config.js:556-569` as *the* ban and says it *"is replaced by a narrower rule"*. There is a **second, later** block at `/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/eslint.config.js:572-593` with `files: ['src/features/*/**/*.{ts,tsx}']` carrying the identical `importNames: ['redirect', 'redirectDocument']` ban and the same "invariant 97" message. In flat config the later block wins for feature files — and `src/features/auth/guard/**` is a feature file. Narrowing only 556-569 leaves the guards failing lint.
+TECH.md cites `eslint.config.js:556-569` as *the* ban and says it *"is replaced by a narrower rule"*. There is a **second, later** block at `/hierarchy-tree/eslint.config.js:572-593` with `files: ['src/features/*/**/*.{ts,tsx}']` carrying the identical `importNames: ['redirect', 'redirectDocument']` ban and the same "invariant 97" message. In flat config the later block wins for feature files — and `src/features/auth/guard/**` is a feature file. Narrowing only 556-569 leaves the guards failing lint.
 
 (Note also: `replace` is not on either ban list, so if the guards use only `replace` as §5.3 specifies, the only real obligation is fixing the stale "invariant 97" message text in **both** blocks.)
 
@@ -196,7 +196,7 @@ Resolution: name both blocks in the narrowing.
 
 Invariant 41: *"the control is **pressed-violet with a spinner** and reads 'Signing in…'"*. Mockup 1c confirms a spinner glyph inside the button.
 
-`/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Button.tsx:41-52` renders `{children}` and nothing else — no spinner — and `VARIANT_CLASS.primary` is `bg-primary text-on-primary hover:bg-primary-pressed`, so a non-hovered busy button paints `--color-primary`, not `--color-primary-pressed`. There is no `Spinner` in the kit (`/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/index.ts` exports Button, Field, Input, Card, Avatar, Skeleton, ErrorState, EmptyState, FieldContext, deriveInitials, SkeletonSize, sizeClass).
+`/hierarchy-tree/src/shared/ui/Button.tsx:41-52` renders `{children}` and nothing else — no spinner — and `VARIANT_CLASS.primary` is `bg-primary text-on-primary hover:bg-primary-pressed`, so a non-hovered busy button paints `--color-primary`, not `--color-primary-pressed`. There is no `Spinner` in the kit (`/hierarchy-tree/src/shared/ui/index.ts` exports Button, Field, Input, Card, Avatar, Skeleton, ErrorState, EmptyState, FieldContext, deriveInitials, SkeletonSize, sizeClass).
 
 TECH.md's map for invariant 141 says *"review, with **the two findings this spec raises** named explicitly (the `Input` props and the `redact` rule)"*. A busy-state spinner and a pressed appearance are a third change the kit cannot express, and invariant 141 requires it be raised rather than slipped in. Invariant 30's and 115's checks both presuppose a spinner element that no module is specified to produce.
 
@@ -250,7 +250,7 @@ Resolution: add a decision-log entry for the header's three-state presentation, 
 
 Invariant 99: if resolution fails, *"the avatar shows its **placeholder shape** rather than derived initials ... Neither presentation is an error state."* TECH.md: *"`Avatar` with `displayName` when resolved, and a `Skeleton shape="circle"` sized `SkeletonSize.avatar` **in the other two cases**."*
 
-`/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Skeleton.tsx:39` hard-codes `animate-pulse`. Using it for the terminal failed state renders a permanently pulsing circle that says "still loading" forever, and `aria-hidden="true"` (line 38) removes it entirely from the accessibility tree in a settled state. The invariant asks for a *placeholder shape*, not a loading indicator.
+`/hierarchy-tree/src/shared/ui/Skeleton.tsx:39` hard-codes `animate-pulse`. Using it for the terminal failed state renders a permanently pulsing circle that says "still loading" forever, and `aria-hidden="true"` (line 38) removes it entirely from the accessibility tree in a settled state. The invariant asks for a *placeholder shape*, not a loading indicator.
 
 Resolution: specify a distinct static placeholder for the failed case, or say explicitly that the skeleton is reused and drop `animate-pulse` from that instance.
 
@@ -260,7 +260,7 @@ Resolution: specify a distinct static placeholder for the failed case, or say ex
 
 *TECH.md §5.1, §9; test map "65", "66", "130".*
 
-`/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/testing/renderRoute.tsx:73-81` renders `<ApplicationRoot runtime={runtime}>{children}</ApplicationRoot>` — no `RouterProvider`, no `MemoryRouter`. TECH.md's only stated change is *"it gains a fake `tabStorage` and a store built over its fake transport"*.
+`/hierarchy-tree/src/app/testing/renderRoute.tsx:73-81` renders `<ApplicationRoot runtime={runtime}>{children}</ApplicationRoot>` — no `RouterProvider`, no `MemoryRouter`. TECH.md's only stated change is *"it gains a fake `tabStorage` and a store built over its fake transport"*.
 
 But the success path calls `navigate(destination, { replace: true })` (§5.3), and several checks are specified as **component** tests that reach it: *"65 - component: a retry that succeeds clears the alert **and navigates**"*, *"130 - component: submitting produces no navigation event ... asserted by a `beforeunload`/`popstate` spy"*. Outside a router, `useNavigate` throws.
 
@@ -296,7 +296,7 @@ Resolution: add a `serviceProblemCorrelationLabel` (or interpolate the id into `
 
 The check: *"the component test unmounts mid-flight and asserts no act warning, no state update and **an empty spy sink**."*
 
-A caller-aborted request emits two records before returning `cancelled` (`/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/http/createHttpClient.ts:104-118`): `observability.logger.debug('http.request_cancelled', ...)` and `observability.tracer.recordTiming({ ..., outcome: 'cancelled' })`. Both reach `dispatch` and therefore the sink. The sink is not empty; it holds exactly these two, which is correct behaviour under invariants 22 and 124 ("no error-level log", "no failure telemetry event").
+A caller-aborted request emits two records before returning `cancelled` (`/hierarchy-tree/src/platform/http/createHttpClient.ts:104-118`): `observability.logger.debug('http.request_cancelled', ...)` and `observability.tracer.recordTiming({ ..., outcome: 'cancelled' })`. Both reach `dispatch` and therefore the sink. The sink is not empty; it holds exactly these two, which is correct behaviour under invariants 22 and 124 ("no error-level log", "no failure telemetry event").
 
 Resolution: restate the check as "no error-level record and no `auth.sign_in_settled`", matching what the invariants actually forbid.
 

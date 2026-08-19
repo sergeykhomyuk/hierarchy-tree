@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/HierarchyPage.test.tsx (10 tests | 2 failed) 111ms
      × an empty collection in each of its three envelope shapes renders the empty state 3ms
@@ -63,4 +63,3 @@ Ignored nodes: comments, script, style
       Tests  2 failed | 8 passed (10)
    Start at  15:40:36
    Duration  725ms (transform 96ms, setup 104ms, import 141ms, tests 111ms, environment 306ms)
-

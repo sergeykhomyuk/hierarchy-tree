@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ build-output/declaration-table.test.ts (2 tests | 1 failed) 10ms
      × the declaration table is complete and every family is declared at phase complete 7ms
@@ -27,4 +27,3 @@ Received: "building"
       Tests  1 failed | 1 passed (2)
    Start at  17:54:04
    Duration  84ms (transform 9ms, setup 0ms, import 13ms, tests 10ms, environment 0ms)
-

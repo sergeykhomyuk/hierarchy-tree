@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 assert-domain-vocabulary: banned vocabulary found:
   - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-Peiyl7/banned.tmp.ts: identifier "make32" carries banned reference-system name "make32"
@@ -33,4 +33,3 @@ assert-no-secrets --source-only: secrets found:
       Tests  15 passed (15)
    Start at  12:57:55
    Duration  663ms (transform 25ms, setup 37ms, import 6ms, tests 560ms, environment 0ms)
-

@@ -2,7 +2,7 @@ Reading additional input from stdin...
 2026-08-17T09:57:43.359086Z ERROR codex_models_manager::cache: failed to load models cache: missing field `base_instructions` at line 95 column 5
 OpenAI Codex v0.145.0
 --------
-workdir: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+workdir: /hierarchy-tree
 model: gpt-5.6-sol
 provider: openai
 approval: on-request
@@ -15,7 +15,7 @@ user
 Read-only code review - do not modify any files.
 Review this full diff for a fix/S loop in the hierarchy-tree repo.
 
-The diff (431 lines) is in /tmp/login-visual-alignment-diff.txt in this repo's parent context - please read it directly from that path with your shell/file tools, and also feel free to read the actual current file contents under src/app/layout/ApplicationLayout.tsx, src/features/auth/LoginPage.tsx, src/shared/ui/Field.tsx, src/shared/ui/Input.tsx, src/shared/ui/Button.tsx in the repo at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree to verify claims against the real code rather than taking the diff on faith.
+The diff (431 lines) is in /tmp/login-visual-alignment-diff.txt in this repo's parent context - please read it directly from that path with your shell/file tools, and also feel free to read the actual current file contents under src/app/layout/ApplicationLayout.tsx, src/features/auth/LoginPage.tsx, src/shared/ui/Field.tsx, src/shared/ui/Input.tsx, src/shared/ui/Button.tsx in the repo at /hierarchy-tree to verify claims against the real code rather than taking the diff on faith.
 
 Context: the login page's behavior was already correct and shipped in a prior "phase-2-login" loop. Its Tailwind CSS layout/typography classes were incomplete, so it rendered wrong against an approved mockup (specs/phase-2-login/mockups/mockup-1a.png through -1d.png): no centering/background, inline labels instead of stacked-above, unstyled heading/subtext, non-full-width submit button, no invalid-border color on inputs, and a permanently-visible skip link. This fix adds only Tailwind utility classes plus one new optional `fullWidth` prop on the shared `Button` component - no behavioral/logic changes were intended.
 
@@ -39,16 +39,16 @@ I’m doing a fresh read-only review against the supplied diff, current source, 
 hook: PreToolUse
 hook: PreToolUse Completed
 exec
-/bin/zsh -lc "rg -n \"hierarchy-tree|evidence-backed-review|login-visual|phase-2-login\" /Users/sergeykhomyuk/.codex/memories/MEMORY.md && sed -n '1,240p' /Users/sergeykhomyuk/.claude/skills/coding/SKILL.md && sed -n '1,260p' /Users/sergeykhomyuk/.claude/skills/typescript-coding/SKILL.md && sed -n '1,280p' /Users/sergeykhomyuk/.claude/skills/react-coding/SKILL.md" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+/bin/zsh -lc "rg -n \"hierarchy-tree|evidence-backed-review|login-visual|phase-2-login\" /.codex/memories/MEMORY.md && sed -n '1,240p' /.claude/skills/coding/SKILL.md && sed -n '1,260p' /.claude/skills/typescript-coding/SKILL.md && sed -n '1,280p' /.claude/skills/react-coding/SKILL.md" in /hierarchy-tree
  succeeded in 0ms:
 1:# Task Group: hierarchy-tree convention, i18n test-locale, and phase-2-login evidence-backed reviews
 3:scope: Read-only diff/spec review and narrow fix verification in `hierarchy-tree`; use for phase-1 convention/import-policy checks, i18n test-locale contracts, phase-2-login specifications, router-owned test seams, or exact review evidence.
-4:applies_to: cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree; reuse_rule=reuse the review procedure and verified code facts only after re-reading the current diff, named spec, and cited source; do not treat the inherited i18n issues or phase-2 spec contradictions as fixed
+4:applies_to: cwd=/hierarchy-tree; reuse_rule=reuse the review procedure and verified code facts only after re-reading the current diff, named spec, and cited source; do not treat the inherited i18n issues or phase-2 spec contradictions as fixed
 6:## Task 1: Narrow verification of eleven phase-2-login spec-review residues, partial
-10:- rollout_summaries/2026-08-14T15-44-34-P67n-phase_2_login_narrow_verification_partial.md (cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree, rollout_path=/Users/sergeykhomyuk/.codex/sessions/2026/08/14/rollout-2026-08-14T16-44-34-01a000f2-4da9-70e3-9c68-c728fd7f6d39.jsonl, updated_at=2026-08-14T19:43:19+00:00, thread_id=01a000f2-4da9-70e3-9c68-c728fd7f6d39, 10/11 requested items verified; contradictions remain)
+10:- rollout_summaries/2026-08-14T15-44-34-P67n-phase_2_login_narrow_verification_partial.md (cwd=/hierarchy-tree, rollout_path=/.codex/sessions/2026/08/14/rollout-2026-08-14T16-44-34-01a000f2-4da9-70e3-9c68-c728fd7f6d39.jsonl, updated_at=2026-08-14T19:43:19+00:00, thread_id=01a000f2-4da9-70e3-9c68-c728fd7f6d39, 10/11 requested items verified; contradictions remain)
 14:- phase-2-login, PRODUCT.md, TECH.md, ARCHITECTURE.md, renderRoute, useLoaderData, Suspense, rejected-promise, decision-log, e2e-migration, eslint no-restricted-imports
-20:- rollout_summaries/2026-08-14T11-58-32-pLJ1-i18n_test_locale_review_and_fix_confirmation.md (cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree, rollout_path=/Users/sergeykhomyuk/.codex/sessions/2026/08/14/rollout-2026-08-14T12-58-32-01a00023-5cfc-70d2-8078-203f9e04aa0b.jsonl, updated_at=2026-08-14T13:09:26+00:00, thread_id=01a00023-5cfc-70d2-8078-203f9e04aa0b, exact cast-fix delta confirmed; inherited generator/dedup issues remain outside it)
-30:- rollout_summaries/2026-08-14T13-52-26-RgLH-phase_1_conventions_read_only_review_sink_import_bypass.md (cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree, rollout_path=/Users/sergeykhomyuk/.codex/sessions/2026/08/14/rollout-2026-08-14T14-52-26-01a0008b-a44d-7420-b257-3feaa02b9c75.jsonl, updated_at=2026-08-14T13:57:33+00:00, thread_id=01a0008b-a44d-7420-b257-3feaa02b9c75, recorded full verification was green but the lint policy was bypassable)
+20:- rollout_summaries/2026-08-14T11-58-32-pLJ1-i18n_test_locale_review_and_fix_confirmation.md (cwd=/hierarchy-tree, rollout_path=/.codex/sessions/2026/08/14/rollout-2026-08-14T12-58-32-01a00023-5cfc-70d2-8078-203f9e04aa0b.jsonl, updated_at=2026-08-14T13:09:26+00:00, thread_id=01a00023-5cfc-70d2-8078-203f9e04aa0b, exact cast-fix delta confirmed; inherited generator/dedup issues remain outside it)
+30:- rollout_summaries/2026-08-14T13-52-26-RgLH-phase_1_conventions_read_only_review_sink_import_bypass.md (cwd=/hierarchy-tree, rollout_path=/.codex/sessions/2026/08/14/rollout-2026-08-14T14-52-26-01a0008b-a44d-7420-b257-3feaa02b9c75.jsonl, updated_at=2026-08-14T13:57:33+00:00, thread_id=01a0008b-a44d-7420-b257-3feaa02b9c75, recorded full verification was green but the lint policy was bypassable)
 398:- Related skill: skills/evidence-backed-review/SKILL.md
 410:- Related skill: skills/evidence-backed-review/SKILL.md
 447:- Related skill: skills/evidence-backed-review/SKILL.md
@@ -367,18 +367,18 @@ The prior repo memory only supplies the review procedure and warns against trust
 hook: PreToolUse
 hook: PreToolUse Completed
 exec
-/bin/zsh -lc "sed -n '1,45p' /Users/sergeykhomyuk/.codex/memories/MEMORY.md && sed -n '1,260p' /Users/sergeykhomyuk/.codex/memories/skills/evidence-backed-review/SKILL.md && wc -l /tmp/login-visual-alignment-diff.txt && sed -n '1,520p' /tmp/login-visual-alignment-diff.txt" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+/bin/zsh -lc "sed -n '1,45p' /.codex/memories/MEMORY.md && sed -n '1,260p' /.codex/memories/skills/evidence-backed-review/SKILL.md && wc -l /tmp/login-visual-alignment-diff.txt && sed -n '1,520p' /tmp/login-visual-alignment-diff.txt" in /hierarchy-tree
  succeeded in 0ms:
 # Task Group: hierarchy-tree convention, i18n test-locale, and phase-2-login evidence-backed reviews
 
 scope: Read-only diff/spec review and narrow fix verification in `hierarchy-tree`; use for phase-1 convention/import-policy checks, i18n test-locale contracts, phase-2-login specifications, router-owned test seams, or exact review evidence.
-applies_to: cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree; reuse_rule=reuse the review procedure and verified code facts only after re-reading the current diff, named spec, and cited source; do not treat the inherited i18n issues or phase-2 spec contradictions as fixed
+applies_to: cwd=/hierarchy-tree; reuse_rule=reuse the review procedure and verified code facts only after re-reading the current diff, named spec, and cited source; do not treat the inherited i18n issues or phase-2 spec contradictions as fixed
 
 ## Task 1: Narrow verification of eleven phase-2-login spec-review residues, partial
 
 ### rollout_summary_files
 
-- rollout_summaries/2026-08-14T15-44-34-P67n-phase_2_login_narrow_verification_partial.md (cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree, rollout_path=/Users/sergeykhomyuk/.codex/sessions/2026/08/14/rollout-2026-08-14T16-44-34-01a000f2-4da9-70e3-9c68-c728fd7f6d39.jsonl, updated_at=2026-08-14T19:43:19+00:00, thread_id=01a000f2-4da9-70e3-9c68-c728fd7f6d39, 10/11 requested items verified; contradictions remain)
+- rollout_summaries/2026-08-14T15-44-34-P67n-phase_2_login_narrow_verification_partial.md (cwd=/hierarchy-tree, rollout_path=/.codex/sessions/2026/08/14/rollout-2026-08-14T16-44-34-01a000f2-4da9-70e3-9c68-c728fd7f6d39.jsonl, updated_at=2026-08-14T19:43:19+00:00, thread_id=01a000f2-4da9-70e3-9c68-c728fd7f6d39, 10/11 requested items verified; contradictions remain)
 
 ### keywords
 
@@ -388,7 +388,7 @@ applies_to: cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree; reu
 
 ### rollout_summary_files
 
-- rollout_summaries/2026-08-14T11-58-32-pLJ1-i18n_test_locale_review_and_fix_confirmation.md (cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree, rollout_path=/Users/sergeykhomyuk/.codex/sessions/2026/08/14/rollout-2026-08-14T12-58-32-01a00023-5cfc-70d2-8078-203f9e04aa0b.jsonl, updated_at=2026-08-14T13:09:26+00:00, thread_id=01a00023-5cfc-70d2-8078-203f9e04aa0b, exact cast-fix delta confirmed; inherited generator/dedup issues remain outside it)
+- rollout_summaries/2026-08-14T11-58-32-pLJ1-i18n_test_locale_review_and_fix_confirmation.md (cwd=/hierarchy-tree, rollout_path=/.codex/sessions/2026/08/14/rollout-2026-08-14T12-58-32-01a00023-5cfc-70d2-8078-203f9e04aa0b.jsonl, updated_at=2026-08-14T13:09:26+00:00, thread_id=01a00023-5cfc-70d2-8078-203f9e04aa0b, exact cast-fix delta confirmed; inherited generator/dedup issues remain outside it)
 
 ### keywords
 
@@ -398,7 +398,7 @@ applies_to: cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree; reu
 
 ### rollout_summary_files
 
-- rollout_summaries/2026-08-14T13-52-26-RgLH-phase_1_conventions_read_only_review_sink_import_bypass.md (cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree, rollout_path=/Users/sergeykhomyuk/.codex/sessions/2026/08/14/rollout-2026-08-14T14-52-26-01a0008b-a44d-7420-b257-3feaa02b9c75.jsonl, updated_at=2026-08-14T13:57:33+00:00, thread_id=01a0008b-a44d-7420-b257-3feaa02b9c75, recorded full verification was green but the lint policy was bypassable)
+- rollout_summaries/2026-08-14T13-52-26-RgLH-phase_1_conventions_read_only_review_sink_import_bypass.md (cwd=/hierarchy-tree, rollout_path=/.codex/sessions/2026/08/14/rollout-2026-08-14T14-52-26-01a0008b-a44d-7420-b257-3feaa02b9c75.jsonl, updated_at=2026-08-14T13:57:33+00:00, thread_id=01a0008b-a44d-7420-b257-3feaa02b9c75, recorded full verification was green but the lint policy was bypassable)
 
 ### keywords
 
@@ -504,7 +504,7 @@ index cb6cba0..1ba40cf 100644
 --- a/src/app/layout/ApplicationLayout.test.tsx
 +++ b/src/app/layout/ApplicationLayout.test.tsx
 @@ -34,4 +34,12 @@ describe('ApplicationLayout', () => {
- 
+
      expect(skipLink).toHaveAttribute('href', `#${main.id}`);
    });
 +
@@ -521,7 +521,7 @@ index f556406..0a8a71f 100644
 --- a/src/app/layout/ApplicationLayout.tsx
 +++ b/src/app/layout/ApplicationLayout.tsx
 @@ -9,7 +9,12 @@ export const ApplicationLayout = memo(function ApplicationLayout() {
- 
+
    return (
      <>
 -      <a href={`#${MAIN_CONTENT_ID}`}>{t('layout.skipLink')}</a>
@@ -541,7 +541,7 @@ index 1a213ca..e1eb3e8 100644
 @@ -22,14 +22,16 @@ import { loadTranslations } from './loadTranslations';
  import { LoginPage } from './LoginPage';
  import type { LoginPageDependencies } from './LoginPage';
- 
+
 -async function renderLoginPage(element: ReactElement): Promise<void> {
 +async function renderLoginPage(
 +  element: ReactElement,
@@ -555,7 +555,7 @@ index 1a213ca..e1eb3e8 100644
 -  render(<I18nextProvider i18n={i18n}>{element}</I18nextProvider>);
 +  return render(<I18nextProvider i18n={i18n}>{element}</I18nextProvider>);
  }
- 
+
  function createSpyObservability(): ObservabilityFacade {
 @@ -506,4 +508,39 @@ describe('LoginPage', () => {
      ]);
@@ -603,7 +603,7 @@ index 53051b6..59fafc0 100644
 +++ b/src/features/auth/LoginPage.tsx
 @@ -79,70 +79,89 @@ export const LoginPage = memo(function LoginPage({
      : { invalid: false, required: true };
- 
+
    return (
 -    <Card>
 -      <form action={formAction} onSubmit={onSubmit}>
@@ -760,7 +760,7 @@ index 7c3f81b..a55e1df 100644
 --- a/src/shared/ui/Button.test.tsx
 +++ b/src/shared/ui/Button.test.tsx
 @@ -134,4 +134,26 @@ describe('Button', () => {
- 
+
      expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
    });
 +
@@ -820,7 +820,7 @@ index c7a1393..77f5c80 100644
 --- a/src/shared/ui/Field.test.tsx
 +++ b/src/shared/ui/Field.test.tsx
 @@ -66,6 +66,24 @@ describe('Field', () => {
- 
+
      expect(screen.getByLabelText('Password')).toBeInTheDocument();
    });
 +
@@ -842,7 +842,7 @@ index c7a1393..77f5c80 100644
 +    expect(screen.getByText('Email')).toHaveClass('text-sm', 'font-medium');
 +  });
  });
- 
+
  describe('Input', () => {
 diff --git a/src/shared/ui/Field.tsx b/src/shared/ui/Field.tsx
 index 7192e0a..fe45b60 100644
@@ -850,7 +850,7 @@ index 7192e0a..fe45b60 100644
 +++ b/src/shared/ui/Field.tsx
 @@ -33,14 +33,20 @@ export const Field = memo(function Field({
    );
- 
+
    return (
 -    <div>
 -      <label htmlFor={id}>{label}</label>
@@ -883,7 +883,7 @@ index d9eda45..45b8b62 100644
  import { Field } from './Field';
 +import { FieldContext } from './fieldContext';
  import { Input } from './Input';
- 
+
  describe('Input', () => {
 @@ -42,4 +43,31 @@ describe('Input', () => {
      expect(input).toHaveAttribute('placeholder', 'you@foo.com');
@@ -946,11 +946,11 @@ nl -ba src/features/auth/LoginPage.tsx | sed -n '1,240p'
 nl -ba src/shared/ui/Field.tsx
 nl -ba src/shared/ui/Input.tsx
 nl -ba src/shared/ui/Button.tsx
-rg -n \"<Button|fullWidth|from ['\\\"].*shared/ui|from ['\\\"].*features\" src --glob '*.ts' --glob '*.tsx'" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+rg -n \"<Button|fullWidth|from ['\\\"].*shared/ui|from ['\\\"].*features\" src --glob '*.ts' --glob '*.tsx'" in /hierarchy-tree
  succeeded in 0ms:
 +++ b/src/shared/ui/Button.test.tsx
 @@ -134,4 +134,26 @@ describe('Button', () => {
- 
+
      expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
    });
 +
@@ -1010,7 +1010,7 @@ index c7a1393..77f5c80 100644
 --- a/src/shared/ui/Field.test.tsx
 +++ b/src/shared/ui/Field.test.tsx
 @@ -66,6 +66,24 @@ describe('Field', () => {
- 
+
      expect(screen.getByLabelText('Password')).toBeInTheDocument();
    });
 +
@@ -1032,7 +1032,7 @@ index c7a1393..77f5c80 100644
 +    expect(screen.getByText('Email')).toHaveClass('text-sm', 'font-medium');
 +  });
  });
- 
+
  describe('Input', () => {
 diff --git a/src/shared/ui/Field.tsx b/src/shared/ui/Field.tsx
 index 7192e0a..fe45b60 100644
@@ -1040,7 +1040,7 @@ index 7192e0a..fe45b60 100644
 +++ b/src/shared/ui/Field.tsx
 @@ -33,14 +33,20 @@ export const Field = memo(function Field({
    );
- 
+
    return (
 -    <div>
 -      <label htmlFor={id}>{label}</label>
@@ -1073,7 +1073,7 @@ index d9eda45..45b8b62 100644
  import { Field } from './Field';
 +import { FieldContext } from './fieldContext';
  import { Input } from './Input';
- 
+
  describe('Input', () => {
 @@ -42,4 +43,31 @@ describe('Input', () => {
      expect(input).toHaveAttribute('placeholder', 'you@foo.com');
@@ -1138,26 +1138,26 @@ index 4b31111..b8aeef6 100644
 ./specs/phase-2-login/PLAN.md
 ./scripts/assert-no-physical-properties.mjs
      1	# CLAUDE.md
-     2	
+     2
      3	Guidance for Claude Code when working in this repository.
-     4	
+     4
      5	## Read first
-     6	
+     6
      7	- [specs/GOAL.md](./specs/GOAL.md) - what the app must do. The feature scope is closed: if it is not in GOAL.md, do not build it.
      8	- [specs/ARCHITECTURE.md](./specs/ARCHITECTURE.md) - how it is built and why. Every technical decision is already made and recorded there.
-     9	
+     9
     10	Treat both as binding. If a task seems to require deviating from ARCHITECTURE.md, say so and ask before writing code; if the deviation is right, update the decision log in the same change.
-    11	
+    11
     12	## Skills
-    13	
+    13
     14	Invoke these for any implementation work, together, before writing code:
-    15	
+    15
     16	- `/coding` - baseline discipline for every change: understand first, keep the diff minimal, define what "done and verified" means.
     17	- `/typescript-coding` - type safety, naming, module organization, constants. Any `.ts` work.
     18	- `/react-coding` - memoization, component structure, logic isolation, props, accessibility. Any `.tsx` or custom hook.
-    19	
+    19
     20	## Core principles
-    21	
+    21
     22	- **The brief bounds the features, not the engineering.** Depth goes into how the requested behavior is built - never into unrequested features.
     23	- **Boundaries are enforced, not suggested.** `app` composes, `features/*` own a slice end to end behind a single entry, `shared` is domain-free, `platform` adapts the outside world. No cross-feature imports, no deep imports. Lint failures on this are design feedback, not obstacles.
     24	- **Domain logic stays pure.** Tree building and flattening are framework-free, synchronous, and fully tested. Nothing in the domain layer imports React.
@@ -1168,25 +1168,25 @@ index 4b31111..b8aeef6 100644
     29	- **Instrument what you build.** Requests, errors and meaningful interactions go through the observability facade with a correlation id. Never log or transmit secrets, passwords or tokens.
     30	- **Prefer platform and React primitives over dependencies.** A new runtime dependency needs a reason that survives the bundle budget.
     31	- **Tests are the evidence.** Pure domain near 100%, components by behavior and keyboard, e2e against Playwright route mocks including failure paths. Do not report work as done on an unrun suite.
-    32	
+    32
     33	## Working agreements
-    34	
+    34
     35	- Ask one clarifying question when a task is ambiguous; do not guess at scope.
     36	- Keep diffs surgical and reviewable. Refactors that were not asked for belong in their own change.
     37	- Verify versions and APIs from `package.json` or the registry, never from memory.
     38	- Report honestly: if a check failed or a step was skipped, say which and why.
-    39	
+    39
     40	## Commands
-    41	
+    41
     42	- `npm run dev` - Vite dev server
     43	- `npm run build` - typecheck and production build
     44	- `npm run lint` - ESLint
-    45	
+    45
     46	Test, format, e2e and budget scripts arrive with their toolchain; check `package.json` for the current set rather than assuming.
      1	# Plan: login-visual-alignment - Login page: align visual styling with mockup
-     2	
+     2
      3	## Brief
-     4	
+     4
      5	phase-2-login shipped the login page with correct behavior but incomplete Tailwind
      6	styling on the layout-level markup. Root cause: `Card`, `Input`, `Button` and
      7	`ProductMark` each carry their own utility classes, but the elements that stitch them
@@ -1202,14 +1202,14 @@ index 4b31111..b8aeef6 100644
     17	submit button is intrinsic-width instead of filling the card, invalid inputs carry no
     18	danger-colored border, and the skip link is permanently visible instead of hidden until
     19	focused.
-    20	
+    20
     21	Regression scope: no behavioral change. Every existing LoginPage/Field/Input/Button/
     22	ApplicationLayout test (tab order, focus management, aria-invalid/aria-describedby
     23	wiring, busy-state semantics, the five card states) must stay green untouched - this is
     24	class additions only, no logic changes.
-    25	
+    25
     26	## Acceptance criteria
-    27	
+    27
     28	- AC1: the login page is centered on the `bg-canvas-login` background, matching
     29	  mockup-1a's overall composition.
     30	- AC2: each field's label renders above its control with mockup-sized type, not inline.
@@ -1221,9 +1221,9 @@ index 4b31111..b8aeef6 100644
     36	- AC6: the skip link is visually hidden until keyboard focus reaches it.
     37	- AC7: no existing test's behavior/assertions change - the diff is additive classes and
     38	  one new optional `Button` prop.
-    39	
+    39
     40	## Steps
-    41	
+    41
     42	1. Add the missing layout/typography classes across `ApplicationLayout`, `LoginPage`,
     43	   `Field`, `Input` (width + invalid border), and a new `fullWidth` prop on `Button`;
     44	   make each of the 8 already-red tests below green (the 9th - "does not stretch to
@@ -1238,12 +1238,12 @@ index 4b31111..b8aeef6 100644
     53	   - `src/features/auth/LoginPage.test.tsx::LoginPage > centers the card on the login canvas background`
     54	   - `src/features/auth/LoginPage.test.tsx::LoginPage > gives the heading bold mockup-sized typography`
     55	   - `src/features/auth/LoginPage.test.tsx::LoginPage > renders the submit control at full width`
-    56	
+    56
     57	   (9 tests registered as one step per fix.md's S-size rule: repro and fix are one
     58	   checkpoint, tests already observed red in Frame - `evidence/step1-red.txt`.)
-    59	
+    59
     60	## Verification
-    61	
+    61
     62	- `npm test` (full suite) green, zero regressions in the 33 pre-existing tests across
     63	  the five touched files.
     64	- Playwright: live render of `/login` at the mockup's viewport size for idle, filled,
@@ -1256,12 +1256,12 @@ index 4b31111..b8aeef6 100644
      1	import { memo } from 'react';
      2	import { useTranslation } from 'react-i18next';
      3	import { Outlet } from 'react-router';
-     4	
+     4
      5	const MAIN_CONTENT_ID = 'main-content';
-     6	
+     6
      7	export const ApplicationLayout = memo(function ApplicationLayout() {
      8	  const { t } = useTranslation();
-     9	
+     9
     10	  return (
     11	    <>
     12	      <a
@@ -1289,9 +1289,9 @@ index 4b31111..b8aeef6 100644
     11	import { loginCardState } from './loginCardState';
     12	import { ProductMark } from './ProductMark';
     13	import { useLoginSubmission } from './useLoginSubmission';
-    14	
+    14
     15	const ALERT_ID = 'login-alert';
-    16	
+    16
     17	export type LoginPageDependencies = {
     18	  http: HttpClient;
     19	  observability: ObservabilityFacade;
@@ -1300,32 +1300,32 @@ index 4b31111..b8aeef6 100644
     22	  endInteraction: () => void;
     23	  navigate: (destination: string, options: { replace: boolean }) => void;
     24	};
-    25	
+    25
     26	type LoginPageProps = {
     27	  dependencies: LoginPageDependencies;
     28	  destination: string;
     29	};
-    30	
+    30
     31	export const LoginPage = memo(function LoginPage({
     32	  dependencies,
     33	  destination,
     34	}: LoginPageProps) {
     35	  const { t } = useTranslation('auth');
     36	  useDocumentTitle(t('login.documentTitle'));
-    37	
+    37
     38	  const [email, setEmail] = useState('');
     39	  const [password, setPassword] = useState('');
     40	  const { result, isPending, formAction, onSubmit } = useLoginSubmission(
     41	    dependencies,
     42	    destination,
     43	  );
-    44	
+    44
     45	  const isReady = email.trim() !== '' && password !== '';
     46	  const cardState = loginCardState(result, isPending, isReady);
     47	  const submitting = cardState.kind === 'submitting';
     48	  const noMatch = cardState.kind === 'noMatch';
     49	  const loginButtonRef = useRef<HTMLButtonElement>(null);
-    50	
+    50
     51	  // Retrying unmounts the alert holding the focused retry control - which
     52	  // would otherwise drop focus to document.body (invariant 110). Moving
     53	  // focus here, inside the same click handler that starts the retry's
@@ -1334,7 +1334,7 @@ index 4b31111..b8aeef6 100644
     56	  const handleRetry = useCallback(() => {
     57	    loginButtonRef.current?.focus();
     58	  }, []);
-    59	
+    59
     60	  const handleEmailChange = useCallback(
     61	    (event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value),
     62	    [],
@@ -1343,7 +1343,7 @@ index 4b31111..b8aeef6 100644
     65	    (event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value),
     66	    [],
     67	  );
-    68	
+    68
     69	  // No field-level message in the no-match state (invariants 51, 52,
     70	  // 109): both fields are marked invalid and described by the one
     71	  // card-level alert instead - the derivation collapses email and
@@ -1355,7 +1355,7 @@ index 4b31111..b8aeef6 100644
     77	  const fieldContextValue: FieldContextValue = noMatch
     78	    ? { invalid: true, required: true, describedBy: ALERT_ID }
     79	    : { invalid: false, required: true };
-    80	
+    80
     81	  return (
     82	    <div className="flex min-h-screen items-center justify-center bg-canvas-login p-4">
     83	      <div className="w-full max-w-sm">
@@ -1446,7 +1446,7 @@ index 4b31111..b8aeef6 100644
      1	import { memo, useMemo } from 'react';
      2	import type { ReactNode } from 'react';
      3	import { FieldContext } from './fieldContext';
-     4	
+     4
      5	type FieldProps = {
      6	  id: string;
      7	  label: string;
@@ -1455,7 +1455,7 @@ index 4b31111..b8aeef6 100644
     10	  required?: boolean;
     11	  children: ReactNode;
     12	};
-    13	
+    13
     14	export const Field = memo(function Field({
     15	  id,
     16	  label,
@@ -1467,7 +1467,7 @@ index 4b31111..b8aeef6 100644
     22	  const hintId = hint !== undefined ? `${id}-hint` : undefined;
     23	  const errorId = error !== undefined ? `${id}-error` : undefined;
     24	  const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined;
-    25	
+    25
     26	  const contextValue = useMemo(
     27	    () => ({
     28	      invalid: error !== undefined,
@@ -1476,7 +1476,7 @@ index 4b31111..b8aeef6 100644
     31	    }),
     32	    [describedBy, error, required],
     33	  );
-    34	
+    34
     35	  return (
     36	    <div className="flex flex-col gap-1.5">
     37	      <label htmlFor={id} className="text-sm font-medium text-ink">
@@ -1501,7 +1501,7 @@ index 4b31111..b8aeef6 100644
      1	import { memo, useContext } from 'react';
      2	import type { ChangeEvent } from 'react';
      3	import { FieldContext } from './fieldContext';
-     4	
+     4
      5	type InputProps = {
      6	  id: string;
      7	  name: string;
@@ -1512,7 +1512,7 @@ index 4b31111..b8aeef6 100644
     12	  readOnly?: boolean;
     13	  placeholder?: string;
     14	};
-    15	
+    15
     16	export const Input = memo(function Input({
     17	  id,
     18	  name,
@@ -1524,7 +1524,7 @@ index 4b31111..b8aeef6 100644
     24	  placeholder,
     25	}: InputProps) {
     26	  const { describedBy, invalid, required } = useContext(FieldContext);
-    27	
+    27
     28	  return (
     29	    <input
     30	      id={id}
@@ -1544,7 +1544,7 @@ index 4b31111..b8aeef6 100644
     44	});
      1	import { memo, useCallback } from 'react';
      2	import type { MouseEvent, ReactNode, Ref } from 'react';
-     3	
+     3
      4	type ButtonProps = {
      5	  variant: 'primary' | 'secondary';
      6	  type?: 'button' | 'submit';
@@ -1555,7 +1555,7 @@ index 4b31111..b8aeef6 100644
     11	  children: ReactNode;
     12	  ref?: Ref<HTMLButtonElement>;
     13	};
-    14	
+    14
     15	// hover:bg-primary-pressed only paints the pressed fill on a hovered
     16	// pointer, so an un-hovered busy button would otherwise show the
     17	// un-pressed variant. A separate busy class (rather than combining
@@ -1576,7 +1576,7 @@ index 4b31111..b8aeef6 100644
     32	    busy: 'border border-border-control bg-surface-hover text-ink',
     33	  },
     34	};
-    35	
+    35
     36	export const Button = memo(function Button({
     37	  variant,
     38	  type = 'button',
@@ -1600,7 +1600,7 @@ index 4b31111..b8aeef6 100644
     56	    },
     57	    [busy, onClick],
     58	  );
-    59	
+    59
     60	  return (
     61	    <button
     62	      ref={ref}
@@ -1689,14 +1689,14 @@ nl -ba src/app/layout/ApplicationLayout.test.tsx
 nl -ba src/shared/ui/Button.test.tsx | sed -n '1,230p'
 nl -ba src/shared/ui/Field.test.tsx | sed -n '1,180p'
 nl -ba src/shared/ui/Input.test.tsx | sed -n '1,160p'
-nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /hierarchy-tree
  succeeded in 0ms:
      1	@import 'tailwindcss';
-     2	
+     2
      3	@theme {
      4	  --font-sans:
      5	    'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
-     6	
+     6
      7	  --color-primary: #7b2bf0;
      8	  --color-primary-pressed: #6a22d6;
      9	  --color-primary-deep: #5b15c4;
@@ -1721,17 +1721,17 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     28	  --color-danger: #c81e4a;
     29	  --color-danger-surface: #fde9ee;
     30	  --color-focus-ring: #5b15c4;
-    31	
+    31
     32	  --radius-toggle: 0.375rem;
     33	  --radius-control: 0.625rem;
     34	  --radius-card: 0.875rem;
     35	  --radius-login-card: 1rem;
-    36	
+    36
     37	  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
     38	  --duration-fast: 150ms;
     39	  --duration-normal: 250ms;
     40	}
-    41	
+    41
     42	/* Dark values re-declared over the same token names only where they
     43	   differ from light (invariant 71) - an unspecified token inherits its
     44	   light value, which is why border-field, primary, on-primary, radii
@@ -1769,7 +1769,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     76	    --color-focus-ring: #9b7bf5;
     77	  }
     78	}
-    79	
+    79
     80	/* The one place default text and page colour are set from the token
     81	   layer - without it, plain text with no explicit text-* class (Card's
     82	   children, the placeholder pages, not-found) inherits the browser's
@@ -1781,12 +1781,12 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     88	  color: var(--color-ink);
     89	  background-color: var(--color-canvas-app);
     90	}
-    91	
+    91
     92	:focus-visible {
     93	  outline: 2px solid var(--color-focus-ring);
     94	  outline-offset: 2px;
     95	}
-    96	
+    96
     97	@media (prefers-reduced-motion: reduce) {
     98	  *,
     99	  *::before,
@@ -1802,7 +1802,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
      3	// physical CSS properties and their Tailwind utility-class equivalents.
      4	// Exit non-zero on a hit; runs as part of npm run lint.
      5	import { readFileSync, globSync } from 'node:fs';
-     6	
+     6
      7	const PATTERNS = [
      8	  { name: 'margin-left', regex: /\bmargin-left\b/ },
      9	  { name: 'margin-right', regex: /\bmargin-right\b/ },
@@ -1820,12 +1820,12 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     21	  { name: 'border-l', regex: /\bborder-l\b/ },
     22	  { name: 'border-r', regex: /\bborder-r\b/ },
     23	];
-    24	
+    24
     25	// Raw color values (invariant 71): scoped to the components and app
     26	// shell rather than every *.css file, because shared/theme/theme.css is
     27	// where the raw values legitimately live - it declares the tokens.
     28	const RAW_COLOR_PATTERN = /#[0-9a-fA-F]{3,8}\b/;
-    29	
+    29
     30	const explicitTargets = process.argv
     31	  .slice(2)
     32	  .filter((arg) => !arg.startsWith('--'));
@@ -1838,9 +1838,9 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     39	        ...globSync('src/shared/ui/**/*.{tsx,css}'),
     40	        ...globSync('src/app/**/*.{tsx,css}'),
     41	      ];
-    42	
+    42
     43	const violations = [];
-    44	
+    44
     45	for (const filePath of physicalPropertyFiles) {
     46	  const source = readFileSync(filePath, 'utf-8');
     47	  for (const pattern of PATTERNS) {
@@ -1851,7 +1851,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     52	    }
     53	  }
     54	}
-    55	
+    55
     56	for (const filePath of rawColorFiles) {
     57	  const source = readFileSync(filePath, 'utf-8');
     58	  if (RAW_COLOR_PATTERN.test(source)) {
@@ -1860,7 +1860,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     61	    );
     62	  }
     63	}
-    64	
+    64
     65	if (violations.length > 0) {
     66	  console.error(
     67	    'assert-no-physical-properties: physical CSS properties found:',
@@ -1870,7 +1870,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     71	  }
     72	  process.exit(1);
     73	}
-    74	
+    74
     75	process.exit(0);
      1	{
      2	  "name": "hierarchy-tree",
@@ -1953,7 +1953,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     79	}
      1	import { memo } from 'react';
      2	import { Button } from '@shared/ui';
-     3	
+     3
      4	type LoginAlertProps =
      5	  | { id: string; kind: 'noMatch'; message: string }
      6	  | {
@@ -1966,7 +1966,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     13	      retryDisabled: boolean;
     14	      onRetry: () => void;
     15	    };
-    16	
+    16
     17	// The card-level summary alert for both the no-match and service-problem
     18	// states (invariants 51, 52, 109): no field-level message is ever
     19	// rendered, so the no-match state's fields point their aria-describedby
@@ -2008,19 +2008,19 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
      6	import type { ObservabilityFacade } from '@platform/observability';
      7	import type { KeyValueStorage } from '@platform/runtime';
      8	import { SignedInName } from './SignedInName';
-     9	
+     9
     10	export type SignedInHeaderDependencies = {
     11	  observability: ObservabilityFacade;
     12	  tabStorage: KeyValueStorage;
     13	  beginInteraction: () => string;
     14	  navigate: (destination: string, options: { replace: boolean }) => void;
     15	};
-    16	
+    16
     17	type SignedInHeaderProps = {
     18	  signedInUser: Promise<SignedInUserView | null>;
     19	  dependencies: SignedInHeaderDependencies;
     20	};
-    21	
+    21
     22	// Rendered only inside AuthenticatedLayout, so it never reaches the
     23	// login or not-found routes (invariant 95) by construction rather than
     24	// by a condition here. The logout control sits outside SignedInName's
@@ -2031,7 +2031,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     29	  dependencies,
     30	}: SignedInHeaderProps) {
     31	  const { t } = useTranslation();
-    32	
+    32
     33	  const handleLogout = useCallback(() => {
     34	    const correlationId = dependencies.beginInteraction();
     35	    clearSession(dependencies.tabStorage);
@@ -2040,7 +2040,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     38	    });
     39	    dependencies.navigate('/login', { replace: true });
     40	  }, [dependencies]);
-    41	
+    41
     42	  return (
     43	    <header className="flex items-center justify-between gap-4 border-b border-border-hairline px-6 py-4">
     44	      <div>
@@ -2060,14 +2060,14 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     58	});
      1	import { memo } from 'react';
      2	import type { PropsWithChildren } from 'react';
-     3	
+     3
      4	type CardProps = PropsWithChildren<{ padding?: 'compact' | 'comfortable' }>;
-     5	
+     5
      6	const PADDING_CLASS: Record<'compact' | 'comfortable', string> = {
      7	  compact: 'p-3',
      8	  comfortable: 'p-6',
      9	};
-    10	
+    10
     11	export const Card = memo(function Card({
     12	  padding = 'comfortable',
     13	  children,
@@ -2082,10 +2082,10 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     22	});
      1	import { memo } from 'react';
      2	import { useTranslation } from 'react-i18next';
-     3	
+     3
      4	export const ProductMark = memo(function ProductMark() {
      5	  const { t } = useTranslation('auth');
-     6	
+     6
      7	  return (
      8	    <div className="flex items-center gap-2">
      9	      <span
@@ -2101,7 +2101,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
      3	import { createMemoryRouter, RouterProvider } from 'react-router';
      4	import { renderRoute } from '../testing/renderRoute';
      5	import { ApplicationLayout } from './ApplicationLayout';
-     6	
+     6
      7	function renderLayout(): ReturnType<typeof renderRoute> {
      8	  const router = createMemoryRouter([
      9	    {
@@ -2110,34 +2110,34 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     12	      children: [{ index: true, element: <h1>Probe page</h1> }],
     13	    },
     14	  ]);
-    15	
+    15
     16	  return renderRoute(<RouterProvider router={router} />);
     17	}
-    18	
+    18
     19	describe('ApplicationLayout', () => {
     20	  it('renders the matched child route inside a main landmark', async () => {
     21	    await renderLayout();
-    22	
+    22
     23	    const main = screen.getByRole('main');
     24	    expect(main).toContainElement(
     25	      screen.getByRole('heading', { name: 'Probe page' }),
     26	    );
     27	  });
-    28	
+    28
     29	  it('renders a skip link pointing at the main landmark', async () => {
     30	    await renderLayout();
-    31	
+    31
     32	    const skipLink = screen.getByRole('link', { name: 'layout.skipLink' });
     33	    const main = screen.getByRole('main');
-    34	
+    34
     35	    expect(skipLink).toHaveAttribute('href', `#${main.id}`);
     36	  });
-    37	
+    37
     38	  it('visually hides the skip link until it is focused', async () => {
     39	    await renderLayout();
-    40	
+    40
     41	    const skipLink = screen.getByRole('link', { name: 'layout.skipLink' });
-    42	
+    42
     43	    expect(skipLink).toHaveClass('sr-only', 'focus:not-sr-only');
     44	  });
     45	});
@@ -2145,7 +2145,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
      2	import { render, screen } from '@testing-library/react';
      3	import userEvent from '@testing-library/user-event';
      4	import { Button } from './Button';
-     5	
+     5
      6	describe('Button', () => {
      7	  it('renders its children as the accessible name', () => {
      8	    render(
@@ -2153,10 +2153,10 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     10	        Save
     11	      </Button>,
     12	    );
-    13	
+    13
     14	    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
     15	  });
-    16	
+    16
     17	  it('calls onClick when activated and not busy', async () => {
     18	    const user = userEvent.setup();
     19	    const handleClick = vi.fn();
@@ -2165,19 +2165,19 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     22	        Save
     23	      </Button>,
     24	    );
-    25	
+    25
     26	    await user.click(screen.getByRole('button', { name: 'Save' }));
-    27	
+    27
     28	    expect(handleClick).toHaveBeenCalledTimes(1);
     29	  });
-    30	
+    30
     31	  it('a busy button cannot submit its form by pointer or keyboard', async () => {
     32	    const user = userEvent.setup();
     33	    const handleSubmit = vi.fn((event: { preventDefault: () => void }) => {
     34	      event.preventDefault();
     35	    });
     36	    const handleClick = vi.fn();
-    37	
+    37
     38	    render(
     39	      <form onSubmit={handleSubmit}>
     40	        <Button variant="primary" type="submit" busy onClick={handleClick}>
@@ -2185,44 +2185,44 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     42	        </Button>
     43	      </form>,
     44	    );
-    45	
+    45
     46	    const button = screen.getByRole('button', { name: 'Submit' });
-    47	
+    47
     48	    await user.click(button);
     49	    expect(handleSubmit).not.toHaveBeenCalled();
     50	    expect(handleClick).not.toHaveBeenCalled();
-    51	
+    51
     52	    button.focus();
     53	    await user.keyboard('{Enter}');
     54	    expect(handleSubmit).not.toHaveBeenCalled();
     55	    expect(handleClick).not.toHaveBeenCalled();
     56	  });
-    57	
+    57
     58	  it('keeps the visible label as the accessible name while busy', () => {
     59	    render(
     60	      <Button variant="primary" busy onClick={vi.fn()}>
     61	        Save
     62	      </Button>,
     63	    );
-    64	
+    64
     65	    const button = screen.getByRole('button', { name: 'Save' });
     66	    expect(button).toHaveAttribute('aria-busy', 'true');
     67	    expect(button).toHaveAttribute('aria-disabled', 'true');
     68	  });
-    69	
+    69
     70	  it('stays focusable while busy, unlike the native disabled attribute', () => {
     71	    render(
     72	      <Button variant="primary" busy onClick={vi.fn()}>
     73	        Save
     74	      </Button>,
     75	    );
-    76	
+    76
     77	    const button = screen.getByRole('button', { name: 'Save' });
     78	    expect(button).not.toBeDisabled();
     79	    button.focus();
     80	    expect(button).toHaveFocus();
     81	  });
-    82	
+    82
     83	  it('does not call onClick when disabled', async () => {
     84	    const user = userEvent.setup();
     85	    const handleClick = vi.fn();
@@ -2231,26 +2231,26 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     88	        Save
     89	      </Button>,
     90	    );
-    91	
+    91
     92	    await user.click(screen.getByRole('button', { name: 'Save' }));
-    93	
+    93
     94	    expect(handleClick).not.toHaveBeenCalled();
     95	  });
-    96	
+    96
     97	  it('renders a spinner and the pressed fill while busy', () => {
     98	    render(
     99	      <Button variant="primary" busy onClick={vi.fn()}>
    100	        Save
    101	      </Button>,
    102	    );
-   103	
+   103
    104	    const button = screen.getByRole('button', { name: 'Save' });
    105	    // eslint-disable-next-line testing-library/no-node-access -- the decorative spinner is aria-hidden and has no accessible role to query by.
    106	    expect(button.firstElementChild).toHaveAttribute('aria-hidden', 'true');
    107	    expect(button.className).toContain('bg-primary-pressed');
    108	    expect(button.className).not.toContain('hover:bg-primary-pressed');
    109	  });
-   110	
+   110
    111	  it('forwards a ref to the underlying button element', () => {
    112	    let element: HTMLButtonElement | null = null;
    113	    render(
@@ -2264,37 +2264,37 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    121	        Save
    122	      </Button>,
    123	    );
-   124	
+   124
    125	    expect(element).toBe(screen.getByRole('button', { name: 'Save' }));
    126	  });
-   127	
+   127
    128	  it('renders the secondary variant', () => {
    129	    render(
    130	      <Button variant="secondary" onClick={vi.fn()}>
    131	        Cancel
    132	      </Button>,
    133	    );
-   134	
+   134
    135	    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
    136	  });
-   137	
+   137
    138	  it('renders at full width when fullWidth is set', () => {
    139	    render(
    140	      <Button variant="primary" fullWidth onClick={vi.fn()}>
    141	        Save
    142	      </Button>,
    143	    );
-   144	
+   144
    145	    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass('w-full');
    146	  });
-   147	
+   147
    148	  it('does not stretch to full width by default', () => {
    149	    render(
    150	      <Button variant="primary" onClick={vi.fn()}>
    151	        Save
    152	      </Button>,
    153	    );
-   154	
+   154
    155	    expect(screen.getByRole('button', { name: 'Save' })).not.toHaveClass(
    156	      'w-full',
    157	    );
@@ -2305,7 +2305,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
      3	import userEvent from '@testing-library/user-event';
      4	import { Field } from './Field';
      5	import { Input } from './Input';
-     6	
+     6
      7	describe('Field', () => {
      8	  it('the field associates its label error and hint and communicates required', () => {
      9	    render(
@@ -2325,11 +2325,11 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     23	        />
     24	      </Field>,
     25	    );
-    26	
+    26
     27	    const input = screen.getByLabelText('Email');
     28	    expect(input).toHaveAttribute('aria-invalid', 'true');
     29	    expect(input).toHaveAttribute('required');
-    30	
+    30
     31	    const describedBy = input.getAttribute('aria-describedby');
     32	    expect(describedBy).toBeTruthy();
     33	    for (const id of describedBy?.split(' ') ?? []) {
@@ -2339,20 +2339,20 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     37	    expect(screen.getByText('We never share it')).toBeInTheDocument();
     38	    expect(screen.getByText('Enter a valid email')).toBeInTheDocument();
     39	  });
-    40	
+    40
     41	  it('omits aria-invalid and aria-describedby when there is no error or hint', () => {
     42	    render(
     43	      <Field id="name" label="Name">
     44	        <Input id="name" name="name" type="text" value="" onChange={vi.fn()} />
     45	      </Field>,
     46	    );
-    47	
+    47
     48	    const input = screen.getByLabelText('Name');
     49	    expect(input).not.toHaveAttribute('aria-invalid');
     50	    expect(input).not.toHaveAttribute('aria-describedby');
     51	    expect(input).not.toHaveAttribute('required');
     52	  });
-    53	
+    53
     54	  it('never uses a placeholder as the label', () => {
     55	    render(
     56	      <Field id="password" label="Password">
@@ -2365,10 +2365,10 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     63	        />
     64	      </Field>,
     65	    );
-    66	
+    66
     67	    expect(screen.getByLabelText('Password')).toBeInTheDocument();
     68	  });
-    69	
+    69
     70	  it('stacks the label above its control with a small gap', () => {
     71	    const { container } = render(
     72	      <Field id="email" label="Email">
@@ -2381,13 +2381,13 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     79	        />
     80	      </Field>,
     81	    );
-    82	
+    82
     83	    // eslint-disable-next-line testing-library/no-node-access -- there is no RTL query for "this component's own root element and its classes"; the label/input queries above it already use accessible queries.
     84	    expect(container.firstElementChild).toHaveClass('flex', 'flex-col');
     85	    expect(screen.getByText('Email')).toHaveClass('text-sm', 'font-medium');
     86	  });
     87	});
-    88	
+    88
     89	describe('Input', () => {
     90	  it('renders standalone outside a Field without throwing', () => {
     91	    expect(() =>
@@ -2396,7 +2396,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     94	      ),
     95	    ).not.toThrow();
     96	  });
-    97	
+    97
     98	  it('calls onChange with the new value', async () => {
     99	    const handleChange = vi.fn();
    100	    render(
@@ -2408,9 +2408,9 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    106	        onChange={handleChange}
    107	      />,
    108	    );
-   109	
+   109
    110	    await userEvent.setup().type(screen.getByRole('textbox'), 'a');
-   111	
+   111
    112	    expect(handleChange).toHaveBeenCalled();
    113	  });
    114	});
@@ -2419,7 +2419,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
      3	import { Field } from './Field';
      4	import { FieldContext } from './fieldContext';
      5	import { Input } from './Input';
-     6	
+     6
      7	describe('Input', () => {
      8	  it('renders read-only without leaving the accessibility tree', () => {
      9	    render(
@@ -2434,13 +2434,13 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     18	        />
     19	      </Field>,
     20	    );
-    21	
+    21
     22	    const input = screen.getByLabelText('Email');
     23	    expect(input).toHaveAttribute('readonly');
     24	    expect(input).not.toHaveAttribute('aria-hidden');
     25	    expect(input).toBeVisible();
     26	  });
-    27	
+    27
     28	  it("renders a placeholder that is not the field's accessible name", () => {
     29	    render(
     30	      <Field id="email" label="Email">
@@ -2454,20 +2454,20 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     38	        />
     39	      </Field>,
     40	    );
-    41	
+    41
     42	    const input = screen.getByLabelText('Email');
     43	    expect(input).toHaveAttribute('placeholder', 'you@foo.com');
     44	    expect(input).toHaveAccessibleName('Email');
     45	  });
-    46	
+    46
     47	  it('fills the width of its container', () => {
     48	    render(
     49	      <Input id="email" name="email" type="text" value="" onChange={vi.fn()} />,
     50	    );
-    51	
+    51
     52	    expect(screen.getByRole('textbox')).toHaveClass('w-full');
     53	  });
-    54	
+    54
     55	  it('shows a danger border when the field context marks it invalid', () => {
     56	    render(
     57	      <FieldContext.Provider value={{ invalid: true, required: false }}>
@@ -2480,7 +2480,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     64	        />
     65	      </FieldContext.Provider>,
     66	    );
-    67	
+    67
     68	    // eslint-disable-next-line testing-library/no-node-access -- a password input has no accessible textbox role; there is no RTL query for it outside a labelled Field.
     69	    const input = document.getElementById('password');
     70	    expect(input).toHaveClass('border-danger');
@@ -2510,7 +2510,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     21	import { loadTranslations } from './loadTranslations';
     22	import { LoginPage } from './LoginPage';
     23	import type { LoginPageDependencies } from './LoginPage';
-    24	
+    24
     25	async function renderLoginPage(
     26	  element: ReactElement,
     27	): Promise<ReturnType<typeof render>> {
@@ -2522,7 +2522,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     33	  await loadTranslations(i18n);
     34	  return render(<I18nextProvider i18n={i18n}>{element}</I18nextProvider>);
     35	}
-    36	
+    36
     37	function createSpyObservability(): ObservabilityFacade {
     38	  return {
     39	    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
@@ -2533,7 +2533,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     44	    analytics: { track: vi.fn() },
     45	  };
     46	}
-    47	
+    47
     48	function createMapStorage(): KeyValueStorage {
     49	  const map = new Map<string, string>();
     50	  return {
@@ -2547,7 +2547,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     58	    },
     59	  };
     60	}
-    61	
+    61
     62	function createTestDependencies(
     63	  transport: Transport = () =>
     64	    Promise.resolve(new Response('null', { status: 200 })),
@@ -2573,7 +2573,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
     84	    navigate: vi.fn(),
     85	  };
     86	}
-    87	
+    87
     88	// Blurs whatever the previous state's setup (typing into a field) left
     89	// focused, so the sweep's first Tab press lands on the first element in
     90	// reading order rather than the element after wherever focus happened to
@@ -2590,7 +2590,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    101	    expect(element).toHaveFocus();
    102	  }
    103	}
-   104	
+   104
    105	// No RTL query answers "does anything in this tree carry a tabindex
    106	// attribute at all" - that is exactly invariant 105's own claim (DOM
    107	// order, visual order and tab order are the same order because nothing
@@ -2601,51 +2601,51 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    112	  const withTabIndex = document.body.querySelectorAll('[tabindex]');
    113	  expect(withTabIndex).toHaveLength(0);
    114	}
-   115	
+   115
    116	describe('LoginPage', () => {
    117	  it('renders the empty card with the Login control absent from the tab order', async () => {
    118	    await renderLoginPage(
    119	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    120	    );
-   121	
+   121
    122	    const button = screen.getByRole('button', { name: 'login.submit' });
    123	    expect(button).toBeDisabled();
    124	  });
-   125	
+   125
    126	  it('enables the control once both fields are non-empty and disables it again when one empties', async () => {
    127	    const user = userEvent.setup();
    128	    await renderLoginPage(
    129	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    130	    );
-   131	
+   131
    132	    const email = screen.getByLabelText('login.emailLabel');
    133	    const password = screen.getByLabelText('login.passwordLabel');
    134	    const button = screen.getByRole('button', { name: 'login.submit' });
-   135	
+   135
    136	    await user.type(email, 'person@example.com');
    137	    await user.type(password, 'hunter2');
    138	    expect(button).toBeEnabled();
-   139	
+   139
    140	    await user.clear(password);
    141	    expect(button).toBeDisabled();
    142	  });
-   143	
+   143
    144	  it('leaves the control inert for a whitespace-only email', async () => {
    145	    const user = userEvent.setup();
    146	    await renderLoginPage(
    147	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    148	    );
-   149	
+   149
    150	    const email = screen.getByLabelText('login.emailLabel');
    151	    const password = screen.getByLabelText('login.passwordLabel');
    152	    const button = screen.getByRole('button', { name: 'login.submit' });
-   153	
+   153
    154	    await user.type(email, '   ');
    155	    await user.type(password, 'hunter2');
-   156	
+   156
    157	    expect(button).toBeDisabled();
    158	  });
-   159	
+   159
    160	  it('renders both fields read-only with their values while submitting', async () => {
    161	    let resolveTransport: ((response: Response) => void) | undefined;
    162	    const transport: Transport = () =>
@@ -2659,23 +2659,23 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    170	        destination="/"
    171	      />,
    172	    );
-   173	
+   173
    174	    const email = screen.getByLabelText('login.emailLabel');
    175	    const password = screen.getByLabelText('login.passwordLabel');
    176	    const button = screen.getByRole('button', { name: 'login.submit' });
-   177	
+   177
    178	    await user.type(email, 'person@example.com');
    179	    await user.type(password, 'hunter2');
    180	    await user.click(button);
-   181	
+   181
    182	    expect(email).toHaveAttribute('readonly');
    183	    expect(password).toHaveAttribute('readonly');
    184	    expect(email).toHaveValue('person@example.com');
    185	    expect(password).toHaveValue('hunter2');
-   186	
+   186
    187	    resolveTransport?.(new Response('null', { status: 200 }));
    188	  });
-   189	
+   189
    190	  it('submits on Enter pressed inside either field', async () => {
    191	    let transportCalls = 0;
    192	    const transport: Transport = () => {
@@ -2689,88 +2689,88 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    200	        destination="/"
    201	      />,
    202	    );
-   203	
+   203
    204	    const email = screen.getByLabelText('login.emailLabel');
    205	    const password = screen.getByLabelText('login.passwordLabel');
-   206	
+   206
    207	    await user.type(email, 'person@example.com');
    208	    await user.type(password, 'hunter2');
    209	    await user.type(password, '{Enter}');
-   210	
+   210
    211	    expect(transportCalls).toBe(1);
    212	  });
-   213	
+   213
    214	  it('shows the summary alert and marks both fields invalid on a null lookup', async () => {
    215	    const user = userEvent.setup();
    216	    await renderLoginPage(
    217	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    218	    );
-   219	
+   219
    220	    const email = screen.getByLabelText('login.emailLabel');
    221	    const password = screen.getByLabelText('login.passwordLabel');
-   222	
+   222
    223	    await user.type(email, 'person@example.com');
    224	    await user.type(password, 'wrong-password');
    225	    await user.click(screen.getByRole('button', { name: 'login.submit' }));
-   226	
+   226
    227	    const alert = await screen.findByRole('alert');
    228	    expect(alert).toHaveTextContent('login.noMatchMessage');
    229	    expect(email).toHaveAttribute('aria-invalid', 'true');
    230	    expect(password).toHaveAttribute('aria-invalid', 'true');
    231	  });
-   232	
+   232
    233	  it('renders no field-level message under either field', async () => {
    234	    const user = userEvent.setup();
    235	    await renderLoginPage(
    236	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    237	    );
-   238	
+   238
    239	    const email = screen.getByLabelText('login.emailLabel');
    240	    const password = screen.getByLabelText('login.passwordLabel');
-   241	
+   241
    242	    await user.type(email, 'person@example.com');
    243	    await user.type(password, 'wrong-password');
    244	    await user.click(screen.getByRole('button', { name: 'login.submit' }));
-   245	
+   245
    246	    await screen.findByRole('alert');
    247	    // Exactly one alert on the page - the card-level summary - never a
    248	    // second, per-field one.
    249	    expect(screen.getAllByRole('alert')).toHaveLength(1);
    250	  });
-   251	
+   251
    252	  it('preserves both typed values, password included, after a failed attempt', async () => {
    253	    const user = userEvent.setup();
    254	    await renderLoginPage(
    255	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    256	    );
-   257	
+   257
    258	    const email = screen.getByLabelText('login.emailLabel');
    259	    const password = screen.getByLabelText('login.passwordLabel');
-   260	
+   260
    261	    await user.type(email, 'person@example.com');
    262	    await user.type(password, 'wrong-password');
    263	    await user.click(screen.getByRole('button', { name: 'login.submit' }));
-   264	
+   264
    265	    await screen.findByRole('alert');
    266	    expect(email).toHaveValue('person@example.com');
    267	    expect(password).toHaveValue('wrong-password');
    268	  });
-   269	
+   269
    270	  it('moves focus nowhere when the alert appears', async () => {
    271	    const user = userEvent.setup();
    272	    await renderLoginPage(
    273	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    274	    );
-   275	
+   275
    276	    const email = screen.getByLabelText('login.emailLabel');
    277	    const password = screen.getByLabelText('login.passwordLabel');
    278	    const button = screen.getByRole('button', { name: 'login.submit' });
-   279	
+   279
    280	    await user.type(email, 'person@example.com');
    281	    await user.type(password, 'wrong-password');
    282	    button.focus();
    283	    await user.click(button);
-   284	
+   284
    285	    await screen.findByRole('alert');
    286	    // Nothing about the no-match transition unmounts the control the
    287	    // visitor already had focused - unlike the retry path (step 21),
@@ -2778,7 +2778,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    289	    // removed from the DOM.
    290	    expect(button).toHaveFocus();
    291	  });
-   292	
+   292
    293	  it('shows the service-problem alert with its correlation id and marks neither field invalid', async () => {
    294	    const user = userEvent.setup();
    295	    const transport: Transport = () =>
@@ -2789,21 +2789,21 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    300	        destination="/"
    301	      />,
    302	    );
-   303	
+   303
    304	    const email = screen.getByLabelText('login.emailLabel');
    305	    const password = screen.getByLabelText('login.passwordLabel');
-   306	
+   306
    307	    await user.type(email, 'person@example.com');
    308	    await user.type(password, 'hunter2');
    309	    await user.click(screen.getByRole('button', { name: 'login.submit' }));
-   310	
+   310
    311	    const alert = await screen.findByRole('alert');
    312	    expect(alert).toHaveTextContent('login.serviceProblemMessage');
    313	    expect(alert).toHaveTextContent('b'.repeat(32));
    314	    expect(email).not.toHaveAttribute('aria-invalid');
    315	    expect(password).not.toHaveAttribute('aria-invalid');
    316	  });
-   317	
+   317
    318	  it('disables the retry control once a field is emptied, mirroring the main Login control', async () => {
    319	    const user = userEvent.setup();
    320	    const transport: Transport = () =>
@@ -2814,20 +2814,20 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    325	        destination="/"
    326	      />,
    327	    );
-   328	
+   328
    329	    const email = screen.getByLabelText('login.emailLabel');
    330	    const password = screen.getByLabelText('login.passwordLabel');
-   331	
+   331
    332	    await user.type(email, 'person@example.com');
    333	    await user.type(password, 'hunter2');
    334	    await user.click(screen.getByRole('button', { name: 'login.submit' }));
    335	    await screen.findByRole('alert');
-   336	
+   336
    337	    await user.clear(password);
-   338	
+   338
    339	    expect(screen.getByRole('button', { name: 'login.retry' })).toBeDisabled();
    340	  });
-   341	
+   341
    342	  it('re-derives from the current field values when retry is activated', async () => {
    343	    const user = userEvent.setup();
    344	    const requestedPaths: string[] = [];
@@ -2841,24 +2841,24 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    352	        destination="/"
    353	      />,
    354	    );
-   355	
+   355
    356	    const email = screen.getByLabelText('login.emailLabel');
    357	    const password = screen.getByLabelText('login.passwordLabel');
-   358	
+   358
    359	    await user.type(email, 'person@example.com');
    360	    await user.type(password, 'hunter2');
    361	    await user.click(screen.getByRole('button', { name: 'login.submit' }));
    362	    await screen.findByRole('alert');
-   363	
+   363
    364	    await user.clear(password);
    365	    await user.type(password, 'a-different-password');
    366	    await user.click(screen.getByRole('button', { name: 'login.retry' }));
    367	    await screen.findByRole('alert');
-   368	
+   368
    369	    expect(requestedPaths).toHaveLength(2);
    370	    expect(requestedPaths[0]).not.toBe(requestedPaths[1]);
    371	  });
-   372	
+   372
    373	  it('hands focus to the busy Login control when the retry control unmounts', async () => {
    374	    let resolveTransport: ((response: Response) => void) | undefined;
    375	    let callCount = 0;
@@ -2878,28 +2878,28 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    389	        destination="/"
    390	      />,
    391	    );
-   392	
+   392
    393	    const email = screen.getByLabelText('login.emailLabel');
    394	    const password = screen.getByLabelText('login.passwordLabel');
-   395	
+   395
    396	    await user.type(email, 'person@example.com');
    397	    await user.type(password, 'hunter2');
    398	    await user.click(screen.getByRole('button', { name: 'login.submit' }));
    399	    await screen.findByRole('alert');
-   400	
+   400
    401	    await user.click(screen.getByRole('button', { name: 'login.retry' }));
-   402	
+   402
    403	    const loginButton = screen.getByRole('button', {
    404	      name: 'login.submitting',
    405	    });
    406	    expect(loginButton).toHaveFocus();
-   407	
+   407
    408	    resolveTransport?.(new Response(null, { status: 404 }));
    409	  });
-   410	
+   410
    411	  it('keeps DOM order, visual order and tab order the same order in every state, with no tabindex anywhere', async () => {
    412	    const user = userEvent.setup();
-   413	
+   413
    414	    // idle - Login is inert and absent from the order entirely
    415	    // (invariant 35), not third in it.
    416	    await renderLoginPage(
@@ -2911,7 +2911,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    422	    ]);
    423	    assertNoTabIndexAnywhere();
    424	    cleanup();
-   425	
+   425
    426	    // ready
    427	    await renderLoginPage(
    428	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
@@ -2927,7 +2927,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    438	    ]);
    439	    assertNoTabIndexAnywhere();
    440	    cleanup();
-   441	
+   441
    442	    // submitting - the control stays focusable while busy (invariant 44)
    443	    let resolveHanging: ((response: Response) => void) | undefined;
    444	    const hangingTransport: Transport = () =>
@@ -2953,7 +2953,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    464	    assertNoTabIndexAnywhere();
    465	    resolveHanging?.(new Response('null', { status: 200 }));
    466	    cleanup();
-   467	
+   467
    468	    // noMatch - no control in the alert, so the order is unchanged from
    469	    // ready/submitting
    470	    await renderLoginPage(
@@ -2972,7 +2972,7 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    483	    ]);
    484	    assertNoTabIndexAnywhere();
    485	    cleanup();
-   486	
+   486
    487	    // serviceProblem - the alert's retry control sits before the fields
    488	    // in DOM order (invariant 24), so it is reached first
    489	    const failingTransport: Transport = () =>
@@ -2997,12 +2997,12 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    508	    ]);
    509	    assertNoTabIndexAnywhere();
    510	  });
-   511	
+   511
    512	  it('centers the card on the login canvas background', async () => {
    513	    const { container } = await renderLoginPage(
    514	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    515	    );
-   516	
+   516
    517	    // eslint-disable-next-line testing-library/no-node-access -- there is no RTL query for "the page's own centering wrapper and its classes".
    518	    expect(container.firstElementChild).toHaveClass(
    519	      'flex',
@@ -3011,23 +3011,23 @@ nl -ba src/features/auth/LoginPage.test.tsx | sed -n '1,620p'" in /Users/sergeyk
    522	      'bg-canvas-login',
    523	    );
    524	  });
-   525	
+   525
    526	  it('gives the heading bold mockup-sized typography', async () => {
    527	    await renderLoginPage(
    528	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    529	    );
-   530	
+   530
    531	    expect(screen.getByRole('heading', { level: 1 })).toHaveClass(
    532	      'text-2xl',
    533	      'font-bold',
    534	    );
    535	  });
-   536	
+   536
    537	  it('renders the submit control at full width', async () => {
    538	    await renderLoginPage(
    539	      <LoginPage dependencies={createTestDependencies()} destination="/" />,
    540	    );
-   541	
+   541
    542	    expect(screen.getByRole('button', { name: 'login.submit' })).toHaveClass(
    543	      'w-full',
    544	    );
@@ -3046,7 +3046,7 @@ rg -n \"\\b(left|right|ml-|mr-|pl-|pr-|text-left|text-right|border-l|border-r)\"
 rg -n \""'^diff --git" /tmp/login-visual-alignment-diff.txt
 git status --short
 git branch --show-current
-git diff --check' in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+git diff --check' in /hierarchy-tree
  succeeded in 0ms:
 specs/login-visual-alignment/evidence/current-1a-idle.png
 specs/login-visual-alignment/evidence/fixed-1a-idle.png
@@ -3189,7 +3189,7 @@ nl -ba specs/login-visual-alignment/evidence/g3-e2e.txt | tail -n 160
 nl -ba specs/login-visual-alignment/evidence/step1-green.txt | tail -n 120
 node -e \"const lum=h=>{const a=h.match(/../g).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return .2126*a[0]+.7152*a[1]+.0722*a[2]}; const ratio=(a,b)=>(Math.max(lum(a),lum(b))+.05)/(Math.min(lum(a),lum(b))+.05); console.log('light danger/surface',ratio('c81e4a','ffffff').toFixed(2)); console.log('dark danger/surface',ratio('ff6b8f','17131f').toFixed(2));\"
 find dist -type f -maxdepth 2 -print 2>/dev/null | sort | head -40
-rg -n \"focus\\\\:not-sr-only|focus\\\\:fixed|\\.not-sr-only|\\.fixed\" dist --glob '*.css' 2>/dev/null | head -30" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+rg -n \"focus\\\\:not-sr-only|focus\\\\:fixed|\\.not-sr-only|\\.fixed\" dist --glob '*.css' 2>/dev/null | head -30" in /hierarchy-tree
 2026-08-17T09:59:22.832679Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 95 column 5
  succeeded in 129ms:
 light danger/surface 5.61
@@ -3225,13 +3225,13 @@ nl -ba e2e/right-to-left.spec.ts | sed -n '45,110p'
 nl -ba e2e/login.spec.ts | sed -n '1,270p'
 nl -ba e2e/accessibility.spec.ts | sed -n '1,130p'
 nl -ba src/app/testing/kitStates.tsx | sed -n '25,190p'
-rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|border-radius:16px\" specs/phase-2-login specs/login-visual-alignment src --glob '"'!**/*.png'"' --glob '"'!**/reviews/**'"' --glob '"'!**/*raw*'"'" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|border-radius:16px\" specs/phase-2-login specs/login-visual-alignment src --glob '"'!**/*.png'"' --glob '"'!**/reviews/**'"' --glob '"'!**/*raw*'"'" in /hierarchy-tree
  succeeded in 0ms:
      1	import { expect, test } from '@playwright/test';
      2	import { recordConsole } from './support/consoleRecorder';
      3	import { installRouteMocks } from './support/routeMocks';
      4	import { installSignInApiMock, signIn } from './support/signIn';
-     5	
+     5
      6	test.describe('placeholder routes', () => {
      7	  test('the home route renders the hierarchy placeholder', async ({
      8	    page,
@@ -3243,9 +3243,9 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     14	    await installRouteMocks(page, baseURL ?? '');
     15	    await installSignInApiMock(page);
     16	    const { records } = recordConsole(page);
-    17	
+    17
     18	    await signIn(page);
-    19	
+    19
     20	    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     21	      'home.title',
     22	    );
@@ -3254,40 +3254,40 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     25	    await expect(
     26	      page.getByRole('link', { name: 'layout.skipLink' }),
     27	    ).toBeAttached();
-    28	
+    28
     29	    expect(await page.evaluate(() => document.documentElement.lang)).toBe(
     30	      'zxx',
     31	    );
     32	    expect(await page.evaluate(() => document.documentElement.dir)).toBe('ltr');
-    33	
+    33
     34	    expect(records).toEqual([]);
     35	  });
-    36	
+    36
     37	  test('the login route renders the sign-in card', async ({
     38	    page,
     39	    baseURL,
     40	  }) => {
     41	    await installRouteMocks(page, baseURL ?? '');
     42	    const { records } = recordConsole(page);
-    43	
+    43
     44	    await page.goto('/login');
-    45	
+    45
     46	    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     47	      'login.heading',
     48	    );
     49	    await expect(page).toHaveTitle('login.documentTitle');
     50	    await expect(page.getByLabel('login.emailLabel')).toBeVisible();
     51	    await expect(page.getByLabel('login.passwordLabel')).toBeVisible();
-    52	
+    52
     53	    expect(records).toEqual([]);
     54	  });
-    55	
+    55
     56	  test('the skip link is the first thing a keyboard user reaches', async ({
     57	    page,
     58	    baseURL,
     59	  }) => {
     60	    await installRouteMocks(page, baseURL ?? '');
-    61	
+    61
     62	    // /login rather than the now-guarded / - the skip link lives on the
     63	    // shared ApplicationLayout every route renders inside, so an
     64	    // unguarded route proves the same thing without needing a session.
@@ -3300,7 +3300,7 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     71	    // focus, so the very first Tab lands nowhere observable.
     72	    await page.bringToFront();
     73	    await page.keyboard.press('Tab');
-    74	
+    74
     75	    await expect(
     76	      page.getByRole('link', { name: 'layout.skipLink' }),
     77	    ).toBeFocused();
@@ -3316,7 +3316,7 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     52	    },
     53	  },
     54	];
-    55	
+    55
     56	test.describe('right-to-left', () => {
     57	  for (const route of ROUTES) {
     58	    test(`${route.path} mirrors correctly under a forced right-to-left direction`, async ({
@@ -3325,12 +3325,12 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     61	    }) => {
     62	      await installRouteMocks(page, baseURL ?? '');
     63	      const { records } = recordConsole(page);
-    64	
+    64
     65	      await route.visit(page);
     66	      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     67	        route.heading,
     68	      );
-    69	
+    69
     70	      await forceDirection(page, 'rtl');
     71	      expect(await page.evaluate(() => document.documentElement.dir)).toBe(
     72	        'rtl',
@@ -3340,18 +3340,18 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     76	          () => getComputedStyle(document.documentElement).direction,
     77	        ),
     78	      ).toBe('rtl');
-    79	
+    79
     80	      const overflowsHorizontally = await page.evaluate(
     81	        () =>
     82	          document.documentElement.scrollWidth >
     83	          document.documentElement.clientWidth,
     84	      );
     85	      expect(overflowsHorizontally).toBe(false);
-    86	
+    86
     87	      const results = await createAxeBuilder(page).analyze();
     88	      expect(results.violations).toEqual([]);
     89	      expect(records).toEqual([]);
-    90	
+    90
     91	      await page.screenshot({
     92	        path: `test-results/right-to-left-${route.path.replace('/', 'home')}.png`,
     93	      });
@@ -3366,18 +3366,18 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
      6	import { installApiMocks } from './support/apiMocks';
      7	import { installRouteMocks } from './support/routeMocks';
      8	import './support/telemetryWindow';
-     9	
+     9
     10	const EMAIL = 'e2e-user@example.com';
     11	const PASSWORD = 'e2e-password-123';
     12	const WRONG_PASSWORD = 'wrong-password';
     13	const USER_ID = 'e2e-user-1';
     14	const MATCHING_SECRET = deriveSecret(EMAIL, PASSWORD);
-    15	
+    15
     16	async function assertAccessible(page: Page): Promise<void> {
     17	  const results = await createAxeBuilder(page).analyze();
     18	  expect(results.violations).toEqual([]);
     19	}
-    20	
+    20
     21	test.describe('the login card', () => {
     22	  test('signs in with a real-shaped credential and lands on the hierarchy page', async ({
     23	    page,
@@ -3390,18 +3390,18 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     30	        body: secret === MATCHING_SECRET ? USER_ID : null,
     31	      }),
     32	    });
-    33	
+    33
     34	    await page.goto('/login');
     35	    await page.getByLabel('login.emailLabel').fill(EMAIL);
     36	    await page.getByLabel('login.passwordLabel').fill(PASSWORD);
     37	    await page.getByRole('button', { name: 'login.submit' }).click();
-    38	
+    38
     39	    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     40	      'home.title',
     41	    );
     42	    expect(new URL(page.url()).pathname).toBe('/');
     43	  });
-    44	
+    44
     45	  test('shows the no-match alert for a null lookup and stays on /login', async ({
     46	    page,
     47	    baseURL,
@@ -3410,16 +3410,16 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     50	    await installApiMocks(page, {
     51	      secret: () => ({ status: 200, body: null }),
     52	    });
-    53	
+    53
     54	    await page.goto('/login');
     55	    await page.getByLabel('login.emailLabel').fill(EMAIL);
     56	    await page.getByLabel('login.passwordLabel').fill(WRONG_PASSWORD);
     57	    await page.getByRole('button', { name: 'login.submit' }).click();
-    58	
+    58
     59	    await expect(page.getByRole('alert')).toHaveText('login.noMatchMessage');
     60	    expect(new URL(page.url()).pathname).toBe('/login');
     61	  });
-    62	
+    62
     63	  test('shows the service-problem alert and retries successfully', async ({
     64	    page,
     65	    baseURL,
@@ -3442,24 +3442,24 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     82	        };
     83	      },
     84	    });
-    85	
+    85
     86	    await page.goto('/login');
     87	    await page.getByLabel('login.emailLabel').fill(EMAIL);
     88	    await page.getByLabel('login.passwordLabel').fill(PASSWORD);
     89	    await page.getByRole('button', { name: 'login.submit' }).click();
-    90	
+    90
     91	    await expect(page.getByRole('alert')).toContainText(
     92	      'login.serviceProblemMessage',
     93	    );
-    94	
+    94
     95	    await page.getByRole('button', { name: 'login.retry' }).click();
-    96	
+    96
     97	    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     98	      'home.title',
     99	    );
    100	    expect(secretCallCount).toBe(3);
    101	  });
-   102	
+   102
    103	  test('issues exactly one secrets request while authenticating, and exactly one users request from the landing route', async ({
    104	    page,
    105	    baseURL,
@@ -3480,16 +3480,16 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
    120	        return { status: 200, body: [] };
    121	      },
    122	    });
-   123	
+   123
    124	    await page.goto('/login');
    125	    await page.getByLabel('login.emailLabel').fill(EMAIL);
    126	    await page.getByLabel('login.passwordLabel').fill(PASSWORD);
    127	    await page.getByRole('button', { name: 'login.submit' }).click();
-   128	
+   128
    129	    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
    130	      'home.title',
    131	    );
-   132	
+   132
    133	    expect(secretRequestCount).toBe(1);
    134	    // Exactly one, not zero: the authenticated route's own loader (M3)
    135	    // fetches the signed-in user's record once landing on / - the
@@ -3497,7 +3497,7 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
    137	    // subsequent navigation's loader does.
    138	    expect(userRequestCount).toBe(1);
    139	  });
-   140	
+   140
    141	  test('leaves no credential material in the telemetry buffer or storage', async ({
    142	    page,
    143	    baseURL,
@@ -3509,7 +3509,7 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
    149	        body: secret === MATCHING_SECRET ? USER_ID : null,
    150	      }),
    151	    });
-   152	
+   152
    153	    await page.goto('/login');
    154	    await page.getByLabel('login.emailLabel').fill(EMAIL);
    155	    await page.getByLabel('login.passwordLabel').fill(PASSWORD);
@@ -3517,13 +3517,13 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
    157	    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
    158	      'home.title',
    159	    );
-   160	
+   160
    161	    const credentials = {
    162	      email: EMAIL,
    163	      password: PASSWORD,
    164	      secret: MATCHING_SECRET,
    165	    };
-   166	
+   166
    167	    // Every surface invariants 125, 129 and 131 name, each checked for
    168	    // both a whole-value leak and any twelve-character window of a
    169	    // credential (section 9) - not just the two surfaces (telemetry,
@@ -3536,35 +3536,35 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
    176	      credentials,
    177	      'the telemetry buffer',
    178	    );
-   179	
+   179
    180	    const storageDump = await page.evaluate(() =>
    181	      JSON.stringify(window.sessionStorage),
    182	    );
    183	    assertNoCredentialLeak(storageDump, credentials, 'sessionStorage');
-   184	
+   184
    185	    const locationHref = await page.evaluate(() => window.location.href);
    186	    assertNoCredentialLeak(locationHref, credentials, 'location.href');
-   187	
+   187
    188	    const documentTitle = await page.evaluate(() => document.title);
    189	    assertNoCredentialLeak(documentTitle, credentials, 'document.title');
-   190	
+   190
    191	    const historyState = await page.evaluate(() =>
    192	      JSON.stringify(history.state),
    193	    );
    194	    assertNoCredentialLeak(historyState, credentials, 'history.state');
-   195	
+   195
    196	    const serializedDom = await page.evaluate(
    197	      () => document.documentElement.outerHTML,
    198	    );
    199	    assertNoCredentialLeak(serializedDom, credentials, 'the serialised DOM');
    200	  });
-   201	
+   201
    202	  test('passes an accessibility scan in each of its five states', async ({
    203	    page,
    204	    baseURL,
    205	  }) => {
    206	    await installRouteMocks(page, baseURL ?? '');
-   207	
+   207
    208	    let mode: 'noMatch' | 'serviceProblem' | 'hang' = 'noMatch';
    209	    await installApiMocks(page, {
    210	      secret: () => {
@@ -3577,17 +3577,17 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
    217	        return { status: 200, body: null };
    218	      },
    219	    });
-   220	
+   220
    221	    const email = page.getByLabel('login.emailLabel');
    222	    const password = page.getByLabel('login.passwordLabel');
    223	    const submitButton = page.getByRole('button', { name: 'login.submit' });
-   224	
+   224
    225	    // Invariant 111 asks for both themes, not just whichever the browser
    226	    // context defaults to - each theme runs the whole five-state sequence
    227	    // from a fresh idle load rather than sharing state across themes.
    228	    for (const colorScheme of ['light', 'dark'] as const) {
    229	      await page.emulateMedia({ colorScheme });
-   230	
+   230
    231	      // idle
    232	      mode = 'noMatch';
    233	      await page.goto('/login');
@@ -3595,13 +3595,13 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
    235	        'login.heading',
    236	      );
    237	      await assertAccessible(page);
-   238	
+   238
    239	      // ready
    240	      await email.fill(EMAIL);
    241	      await password.fill(PASSWORD);
    242	      await expect(submitButton).toBeEnabled();
    243	      await assertAccessible(page);
-   244	
+   244
    245	      // submitting - the route never resolves, so the card stays busy for
    246	      // the rest of this state's assertions; the next state's page.goto
    247	      // discards the still-pending request rather than waiting it out.
@@ -3611,7 +3611,7 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
    251	        page.getByRole('button', { name: 'login.submitting' }),
    252	      ).toBeVisible();
    253	      await assertAccessible(page);
-   254	
+   254
    255	      // noMatch
    256	      mode = 'noMatch';
    257	      await page.goto('/login');
@@ -3620,7 +3620,7 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
    260	      await submitButton.click();
    261	      await expect(page.getByRole('alert')).toBeVisible();
    262	      await assertAccessible(page);
-   263	
+   263
    264	      // serviceProblem - resubmitted with the same (still-filled) fields,
    265	      // matching the retry path's own re-derive-in-place behaviour.
    266	      mode = 'serviceProblem';
@@ -3636,9 +3636,9 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
      6	} from './support/deferredUserMock';
      7	import { installRouteMocks } from './support/routeMocks';
      8	import { installSignInApiMock, signIn } from './support/signIn';
-     9	
+     9
     10	const ROUTES = [{ path: '/does-not-exist', heading: 'notFound.title' }];
-    11	
+    11
     12	test.describe('accessibility', () => {
     13	  for (const route of ROUTES) {
     14	    test(`${route.path} has zero axe violations`, async ({ page, baseURL }) => {
@@ -3647,23 +3647,23 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     17	      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     18	        route.heading,
     19	      );
-    20	
+    20
     21	      const results = await createAxeBuilder(page).analyze();
     22	      expect(results.violations).toEqual([]);
     23	    });
     24	  }
-    25	
+    25
     26	  test('has no violations on /login', async ({ page, baseURL }) => {
     27	    await installRouteMocks(page, baseURL ?? '');
     28	    await page.goto('/login');
     29	    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     30	      'login.heading',
     31	    );
-    32	
+    32
     33	    const results = await createAxeBuilder(page).analyze();
     34	    expect(results.violations).toEqual([]);
     35	  });
-    36	
+    36
     37	  // / is a guarded route since M3, so reaching the hierarchy placeholder
     38	  // (and the header above it) needs a session first. Both themes: the
     39	  // header is in scope for invariant 111, same as the login card.
@@ -3682,12 +3682,12 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     52	      await expect(
     53	        page.getByRole('button', { name: 'header.logout' }),
     54	      ).toBeVisible();
-    55	
+    55
     56	      const results = await createAxeBuilder(page).analyze();
     57	      expect(results.violations).toEqual([]);
     58	    });
     59	  }
-    60	
+    60
     61	  // The header's other two presentations (invariant 99) - the pending
     62	  // aria-busy skeleton and the neutral signedInFallback shown when a
     63	  // name never arrives - are not axe-checked by the resolved-only test
@@ -3700,14 +3700,14 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     70	      await installRouteMocks(page, baseURL ?? '');
     71	      await page.emulateMedia({ colorScheme });
     72	      await installDeferredUserMock(page);
-    73	
+    73
     74	      await submitSignInForm(page);
     75	      await expect(page.getByLabel('header.nameLoading')).toBeVisible();
-    76	
+    76
     77	      const results = await createAxeBuilder(page).analyze();
     78	      expect(results.violations).toEqual([]);
     79	    });
-    80	
+    80
     81	    test(`/ has zero axe violations when the header's name cannot resolve, in ${colorScheme}`, async ({
     82	      page,
     83	      baseURL,
@@ -3715,11 +3715,11 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     85	      await installRouteMocks(page, baseURL ?? '');
     86	      await page.emulateMedia({ colorScheme });
     87	      const getResolveUser = await installDeferredUserMock(page);
-    88	
+    88
     89	      await submitSignInForm(page);
     90	      getResolveUser()({ status: 200, body: [] });
     91	      await expect(page.getByText('header.signedInFallback')).toBeVisible();
-    92	
+    92
     93	      const results = await createAxeBuilder(page).analyze();
     94	      expect(results.violations).toEqual([]);
     95	    });
@@ -3731,9 +3731,9 @@ rg -n \"rounded-login-card|radius-login-card|max-w-sm|max-w-\\[|width:352px|bord
     28	  'ErrorState',
     29	  'EmptyState',
     30	] as const;
-    31	
+    31
     32	const noop = (): void => {};
-    33	
+    33
     34	export const kitStates: readonly KitState[] = [
     35	  {
     36	    component: 'Button',
@@ -3897,17 +3897,17 @@ specs/login-visual-alignment/loop.json:93:    "2026-08-17T09:49:48Z frame: repro
 src/features/auth/LoginPage.tsx:83:      <div className="w-full max-w-sm">
 
 2026-08-17T09:59:30.270937Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 95 column 5
-2026-08-17T09:59:42.320417Z ERROR codex_core::tools::router: error=apply_patch verification failed: Failed to find expected lines in /Users/sergeykhomyuk/.codex/memories/MEMORY.md:
+2026-08-17T09:59:42.320417Z ERROR codex_core::tools::router: error=apply_patch verification failed: Failed to find expected lines in /.codex/memories/MEMORY.md:
 # Task Group: Celti login-card-public-stats review chain
 
 scope: Read-only spec review, implementation review, and follow-up source re-review for the login-card/public-stats work; use when checking proxy matcher scope, login-shell composition, `AuthProvider` behavior, stats guard placement, and whether tests actually prove the intended boundaries.
-applies_to: cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/celti; reuse_rule=reuse for this checkout family's login-card/public-stats review work, but re-open the current SPEC, diff, controller, DTOs, and tests before treating any route or guard detail as current
+applies_to: cwd=/celti; reuse_rule=reuse for this checkout family's login-card/public-stats review work, but re-open the current SPEC, diff, controller, DTOs, and tests before treating any route or guard detail as current
 
 ## Task 1: Review login-card/public-stats spec before implementation, partial
 
 ### rollout_summary_files
 
-- rollout_summaries/2026-07-18T08-31-24-7YTN-spec_review_login_card_public_stats_blocking_gaps.md (cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/celti, rollout_path=/Users/sergeykhomyuk/.codex/sessions/2026/07/18/rollout-2026-07-18T09-31-24-019f745a-069a-7cc0-9ef1-0fd4a5b132fb.jsonl, updated_at=2026-07-18T08:35:04+00:00, thread_id=019f745a-069a-7cc0-9ef1-0fd4a5b132fb, four blocking spec gaps before coding)
+- rollout_summaries/2026-07-18T08-31-24-7YTN-spec_review_login_card_public_stats_blocking_gaps.md (cwd=/celti, rollout_path=/.codex/sessions/2026/07/18/rollout-2026-07-18T09-31-24-019f745a-069a-7cc0-9ef1-0fd4a5b132fb.jsonl, updated_at=2026-07-18T08:35:04+00:00, thread_id=019f745a-069a-7cc0-9ef1-0fd4a5b132fb, four blocking spec gaps before coding)
 
 ### keywords
 
@@ -3917,7 +3917,7 @@ applies_to: cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/celti; reuse_rule=r
 
 ### rollout_summary_files
 
-- rollout_summaries/2026-07-18T09-35-57-VzwK-celti_login_card_public_stats_security_review.md (cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/celti, rollout_path=/Users/sergeykhomyuk/.codex/sessions/2026/07/18/rollout-2026-07-18T10-35-57-019f7495-1efb-7f11-8d51-ef1081a34ca7.jsonl, updated_at=2026-07-18T09:39:12+00:00, thread_id=019f7495-1efb-7f11-8d51-ef1081a34ca7, final verdict `4 findings (1 blocking)`)
+- rollout_summaries/2026-07-18T09-35-57-VzwK-celti_login_card_public_stats_security_review.md (cwd=/celti, rollout_path=/.codex/sessions/2026/07/18/rollout-2026-07-18T10-35-57-019f7495-1efb-7f11-8d51-ef1081a34ca7.jsonl, updated_at=2026-07-18T09:39:12+00:00, thread_id=019f7495-1efb-7f11-8d51-ef1081a34ca7, final verdict `4 findings (1 blocking)`)
 
 ### keywords
 
@@ -3927,7 +3927,7 @@ applies_to: cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/celti; reuse_rule=r
 
 ### rollout_summary_files
 
-- rollout_summaries/2026-07-18T08-40-36-i4Ye-review_login_card_public_stats_findings.md (cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/celti, rollout_path=/Users/sergeykhomyuk/.codex/sessions/2026/07/18/rollout-2026-07-18T09-40-36-019f7462-6fee-7382-aabb-9ed871df4026.jsonl, updated_at=2026-07-18T08:42:56+00:00, thread_id=019f7462-6fee-7382-aabb-9ed871df4026, five-line verdict found requested spec evidence while flagging a source caveat)
+- rollout_summaries/2026-07-18T08-40-36-i4Ye-review_login_card_public_stats_findings.md (cwd=/celti, rollout_path=/.codex/sessions/2026/07/18/rollout-2026-07-18T09-40-36-019f7462-6fee-7382-aabb-9ed871df4026.jsonl, updated_at=2026-07-18T08:42:56+00:00, thread_id=019f7462-6fee-7382-aabb-9ed871df4026, five-line verdict found requested spec evidence while flagging a source caveat)
 
 ### keywords
 
@@ -3960,42 +3960,42 @@ applies_to: cwd=/Users/sergeykhomyuk/System/Areas/Dev/github/celti; reuse_rule=r
 
 2026-08-17T09:59:42.362242Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 95 column 5
 2026-08-17T09:59:47.217970Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 95 column 5
-2026-08-17T09:59:54.142735Z ERROR codex_core::tools::router: error=apply_patch verification failed: Failed to find context '-1962,62 +1962,0 @@' in /Users/sergeykhomyuk/.codex/memories/MEMORY.md
+2026-08-17T09:59:54.142735Z ERROR codex_core::tools::router: error=apply_patch verification failed: Failed to find context '-1962,62 +1962,0 @@' in /.codex/memories/MEMORY.md
 2026-08-17T09:59:54.144694Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 95 column 5
 codex
 The architecture checks are clean: `shared/ui` remains domain-free, there are no cross-feature imports, and every production `Button` caller outside login omits `fullWidth`, so the optional prop preserves intrinsic width. The compiled CSS also confirms the focused skip link becomes fixed, padded, and visible, while `start-4` mirrors logically. I’m doing a final targeted unit run and read-only physical-property lint, then I’ll separate implementation defects from test-suite blind spots.
 hook: PreToolUse
 hook: PreToolUse Completed
 exec
-/bin/zsh -lc 'npm test -- src/app/layout/ApplicationLayout.test.tsx src/features/auth/LoginPage.test.tsx src/shared/ui/Button.test.tsx src/shared/ui/Field.test.tsx src/shared/ui/Input.test.tsx' in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+/bin/zsh -lc 'npm test -- src/app/layout/ApplicationLayout.test.tsx src/features/auth/LoginPage.test.tsx src/shared/ui/Button.test.tsx src/shared/ui/Field.test.tsx src/shared/ui/Input.test.tsx' in /hierarchy-tree
 hook: PreToolUse
 hook: PreToolUse Completed
  exited 1 in 227ms:
-failed to load config from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/vitest.config.ts
+failed to load config from /hierarchy-tree/vitest.config.ts
 
 ⎯⎯⎯⎯⎯⎯⎯ Startup Error ⎯⎯⎯⎯⎯⎯⎯⎯
-Error: EPERM: operation not permitted, open '/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/.vite-temp/vitest.config.ts.timestamp-1786960800189-34d8f854fa46f8.mjs'
+Error: EPERM: operation not permitted, open '/hierarchy-tree/node_modules/.vite-temp/vitest.config.ts.timestamp-1786960800189-34d8f854fa46f8.mjs'
     at async open (node:internal/fs/promises:640:25)
     at async Object.writeFile (node:internal/fs/promises:1257:14)
-    at async loadConfigFromBundledFile (file:///Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:37064:3)
-    at async bundleAndLoadConfigFile (file:///Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:36919:21)
-    at async loadConfigFromFile (file:///Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:36879:42)
-    at async resolveConfig (file:///Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:36488:22)
-    at async _createServer (file:///Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:26319:65)
-    at async createViteServer (file:///Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/vitest/dist/chunks/cli-api.BK8pd4xc.js:8835:17)
-    at async createVitest (file:///Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/vitest/dist/chunks/cli-api.BK8pd4xc.js:14221:18)
-    at async prepareVitest (file:///Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/vitest/dist/chunks/cli-api.BK8pd4xc.js:14588:14) {
+    at async loadConfigFromBundledFile (file:///hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:37064:3)
+    at async bundleAndLoadConfigFile (file:///hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:36919:21)
+    at async loadConfigFromFile (file:///hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:36879:42)
+    at async resolveConfig (file:///hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:36488:22)
+    at async _createServer (file:///hierarchy-tree/node_modules/vite/dist/node/chunks/node.js:26319:65)
+    at async createViteServer (file:///hierarchy-tree/node_modules/vitest/dist/chunks/cli-api.BK8pd4xc.js:8835:17)
+    at async createVitest (file:///hierarchy-tree/node_modules/vitest/dist/chunks/cli-api.BK8pd4xc.js:14221:18)
+    at async prepareVitest (file:///hierarchy-tree/node_modules/vitest/dist/chunks/cli-api.BK8pd4xc.js:14588:14) {
   errno: -1,
   code: 'EPERM',
   syscall: 'open',
-  path: '/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/node_modules/.vite-temp/vitest.config.ts.timestamp-1786960800189-34d8f854fa46f8.mjs'
+  path: '/hierarchy-tree/node_modules/.vite-temp/vitest.config.ts.timestamp-1786960800189-34d8f854fa46f8.mjs'
 }
 
 
 
 
 exec
-/bin/zsh -lc 'node scripts/assert-no-physical-properties.mjs src/app/layout/ApplicationLayout.tsx src/features/auth/LoginPage.tsx src/shared/ui/Field.tsx src/shared/ui/Input.tsx src/shared/ui/Button.tsx' in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+/bin/zsh -lc 'node scripts/assert-no-physical-properties.mjs src/app/layout/ApplicationLayout.tsx src/features/auth/LoginPage.tsx src/shared/ui/Field.tsx src/shared/ui/Input.tsx src/shared/ui/Button.tsx' in /hierarchy-tree
  succeeded in 0ms:
 2026-08-17T10:00:00.353366Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 95 column 5
 2026-08-17T10:00:33.264759Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 95 column 5
@@ -4005,35 +4005,35 @@ exec
 /bin/zsh -lc "nl -ba specs/login-visual-alignment/evidence/g3-verify.txt | sed -n '1,45p'
 nl -ba specs/login-visual-alignment/evidence/g3-e2e.txt | sed -n '1,60p'
 nl -ba specs/login-visual-alignment/evidence/step1-green.txt | sed -n '1,20p'
-nl -ba /Users/sergeykhomyuk/.codex/memories/skills/evidence-backed-review/SKILL.md | sed -n '1,95p'
-git status --short" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+nl -ba /.codex/memories/skills/evidence-backed-review/SKILL.md | sed -n '1,95p'
+git status --short" in /hierarchy-tree
  succeeded in 0ms:
-     1	
+     1
      2	> hierarchy-tree@0.0.0 verify
      3	> npm run typecheck && npm run lint && npm run format:check && npm run test:coverage && npm run build && npm run verify:build && npm run size
-     4	
-     5	
+     4
+     5
      6	> hierarchy-tree@0.0.0 typecheck
      7	> tsc -b
-     8	
-     9	
+     8
+     9
     10	> hierarchy-tree@0.0.0 lint
     11	> eslint . && node scripts/assert-no-physical-properties.mjs && node scripts/assert-domain-vocabulary.mjs && node scripts/assert-no-lorem-ipsum.mjs && node scripts/assert-no-secrets.mjs --source-only
-    12	
-    13	
+    12
+    13
     14	> hierarchy-tree@0.0.0 format:check
     15	> prettier --check .
-    16	
+    16
     17	Checking formatting...
     18	All matched files use Prettier code style!
-    19	
+    19
     20	> hierarchy-tree@0.0.0 test:coverage
     21	> vitest run --coverage
-    22	
-    23	
-    24	 RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+    22
+    23
+    24	 RUN  v4.1.10 /hierarchy-tree
     25	      Coverage enabled with v8
-    26	
+    26
     27	assert-domain-vocabulary: banned vocabulary found:
     28	  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-GRy2ly/banned.tmp.ts: identifier "buildForest" carries banned reference-system name "buildForest"
     29	assert-domain-vocabulary: banned vocabulary found:
@@ -4053,13 +4053,13 @@ git status --short" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tr
     43	assert-no-secrets --source-only: secrets found:
     44	  - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/no-secrets-keyword-qzcorw/banned.tmp.ts: matches secret keyword pattern /apiKey/i
     45	assert-no-secrets --source-only: secrets found:
-     1	
+     1
      2	> hierarchy-tree@0.0.0 e2e
      3	> playwright test
-     4	
-     5	
+     4
+     5
      6	Running 41 tests using 5 workers
-     7	
+     7
      8	  ✓   2 [chromium] › e2e/guard.spec.ts:27:3 › the route guard › sends a bookmarked authenticated URL to the login card with no users request and no flash (432ms)
      9	  ✓   5 [chromium] › e2e/login.spec.ts:22:3 › the login card › signs in with a real-shaped credential and lands on the hierarchy page (552ms)
     10	  ✓   1 [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry (567ms)
@@ -4101,17 +4101,17 @@ git status --short" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tr
     46	  ✓  40 [development] › e2e/kit-route.spec.ts:57:3 › kit route › a skeleton box equals the box of the content it stands in for (275ms)
     47	  ✓  38 [chromium] › e2e/accessibility.spec.ts:81:5 › accessibility › / has zero axe violations when the header's name cannot resolve, in dark (1.2s)
     48	  ✓  41 [development] › e2e/kit-route.spec.ts:76:3 › kit route › mirrors correctly under a forced right-to-left direction (489ms)
-    49	
+    49
     50	  41 passed (7.1s)
-     1	
-     2	 RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
-     3	
-     4	
+     1
+     2	 RUN  v4.1.10 /hierarchy-tree
+     3
+     4
      5	 Test Files  5 passed (5)
      6	      Tests  41 passed (41)
      7	   Start at  10:52:31
      8	   Duration  2.13s (transform 357ms, setup 597ms, import 424ms, tests 1.66s, environment 2.10s)
-     9	
+     9
      1	---
      2	name: evidence-backed-review
      3	description: Use for read-only diagnosis reviews or narrowly scoped code reviews where every code claim must be tied to exact file paths, line references, and recorded evidence.
@@ -4122,31 +4122,31 @@ git status --short" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tr
      8	  - Grep
      9	  - Bash
     10	---
-    11	
+    11
     12	# Evidence-Backed Review
-    13	
+    13
     14	## When to use
-    15	
+    15
     16	Use this skill when:
     17	1. The user asks for a skeptical review of a diagnosis, bug report, or verification document.
     18	2. The user scopes review to a specific diff, branch, spec, or nested repo.
     19	3. The review must stay read-only and every code claim needs file:line backing.
-    20	
+    20
     21	Do not use this skill when:
     22	1. The user wants implementation changes instead of a review.
     23	2. The request is broad architecture advice with no concrete repo evidence to inspect.
-    24	
+    24
     25	## Inputs / context to gather
-    26	
+    26
     27	1. Confirm the exact review target from the user wording: diagnosis doc, named diff, branch, or spec folder.
     28	2. Identify the real working repo. In nested workspaces, verify whether the changed code lives in a sub-repo such as `debug/run-06/app`.
     29	3. Find the supporting evidence files first: specs folders, recorded unit/e2e outputs, verification docs, and relevant source files.
     30	4. Check for explicit constraints such as "Do not modify any files", "fresh thread", or "do not reference prior thread".
     31	5. If the user supplied an exact shell or `git diff` command, record it as required evidence and execute it before forming the verdict.
     32	6. If the user names accepted risks, record their exact boundary so new findings are not confused with risks they explicitly excluded from blocking status.
-    33	
+    33
     34	## Procedure
-    35	
+    35
     36	1. Restate the review scope in one sentence and treat it as a hard boundary.
     37	2. Validate the target path before trusting the prompt. If the named file is missing, search the scoped repo for the actual artifact and note the mismatch.
     38	3. Read the target artifact, then inspect the exact source files it depends on.
@@ -4164,17 +4164,17 @@ git status --short" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tr
     50	   3. Disputed or unverified claims
     51	   4. Missed considerations
     52	   5. Recommendation
-    53	
+    53
     54	## Efficiency plan
-    55	
+    55
     56	1. Search for the real artifact path before opening many files.
     57	2. Read the decisive source-of-truth logic first, then confirm propagation layers and presentation code.
     58	3. Prefer committed evidence logs over local reruns when the environment is read-only or sandboxed.
     59	4. Cache the exact quotes that define scope and output format so the final review does not drift.
     60	5. Stop once each important claim has one direct code citation and one verification path, or once you have explicit evidence that the claim is unverified.
-    61	
+    61
     62	## Pitfalls and fixes
-    63	
+    63
     64	1. Symptom: review drifts into old context or prior threads.
     65	   Likely cause: ignoring explicit scope boundaries.
     66	   Fix: treat "fresh thread", "scope only to", and "do not reference prior thread" as hard constraints.
@@ -4187,9 +4187,9 @@ git status --short" in /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tr
     73	4. Symptom: rerun-based verification fails with `EPERM` in `node_modules/.vite-temp`.
     74	   Likely cause: Vitest/Vite temp writes in a read-only sandbox.
     75	   Fix: rely on committed evidence logs and say the rerun was blocked.
-    76	
+    76
     77	## Verification checklist
-    78	
+    78
     79	1. The final review stays inside the exact requested scope.
     80	2. Every code claim has an exact file path and line reference you actually read.
     81	3. Any missing file path from the prompt was validated and corrected explicitly.
@@ -4208,16 +4208,16 @@ git: error: couldn't create cache file '/tmp/xcrun_db-ApTjzlWg' (errno=Operation
 codex
 2 findings (1 blocking).
 
-1. The login card geometry still does not match mockup-1a: `max-w-sm` caps it at 384px and `Card` retains the generic 14px radius, while the approved card is approximately 406px wide with the declared 16px login radius | [LoginPage.tsx:82](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.tsx:82), [Card.tsx:16](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Card.tsx:16), [theme.css:34](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/theme/theme.css:34), [mockup-1a.png](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/specs/phase-2-login/mockups/mockup-1a.png) | The recorded fixed render is visibly narrower, and `--radius-login-card` remains unused; therefore AC1's mockup-composition requirement is only partially satisfied | BLOCKING
-2. The added visual tests permit several acceptance-breaking implementations to remain green | [LoginPage.test.tsx:512](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.test.tsx:512), [Field.test.tsx:69](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Field.test.tsx:69), [ApplicationLayout.test.tsx:38](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/layout/ApplicationLayout.test.tsx:38) | Removing `min-h-screen`, the field gap, all subtext classes, or `w-full` only while busy would still pass; the skip-link test checks tokens without focusing or establishing computed visibility | non-blocking
+1. The login card geometry still does not match mockup-1a: `max-w-sm` caps it at 384px and `Card` retains the generic 14px radius, while the approved card is approximately 406px wide with the declared 16px login radius | [LoginPage.tsx:82](/hierarchy-tree/src/features/auth/LoginPage.tsx:82), [Card.tsx:16](/hierarchy-tree/src/shared/ui/Card.tsx:16), [theme.css:34](/hierarchy-tree/src/shared/theme/theme.css:34), [mockup-1a.png](/hierarchy-tree/specs/phase-2-login/mockups/mockup-1a.png) | The recorded fixed render is visibly narrower, and `--radius-login-card` remains unused; therefore AC1's mockup-composition requirement is only partially satisfied | BLOCKING
+2. The added visual tests permit several acceptance-breaking implementations to remain green | [LoginPage.test.tsx:512](/hierarchy-tree/src/features/auth/LoginPage.test.tsx:512), [Field.test.tsx:69](/hierarchy-tree/src/shared/ui/Field.test.tsx:69), [ApplicationLayout.test.tsx:38](/hierarchy-tree/src/app/layout/ApplicationLayout.test.tsx:38) | Removing `min-h-screen`, the field gap, all subtext classes, or `w-full` only while busy would still pass; the skip-link test checks tokens without focusing or establishing computed visibility | non-blocking
 
 Acceptance criteria:
 
 - AC1 - PARTIAL. `flex`, `items-center`, `justify-center`, `min-h-screen`, and `bg-canvas-login` correctly center the wrapper and paint the login canvas. Card width and radius remain mismatched as finding 1 describes.
-- AC2 - SATISFIED. `Field` uses `flex-col`, `gap-1.5`, and a `text-sm font-medium` label at [Field.tsx:35](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Field.tsx:35).
-- AC3 - SATISFIED in code. The heading is `text-2xl font-bold`; subtext is `text-sm text-ink-muted` at [LoginPage.tsx:91](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.tsx:91).
-- AC4 - SATISFIED. `fullWidth` is unconditional on the persistent submit component, so `w-full` remains through idle, ready, submitting, and no-match states at [LoginPage.tsx:147](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.tsx:147).
-- AC5 - SATISFIED. Both no-match inputs receive `invalid: true`, and `Input` selects `border-danger` instead of `border-border-field` at [Input.tsx:38](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Input.tsx:38).
+- AC2 - SATISFIED. `Field` uses `flex-col`, `gap-1.5`, and a `text-sm font-medium` label at [Field.tsx:35](/hierarchy-tree/src/shared/ui/Field.tsx:35).
+- AC3 - SATISFIED in code. The heading is `text-2xl font-bold`; subtext is `text-sm text-ink-muted` at [LoginPage.tsx:91](/hierarchy-tree/src/features/auth/LoginPage.tsx:91).
+- AC4 - SATISFIED. `fullWidth` is unconditional on the persistent submit component, so `w-full` remains through idle, ready, submitting, and no-match states at [LoginPage.tsx:147](/hierarchy-tree/src/features/auth/LoginPage.tsx:147).
+- AC5 - SATISFIED. Both no-match inputs receive `invalid: true`, and `Input` selects `border-danger` instead of `border-border-field` at [Input.tsx:38](/hierarchy-tree/src/shared/ui/Input.tsx:38).
 - AC6 - SATISFIED in code. `sr-only` hides the link; focused utilities restore and position it. The global `:focus-visible` rule supplies its keyboard outline.
 - AC7 - SATISFIED. Existing assertions were not changed. The helper now returns the render result without changing rendering behavior; production changes are classes plus the optional prop.
 
@@ -4247,16 +4247,16 @@ tokens used
 108,972
 2 findings (1 blocking).
 
-1. The login card geometry still does not match mockup-1a: `max-w-sm` caps it at 384px and `Card` retains the generic 14px radius, while the approved card is approximately 406px wide with the declared 16px login radius | [LoginPage.tsx:82](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.tsx:82), [Card.tsx:16](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Card.tsx:16), [theme.css:34](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/theme/theme.css:34), [mockup-1a.png](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/specs/phase-2-login/mockups/mockup-1a.png) | The recorded fixed render is visibly narrower, and `--radius-login-card` remains unused; therefore AC1's mockup-composition requirement is only partially satisfied | BLOCKING
-2. The added visual tests permit several acceptance-breaking implementations to remain green | [LoginPage.test.tsx:512](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.test.tsx:512), [Field.test.tsx:69](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Field.test.tsx:69), [ApplicationLayout.test.tsx:38](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/layout/ApplicationLayout.test.tsx:38) | Removing `min-h-screen`, the field gap, all subtext classes, or `w-full` only while busy would still pass; the skip-link test checks tokens without focusing or establishing computed visibility | non-blocking
+1. The login card geometry still does not match mockup-1a: `max-w-sm` caps it at 384px and `Card` retains the generic 14px radius, while the approved card is approximately 406px wide with the declared 16px login radius | [LoginPage.tsx:82](/hierarchy-tree/src/features/auth/LoginPage.tsx:82), [Card.tsx:16](/hierarchy-tree/src/shared/ui/Card.tsx:16), [theme.css:34](/hierarchy-tree/src/shared/theme/theme.css:34), [mockup-1a.png](/hierarchy-tree/specs/phase-2-login/mockups/mockup-1a.png) | The recorded fixed render is visibly narrower, and `--radius-login-card` remains unused; therefore AC1's mockup-composition requirement is only partially satisfied | BLOCKING
+2. The added visual tests permit several acceptance-breaking implementations to remain green | [LoginPage.test.tsx:512](/hierarchy-tree/src/features/auth/LoginPage.test.tsx:512), [Field.test.tsx:69](/hierarchy-tree/src/shared/ui/Field.test.tsx:69), [ApplicationLayout.test.tsx:38](/hierarchy-tree/src/app/layout/ApplicationLayout.test.tsx:38) | Removing `min-h-screen`, the field gap, all subtext classes, or `w-full` only while busy would still pass; the skip-link test checks tokens without focusing or establishing computed visibility | non-blocking
 
 Acceptance criteria:
 
 - AC1 - PARTIAL. `flex`, `items-center`, `justify-center`, `min-h-screen`, and `bg-canvas-login` correctly center the wrapper and paint the login canvas. Card width and radius remain mismatched as finding 1 describes.
-- AC2 - SATISFIED. `Field` uses `flex-col`, `gap-1.5`, and a `text-sm font-medium` label at [Field.tsx:35](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Field.tsx:35).
-- AC3 - SATISFIED in code. The heading is `text-2xl font-bold`; subtext is `text-sm text-ink-muted` at [LoginPage.tsx:91](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.tsx:91).
-- AC4 - SATISFIED. `fullWidth` is unconditional on the persistent submit component, so `w-full` remains through idle, ready, submitting, and no-match states at [LoginPage.tsx:147](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/LoginPage.tsx:147).
-- AC5 - SATISFIED. Both no-match inputs receive `invalid: true`, and `Input` selects `border-danger` instead of `border-border-field` at [Input.tsx:38](/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Input.tsx:38).
+- AC2 - SATISFIED. `Field` uses `flex-col`, `gap-1.5`, and a `text-sm font-medium` label at [Field.tsx:35](/hierarchy-tree/src/shared/ui/Field.tsx:35).
+- AC3 - SATISFIED in code. The heading is `text-2xl font-bold`; subtext is `text-sm text-ink-muted` at [LoginPage.tsx:91](/hierarchy-tree/src/features/auth/LoginPage.tsx:91).
+- AC4 - SATISFIED. `fullWidth` is unconditional on the persistent submit component, so `w-full` remains through idle, ready, submitting, and no-match states at [LoginPage.tsx:147](/hierarchy-tree/src/features/auth/LoginPage.tsx:147).
+- AC5 - SATISFIED. Both no-match inputs receive `invalid: true`, and `Input` selects `border-danger` instead of `border-border-field` at [Input.tsx:38](/hierarchy-tree/src/shared/ui/Input.tsx:38).
 - AC6 - SATISFIED in code. `sr-only` hides the link; focused utilities restore and position it. The global `:focus-visible` rule supplies its keyboard outline.
 - AC7 - SATISFIED. Existing assertions were not changed. The helper now returns the render result without changing rendering behavior; production changes are classes plus the optional prop.
 
@@ -4278,5 +4278,3 @@ Test discrimination:
 - AC5: the shared input test catches invalid/default border selection, while existing LoginPage tests establish no-match invalid state.
 - AC6: catches removal of the two named classes, but neither unit nor e2e asserts that the focused link is visibly rendered.
 - AC7: existing behavioral tests are unchanged and recorded green.
-
-

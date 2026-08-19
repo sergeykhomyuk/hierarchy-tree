@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |platform| src/platform/observability/sinks/createNoOpSink.test.ts (0 test)
  ❯ |platform| src/platform/observability/sinks/createConsoleSink.test.ts (0 test)
@@ -10,7 +10,7 @@
 ⎯⎯⎯⎯⎯⎯ Failed Suites 5 ⎯⎯⎯⎯⎯⎯⎯
 
  FAIL  |platform| src/platform/observability/createObservability.test.ts [ src/platform/observability/createObservability.test.ts ]
-Error: Cannot find module './createObservability' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/observability/createObservability.test.ts
+Error: Cannot find module './createObservability' imported from /hierarchy-tree/src/platform/observability/createObservability.test.ts
  ❯ src/platform/observability/createObservability.test.ts:3:1
       1| import { describe, expect, it } from 'vitest';
       2| import { createFakeRandomness } from '@shared/testing';
@@ -22,7 +22,7 @@ Error: Cannot find module './createObservability' imported from /Users/sergeykho
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
 
  FAIL  |platform| src/platform/observability/redact.test.ts [ src/platform/observability/redact.test.ts ]
-Error: Cannot find module './redact' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/observability/redact.test.ts
+Error: Cannot find module './redact' imported from /hierarchy-tree/src/platform/observability/redact.test.ts
  ❯ src/platform/observability/redact.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { redact } from './redact';
@@ -33,7 +33,7 @@ Error: Cannot find module './redact' imported from /Users/sergeykhomyuk/System/A
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
 
  FAIL  |platform| src/platform/observability/sinks/createConsoleSink.test.ts [ src/platform/observability/sinks/createConsoleSink.test.ts ]
-Error: Cannot find module './createConsoleSink' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/observability/sinks/createConsoleSink.test.ts
+Error: Cannot find module './createConsoleSink' imported from /hierarchy-tree/src/platform/observability/sinks/createConsoleSink.test.ts
  ❯ src/platform/observability/sinks/createConsoleSink.test.ts:2:1
       1| import { afterEach, describe, expect, it, vi } from 'vitest';
       2| import { createConsoleSink } from './createConsoleSink';
@@ -44,7 +44,7 @@ Error: Cannot find module './createConsoleSink' imported from /Users/sergeykhomy
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
 
  FAIL  |platform| src/platform/observability/sinks/createNoOpSink.test.ts [ src/platform/observability/sinks/createNoOpSink.test.ts ]
-Error: Cannot find module './createNoOpSink' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/observability/sinks/createNoOpSink.test.ts
+Error: Cannot find module './createNoOpSink' imported from /hierarchy-tree/src/platform/observability/sinks/createNoOpSink.test.ts
  ❯ src/platform/observability/sinks/createNoOpSink.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { createNoOpSink } from './createNoOpSink';
@@ -55,7 +55,7 @@ Error: Cannot find module './createNoOpSink' imported from /Users/sergeykhomyuk/
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
 
  FAIL  |platform| src/platform/observability/sinks/createRingBufferSink.test.ts [ src/platform/observability/sinks/createRingBufferSink.test.ts ]
-Error: Cannot find module './createRingBufferSink' imported from /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/platform/observability/sinks/createRingBufferSink.test.ts
+Error: Cannot find module './createRingBufferSink' imported from /hierarchy-tree/src/platform/observability/sinks/createRingBufferSink.test.ts
  ❯ src/platform/observability/sinks/createRingBufferSink.test.ts:2:1
       1| import { describe, expect, it } from 'vitest';
       2| import { createRingBufferSink } from './createRingBufferSink';
@@ -70,4 +70,3 @@ Error: Cannot find module './createRingBufferSink' imported from /Users/sergeykh
       Tests  2 passed (2)
    Start at  14:56:16
    Duration  120ms (transform 105ms, setup 56ms, import 26ms, tests 1ms, environment 0ms)
-

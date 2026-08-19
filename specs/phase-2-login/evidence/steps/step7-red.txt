@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/data/lookupUserIdentifier.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/auth/data/lookupUserIdentifier.test.ts [ src/features/auth/data/lookupUserIdentifier.test.ts ]
 Error: Failed to resolve import "./lookupUserIdentifier" from "src/features/auth/data/lookupUserIdentifier.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/lookupUserIdentifier.test.ts:7:37
+  File: /hierarchy-tree/src/features/auth/data/lookupUserIdentifier.test.ts:7:37
   2  |  import { createFakeClock, createFakeRandomness } from "@shared/testing";
   3  |  import { createHttpClient } from "@platform/http";
   4  |  import { lookupUserIdentifier } from "./lookupUserIdentifier";
@@ -30,4 +30,3 @@ Error: Failed to resolve import "./lookupUserIdentifier" from "src/features/auth
       Tests  no tests
    Start at  21:51:04
    Duration  551ms (transform 20ms, setup 90ms, import 0ms, tests 0ms, environment 362ms)
-

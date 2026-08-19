@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/deployment-configuration.test.ts (3 tests | 3 failed) 3ms
      × carries a project name and an https production hostname 2ms
@@ -52,4 +52,3 @@ Error: ENOENT: no such file or directory, open 'deployment.json'
       Tests  3 failed (3)
    Start at  19:39:18
    Duration  107ms (transform 22ms, setup 36ms, import 5ms, tests 3ms, environment 0ms)
-

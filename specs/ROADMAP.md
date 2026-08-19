@@ -7,7 +7,7 @@ The goal is in [GOAL.md](./GOAL.md), the technical decisions are in [ARCHITECTUR
 ## Status
 
 - **Phase 1 - Project setup**: done (6/6 outcomes, 3/3 exit criteria)
-- **Phase 2 - Login page**: IN PROGRESS - specs written and under validation (0/6 outcomes, 0/4 exit criteria)
+- **Phase 2 - Login page**: done (6/6 outcomes, 4/4 exit criteria)
 - **Phase 3 - Hierarchy Tree page**: done (6/6 outcomes, 5/5 exit criteria)
 
 **Next up**: nothing - all three phases are complete.
@@ -62,19 +62,19 @@ Screens `1a`-`1d`, plus `1e`'s header. The interesting risk here is the credenti
 
 **Outcomes**
 
-- [ ] The credential-to-secret derivation is ported and proven against a real account, not just unit-tested for shape
-- [ ] Signing in looks up only the secret; the user table, with its plaintext passwords, is never fetched to authenticate
-- [ ] A session survives a reload, dies with the tab, and holds nothing sensitive
-- [ ] Access control runs before data fetching, and returns the user to where they were headed
-- [ ] The login page renders all five of its states
-- [ ] The header names the signed-in user and signs them out, and the back button cannot undo it
+- [x] The credential-to-secret derivation is ported and proven against a real account, not just unit-tested for shape
+- [x] Signing in looks up only the secret; the user table, with its plaintext passwords, is never fetched to authenticate
+- [x] A session survives a reload, dies with the tab, and holds nothing sensitive
+- [x] Access control runs before data fetching, and returns the user to where they were headed
+- [x] The login page renders all five of its states
+- [x] The header names the signed-in user and signs them out, and the back button cannot undo it
 
 **Exit criteria**
 
-- [ ] A real credential signs in and lands on the hierarchy page; a wrong one stays put and says why
-- [ ] The states match the mockups, with the one deliberate deviation recorded
-- [ ] No credential material reaches any URL, log line, telemetry event or storage entry - asserted, not eyeballed
-- [ ] Full pipeline green
+- [x] A real credential signs in and lands on the hierarchy page; a wrong one stays put and says why
+- [x] The states match the mockups, with the one deliberate deviation recorded
+- [x] No credential material reaches any URL, log line, telemetry event or storage entry - asserted, not eyeballed
+- [x] Full pipeline green
 
 ---
 

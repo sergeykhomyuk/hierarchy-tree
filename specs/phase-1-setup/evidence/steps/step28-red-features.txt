@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/features.test.tsx (3 tests | 2 failed) 51ms
      × each placeholder exposes one h1 inside a main landmark and passes axe 43ms
@@ -61,4 +61,3 @@ Ignored nodes: comments, script, style
       Tests  2 failed | 1 passed (3)
    Start at  17:10:12
    Duration  649ms (transform 68ms, setup 90ms, import 101ms, tests 51ms, environment 339ms)
-

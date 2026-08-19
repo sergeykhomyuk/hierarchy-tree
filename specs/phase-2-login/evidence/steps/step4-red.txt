@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/domain/userIdentifier.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/auth/domain/userIdentifier.test.ts [ src/features/auth/domain/userIdentifier.test.ts ]
 Error: Failed to resolve import "./userIdentifier" from "src/features/auth/domain/userIdentifier.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/domain/userIdentifier.test.ts:2:31
+  File: /hierarchy-tree/src/features/auth/domain/userIdentifier.test.ts:2:31
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { userIdentifier } from "./userIdentifier";
      |                                  ^
@@ -29,4 +29,3 @@ Error: Failed to resolve import "./userIdentifier" from "src/features/auth/domai
       Tests  no tests
    Start at  21:45:46
    Duration  529ms (transform 25ms, setup 93ms, import 0ms, tests 0ms, environment 345ms)
-

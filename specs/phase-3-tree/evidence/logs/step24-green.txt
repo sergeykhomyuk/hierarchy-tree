@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 assert-domain-vocabulary: banned vocabulary found:
   - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-Ap9jAt/banned.tmp.ts: identifier "make32" carries banned reference-system name "make32"
@@ -51,4 +51,3 @@ Not implemented: HTMLCanvasElement's getContext() method: without installing the
       Tests  528 passed (528)
    Start at  17:11:12
    Duration  15.70s (transform 3.20s, setup 11.63s, import 7.51s, tests 23.84s, environment 40.93s)
-

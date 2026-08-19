@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/shared/ui/Card.test.tsx (0 test)
  ❯ |ui| src/shared/ui/sizeClass.test.ts (0 test)
@@ -16,12 +16,12 @@
  FAIL  |ui| src/shared/ui/Avatar.test.tsx [ src/shared/ui/Avatar.test.tsx ]
 Error: Failed to resolve import "./Avatar" from "src/shared/ui/Avatar.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Avatar.test.tsx:3:23
+  File: /hierarchy-tree/src/shared/ui/Avatar.test.tsx:3:23
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { render, screen } from "@testing-library/react";
   3  |  import { Avatar } from "./Avatar";
      |                          ^
-  4  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Avatar.test.tsx";
+  4  |  var _jsxFileName = "/hierarchy-tree/src/shared/ui/Avatar.test.tsx";
   5  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -36,12 +36,12 @@ Error: Failed to resolve import "./Avatar" from "src/shared/ui/Avatar.test.tsx".
  FAIL  |ui| src/shared/ui/Button.test.tsx [ src/shared/ui/Button.test.tsx ]
 Error: Failed to resolve import "./Button" from "src/shared/ui/Button.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Button.test.tsx:4:23
+  File: /hierarchy-tree/src/shared/ui/Button.test.tsx:4:23
   2  |  import { render, screen } from "@testing-library/react";
   3  |  import userEvent from "@testing-library/user-event";
   4  |  import { Button } from "./Button";
      |                          ^
-  5  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Button.test.tsx";
+  5  |  var _jsxFileName = "/hierarchy-tree/src/shared/ui/Button.test.tsx";
   6  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -56,12 +56,12 @@ Error: Failed to resolve import "./Button" from "src/shared/ui/Button.test.tsx".
  FAIL  |ui| src/shared/ui/Card.test.tsx [ src/shared/ui/Card.test.tsx ]
 Error: Failed to resolve import "./Card" from "src/shared/ui/Card.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Card.test.tsx:3:21
+  File: /hierarchy-tree/src/shared/ui/Card.test.tsx:3:21
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { render, screen } from "@testing-library/react";
   3  |  import { Card } from "./Card";
      |                        ^
-  4  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Card.test.tsx";
+  4  |  var _jsxFileName = "/hierarchy-tree/src/shared/ui/Card.test.tsx";
   5  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -76,12 +76,12 @@ Error: Failed to resolve import "./Card" from "src/shared/ui/Card.test.tsx". Doe
  FAIL  |ui| src/shared/ui/EmptyState.test.tsx [ src/shared/ui/EmptyState.test.tsx ]
 Error: Failed to resolve import "./EmptyState" from "src/shared/ui/EmptyState.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/EmptyState.test.tsx:4:27
+  File: /hierarchy-tree/src/shared/ui/EmptyState.test.tsx:4:27
   2  |  import { render, screen } from "@testing-library/react";
   3  |  import userEvent from "@testing-library/user-event";
   4  |  import { EmptyState } from "./EmptyState";
      |                              ^
-  5  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/EmptyState.test.tsx";
+  5  |  var _jsxFileName = "/hierarchy-tree/src/shared/ui/EmptyState.test.tsx";
   6  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -96,12 +96,12 @@ Error: Failed to resolve import "./EmptyState" from "src/shared/ui/EmptyState.te
  FAIL  |ui| src/shared/ui/ErrorState.test.tsx [ src/shared/ui/ErrorState.test.tsx ]
 Error: Failed to resolve import "./ErrorState" from "src/shared/ui/ErrorState.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/ErrorState.test.tsx:4:27
+  File: /hierarchy-tree/src/shared/ui/ErrorState.test.tsx:4:27
   2  |  import { render, screen } from "@testing-library/react";
   3  |  import userEvent from "@testing-library/user-event";
   4  |  import { ErrorState } from "./ErrorState";
      |                              ^
-  5  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/ErrorState.test.tsx";
+  5  |  var _jsxFileName = "/hierarchy-tree/src/shared/ui/ErrorState.test.tsx";
   6  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -116,13 +116,13 @@ Error: Failed to resolve import "./ErrorState" from "src/shared/ui/ErrorState.te
  FAIL  |ui| src/shared/ui/Field.test.tsx [ src/shared/ui/Field.test.tsx ]
 Error: Failed to resolve import "./Field" from "src/shared/ui/Field.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Field.test.tsx:4:22
+  File: /hierarchy-tree/src/shared/ui/Field.test.tsx:4:22
   2  |  import { render, screen } from "@testing-library/react";
   3  |  import userEvent from "@testing-library/user-event";
   4  |  import { Field } from "./Field";
      |                         ^
   5  |  import { Input } from "./Input";
-  6  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Field.test.tsx";
+  6  |  var _jsxFileName = "/hierarchy-tree/src/shared/ui/Field.test.tsx";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
  ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:28008:18
@@ -136,12 +136,12 @@ Error: Failed to resolve import "./Field" from "src/shared/ui/Field.test.tsx". D
  FAIL  |ui| src/shared/ui/Skeleton.test.tsx [ src/shared/ui/Skeleton.test.tsx ]
 Error: Failed to resolve import "./Skeleton" from "src/shared/ui/Skeleton.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Skeleton.test.tsx:3:25
+  File: /hierarchy-tree/src/shared/ui/Skeleton.test.tsx:3:25
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { render } from "@testing-library/react";
   3  |  import { Skeleton } from "./Skeleton";
      |                            ^
-  4  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/Skeleton.test.tsx";
+  4  |  var _jsxFileName = "/hierarchy-tree/src/shared/ui/Skeleton.test.tsx";
   5  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -156,7 +156,7 @@ Error: Failed to resolve import "./Skeleton" from "src/shared/ui/Skeleton.test.t
  FAIL  |ui| src/shared/ui/deriveInitials.test.ts [ src/shared/ui/deriveInitials.test.ts ]
 Error: Failed to resolve import "./deriveInitials" from "src/shared/ui/deriveInitials.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/deriveInitials.test.ts:2:31
+  File: /hierarchy-tree/src/shared/ui/deriveInitials.test.ts:2:31
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { deriveInitials } from "./deriveInitials";
      |                                  ^
@@ -175,7 +175,7 @@ Error: Failed to resolve import "./deriveInitials" from "src/shared/ui/deriveIni
  FAIL  |ui| src/shared/ui/sizeClass.test.ts [ src/shared/ui/sizeClass.test.ts ]
 Error: Failed to resolve import "./sizeClass" from "src/shared/ui/sizeClass.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/shared/ui/sizeClass.test.ts:2:26
+  File: /hierarchy-tree/src/shared/ui/sizeClass.test.ts:2:26
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { sizeClass } from "./sizeClass";
      |                             ^
@@ -196,4 +196,3 @@ Error: Failed to resolve import "./sizeClass" from "src/shared/ui/sizeClass.test
       Tests  no tests
    Start at  15:50:01
    Duration  1.60s (transform 373ms, setup 1.94s, import 0ms, tests 0ms, environment 9.25s)
-

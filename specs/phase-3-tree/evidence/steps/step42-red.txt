@@ -6,7 +6,7 @@ Running 3 tests using 1 worker
   ✘  3 [chromium] › e2e/hierarchy-telemetry.spec.ts:143:3 › hierarchy telemetry and privacy › every hierarchy flow produces no console error or warning (304ms)
 
 
-  1) [chromium] › e2e/hierarchy-telemetry.spec.ts:56:3 › hierarchy telemetry and privacy › the buffer holds one hierarchy-viewed event and one toggle event per toggle and no additional route-viewed event 
+  1) [chromium] › e2e/hierarchy-telemetry.spec.ts:56:3 › hierarchy telemetry and privacy › the buffer holds one hierarchy-viewed event and one toggle event per toggle and no additional route-viewed event
 
     Error: expect(received).toHaveLength(expected)
 
@@ -21,11 +21,11 @@ Running 3 tests using 1 worker
       87 |       routeViewedBeforeToggle + 1,
       88 |     );
       89 |     expect(analyticsNamed(records, 'hierarchy.viewed')).toHaveLength(1);
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-telemetry.spec.ts:86:57
+        at /hierarchy-tree/e2e/hierarchy-telemetry.spec.ts:86:57
 
     Error Context: test-results/hierarchy-telemetry-hierar-3b09d-ditional-route-viewed-event-chromium/error-context.md
 
-  2) [chromium] › e2e/hierarchy-telemetry.spec.ts:93:3 › hierarchy telemetry and privacy › no event in the buffer carries a password, an email, a person name or a photo URL 
+  2) [chromium] › e2e/hierarchy-telemetry.spec.ts:93:3 › hierarchy telemetry and privacy › no event in the buffer carries a password, an email, a person name or a photo URL
 
     Error: expect(received).toContain(expected) // indexOf
 
@@ -39,11 +39,11 @@ Running 3 tests using 1 worker
       135 |     expect(serialized).not.toContain('another-not-real-password');
       136 |     expect(serialized).not.toContain('ronnen.gurevitch@example.com');
       137 |     expect(serialized).not.toContain('dorit.nuhum@example.com');
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-telemetry.spec.ts:134:24
+        at /hierarchy-tree/e2e/hierarchy-telemetry.spec.ts:134:24
 
     Error Context: test-results/hierarchy-telemetry-hierar-92215--person-name-or-a-photo-URL-chromium/error-context.md
 
-  3) [chromium] › e2e/hierarchy-telemetry.spec.ts:143:3 › hierarchy telemetry and privacy › every hierarchy flow produces no console error or warning 
+  3) [chromium] › e2e/hierarchy-telemetry.spec.ts:143:3 › hierarchy telemetry and privacy › every hierarchy flow produces no console error or warning
 
     Error: expect(received).toBeGreaterThan(expected)
 
@@ -57,11 +57,11 @@ Running 3 tests using 1 worker
       165 |   });
       166 | });
       167 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/hierarchy-telemetry.spec.ts:164:35
+        at /hierarchy-tree/e2e/hierarchy-telemetry.spec.ts:164:35
 
     Error Context: test-results/hierarchy-telemetry-hierar-8b9a4-no-console-error-or-warning-chromium/error-context.md
 
   3 failed
-    [chromium] › e2e/hierarchy-telemetry.spec.ts:56:3 › hierarchy telemetry and privacy › the buffer holds one hierarchy-viewed event and one toggle event per toggle and no additional route-viewed event 
-    [chromium] › e2e/hierarchy-telemetry.spec.ts:93:3 › hierarchy telemetry and privacy › no event in the buffer carries a password, an email, a person name or a photo URL 
-    [chromium] › e2e/hierarchy-telemetry.spec.ts:143:3 › hierarchy telemetry and privacy › every hierarchy flow produces no console error or warning 
+    [chromium] › e2e/hierarchy-telemetry.spec.ts:56:3 › hierarchy telemetry and privacy › the buffer holds one hierarchy-viewed event and one toggle event per toggle and no additional route-viewed event
+    [chromium] › e2e/hierarchy-telemetry.spec.ts:93:3 › hierarchy telemetry and privacy › no event in the buffer carries a password, an email, a person name or a photo URL
+    [chromium] › e2e/hierarchy-telemetry.spec.ts:143:3 › hierarchy telemetry and privacy › every hierarchy flow produces no console error or warning

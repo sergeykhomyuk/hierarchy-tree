@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/session/clearSession.test.ts (0 test)
  ❯ |ui| src/features/auth/session/readSession.test.ts (0 test)
@@ -10,7 +10,7 @@
  FAIL  |ui| src/features/auth/session/clearSession.test.ts [ src/features/auth/session/clearSession.test.ts ]
 Error: Failed to resolve import "./clearSession" from "src/features/auth/session/clearSession.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/session/clearSession.test.ts:5:29
+  File: /hierarchy-tree/src/features/auth/session/clearSession.test.ts:5:29
   1  |  import { describe, expect, it, vi } from "vitest";
   2  |  import { userIdentifier } from "../domain/userIdentifier";
   3  |  import { clearSession } from "./clearSession";
@@ -30,7 +30,7 @@ Error: Failed to resolve import "./clearSession" from "src/features/auth/session
  FAIL  |ui| src/features/auth/session/readSession.test.ts [ src/features/auth/session/readSession.test.ts ]
 Error: Failed to resolve import "./writeSession" from "src/features/auth/session/readSession.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/session/readSession.test.ts:6:29
+  File: /hierarchy-tree/src/features/auth/session/readSession.test.ts:6:29
   2  |  import { userIdentifier } from "../domain/userIdentifier";
   3  |  import { readSession } from "./readSession";
   4  |  import { writeSession } from "./writeSession";
@@ -50,7 +50,7 @@ Error: Failed to resolve import "./writeSession" from "src/features/auth/session
  FAIL  |ui| src/features/auth/session/writeSession.test.ts [ src/features/auth/session/writeSession.test.ts ]
 Error: Failed to resolve import "./readSession" from "src/features/auth/session/writeSession.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/session/writeSession.test.ts:5:28
+  File: /hierarchy-tree/src/features/auth/session/writeSession.test.ts:5:28
   1  |  import { describe, expect, it, vi } from "vitest";
   2  |  import { userIdentifier } from "../domain/userIdentifier";
   3  |  import { readSession } from "./readSession";
@@ -72,4 +72,3 @@ Error: Failed to resolve import "./readSession" from "src/features/auth/session/
       Tests  1 passed (1)
    Start at  21:58:54
    Duration  757ms (transform 168ms, setup 501ms, import 67ms, tests 1ms, environment 1.98s)
-

@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/features.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/features.test.ts [ src/features/features.test.ts ]
 Error: Failed to resolve import "@features/auth" from "src/features/features.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/features.test.ts:5:35
+  File: /hierarchy-tree/src/features/features.test.ts:5:35
   2  |  describe("feature slices", () => {
   3  |  	it("both feature entries exist and export their documented names", async () => {
   4  |  		const authEntry = await import("@features/auth");
@@ -30,4 +30,3 @@ Error: Failed to resolve import "@features/auth" from "src/features/features.tes
       Tests  no tests
    Start at  13:34:02
    Duration  541ms (transform 9ms, setup 91ms, import 0ms, tests 0ms, environment 360ms)
-

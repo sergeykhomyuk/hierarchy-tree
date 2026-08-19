@@ -27,7 +27,7 @@ Running 15 tests using 5 workers
   ✘   8 [chromium] › e2e/placeholder-routes.spec.ts:44:3 › placeholder routes › the skip link is the first thing a keyboard user reaches (5.2s)
 
 
-  1) [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry 
+  1) [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry
 
     Error: expect(received).toHaveLength(expected)
 
@@ -42,11 +42,11 @@ Running 15 tests using 5 workers
       62 |   expect(records[0]?.text).toContain('LoginRoute');
       63 | });
       64 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/error-boundary.spec.ts:61:19
+        at /hierarchy-tree/e2e/error-boundary.spec.ts:61:19
 
     Error Context: test-results/error-boundary-a-forced-ro-80071-on-id-and-recovers-on-retry-chromium/error-context.md
 
-  2) [chromium] › e2e/not-found.spec.ts:5:1 › an unknown path renders the not-found route with a working link home 
+  2) [chromium] › e2e/not-found.spec.ts:5:1 › an unknown path renders the not-found route with a working link home
 
     Error: expect(received).toEqual(expected) // deep equality
 
@@ -67,11 +67,11 @@ Running 15 tests using 5 workers
          |                   ^
       26 | });
       27 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/not-found.spec.ts:25:19
+        at /hierarchy-tree/e2e/not-found.spec.ts:25:19
 
     Error Context: test-results/not-found-an-unknown-path--e8b2c-te-with-a-working-link-home-chromium/error-context.md
 
-  3) [chromium] › e2e/placeholder-routes.spec.ts:6:3 › placeholder routes › the home route renders the hierarchy placeholder 
+  3) [chromium] › e2e/placeholder-routes.spec.ts:6:3 › placeholder routes › the home route renders the hierarchy placeholder
 
     Error: expect(received).toEqual(expected) // deep equality
 
@@ -93,11 +93,11 @@ Running 15 tests using 5 workers
       25 |   });
       26 |
       27 |   test('the login route renders the generic auth placeholder', async ({
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/placeholder-routes.spec.ts:24:21
+        at /hierarchy-tree/e2e/placeholder-routes.spec.ts:24:21
 
     Error Context: test-results/placeholder-routes-placeho-f940c-s-the-hierarchy-placeholder-chromium/error-context.md
 
-  4) [chromium] › e2e/placeholder-routes.spec.ts:27:3 › placeholder routes › the login route renders the generic auth placeholder 
+  4) [chromium] › e2e/placeholder-routes.spec.ts:27:3 › placeholder routes › the login route renders the generic auth placeholder
 
     Error: expect(received).toEqual(expected) // deep equality
 
@@ -119,11 +119,11 @@ Running 15 tests using 5 workers
       42 |   });
       43 |
       44 |   test('the skip link is the first thing a keyboard user reaches', async ({
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/placeholder-routes.spec.ts:41:21
+        at /hierarchy-tree/e2e/placeholder-routes.spec.ts:41:21
 
     Error Context: test-results/placeholder-routes-placeho-3ecb7-he-generic-auth-placeholder-chromium/error-context.md
 
-  5) [chromium] › e2e/placeholder-routes.spec.ts:44:3 › placeholder routes › the skip link is the first thing a keyboard user reaches 
+  5) [chromium] › e2e/placeholder-routes.spec.ts:44:3 › placeholder routes › the skip link is the first thing a keyboard user reaches
 
     Error: expect(locator).toBeFocused() failed
 
@@ -146,11 +146,11 @@ Running 15 tests using 5 workers
       56 |   });
       57 | });
       58 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/placeholder-routes.spec.ts:55:7
+        at /hierarchy-tree/e2e/placeholder-routes.spec.ts:55:7
 
     Error Context: test-results/placeholder-routes-placeho-48d2b-ing-a-keyboard-user-reaches-chromium/error-context.md
 
-  6) [chromium] › e2e/right-to-left.spec.ts:13:1 › the placeholder pages mirror correctly under a forced right-to-left direction 
+  6) [chromium] › e2e/right-to-left.spec.ts:13:1 › the placeholder pages mirror correctly under a forced right-to-left direction
 
     Error: expect(received).toBe(expected) // Object.is equality
 
@@ -164,11 +164,11 @@ Running 15 tests using 5 workers
       29 |
       30 |   const overflowsHorizontally = await page.evaluate(
       31 |     () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/right-to-left.spec.ts:28:5
+        at /hierarchy-tree/e2e/right-to-left.spec.ts:28:5
 
     Error Context: test-results/right-to-left-the-placehol-f10df-ced-right-to-left-direction-chromium/error-context.md
 
-  7) [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › / produces no console error or warning 
+  7) [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › / produces no console error or warning
 
     Error: expect(received).toEqual(expected) // deep equality
 
@@ -190,11 +190,11 @@ Running 15 tests using 5 workers
       21 |     });
       22 |   }
       23 | });
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/development-console.spec.ts:20:23
+        at /hierarchy-tree/e2e/development-console.spec.ts:20:23
 
     Error Context: test-results/development-console-develo-b7749-no-console-error-or-warning-development/error-context.md
 
-  8) [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › /login produces no console error or warning 
+  8) [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › /login produces no console error or warning
 
     Error: expect(received).toEqual(expected) // deep equality
 
@@ -216,11 +216,11 @@ Running 15 tests using 5 workers
       21 |     });
       22 |   }
       23 | });
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/development-console.spec.ts:20:23
+        at /hierarchy-tree/e2e/development-console.spec.ts:20:23
 
     Error Context: test-results/development-console-develo-7fe7e-no-console-error-or-warning-development/error-context.md
 
-  9) [development] › e2e/kit-route.spec.ts:28:3 › kit route › has zero axe violations in real light 
+  9) [development] › e2e/kit-route.spec.ts:28:3 › kit route › has zero axe violations in real light
 
     Error: expect(received).toEqual(expected) // deep equality
 
@@ -271,11 +271,11 @@ Running 15 tests using 5 workers
       37 |   });
       38 |
       39 |   test('has zero axe violations in real dark', async ({ page, baseURL }) => {
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/kit-route.spec.ts:36:32
+        at /hierarchy-tree/e2e/kit-route.spec.ts:36:32
 
     Error Context: test-results/kit-route-kit-route-has-zero-axe-violations-in-real-light-development/error-context.md
 
-  10) [development] › e2e/kit-route.spec.ts:39:3 › kit route › has zero axe violations in real dark 
+  10) [development] › e2e/kit-route.spec.ts:39:3 › kit route › has zero axe violations in real dark
 
     Error: expect(received).toEqual(expected) // deep equality
 
@@ -417,19 +417,19 @@ Running 15 tests using 5 workers
       48 |   });
       49 | });
       50 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/kit-route.spec.ts:47:32
+        at /hierarchy-tree/e2e/kit-route.spec.ts:47:32
 
     Error Context: test-results/kit-route-kit-route-has-zero-axe-violations-in-real-dark-development/error-context.md
 
   10 failed
-    [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry 
-    [chromium] › e2e/not-found.spec.ts:5:1 › an unknown path renders the not-found route with a working link home 
-    [chromium] › e2e/placeholder-routes.spec.ts:6:3 › placeholder routes › the home route renders the hierarchy placeholder 
-    [chromium] › e2e/placeholder-routes.spec.ts:27:3 › placeholder routes › the login route renders the generic auth placeholder 
-    [chromium] › e2e/placeholder-routes.spec.ts:44:3 › placeholder routes › the skip link is the first thing a keyboard user reaches 
-    [chromium] › e2e/right-to-left.spec.ts:13:1 › the placeholder pages mirror correctly under a forced right-to-left direction 
-    [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › / produces no console error or warning 
-    [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › /login produces no console error or warning 
+    [chromium] › e2e/error-boundary.spec.ts:8:1 › a forced route chunk failure renders the boundary with a correlation id and recovers on retry
+    [chromium] › e2e/not-found.spec.ts:5:1 › an unknown path renders the not-found route with a working link home
+    [chromium] › e2e/placeholder-routes.spec.ts:6:3 › placeholder routes › the home route renders the hierarchy placeholder
+    [chromium] › e2e/placeholder-routes.spec.ts:27:3 › placeholder routes › the login route renders the generic auth placeholder
+    [chromium] › e2e/placeholder-routes.spec.ts:44:3 › placeholder routes › the skip link is the first thing a keyboard user reaches
+    [chromium] › e2e/right-to-left.spec.ts:13:1 › the placeholder pages mirror correctly under a forced right-to-left direction
+    [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › / produces no console error or warning
+    [development] › e2e/development-console.spec.ts:10:5 › development server console hygiene › /login produces no console error or warning
     [development] › e2e/kit-route.spec.ts:28:3 › kit route › has zero axe violations in real light ─
     [development] › e2e/kit-route.spec.ts:39:3 › kit route › has zero axe violations in real dark ──
   5 passed (10.7s)

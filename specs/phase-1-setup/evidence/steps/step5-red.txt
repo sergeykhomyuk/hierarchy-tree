@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/repository-configuration.test.ts (8 tests | 1 failed) 61ms
      × the Prettier config declares the tailwind stylesheet path 1ms
@@ -23,4 +23,3 @@ Error: ENOENT: no such file or directory, open '.prettierrc.json'
       Tests  1 failed | 7 passed (8)
    Start at  13:05:32
    Duration  138ms (transform 19ms, setup 11ms, import 9ms, tests 61ms, environment 0ms)
-

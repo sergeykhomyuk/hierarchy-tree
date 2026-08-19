@@ -21,7 +21,7 @@ All matched files use Prettier code style!
 > vitest run --coverage
 
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
       Coverage enabled with v8
 
 
@@ -32,7 +32,7 @@ All matched files use Prettier code style!
 
  % Coverage report from v8
 -------------------|---------|----------|---------|---------|-------------------
-File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 -------------------|---------|----------|---------|---------|-------------------
 -------------------|---------|----------|---------|---------|-------------------
 
@@ -47,7 +47,8 @@ Lines        : 100% ( 3/3 )
 > tsc -b && vite build
 
 vite v8.2.1 building client environment for production...
-[2Ktransforming...✓ 16 modules transformed.
+[2K
+transforming...✓ 16 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                   0.46 kB │ gzip:  0.30 kB
@@ -59,8 +60,8 @@ dist/assets/vendor-BEu8oNmQ.js  189.55 kB │ gzip: 59.58 kB
 > hierarchy-tree@0.0.0 verify:build
 > vitest run --config vitest.build-output.config.ts
 
-
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+/
+ RUN  v4.1.10 /hierarchy-tree
 
 
  Test Files  2 passed (2)
@@ -74,8 +75,7 @@ dist/assets/vendor-BEu8oNmQ.js  189.55 kB │ gzip: 59.58 kB
 
 - Running JS in headless Chrome
 ✔ Running JS in headless Chrome
-  
+
   Size limit:   100 kB
   Size:         59.4 kB gzipped
   Loading time: 1.2 s   on slow 3G
-  

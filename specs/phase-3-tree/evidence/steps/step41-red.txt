@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/layer-boundaries.test.ts (3 tests | 2 failed) 10ms
      × the hierarchy feature imports no other feature and nothing from app 6ms
@@ -56,7 +56,7 @@ AssertionError: expected [] to deeply equal [ '__forced_red__' ]
    Duration  119ms (transform 27ms, setup 42ms, import 2ms, tests 10ms, environment 0ms)
 
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/routing/routeDefinitions.test.ts (7 tests | 1 failed | 6 skipped) 5ms
      × the route set is slash, slash-login and the not-found wildcard and nothing else 4ms
@@ -91,4 +91,3 @@ AssertionError: expected [ undefined, 'login', '*' ] to deeply equal [ '__forced
       Tests  1 failed | 6 skipped (7)
    Start at  08:43:43
    Duration  817ms (transform 175ms, setup 110ms, import 218ms, tests 5ms, environment 416ms)
-

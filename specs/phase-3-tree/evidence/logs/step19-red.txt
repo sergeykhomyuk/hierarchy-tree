@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/HierarchySkeleton.test.tsx (0 test)
  ❯ |ui| src/features/hierarchy/HierarchyPage.test.tsx (0 test)
@@ -9,7 +9,7 @@
  FAIL  |ui| src/features/hierarchy/HierarchyPage.test.tsx [ src/features/hierarchy/HierarchyPage.test.tsx ]
 Error: Failed to resolve import "./HierarchyPage" from "src/features/hierarchy/HierarchyPage.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchyPage.test.tsx:12:30
+  File: /hierarchy-tree/src/features/hierarchy/HierarchyPage.test.tsx:12:30
   6  |  import { createInternationalization, createKeyEchoCatalogue, Locale } from "@platform/internationalization";
   7  |  import hierarchyCatalogue from "./locales/en/hierarchy.json";
   8  |  import { HierarchyPage } from "./HierarchyPage";
@@ -29,12 +29,12 @@ Error: Failed to resolve import "./HierarchyPage" from "src/features/hierarchy/H
  FAIL  |ui| src/features/hierarchy/HierarchySkeleton.test.tsx [ src/features/hierarchy/HierarchySkeleton.test.tsx ]
 Error: Failed to resolve import "./HierarchySkeleton" from "src/features/hierarchy/HierarchySkeleton.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchySkeleton.test.tsx:10:34
+  File: /hierarchy-tree/src/features/hierarchy/HierarchySkeleton.test.tsx:10:34
   4  |  import { createInternationalization, createKeyEchoCatalogue, Locale } from "@platform/internationalization";
   5  |  import hierarchyCatalogue from "./locales/en/hierarchy.json";
   6  |  import { HierarchySkeleton } from "./HierarchySkeleton";
      |                                     ^
-  7  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchySkele...
+  7  |  var _jsxFileName = "/hierarchy-tree/src/features/hierarchy/HierarchySkele...
   8  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -51,4 +51,3 @@ Error: Failed to resolve import "./HierarchySkeleton" from "src/features/hierarc
       Tests  no tests
    Start at  15:21:55
    Duration  692ms (transform 65ms, setup 295ms, import 0ms, tests 0ms, environment 850ms)
-

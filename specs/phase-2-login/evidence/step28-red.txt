@@ -8,7 +8,7 @@ Running 5 tests using 1 worker
   ✘  5 [chromium] › e2e/guard.spec.ts:126:3 › the route guard › ignores a protocol-relative or backslash-escaped from value (30.0s)
 
 
-  1) [chromium] › e2e/guard.spec.ts:24:3 › the route guard › sends a bookmarked authenticated URL to the login card with no users request and no flash 
+  1) [chromium] › e2e/guard.spec.ts:24:3 › the route guard › sends a bookmarked authenticated URL to the login card with no users request and no flash
 
     Error: expect(page).toHaveURL(expected) failed
 
@@ -29,11 +29,11 @@ Running 5 tests using 1 worker
       45 |     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
       46 |       'login.heading',
       47 |     );
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/guard.spec.ts:44:24
+        at /hierarchy-tree/e2e/guard.spec.ts:44:24
 
     Error Context: test-results/guard-the-route-guard-send-e583a--users-request-and-no-flash-chromium/error-context.md
 
-  2) [chromium] › e2e/guard.spec.ts:56:3 › the route guard › lands on the bookmarked path after signing in from the redirect 
+  2) [chromium] › e2e/guard.spec.ts:56:3 › the route guard › lands on the bookmarked path after signing in from the redirect
 
     Error: expect(page).toHaveURL(expected) failed
 
@@ -54,11 +54,11 @@ Running 5 tests using 1 worker
       69 |
       70 |     await submitSignInForm(page);
       71 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/guard.spec.ts:68:24
+        at /hierarchy-tree/e2e/guard.spec.ts:68:24
 
     Error Context: test-results/guard-the-route-guard-land-d65a2-igning-in-from-the-redirect-chromium/error-context.md
 
-  3) [chromium] › e2e/guard.spec.ts:78:3 › the route guard › bounces a signed-in visitor straight off the login route 
+  3) [chromium] › e2e/guard.spec.ts:78:3 › the route guard › bounces a signed-in visitor straight off the login route
 
     Test timeout of 30000ms exceeded.
 
@@ -76,12 +76,12 @@ Running 5 tests using 1 worker
       45 |   await page.locator('input[name="password"]').fill(SIGN_IN_PASSWORD);
       46 |   await page.locator('form button[type="submit"]').click();
       47 |   // Locale-independent: confirms the navigation actually left /login
-        at signIn (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/support/signIn.ts:44:45)
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/guard.spec.ts:84:5
+        at signIn (/hierarchy-tree/e2e/support/signIn.ts:44:45)
+        at /hierarchy-tree/e2e/guard.spec.ts:84:5
 
     Error Context: test-results/guard-the-route-guard-boun-a4452-traight-off-the-login-route-chromium/error-context.md
 
-  4) [chromium] › e2e/guard.spec.ts:99:3 › the route guard › returns Back from the login card to where the visitor came from 
+  4) [chromium] › e2e/guard.spec.ts:99:3 › the route guard › returns Back from the login card to where the visitor came from
 
     Error: expect(page).toHaveURL(expected) failed
 
@@ -102,11 +102,11 @@ Running 5 tests using 1 worker
       112 |     await page.goBack();
       113 |     await expect(page).toHaveURL(/\/this-path-does-not-exist$/);
       114 |
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/guard.spec.ts:111:24
+        at /hierarchy-tree/e2e/guard.spec.ts:111:24
 
     Error Context: test-results/guard-the-route-guard-retu-16a5e-where-the-visitor-came-from-chromium/error-context.md
 
-  5) [chromium] › e2e/guard.spec.ts:126:3 › the route guard › ignores a protocol-relative or backslash-escaped from value 
+  5) [chromium] › e2e/guard.spec.ts:126:3 › the route guard › ignores a protocol-relative or backslash-escaped from value
 
     Test timeout of 30000ms exceeded.
 
@@ -124,16 +124,16 @@ Running 5 tests using 1 worker
       45 |   await page.locator('input[name="password"]').fill(SIGN_IN_PASSWORD);
       46 |   await page.locator('form button[type="submit"]').click();
       47 |   // Locale-independent: confirms the navigation actually left /login
-        at signIn (/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/support/signIn.ts:44:45)
-        at /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/e2e/guard.spec.ts:132:5
+        at signIn (/hierarchy-tree/e2e/support/signIn.ts:44:45)
+        at /hierarchy-tree/e2e/guard.spec.ts:132:5
 
     Error Context: test-results/guard-the-route-guard-igno-31e50-ackslash-escaped-from-value-chromium/error-context.md
 
   5 failed
-    [chromium] › e2e/guard.spec.ts:24:3 › the route guard › sends a bookmarked authenticated URL to the login card with no users request and no flash 
-    [chromium] › e2e/guard.spec.ts:56:3 › the route guard › lands on the bookmarked path after signing in from the redirect 
-    [chromium] › e2e/guard.spec.ts:78:3 › the route guard › bounces a signed-in visitor straight off the login route 
-    [chromium] › e2e/guard.spec.ts:99:3 › the route guard › returns Back from the login card to where the visitor came from 
-    [chromium] › e2e/guard.spec.ts:126:3 › the route guard › ignores a protocol-relative or backslash-escaped from value 
+    [chromium] › e2e/guard.spec.ts:24:3 › the route guard › sends a bookmarked authenticated URL to the login card with no users request and no flash
+    [chromium] › e2e/guard.spec.ts:56:3 › the route guard › lands on the bookmarked path after signing in from the redirect
+    [chromium] › e2e/guard.spec.ts:78:3 › the route guard › bounces a signed-in visitor straight off the login route
+    [chromium] › e2e/guard.spec.ts:99:3 › the route guard › returns Back from the login card to where the visitor came from
+    [chromium] › e2e/guard.spec.ts:126:3 › the route guard › ignores a protocol-relative or backslash-escaped from value
 
 [exited with code 0]

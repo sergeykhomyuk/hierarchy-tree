@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/HierarchySummary.test.tsx (0 test)
  ❯ |ui| src/features/hierarchy/HierarchyPage.test.tsx (12 tests | 2 failed) 113ms
@@ -11,12 +11,12 @@
  FAIL  |ui| src/features/hierarchy/HierarchySummary.test.tsx [ src/features/hierarchy/HierarchySummary.test.tsx ]
 Error: Failed to resolve import "./HierarchySummary" from "src/features/hierarchy/HierarchySummary.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchySummary.test.tsx:6:33
+  File: /hierarchy-tree/src/features/hierarchy/HierarchySummary.test.tsx:6:33
   4  |  import { createInternationalization, Locale } from "@platform/internationalization";
   5  |  import { loadTranslations } from "./loadTranslations";
   6  |  import { HierarchySummary } from "./HierarchySummary";
      |                                    ^
-  7  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/HierarchySumma...
+  7  |  var _jsxFileName = "/hierarchy-tree/src/features/hierarchy/HierarchySumma...
   8  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -100,4 +100,3 @@ Ignored nodes: comments, script, style
       Tests  2 failed | 10 passed (12)
    Start at  16:51:51
    Duration  911ms (transform 144ms, setup 233ms, import 160ms, tests 113ms, environment 876ms)
-

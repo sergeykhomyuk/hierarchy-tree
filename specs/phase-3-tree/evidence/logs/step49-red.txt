@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/shared/ui/EmptyState.test.tsx (5 tests | 1 failed) 63ms
      × keeps hierarchy empty-state typography out of the framed kit presentation 5ms
@@ -47,4 +47,3 @@ Received:
       Tests  2 failed | 8 passed (10)
    Start at  13:23:15
    Duration  658ms (transform 57ms, setup 240ms, import 44ms, tests 131ms, environment 774ms)
-

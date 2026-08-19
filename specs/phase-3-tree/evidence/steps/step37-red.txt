@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |tooling| scripts/documentation-configuration.test.ts (2 tests | 2 failed) 4ms
      × README.md describes this project and carries no sentence of the Vite template 3ms
@@ -196,4 +196,3 @@ export default defineConfig([
       Tests  2 failed (2)
    Start at  08:37:22
    Duration  112ms (transform 25ms, setup 43ms, import 2ms, tests 4ms, environment 0ms)
-

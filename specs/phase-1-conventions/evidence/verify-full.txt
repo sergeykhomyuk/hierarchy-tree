@@ -21,7 +21,7 @@ All matched files use Prettier code style!
 > vitest run --coverage
 
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
       Coverage enabled with v8
 
 assert-domain-vocabulary: banned vocabulary found:
@@ -72,26 +72,26 @@ Not implemented: HTMLCanvasElement's getContext() method: without installing the
 
  % Coverage report from v8
 -------------------|---------|----------|---------|---------|-------------------
-File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 -------------------|---------|----------|---------|---------|-------------------
-All files          |   96.28 |    96.33 |   95.12 |   96.27 |                   
- app               |   94.73 |      100 |      80 |   94.73 |                   
-  bootstrap.ts     |      90 |      100 |      50 |      90 | 58                
- ...error-boundary |   90.62 |      100 |   77.77 |   90.32 |                   
-  ...rBoundary.tsx |   77.77 |      100 |      75 |   77.77 | 40-41             
-  ...rBoundary.tsx |   85.71 |      100 |      50 |   85.71 | 23                
- app/routing       |   84.44 |      100 |   78.57 |   83.72 |                   
-  ...efinitions.ts |   56.25 |      100 |      50 |   56.25 | 29-31,48-49,57-58 
- platform/http     |   94.56 |    93.75 |     100 |   95.18 |                   
-  buildUrl.ts      |      75 |      100 |     100 |      75 | 11                
-  ...HttpClient.ts |   93.33 |     92.3 |     100 |   95.45 | 172-173           
-  ...escription.ts |      80 |       75 |     100 |   66.66 | 4                 
- platform/runtime  |     100 |    66.66 |     100 |     100 |                   
-  ...ystemClock.ts |     100 |       75 |     100 |     100 | 44                
-  ...Randomness.ts |     100 |       50 |     100 |     100 | 8                 
- shared/ui         |   98.11 |    93.75 |     100 |   98.03 |                   
-  Skeleton.tsx     |   88.88 |       50 |     100 |    87.5 | 26                
-  ...veInitials.ts |     100 |       75 |     100 |     100 | 5-6               
+All files          |   96.28 |    96.33 |   95.12 |   96.27 |
+ app               |   94.73 |      100 |      80 |   94.73 |
+  bootstrap.ts     |      90 |      100 |      50 |      90 | 58
+ ...error-boundary |   90.62 |      100 |   77.77 |   90.32 |
+  ...rBoundary.tsx |   77.77 |      100 |      75 |   77.77 | 40-41
+  ...rBoundary.tsx |   85.71 |      100 |      50 |   85.71 | 23
+ app/routing       |   84.44 |      100 |   78.57 |   83.72 |
+  ...efinitions.ts |   56.25 |      100 |      50 |   56.25 | 29-31,48-49,57-58
+ platform/http     |   94.56 |    93.75 |     100 |   95.18 |
+  buildUrl.ts      |      75 |      100 |     100 |      75 | 11
+  ...HttpClient.ts |   93.33 |     92.3 |     100 |   95.45 | 172-173
+  ...escription.ts |      80 |       75 |     100 |   66.66 | 4
+ platform/runtime  |     100 |    66.66 |     100 |     100 |
+  ...ystemClock.ts |     100 |       75 |     100 |     100 | 44
+  ...Randomness.ts |     100 |       50 |     100 |     100 | 8
+ shared/ui         |   98.11 |    93.75 |     100 |   98.03 |
+  Skeleton.tsx     |   88.88 |       50 |     100 |    87.5 | 26
+  ...veInitials.ts |     100 |       75 |     100 |     100 | 5-6
 -------------------|---------|----------|---------|---------|-------------------
 
 =============================== Coverage summary ===============================
@@ -105,7 +105,8 @@ Lines        : 96.27% ( 413/429 )
 > tsc -b && vite build
 
 vite v8.2.1 building client environment for production...
-[2Ktransforming...✓ 261 modules transformed.
+[2K
+transforming...✓ 261 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                             1.00 kB │ gzip:   0.48 kB
@@ -127,8 +128,8 @@ dist/assets/vendor-CdUFDZ9N.js            343.81 kB │ gzip: 108.88 kB
 > hierarchy-tree@0.0.0 verify:build
 > vitest run --config vitest.build-output.config.ts
 
-
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+/
+ RUN  v4.1.10 /hierarchy-tree
 
 
  Test Files  8 passed (8)
@@ -142,39 +143,38 @@ dist/assets/vendor-CdUFDZ9N.js            343.81 kB │ gzip: 108.88 kB
 
 - Running JS in headless Chrome
 ✔ Running JS in headless Chrome
-  
+
   app entry (initial payload)
   Size limit:   150 kB
   Size:         112.92 kB gzipped
   Loading time: 2.3 s     on slow 3G
-  
+
   stylesheet
   Size limit:   15 kB
   Size:         3.81 kB gzipped
   Loading time: 75 ms   on slow 3G
-  
+
   route: home
   Size limit:   30 kB
   Size:         452 B gzipped
   Loading time: 10 ms on slow 3G
-  
+
   route: login
   Size limit:   30 kB
   Size:         448 B gzipped
   Loading time: 10 ms on slow 3G
-  
+
   route: not-found
   Size limit:   30 kB
   Size:         251 B gzipped
   Loading time: 10 ms on slow 3G
-  
+
   catalogue: auth
   Size limit:   5 kB
   Size:         156 B gzipped
   Loading time: 10 ms on slow 3G
-  
+
   catalogue: hierarchy
   Size limit:   5 kB
   Size:         157 B gzipped
   Loading time: 10 ms on slow 3G
-  

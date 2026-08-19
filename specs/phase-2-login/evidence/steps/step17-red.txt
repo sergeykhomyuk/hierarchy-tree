@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/loginCardState.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/auth/loginCardState.test.ts [ src/features/auth/loginCardState.test.ts ]
 Error: Failed to resolve import "./loginCardState" from "src/features/auth/loginCardState.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/loginCardState.test.ts:2:31
+  File: /hierarchy-tree/src/features/auth/loginCardState.test.ts:2:31
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { loginCardState } from "./loginCardState";
      |                                  ^
@@ -29,4 +29,3 @@ Error: Failed to resolve import "./loginCardState" from "src/features/auth/login
       Tests  no tests
    Start at  23:38:37
    Duration  475ms (transform 17ms, setup 84ms, import 0ms, tests 0ms, environment 315ms)
-

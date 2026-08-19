@@ -1,11 +1,11 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 node:internal/modules/cjs/loader:1479
   throw err;
   ^
 
-Error: Cannot find module '/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/scripts/assert-no-lorem-ipsum.mjs'
+Error: Cannot find module '/hierarchy-tree/scripts/assert-no-lorem-ipsum.mjs'
     at Module._resolveFilename (node:internal/modules/cjs/loader:1476:15)
     at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)
     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)
@@ -23,7 +23,7 @@ node:internal/modules/cjs/loader:1479
   throw err;
   ^
 
-Error: Cannot find module '/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/scripts/assert-no-lorem-ipsum.mjs'
+Error: Cannot find module '/hierarchy-tree/scripts/assert-no-lorem-ipsum.mjs'
     at Module._resolveFilename (node:internal/modules/cjs/loader:1476:15)
     at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)
     at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)
@@ -66,4 +66,3 @@ AssertionError: real copy must not be flagged: expected 1 to be +0 // Object.is 
       Tests  1 failed | 10 skipped (11)
    Start at  17:12:17
    Duration  148ms (transform 21ms, setup 32ms, import 6ms, tests 50ms, environment 0ms)
-

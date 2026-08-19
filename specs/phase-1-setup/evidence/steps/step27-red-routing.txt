@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/layout/ApplicationLayout.test.tsx (0 test)
  ❯ |ui| src/app/routing/routes/NotFoundRoute.test.tsx (0 test)
@@ -10,12 +10,12 @@
  FAIL  |ui| src/app/layout/ApplicationLayout.test.tsx [ src/app/layout/ApplicationLayout.test.tsx ]
 Error: Failed to resolve import "./ApplicationLayout" from "src/app/layout/ApplicationLayout.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/layout/ApplicationLayout.test.tsx:5:34
+  File: /hierarchy-tree/src/app/layout/ApplicationLayout.test.tsx:5:34
   3  |  import { createMemoryRouter, RouterProvider } from "react-router";
   4  |  import { renderRoute } from "../testing/renderRoute";
   5  |  import { ApplicationLayout } from "./ApplicationLayout";
      |                                     ^
-  6  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/layout/ApplicationLayout.test...
+  6  |  var _jsxFileName = "/hierarchy-tree/src/app/layout/ApplicationLayout.test...
   7  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -30,7 +30,7 @@ Error: Failed to resolve import "./ApplicationLayout" from "src/app/layout/Appli
  FAIL  |ui| src/app/routing/createApplicationRouter.test.ts [ src/app/routing/createApplicationRouter.test.ts ]
 Error: Failed to resolve import "./createApplicationRouter" from "src/app/routing/createApplicationRouter.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/routing/createApplicationRouter.test.ts:3:40
+  File: /hierarchy-tree/src/app/routing/createApplicationRouter.test.ts:3:40
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { buildTestRuntime } from "../testing/renderRoute";
   3  |  import { createApplicationRouter } from "./createApplicationRouter";
@@ -50,12 +50,12 @@ Error: Failed to resolve import "./createApplicationRouter" from "src/app/routin
  FAIL  |ui| src/app/routing/routes/NotFoundRoute.test.tsx [ src/app/routing/routes/NotFoundRoute.test.tsx ]
 Error: Failed to resolve import "./NotFoundRoute" from "src/app/routing/routes/NotFoundRoute.test.tsx". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/routing/routes/NotFoundRoute.test.tsx:5:30
+  File: /hierarchy-tree/src/app/routing/routes/NotFoundRoute.test.tsx:5:30
   3  |  import { MemoryRouter } from "react-router";
   4  |  import { renderRoute } from "../../testing/renderRoute";
   5  |  import { NotFoundRoute } from "./NotFoundRoute";
      |                                 ^
-  6  |  var _jsxFileName = "/Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/app/routing/routes/NotFoundRoute....
+  6  |  var _jsxFileName = "/hierarchy-tree/src/app/routing/routes/NotFoundRoute....
   7  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
  ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:31066:39
  ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:31063:14
@@ -72,4 +72,3 @@ Error: Failed to resolve import "./NotFoundRoute" from "src/app/routing/routes/N
       Tests  no tests
    Start at  17:06:34
    Duration  781ms (transform 58ms, setup 391ms, import 0ms, tests 0ms, environment 1.42s)
-

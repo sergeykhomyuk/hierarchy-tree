@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/data/userResourcePath.test.ts (0 test)
  ❯ |ui| src/features/auth/data/secretResourcePath.test.ts (0 test)
@@ -9,7 +9,7 @@
  FAIL  |ui| src/features/auth/data/secretResourcePath.test.ts [ src/features/auth/data/secretResourcePath.test.ts ]
 Error: Failed to resolve import "./secretResourcePath" from "src/features/auth/data/secretResourcePath.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/secretResourcePath.test.ts:3:35
+  File: /hierarchy-tree/src/features/auth/data/secretResourcePath.test.ts:3:35
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { secretResourcePath } from "./secretResourcePath";
      |                                      ^
@@ -28,7 +28,7 @@ Error: Failed to resolve import "./secretResourcePath" from "src/features/auth/d
  FAIL  |ui| src/features/auth/data/userResourcePath.test.ts [ src/features/auth/data/userResourcePath.test.ts ]
 Error: Failed to resolve import "./userResourcePath" from "src/features/auth/data/userResourcePath.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/userResourcePath.test.ts:3:33
+  File: /hierarchy-tree/src/features/auth/data/userResourcePath.test.ts:3:33
   1  |  import { describe, expect, it } from "vitest";
   2  |  import { userIdentifier } from "../domain/userIdentifier";
   3  |  import { userResourcePath } from "./userResourcePath";
@@ -50,4 +50,3 @@ Error: Failed to resolve import "./userResourcePath" from "src/features/auth/dat
       Tests  no tests
    Start at  21:46:53
    Duration  563ms (transform 34ms, setup 193ms, import 0ms, tests 0ms, environment 725ms)
-

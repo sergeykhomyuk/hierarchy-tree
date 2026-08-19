@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/LoginPage.test.tsx (9 tests | 4 failed) 4751ms
      × shows the summary alert and marks both fields invalid on a null lookup 1100ms
@@ -670,4 +670,3 @@ Ignored nodes: comments, script, style
       Tests  4 failed | 5 passed (9)
    Start at  23:50:20
    Duration  5.36s (transform 87ms, setup 87ms, import 116ms, tests 4.75s, environment 336ms)
-

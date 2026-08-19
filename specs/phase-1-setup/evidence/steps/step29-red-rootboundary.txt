@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/app/error-boundary/RootErrorBoundary.test.tsx (2 tests | 2 failed) 27ms
      × the root boundary renders the error surface above any router without throwing 22ms
@@ -57,4 +57,3 @@ Error: boom
       Tests  2 failed (2)
    Start at  17:19:09
    Duration  2.76s (transform 177ms, setup 277ms, import 177ms, tests 27ms, environment 1.58s)
-

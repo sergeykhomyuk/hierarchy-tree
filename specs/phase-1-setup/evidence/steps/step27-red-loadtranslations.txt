@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/loadTranslations.test.ts (0 test)
  ❯ |ui| src/features/hierarchy/loadTranslations.test.ts (0 test)
@@ -9,7 +9,7 @@
  FAIL  |ui| src/features/hierarchy/loadTranslations.test.ts [ src/features/hierarchy/loadTranslations.test.ts ]
 Error: Failed to resolve import "./loadTranslations" from "src/features/hierarchy/loadTranslations.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/hierarchy/loadTranslations.test.ts:18:46
+  File: /hierarchy-tree/src/features/hierarchy/loadTranslations.test.ts:18:46
   13 |  	});
   14 |  	it("registers only the hierarchy namespace", async () => {
   15 |  		const { loadTranslations } = await import("./loadTranslations");
@@ -29,7 +29,7 @@ Error: Failed to resolve import "./loadTranslations" from "src/features/hierarch
  FAIL  |ui| src/features/auth/loadTranslations.test.ts [ src/features/auth/loadTranslations.test.ts ]
 Error: Failed to resolve import "./loadTranslations" from "src/features/auth/loadTranslations.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/loadTranslations.test.ts:18:46
+  File: /hierarchy-tree/src/features/auth/loadTranslations.test.ts:18:46
   13 |  	});
   14 |  	it("registers only the auth namespace", async () => {
   15 |  		const { loadTranslations } = await import("./loadTranslations");
@@ -51,4 +51,3 @@ Error: Failed to resolve import "./loadTranslations" from "src/features/auth/loa
       Tests  no tests
    Start at  17:00:44
    Duration  447ms (transform 39ms, setup 160ms, import 0ms, tests 0ms, environment 521ms)
-

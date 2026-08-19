@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/data/analyticsEvents.test.ts (0 test)
 
@@ -8,7 +8,7 @@
  FAIL  |ui| src/features/auth/data/analyticsEvents.test.ts [ src/features/auth/data/analyticsEvents.test.ts ]
 Error: Failed to resolve import "./signInOutcome" from "src/features/auth/data/analyticsEvents.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree/src/features/auth/data/analyticsEvents.test.ts:5:30
+  File: /hierarchy-tree/src/features/auth/data/analyticsEvents.test.ts:5:30
   1  |  import { execFileSync } from "node:child_process";
   2  |  import { describe, expect, it, vi } from "vitest";
   3  |  import { SignInOutcome } from "./signInOutcome";
@@ -30,4 +30,3 @@ Error: Failed to resolve import "./signInOutcome" from "src/features/auth/data/a
       Tests  no tests
    Start at  14:04:32
    Duration  642ms (transform 39ms, setup 132ms, import 0ms, tests 0ms, environment 410ms)
-

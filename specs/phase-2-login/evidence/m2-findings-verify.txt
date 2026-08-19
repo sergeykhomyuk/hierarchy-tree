@@ -21,7 +21,7 @@ All matched files use Prettier code style!
 > vitest run --coverage
 
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
       Coverage enabled with v8
 
 assert-domain-vocabulary: banned vocabulary found:
@@ -75,37 +75,37 @@ Not implemented: HTMLCanvasElement's getContext() method: without installing the
 
  % Coverage report from v8
 -------------------|---------|----------|---------|---------|-------------------
-File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 -------------------|---------|----------|---------|---------|-------------------
-All files          |   95.79 |    95.15 |    95.2 |   95.71 |                   
- app               |   94.73 |      100 |      80 |   94.73 |                   
-  bootstrap.ts     |      90 |      100 |      50 |      90 | 58                
- ...error-boundary |   90.62 |      100 |   77.77 |   90.32 |                   
-  ...rBoundary.tsx |   77.77 |      100 |      75 |   77.77 | 40-41             
-  ...rBoundary.tsx |   85.71 |      100 |      50 |   85.71 | 23                
- app/routing       |    85.1 |      100 |      80 |   84.44 |                   
-  ...efinitions.ts |   56.25 |      100 |      50 |   56.25 | 29-31,48-49,57-58 
- ...routing/routes |   27.27 |      100 |   33.33 |   27.27 |                   
-  LoginRoute.tsx   |       0 |      100 |       0 |       0 | 10-26             
- features/auth     |     100 |    94.73 |     100 |     100 |                   
-  ...Submission.ts |     100 |    83.33 |     100 |     100 | 53-54             
- ...ures/auth/data |     100 |    92.85 |     100 |     100 |                   
-  ...gnedInUser.ts |     100 |       75 |     100 |     100 | 26                
- ...res/auth/guard |   86.66 |    92.85 |     100 |   86.66 |                   
-  ...estination.ts |   86.66 |    92.85 |     100 |   86.66 | 23,26             
- ...s/auth/session |   97.05 |    92.85 |     100 |   97.05 |                   
-  readSession.ts   |      95 |       90 |     100 |      95 | 29                
- platform/http     |   96.73 |    95.83 |     100 |   97.59 |                   
-  ...HttpClient.ts |   93.33 |     92.3 |     100 |   95.45 | 172-173           
- .../observability |     100 |    93.18 |     100 |     100 |                   
-  redact.ts        |     100 |    90.62 |     100 |     100 | 55-56,59          
- platform/runtime  |    92.3 |     62.5 |     100 |    92.1 |                   
-  ...ystemClock.ts |     100 |       75 |     100 |     100 | 44                
-  ...Randomness.ts |     100 |       50 |     100 |     100 | 8                 
-  ...TabStorage.ts |   83.33 |       50 |     100 |   83.33 | 20,28,36          
- shared/ui         |   98.11 |    94.23 |     100 |   98.03 |                   
-  Skeleton.tsx     |   88.88 |       50 |     100 |    87.5 | 26                
-  ...veInitials.ts |     100 |       75 |     100 |     100 | 5-6               
+All files          |   95.79 |    95.15 |    95.2 |   95.71 |
+ app               |   94.73 |      100 |      80 |   94.73 |
+  bootstrap.ts     |      90 |      100 |      50 |      90 | 58
+ ...error-boundary |   90.62 |      100 |   77.77 |   90.32 |
+  ...rBoundary.tsx |   77.77 |      100 |      75 |   77.77 | 40-41
+  ...rBoundary.tsx |   85.71 |      100 |      50 |   85.71 | 23
+ app/routing       |    85.1 |      100 |      80 |   84.44 |
+  ...efinitions.ts |   56.25 |      100 |      50 |   56.25 | 29-31,48-49,57-58
+ ...routing/routes |   27.27 |      100 |   33.33 |   27.27 |
+  LoginRoute.tsx   |       0 |      100 |       0 |       0 | 10-26
+ features/auth     |     100 |    94.73 |     100 |     100 |
+  ...Submission.ts |     100 |    83.33 |     100 |     100 | 53-54
+ ...ures/auth/data |     100 |    92.85 |     100 |     100 |
+  ...gnedInUser.ts |     100 |       75 |     100 |     100 | 26
+ ...res/auth/guard |   86.66 |    92.85 |     100 |   86.66 |
+  ...estination.ts |   86.66 |    92.85 |     100 |   86.66 | 23,26
+ ...s/auth/session |   97.05 |    92.85 |     100 |   97.05 |
+  readSession.ts   |      95 |       90 |     100 |      95 | 29
+ platform/http     |   96.73 |    95.83 |     100 |   97.59 |
+  ...HttpClient.ts |   93.33 |     92.3 |     100 |   95.45 | 172-173
+ .../observability |     100 |    93.18 |     100 |     100 |
+  redact.ts        |     100 |    90.62 |     100 |     100 | 55-56,59
+ platform/runtime  |    92.3 |     62.5 |     100 |    92.1 |
+  ...ystemClock.ts |     100 |       75 |     100 |     100 | 44
+  ...Randomness.ts |     100 |       50 |     100 |     100 | 8
+  ...TabStorage.ts |   83.33 |       50 |     100 |   83.33 | 20,28,36
+ shared/ui         |   98.11 |    94.23 |     100 |   98.03 |
+  Skeleton.tsx     |   88.88 |       50 |     100 |    87.5 | 26
+  ...veInitials.ts |     100 |       75 |     100 |     100 | 5-6
 -------------------|---------|----------|---------|---------|-------------------
 
 =============================== Coverage summary ===============================
@@ -119,7 +119,8 @@ Lines        : 95.71% ( 626/654 )
 > tsc -b && vite build
 
 vite v8.2.1 building client environment for production...
-[2Ktransforming...✓ 294 modules transformed.
+[2K
+transforming...✓ 294 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                                   1.11 kB │ gzip:   0.51 kB
@@ -142,8 +143,8 @@ dist/assets/vendor-DFc831lG.js                  396.67 kB │ gzip: 122.54 kB
 > hierarchy-tree@0.0.0 verify:build
 > vitest run --config vitest.build-output.config.ts
 
-
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+/
+ RUN  v4.1.10 /hierarchy-tree
 
 
  Test Files  8 passed (8)
@@ -157,39 +158,38 @@ dist/assets/vendor-DFc831lG.js                  396.67 kB │ gzip: 122.54 kB
 
 - Running JS in headless Chrome
 ✔ Running JS in headless Chrome
-  
+
   app entry (initial payload)
   Size limit:   150 kB
   Size:         127.36 kB gzipped
   Loading time: 2.5 s     on slow 3G
-  
+
   stylesheet
   Size limit:   15 kB
   Size:         3.99 kB gzipped
   Loading time: 78 ms   on slow 3G
-  
+
   route: home
   Size limit:   30 kB
   Size:         464 B gzipped
   Loading time: 10 ms on slow 3G
-  
+
   route: login
   Size limit:   30 kB
   Size:         3.93 kB gzipped
   Loading time: 77 ms   on slow 3G
-  
+
   route: not-found
   Size limit:   30 kB
   Size:         253 B gzipped
   Loading time: 10 ms on slow 3G
-  
+
   catalogue: auth
   Size limit:   5 kB
   Size:         388 B gzipped
   Loading time: 10 ms on slow 3G
-  
+
   catalogue: hierarchy
   Size limit:   5 kB
   Size:         157 B gzipped
   Loading time: 10 ms on slow 3G
-  

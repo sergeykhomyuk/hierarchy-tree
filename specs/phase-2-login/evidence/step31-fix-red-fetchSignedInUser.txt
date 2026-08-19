@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/auth/data/fetchSignedInUser.test.ts (3 tests | 2 failed) 8ms
      × resolves to the composed display name for the matching record in the collection 2ms
@@ -61,4 +61,3 @@ Number of calls: 1
       Tests  2 failed | 1 passed (3)
    Start at  13:26:51
    Duration  581ms (transform 60ms, setup 91ms, import 70ms, tests 8ms, environment 344ms)
-

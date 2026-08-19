@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/shared/ui/Input.test.tsx (4 tests | 2 failed) 57ms
      × fills the width of its container 6ms
@@ -158,4 +158,3 @@ Received:
       Tests  8 failed | 33 passed (41)
    Start at  10:48:43
    Duration  2.40s (transform 548ms, setup 745ms, import 604ms, tests 1.77s, environment 2.39s)
-

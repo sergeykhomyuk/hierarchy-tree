@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 assert-domain-vocabulary: banned vocabulary found:
   - /var/folders/cw/9qpg225s27g0tc1y92m772c00000gn/T/domain-vocabulary-retired-U6iPlF/retired.tmp.ts: exported identifier "Tree" carries the banned domain word "tree"
@@ -37,4 +37,3 @@ AssertionError: buildForest, flattenVisible and role="tree" must no longer be fl
       Tests  1 failed | 14 skipped (15)
    Start at  12:57:02
    Duration  157ms (transform 27ms, setup 39ms, import 6ms, tests 50ms, environment 0ms)
-

@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
 stderr | src/app/routing/routes/HomeRoute.test.tsx > HomeRoute > retry mints a new correlation id and emits no route-viewed event
 No `HydrateFallback` element provided to render during initial hydration
@@ -234,4 +234,3 @@ Ignored nodes: comments, script, style
       Tests  4 failed | 12 passed (16)
    Start at  16:30:31
    Duration  9.84s (transform 195ms, setup 141ms, import 232ms, tests 12.76s, environment 400ms)
-

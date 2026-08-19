@@ -1,5 +1,5 @@
 
- RUN  v4.1.10 /Users/sergeykhomyuk/System/Areas/Dev/github/hierarchy-tree
+ RUN  v4.1.10 /hierarchy-tree
 
  ❯ |ui| src/features/hierarchy/useExpansion.test.tsx (7 tests | 1 failed) 124ms
      × expandMany opens several branches in one history entry 11ms
@@ -136,4 +136,3 @@ The latest test that might've caused the error is "expandMany that would open no
      Errors  2 errors
    Start at  10:22:36
    Duration  905ms (transform 215ms, setup 490ms, import 194ms, tests 380ms, environment 1.57s)
-
